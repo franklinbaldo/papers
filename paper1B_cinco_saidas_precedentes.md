@@ -30,8 +30,7 @@ prática de invocar o precedente para se valer da porção favorável,
 ignorando ressalvas expressas da ratio, sem adotar nenhuma das
 saídas substantivas legítimas. O artigo engaja a doutrina de
 Marinoni e Mitidiero sobre a natureza do precedente e ilustra a
-análise com acórdão real do Tribunal de Justiça do Estado de
-Rondônia.
+análise com hipótese de aplicação.
 
 **Palavras-chave**: precedentes vinculantes; fundamentação; art. 927
 do CPC; art. 489 do CPC; distinguishing; overruling; superação
@@ -63,8 +62,8 @@ precedent": the practice of invoking the precedent to benefit from
 the favorable portion while ignoring express qualifications in the
 ratio, without adopting any of the substantive legitimate responses.
 The article engages the doctrine of Marinoni and Mitidiero on the
-nature of precedent and illustrates the analysis with a real
-decision of the Court of Justice of the State of Rondônia.
+nature of precedent and illustrates the analysis with a
+hypothetical scenario.
 
 **Keywords**: binding precedents; judicial reasoning; art. 927 CPC;
 art. 489 CPC; distinguishing; overruling; rational supersession;
@@ -474,47 +473,46 @@ satisfaz os requisitos do art. 1.022.
 
 ---
 
-## 6. Ilustração: o Acórdão da Apelação 7003561-54.2024.8.22.0010
+## 6. Ilustração
 
-### 6.1 O caso
+### 6.1 O caso hipotético
 
-A Apelação Cível 7003561-54.2024.8.22.0010 foi julgada pela 2ª
-Câmara Especial do Tribunal de Justiça do Estado de Rondônia em
-29 de abril de 2026, com relatoria do Des. Jorge Luiz dos Santos
-Leal. A questão central era se o cargo de Especialista em Supervisão
-Escolar integrava a carreira do magistério para fins do art. 37,
-XVI, "b", da Constituição Federal. A servidora havia sido nomeada
-originariamente para esse cargo e posteriormente reenquadrada como
-Professora Classe C por força da Lei Complementar Estadual n.
-680/2012.
+Considere-se hipótese em que tribunal de segundo grau julga
+apelação cuja questão central é se determinado cargo de
+especialista em educação integra a carreira do magistério para
+fins do art. 37, XVI, "b", da Constituição Federal. A servidora
+havia sido nomeada originariamente para esse cargo e posteriormente
+reenquadrada como professora por força de lei estadual de
+reenquadramento.
 
-### 6.2 A ADI 3.772/STF e sua ratio integral
+### 6.2 O precedente vinculante e sua ratio integral
 
-O acórdão recorrido transcreveu a ementa da ADI 3.772/STF, que
+O acórdão recorrido transcreveu a ementa de precedente vinculante
+do STF sobre o alcance da expressão "carreira do magistério", que
 contém a seguinte passagem: "as funções de direção, coordenação e
 assessoramento pedagógico integram a carreira do magistério, desde
 que exercidos, em estabelecimentos de ensino básico, por professores
 de carreira, **excluídos os especialistas em educação**".
 
 A ressalva "excluídos os especialistas em educação" é parte da
-ratio da ADI 3.772 — não obiter dictum. O STF, ao decidir a ADI
-3.772, precisou delimitar o alcance da expressão "carreira do
-magistério" e o fez de modo a incluir funções pedagógicas em geral,
-mas excluir expressamente os especialistas em educação. Essa
-exclusão foi determinante para a ratio: sem ela, a decisão teria
-alcance distinto.
+ratio do precedente — não obiter dictum. O STF, ao decidir a
+controvérsia, precisou delimitar o alcance da expressão "carreira
+do magistério" e o fez de modo a incluir funções pedagógicas em
+geral, mas excluir expressamente os especialistas em educação.
+Essa exclusão foi determinante para a ratio: sem ela, a decisão
+teria alcance distinto.
 
-A identificação correta dos fundamentos determinantes da ADI 3.772
-exige, portanto, o enfrentamento da ressalva — não a sua omissão.
+A identificação correta dos fundamentos determinantes do
+precedente exige, portanto, o enfrentamento da ressalva — não a
+sua omissão.
 
 ### 6.3 A aplicação parcial silenciosa no acórdão
 
 O acórdão transcreveu a ementa — inclusive a ressalva — e a seguir
 concluiu pela licitude da acumulação de cargos pela servidora, sem
-enfrentar a questão de se a servidora, nomeada originariamente como
-Especialista em Supervisão Escolar, estava ou não incluída na
-categoria "especialistas em educação" que a ratio da ADI 3.772
-expressamente exclui.
+enfrentar a questão de se a servidora, nomeada originariamente
+para cargo de especialista em educação, estava ou não incluída na
+categoria que a ratio do precedente expressamente exclui.
 
 O acórdão não adotou nenhuma das cinco saídas legítimas:
 
@@ -527,10 +525,10 @@ em educação para fins da ressalva, nem identificou qualquer diferença
 substantiva entre o caso e a hipótese excludente da ratio.
 
 Não reconheceu superação superveniente: não invocou precedente
-posterior do STF que haja superado a ressalva da ADI 3.772.
+posterior do STF que haja superado a ressalva.
 
-Não superou racionalmente: não apontou erro algum na ratio da ADI
-3.772 nem na ressalva que ela contém.
+Não superou racionalmente: não apontou erro algum na ratio do
+precedente nem na ressalva que ela contém.
 
 Não se absteve de invocar: invocou o precedente, vinculando-se às
 quatro saídas substantivas.
@@ -650,6 +648,4 @@ Salvador: JusPodivm, 2019.
 
 ---
 
-*Artigo submetido para publicação em [VEÍCULO]. Versão de [DATA].
-Processo de referência: Apelação Cível 7003561-54.2024.8.22.0010,
-TJRO, 2ª Câmara Especial, j. 29.04.2026.*
+*Artigo submetido para publicação em [VEÍCULO]. Versão de [DATA].*

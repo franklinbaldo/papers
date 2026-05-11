@@ -27,8 +27,7 @@ na prática forense de "subsidiariamente, requer-se a atribuição de
 efeitos infringentes" é dogmaticamente imprecisa e deve ser
 substituída. O artigo propõe formulação correta e examina as
 consequências processuais da distinção para o julgamento dos
-embargos. Ilustra-se a análise com exame de acórdão real do
-Tribunal de Justiça do Estado de Rondônia.
+embargos. A análise é ilustrada com hipótese de aplicação.
 
 **Palavras-chave**: Embargos de Declaração; efeitos infringentes;
 fundamentação; obscuridade; contradição; omissão; art. 1.022 do
@@ -57,8 +56,7 @@ subsidiarily. The formula routinely used in forensic practice of
 imprecise and should be replaced. The article proposes a correct
 formulation and examines the procedural consequences of the
 distinction for the adjudication of the motions. The analysis is
-illustrated with examination of a real decision of the Court of
-Justice of the State of Rondônia.
+illustrated with a hypothetical scenario.
 
 **Keywords**: Embargos de Declaração; infringement effects;
 judicial reasoning; obscurity; contradiction; omission; art. 1,022
@@ -370,56 +368,53 @@ sanado e da integração realizada.
 
 ---
 
-## 4. Ilustração: o Acórdão da Apelação 7003561-54.2024.8.22.0010
+## 4. Ilustração
 
-### 4.1 O caso
+### 4.1 O caso hipotético
 
-A Apelação Cível 7003561-54.2024.8.22.0010 foi julgada pela 2ª
-Câmara Especial do Tribunal de Justiça do Estado de Rondônia em
-29 de abril de 2026, com relatoria do Des. Jorge Luiz dos Santos
-Leal. O IPERON — Instituto de Previdência dos Servidores do Estado
-de Rondônia — interpôs a apelação contra sentença que havia
-reconhecido a licitude da acumulação de cargos pela servidora
-Marilene Betiol, nomeada originariamente como Especialista em
-Supervisão Escolar (Decreto Estadual 7.999/1997) e posteriormente
-reenquadrada para Professora Classe C por força da Lei Complementar
-Estadual n. 680/2012.
+Considere-se a hipótese em que tribunal de segundo grau julga
+apelação envolvendo a licitude da acumulação de cargos por
+servidora nomeada originariamente para cargo de especialista em
+educação e posteriormente reenquadrada para cargo de professora
+por força de lei estadual de reenquadramento.
 
 ### 4.2 Os vícios de mérito sanáveis por embargos
 
-O acórdão transcreveu em sua fundamentação a ementa da ADI 3.772/STF,
-que contém, entre outros elementos, a ressalva expressa: "excluídos
-os especialistas em educação". A seguir, concluiu pela licitude da
-acumulação de cargos pela servidora — que havia sido nomeada
-originariamente precisamente como especialista em educação, na
-modalidade supervisão escolar.
+O acórdão transcreveu em sua fundamentação a ementa de precedente
+vinculante do STF sobre o alcance da expressão "carreira do
+magistério" para fins do art. 37, XVI, "b", da Constituição
+Federal, ementa que contém, entre outros elementos, a ressalva
+expressa: "excluídos os especialistas em educação". A seguir,
+concluiu pela licitude da acumulação de cargos pela servidora —
+que havia sido nomeada originariamente precisamente como
+especialista em educação.
 
-Os Embargos de Declaração interpostos pelo IPERON identificaram
-os seguintes vícios:
+Os Embargos de Declaração interpostos pela parte sucumbente
+identificaram os seguintes vícios:
 
-**Omissão sobre a ressalva expressa da ADI 3.772.** A apelação
-havia suscitado o ponto expressamente: o cargo de Especialista em
-Supervisão Escolar está incluído na categoria "especialistas em
-educação" excluída da ratio da ADI 3.772. O acórdão não enfrentou
-esse argumento — que era, em tese, capaz de infirmar a conclusão
-adotada. Trata-se de omissão nos termos do art. 1.022, II, c/c
-art. 489, §1º, IV, do CPC. O vício é de mérito: a questão omitida
-é questão sobre a natureza jurídica do cargo para fins
-constitucionais. O cabimento dos embargos, contudo, não está em
-questão, pois a modalidade do vício — omissão — não depende da
-natureza meritória do ponto omitido.
+**Omissão sobre a ressalva expressa do precedente.** A apelação
+havia suscitado o ponto expressamente: o cargo de origem está
+incluído na categoria "especialistas em educação" excluída da
+ratio do precedente. O acórdão não enfrentou esse argumento — que
+era, em tese, capaz de infirmar a conclusão adotada. Trata-se de
+omissão nos termos do art. 1.022, II, c/c art. 489, §1º, IV, do
+CPC. O vício é de mérito: a questão omitida é questão sobre a
+natureza jurídica do cargo para fins constitucionais. O cabimento
+dos embargos, contudo, não está em questão, pois a modalidade do
+vício — omissão — não depende da natureza meritória do ponto
+omitido.
 
 **Contradição entre a premissa transcrita e a conclusão sustentada.**
-O acórdão transcreveu a ementa da ADI 3.772 na íntegra, incluindo
-a ressalva. A seguir, aplicou a ratio da ADI 3.772 de modo a
+O acórdão transcreveu a ementa do precedente na íntegra, incluindo
+a ressalva. A seguir, aplicou a ratio do precedente de modo a
 incluir, e não excluir, a categoria que a ressalva expressamente
-exclui. Há contradição entre a premissa adotada (a ratio da ADI
-3.772 com sua ressalva) e a conclusão sustentada (que a servidora
-— originariamente nomeada como especialista — está abrangida pela
-ratio). Trata-se de contradição nos termos do art. 1.022, I, c/c
-art. 489, §1º, V, do CPC. O vício é de mérito: a contradição está
-nos fundamentos meritórios do voto. O cabimento dos embargos,
-igualmente, não está em questão.
+exclui. Há contradição entre a premissa adotada (a ratio do
+precedente com sua ressalva) e a conclusão sustentada (que a
+servidora — originariamente nomeada como especialista — está
+abrangida pela ratio). Trata-se de contradição nos termos do
+art. 1.022, I, c/c art. 489, §1º, V, do CPC. O vício é de mérito:
+a contradição está nos fundamentos meritórios do voto. O cabimento
+dos embargos, igualmente, não está em questão.
 
 ### 4.3 A formulação correta do pedido
 
@@ -504,6 +499,4 @@ ed. São Paulo: Revista dos Tribunais, 2016.
 
 ---
 
-*Artigo submetido para publicação em [VEÍCULO]. Versão de [DATA].
-Processo de referência: Apelação Cível 7003561-54.2024.8.22.0010,
-TJRO, 2ª Câmara Especial, j. 29.04.2026.*
+*Artigo submetido para publicação em [VEÍCULO]. Versão de [DATA].*
