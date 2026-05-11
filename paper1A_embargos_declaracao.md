@@ -103,7 +103,8 @@ subsidiário; não é categoria distinta de recurso.
 As seções seguintes desenvolvem cada um desses pontos. A seção 2
 examina a questão do escopo dos vícios. A seção 3 examina a questão
 dos efeitos infringentes. A seção 4 ilustra ambas com análise de
-caso concreto. A seção 5 conclui.
+caso concreto. A seção 5 enfrenta as principais objeções à tese
+aqui sustentada. A seção 6 conclui.
 
 ---
 
@@ -437,7 +438,111 @@ possível da integração, não como pretensão autônoma.
 
 ---
 
-## 5. Conclusão
+## 5. Objeções e Respostas
+
+As teses sustentadas nas seções 2 e 3 — escopo amplo dos vícios
+sanáveis e modificação como consequência automática — contrariam
+posições consolidadas na doutrina e na prática forense. Esta seção
+enfrenta as cinco objeções de maior peso.
+
+### 5.1 A tradição restritiva clássica
+
+**Objeção.** Em linha que remonta aos comentários de Barbosa
+Moreira ao CPC/1973 e à dogmática construída sob aquele código,
+os embargos seriam recurso de mero "esclarecimento", sem espaço
+para reapreciação meritória. Omissão sobre questão de mérito não
+seria propriamente omissão sanável; cabe à apelação ou aos
+recursos extraordinários enfrentar tal vício.
+
+**Resposta.** A objeção tem força histórica, mas perdeu base
+normativa com o CPC/2015. O texto do art. 1.022 define os vícios
+pela modalidade — obscuridade, contradição, omissão — sem
+qualificar a matéria sobre a qual recaem. O art. 489, §1º, IV e V,
+caracteriza expressamente como não fundamentada a decisão que não
+enfrenta argumentos capazes de infirmar a conclusão ou que invoca
+precedente sem demonstrar o ajustamento. Essas hipóteses são
+estruturalmente meritórias. Limitar os embargos a vícios formais
+sobre matéria formal exigiria leitura que o texto da lei não
+suporta. A tradição restritiva foi formada em outro regime
+normativo; não sobrevive à reescrita dos arts. 1.022 a 1.026.
+
+### 5.2 Os efeitos infringentes como categoria excepcional
+
+**Objeção.** Linha doutrinária representada por Nery Jr. e parte
+de Theodoro Jr. sustenta que a modificação do julgado embargado é
+hipótese excepcional, dependente de pedido expresso, sob pena de
+violação do contraditório e da taxatividade recursal. A fórmula
+"subsidiariamente, requer-se a atribuição de efeitos infringentes"
+expressaria essa cautela dogmática.
+
+**Resposta.** A objeção confunde pressuposto com pretensão. O
+art. 1.024, §3º, não condiciona a modificação a pedido autônomo;
+ao contrário, trata-a como pressuposto do direito do embargado
+de complementar suas razões recursais — "caso o acolhimento dos
+embargos de declaração implique modificação". O contraditório
+está preservado precisamente pelo §4º, que abre prazo para
+manifestação do embargado. Não há criação de "recurso novo": há
+sanação de vício de fundamentação com efeito reflexo previsto
+em lei. A fórmula tradicional, antes de proteger o contraditório,
+desloca o foco do pedido (sanação) para uma consequência
+(modificação), enfraquecendo o próprio recurso.
+
+### 5.3 O argumento sistêmico da taxatividade recursal
+
+**Objeção.** Admitir embargos para sanar vícios sobre matéria
+meritória transformaria o recurso em terceira instância de
+mérito, ofendendo a taxatividade recursal e a distribuição de
+competências entre apelação, recursos extraordinários e
+embargos.
+
+**Resposta.** A objeção pressupõe que sanar vício de fundamentação
+equivale a rejulgar o mérito. Não equivale. O que se sana é o
+defeito do iter argumentativo — a ausência de enfrentamento de
+argumento, a contradição entre premissa e conclusão, a obscuridade
+no alcance do dispositivo. A modificação eventual é efeito da
+integração: a fundamentação corrigida pode levar a dispositivo
+distinto, mas não há nova cognição autônoma. A taxatividade
+recursal segue intacta: embargos sanam vícios de fundamentação;
+apelação e recursos extraordinários enfrentam o mérito em si.
+
+### 5.4 A jurisprudência conservadora pré-2015
+
+**Objeção.** Súmulas e precedentes do STJ formados sob o CPC/1973
+— inclusive a Súmula 18, sobre embargos manifestamente
+protelatórios — sustentariam leitura restritiva dos embargos,
+incompatível com a tese aqui defendida.
+
+**Resposta.** A objeção mistura escopo com protelação. A Súmula
+18 trata de sanção a embargos manifestamente infundados, não de
+delimitação do que é vício sanável. Quanto à jurisprudência
+formada sob o CPC/1973, ela precisa ser recalibrada à luz do
+regime do CPC/2015, que reescreveu os arts. 1.022 a 1.026,
+introduziu a tipologia do art. 489, §1º, e reordenou a relação
+entre vícios de fundamentação e cabimento dos embargos.
+Precedentes anteriores que ignoraram essa reescrita não
+constituem argumento dogmático; constituem inércia hermenêutica.
+
+### 5.5 A crítica hermenêutica
+
+**Objeção.** Em linha próxima à crítica hermenêutica de Lenio
+Streck, o problema dos embargos não seria dogmático, mas cultural:
+juízes não enfrentam argumentos porque a cultura jurídica
+brasileira tolera a fundamentação por adesão e o decisionismo.
+Reforço dogmático seria insuficiente — ou ilusório — diante desse
+quadro.
+
+**Resposta.** A crítica é parcialmente procedente, mas não infirma
+a utilidade da dogmática. A nomeação precisa do vício e a
+ancoragem em dispositivo correto são condição *necessária* — não
+suficiente — para mudança de prática. Sem o reforço dogmático, o
+advogado não dispõe de categoria para nomear o vício, o juiz não
+dispõe de fundamento para acolher os embargos, e o controle
+recursal opera no vazio. A crítica hermenêutica é complementar,
+não substitutiva, à reconstrução dogmática proposta.
+
+---
+
+## 6. Conclusão
 
 O CPC 2015 é claro em dois pontos que a prática forense ainda não
 assimilou plenamente.
@@ -475,6 +580,9 @@ recursais é automático quando há modificação.
 ASSIS, Araken de. *Manual dos recursos*. 9. ed. São Paulo: Revista
 dos Tribunais, 2017.
 
+BARBOSA MOREIRA, José Carlos. *Comentários ao Código de Processo
+Civil*. Vol. V. 17. ed. Rio de Janeiro: Forense, 2013.
+
 CÂMARA, Alexandre Freitas. *O novo processo civil brasileiro*. 6.
 ed. São Paulo: Atlas, 2020.
 
@@ -487,6 +595,12 @@ dos Tribunais, 2017.
 
 NERY JR., Nelson; NERY, Rosa Maria de Andrade. *Código de processo
 civil comentado*. 17. ed. São Paulo: Revista dos Tribunais, 2018.
+
+STRECK, Lenio Luiz. *Jurisdição constitucional e decisão jurídica*.
+4. ed. São Paulo: Revista dos Tribunais, 2014.
+
+THEODORO JÚNIOR, Humberto. *Curso de direito processual civil*.
+Vol. III. 53. ed. Rio de Janeiro: Forense, 2020.
 
 WAMBIER, Teresa Arruda Alvim. *Recurso especial, recurso
 extraordinário e ação rescisória*. 3. ed. São Paulo: Revista dos

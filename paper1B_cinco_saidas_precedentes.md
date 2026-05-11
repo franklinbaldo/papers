@@ -122,7 +122,8 @@ partir do CPC 2015. A seção 3 apresenta e desenvolve as cinco
 saídas. A seção 4 examina em detalhe a quarta saída — superação
 racional — e seu fundamento na teoria do precedente brasileiro. A
 seção 5 conceitua a aplicação parcial silenciosa como vício. A
-seção 6 ilustra com análise de caso concreto. A seção 7 conclui.
+seção 6 ilustra com análise de caso concreto. A seção 7 enfrenta
+as principais objeções à tese aqui sustentada. A seção 8 conclui.
 
 ---
 
@@ -556,7 +557,146 @@ termos do art. 1.024, §3º, do CPC.
 
 ---
 
-## 7. Conclusão
+## 7. Objeções e Respostas
+
+As teses sustentadas nas seções anteriores — sobretudo a tese das
+cinco saídas e a admissibilidade da superação racional pelo
+tribunal inferior — contrariam posições consolidadas na doutrina
+brasileira e estrangeira. Esta seção enfrenta as seis objeções de
+maior peso.
+
+### 7.1 A concepção hierárquica forte
+
+**Objeção.** Em linha defendida por autores como Eduardo Cambi e
+Elpídio Donizetti, o art. 927 do CPC institui vinculação topo-down
+de natureza estritamente hierárquica: o tribunal inferior está
+obrigado a seguir o precedente do tribunal superior, sob pena de
+cassação por recurso. Não há, nesse quadro, espaço para "superação
+racional" pelo inferior — apenas para distinção quando o caso
+diferir.
+
+**Resposta.** A objeção captura uma dimensão real do sistema —
+a vinculação é, de fato, robusta — mas confunde vinculação com
+obediência automática. O art. 489, §1º, VI, exige *demonstração*
+de distinção ou superação, o que pressupõe competência
+argumentativa do tribunal inferior para identificar os fundamentos
+determinantes, examinar sua aplicabilidade e, quando seja o caso,
+apontar erro qualificado. Se a vinculação fosse meramente
+hierárquica, bastaria a citação do precedente; o ônus do art. 489,
+§1º, V e VI, perderia sentido. A vinculação é racional, não
+formal: é à ratio que se vincula, e a ratio só vincula enquanto
+articula razão sustentável.
+
+### 7.2 A ortodoxia sobre overruling
+
+**Objeção.** Em linha presente em parte da obra de Marinoni e em
+Mitidiero, o *overruling* é prerrogativa exclusiva do tribunal que
+firmou o precedente. Ao tribunal inferior cabe distinguir; não
+cabe superar. Admitir superação pelo inferior subverteria o
+desenho institucional do sistema de precedentes e a função das
+cortes supremas como cortes de interpretação.
+
+**Resposta.** A objeção tem peso porque os mesmos autores aqui
+invocados em apoio sustentam, em outros momentos, a leitura
+ortodoxa. Reconhece-se a tensão. A tese das cinco saídas não
+nega que o *overruling* pleno seja prerrogativa do tribunal de
+origem; sustenta que o tribunal inferior, quando vinculado a
+precedente cuja ratio entende equivocada, tem três caminhos
+legítimos: aplicar mesmo discordando, abster-se de invocar (se
+o caso permitir solução por fundamento alternativo) ou superar
+racionalmente com apontamento expresso de erro — caso em que se
+expõe à reforma e contribui para o aperfeiçoamento do sistema.
+A posição encontra base em (a) art. 926 do CPC, que impõe dever
+de integridade e coerência a todos os tribunais; (b) na noção
+de *anticipatory overruling* presente na literatura comparada;
+e (c) na própria distinção marinoniana entre vinculação por
+autoridade de fonte e vinculação por autoridade de conteúdo.
+
+### 7.3 A crítica cética (Streck)
+
+**Objeção.** Em linha desenvolvida por Lenio Streck, os
+"precedentes" do CPC/2015 não são precedentes em sentido forte;
+são provimentos administrativos vinculantes, formados por
+procedimento concentrado, sem o lastro de elaboração caso-a-caso
+próprio do *stare decisis*. Toda a moldura das "saídas legítimas"
+seria viciada na origem por importar categoria estranha ao
+sistema brasileiro.
+
+**Resposta.** A crítica é teoricamente significativa, mas não
+infirma a tese aqui sustentada. Independentemente da classificação
+teórica dos provimentos do art. 927, o sistema do CPC opera com
+vinculação — e essa vinculação demanda critérios de aplicação. A
+tese das cinco saídas é descrição da estrutura normativa
+existente, não importação de modelo estrangeiro. Aliás, é
+*compatível* com a crítica de Streck: precisamente por limitar o
+automatismo da invocação, reabre espaço para argumentação
+substantiva — exatamente o que a crítica hermenêutica reivindica.
+
+### 7.4 O argumento formalista da redundância
+
+**Objeção.** A "aplicação parcial silenciosa" seria mera espécie
+de error in iudicando ou de aplicação incorreta. Sua nomeação
+como vício autônomo é redundante diante do art. 489, §1º, V, que
+já caracteriza como não fundamentada a decisão que invoca
+precedente sem demonstrar o ajustamento.
+
+**Resposta.** A redundância é apenas aparente. O art. 489, §1º, V,
+captura a hipótese genericamente, mas não distingue o padrão
+específico — invocar a ratio favorável e silenciar a ressalva
+restritiva. A nomeação dogmática é útil porque (a) identifica um
+padrão recorrente que opera sob a aparência de cumprimento, (b)
+ancora o vício em dispositivo preciso, e (c) facilita o controle
+recursal ao oferecer ao advogado e ao tribunal categoria com
+contornos definidos. Conceitos dogmáticos não se justificam pela
+ausência de cobertura legal genérica, mas pela utilidade analítica
+e operacional.
+
+### 7.5 A concepção restritiva de ratio (Goodhart)
+
+**Objeção.** No método clássico de Goodhart para identificação da
+*ratio decidendi*, são *ratio* apenas os fatos materiais tratados
+pelo juiz como relevantes para a conclusão. Ressalvas que
+delimitam o alcance da regra sem se referirem a fatos materiais
+do caso seriam *obiter dictum*, não vinculando tribunais
+posteriores.
+
+**Resposta.** A leitura goodhartiana estrita é uma entre várias.
+Cross e Harris, em *Precedent in English Law*, e MacCormick, em
+*Legal Reasoning and Legal Theory*, sustentam concepção mais
+ampla: integram a ratio também as proposições normativas
+necessárias para sustentar o dispositivo, ainda quando articuladas
+em termos abstratos. Pelo critério da necessidade lógica, ressalvas
+que delimitam o alcance da regra — sem as quais a decisão teria
+escopo distinto — são parte da ratio, não obiter. No caso da
+ratio analisada, a ressalva "excluídos os especialistas em
+educação" não é digressão; é o limite preciso do alcance da
+proposição central. Suprimi-la altera o dispositivo. Logo,
+integra a ratio.
+
+### 7.6 O argumento da segurança jurídica
+
+**Objeção.** Admitir superação racional pelo tribunal inferior
+gera instabilidade. Decisões díspares proliferariam, a previsibilidade
+do sistema seria comprometida e o princípio da segurança jurídica
+— um dos pilares do regime de precedentes — sofreria erosão.
+
+**Resposta.** A objeção pressupõe que segurança jurídica equivale
+a uniformidade automática. Não equivale. Segurança jurídica é
+*previsibilidade racional*: o jurisdicionado pode antecipar como
+o caso será decidido porque conhece as razões que orientam a
+decisão. Um sistema que decide por inércia — invocando
+precedente sem enfrentar argumento qualificado de erro — não
+oferece previsibilidade racional; oferece submissão. O ônus
+argumentativo qualificado do art. 489, §1º, VI, é exatamente o
+filtro: a superação racional é exceção que demanda demonstração
+expressa, sob controle recursal. O risco de instabilidade é
+contido pelo próprio desenho do ônus; o risco de erro
+inquestionável, ao contrário, é estrutural na leitura puramente
+hierárquica.
+
+---
+
+## 8. Conclusão
 
 O CPC 2015 instituiu regime de precedentes vinculantes que não se
 reduz à submissão hierárquica. O art. 927, §1º, combinado com o
@@ -596,6 +736,10 @@ localizar a falha com a especificidade que o art. 489, §1º, exige.
 
 ## Referências
 
+CAMBI, Eduardo. *Neoconstitucionalismo e neoprocessualismo:
+direitos fundamentais, políticas públicas e protagonismo
+judiciário*. 2. ed. São Paulo: Revista dos Tribunais, 2016.
+
 CÂMARA, Alexandre Freitas. *O novo processo civil brasileiro*. 6.
 ed. São Paulo: Atlas, 2020.
 
@@ -606,11 +750,20 @@ DIDIER JR., Fredie; CUNHA, Leonardo Carneiro da; BRAGA, Paula
 Sarno; OLIVEIRA, Rafael Alexandria de. *Curso de direito processual
 civil*. Vol. 3. 16. ed. Salvador: JusPodivm, 2019.
 
+DONIZETTI, Elpídio. *Curso didático de direito processual civil*.
+22. ed. São Paulo: Atlas, 2019.
+
+GOODHART, Arthur L. Determining the ratio decidendi of a case.
+*Yale Law Journal*, v. 40, n. 2, p. 161–183, 1930.
+
 HART, Herbert L. A. *O conceito de direito*. Tradução de A.
 Ribeiro Mendes. 3. ed. Lisboa: Fundação Calouste Gulbenkian, 2001.
 
 MACÊDO, Lucas Buril de. *Precedentes judiciais e o direito
 processual civil*. 3. ed. Salvador: JusPodivm, 2019.
+
+MACCORMICK, Neil. *Legal reasoning and legal theory*. Oxford:
+Clarendon Press, 1978.
 
 MARINONI, Luiz Guilherme. *Precedentes obrigatórios*. 5. ed.
 São Paulo: Revista dos Tribunais, 2016.
