@@ -6,9 +6,14 @@ franklinbaldo@gmail.com
 
 ---
 
+> **Position paper.** This article proposes an architecture and outlines an evaluation
+> protocol. No empirical results are reported. Sequence-length, fidelity, and
+> downstream-task figures appear only as design targets and falsifiable predictions,
+> not as measurements.
+
 ## Abstract
 
-Current language models rely on subword tokenization (e.g., Byte-Pair Encoding) which operates at a granularity that is fundamentally misaligned with semantic units of meaning. This limits effective context length, requires excessive computational steps to model long-range dependencies, and produces representations that lack semantic coherence. We propose **Semantic Tokenization Transformers (STT)**, a novel approach that shifts the atomic unit of pre-training from subwords to semantic chunks. Our method consists of three key innovations: (1) an offline tokenization pipeline that embeds text chunks using a pre-trained teacher model and quantizes them into a discrete codebook via Residual Vector Quantization (RVQ), (2) a Transformer architecture trained autoregressively on sequences of semantic codes with optional dual-stream processing, and (3) a semantically grounded decoding mechanism that reconstructs readable text through medoid-based path selection with disciplined LLM normalization, preserving core concepts while producing fluent paraphrases. Experiments demonstrate that STT achieves substantial compression of sequence length (5-10x over BPE), enables modeling of significantly longer contexts, and produces decodings with high semantic fidelity and minimal hallucination. The approach naturally provides semantic indexing for retrieval and memory systems while maintaining compatibility with existing Transformer architectures.
+Current language models rely on subword tokenization (e.g., Byte-Pair Encoding) which operates at a granularity that is fundamentally misaligned with semantic units of meaning. This limits effective context length, requires excessive computational steps to model long-range dependencies, and produces representations that lack semantic coherence. We propose **Semantic Tokenization Transformers (STT)**, an approach that shifts the atomic unit of pre-training from subwords to semantic chunks. The method has three components: (1) an offline tokenization pipeline that embeds text chunks using a pre-trained teacher model and quantizes them into a discrete codebook via Residual Vector Quantization (RVQ), (2) a Transformer architecture trained autoregressively on sequences of semantic codes with optional dual-stream processing, and (3) a semantically grounded decoding mechanism that reconstructs readable text through medoid-based path selection with disciplined LLM normalization, preserving core concepts while producing fluent paraphrases. We argue that, *if* the proposed pipeline behaves as designed, STT should yield substantial compression of sequence length over BPE, enable modeling of significantly longer contexts, and produce decodings with high semantic fidelity and low hallucination. We formulate these as falsifiable predictions and describe an experimental protocol to test them. The approach is also intended to provide semantic indexing for retrieval and memory systems while remaining compatible with existing Transformer architectures.
 
 **Keywords:** semantic tokenization, vector quantization, transformer architecture, faithful decoding, long-range modeling
 
@@ -61,17 +66,18 @@ This approach produces fluent paraphrases that preserve core concepts and factua
 
 ### 1.4 Contributions
 
-Our main contributions are:
+This article is a **position paper**: its contributions are conceptual and
+methodological, not empirical. Specifically:
 
-1. **Semantic tokenization pipeline:** A complete offline framework for converting text corpora into sequences of semantic codes while preserving document structure.
+1. **Semantic tokenization pipeline (proposal):** A complete offline framework for converting text corpora into sequences of semantic codes while preserving document structure.
 
-2. **STT architecture:** Transformer variants (single-stream and dual-stream) for autoregressive modeling of semantic code sequences with multiple training objectives.
+2. **STT architecture (proposal):** Transformer variants (single-stream and dual-stream) for autoregressive modeling of semantic code sequences with multiple training objectives.
 
-3. **Semantically grounded decoding method:** A retrieval-based reconstruction pipeline that produces fluent paraphrases preserving core concepts through medoid selection and disciplined normalization, with strong guarantees against hallucination.
+3. **Semantically grounded decoding method (proposal):** A retrieval-based reconstruction pipeline intended to produce fluent paraphrases preserving core concepts through medoid selection and disciplined normalization.
 
-4. **Comprehensive evaluation:** Metrics and ablations demonstrating sequence compression, context length improvements, and semantic fidelity of decoded outputs.
+4. **Falsifiable evaluation protocol:** A set of explicit, pre-registered predictions and failure criteria (Section 5) under which each design claim can be tested.
 
-The remainder of this paper is organized as follows: Section 2 reviews related work, Section 3 details our method, Section 4 describes implementation considerations, Section 5 presents experimental results, Section 6 discusses implications and limitations, and Section 7 concludes with future directions.
+The remainder of this paper is organized as follows: Section 2 reviews related work, Section 3 details the proposed method, Section 4 describes implementation considerations, Section 5 presents the evaluation protocol and falsifiable predictions, Section 6 discusses limitations, and Section 7 concludes with future directions.
 
 ---
 
@@ -546,7 +552,12 @@ Key hyperparameters and typical ranges:
 
 ---
 
-## 5. Experiments
+## 5. Proposed Evaluation Protocol
+
+*This section describes the experimental design and falsifiable predictions
+we intend to test. No measurements are reported here; the figures that
+follow are explicit **design targets** and **expected orderings**, not
+results. We mark each prediction as such.*
 
 ### 5.1 Experimental Setup
 
@@ -579,87 +590,72 @@ Key hyperparameters and typical ranges:
 - Document summarization (PubMed, ArXiv)
 - Semantic retrieval (BEIR benchmark)
 
-### 5.2 Encoding Results
+### 5.2 Falsifiable Predictions — Encoding
 
-**Sequence compression:** On Wikipedia, our method reduces sequence length by 8.2x on average compared to BPE (σ=1.3x). A typical 10K BPE-token article (≈7,500 words) becomes 122 semantic codes with RVQ L=3, or 366 flattened tokens.
+We commit, in advance, to the following predictions. Each is paired with
+a clear failure criterion under which the method should be considered
+to have *not* delivered its claimed advantage.
 
-**Context window advantage:** With a 4K token context window:
-- BPE: ≈3,000 words (6-7 pages)
-- STT: ≈25,000 words (50-60 pages)
+**P1 — Sequence compression (design target ≥5x).** With RVQ depth L ∈ {2,3,4}
+and chunk size aligned to roughly one sentence, the ratio
+*BPE-tokens / flattened-STT-codes* on a Wikipedia sample should be at
+least 5x. *Falsified if:* median compression < 3x at comparable
+reconstruction fidelity.
 
-**Training efficiency:** STT converges 2.3x faster in wall-clock time and 2.8x faster in FLOP-equivalents compared to BPE baseline, due to shorter sequences.
+**P2 — Effective context.** For a fixed model context budget of N tokens,
+the *number of words* covered by STT should exceed BPE by a factor
+proportional to P1. *Falsified if:* word coverage gain < 2x.
 
-**Perplexity:** On held-out Wikipedia articles, our best STT model achieves a perplexity of 24.3 on semantic codes (compared to GPT-2's 32.1 on BPE tokens, not directly comparable but indicative of model quality).
+**P3 — Codebook utilization.** Entropy regularization should keep codebook
+usage above ~80% of theoretical maximum entropy. *Falsified if:* >30% of
+codes are dead after training on the full corpus.
 
-**Codebook usage:** With entropy regularization, we achieve 92% of theoretical maximum entropy (i.e., 92% of codes are used regularly), avoiding collapse.
+**P4 — Training cost.** Wall-clock time per token modeled should be lower
+for STT than for a BPE baseline of equivalent parameter count, due to
+shorter sequences. *Falsified if:* STT is slower per equivalent context.
 
-### 5.3 Decoding Results
+### 5.3 Falsifiable Predictions — Decoding
 
-**Fidelity metrics (Wikipedia test set, 1000 articles):**
+The decoding pipeline is the most uncertain component of the design.
+We articulate it as a sequence of additive interventions, each of which
+should produce a measurable improvement on the previous stage if the
+underlying mechanism is correct:
 
-| Method | BLEU-4 | ROUGE-L | chrF | Hallucination Rate | OER |
-|--------|--------|---------|------|-------------------|-----|
-| Naive concat | 38.2 | 51.3 | 64.5 | 2.1% | 18.7% |
-| Medoids only | 52.6 | 68.4 | 78.3 | 0.8% | 12.3% |
-| + Viterbi (k=1) | 61.4 | 75.2 | 83.7 | 0.6% | 8.1% |
-| + Viterbi (k=5, beam=8) | 68.9 | 81.6 | 88.4 | 0.3% | 4.2% |
-| + LLM normalization | **82.3** | **89.7** | **93.1** | **0.4%** | **1.8%** |
-| Lightweight decoder | 87.6 | 92.1 | 94.8 | 0.0% | 0.5% |
+1. **Naive concatenation** of medoids is the baseline (expected: low
+   fidelity, high boundary error rate).
+2. **Medoid selection per code** should reduce surface artifacts vs.
+   naive concatenation.
+3. **Viterbi path selection (k>1)** should reduce boundary errors
+   (OER) by enforcing local coherence.
+4. **LCS overlap merging** should reduce duplicate text at code
+   boundaries.
+5. **Disciplined LLM normalization** should improve fluency without
+   introducing hallucinations exceeding a pre-registered threshold
+   (e.g., hallucinated n-gram rate ≤ 1%).
 
-**Key findings:**
-- Viterbi path selection dramatically reduces boundary errors (OER drops from 12.3% to 4.2%)
-- LLM normalization improves fluency significantly (chrF +4.7 points)
-- Hallucination rate remains extremely low (<0.5%) across all methods
-- Lightweight decoder achieves near-perfect reconstruction but requires training
+*Falsified if:* any intervention fails to monotonically improve its
+target metric, or if LLM normalization introduces a hallucination rate
+above the pre-registered threshold.
 
-**Ablations:**
+Ablations to be reported: number of medoids per code (1, 3, 5, 10);
+coherence weight β ∈ {0, 0.5, 1.0, 1.5}; with and without LCS merging;
+with and without LLM normalization.
 
-| Configuration | BLEU-4 | OER |
-|--------------|--------|-----|
-| 1 medoid per code | 61.4 | 8.1% |
-| 3 medoids per code | 66.7 | 5.3% |
-| 5 medoids per code | **68.9** | **4.2%** |
-| 10 medoids per code | 69.2 | 4.1% |
-| No coherence score (β=0) | 63.8 | 9.7% |
-| High coherence (β=1.5) | 67.1 | 4.8% |
-| Optimal (β=0.5) | **68.9** | **4.2%** |
+### 5.4 Falsifiable Predictions — Downstream Tasks
 
-**Human evaluation (100 random documents, 3 raters):**
+**P5 — Long-document QA.** On a long-context QA benchmark (e.g.,
+QuALITY, NarrativeQA), STT with full-document input should outperform
+a BPE baseline restricted to the first N tokens of the document, at
+equal parameter count. *Falsified if:* STT does not beat the truncated
+baseline.
 
-| Method | Fluency | Faithfulness |
-|--------|---------|--------------|
-| Original text | 4.9 | 5.0 |
-| Medoids + Viterbi | 3.8 | 4.6 |
-| + LLM normalization | **4.6** | **4.7** |
-| Lightweight decoder | 4.7 | 4.9 |
+**P6 — Retrieval.** Treating STT codes as discrete retrieval units
+should match or exceed BM25 on a standard benchmark (e.g., a subset of
+BEIR). *Falsified if:* nDCG@10 is worse than BM25.
 
-### 5.4 Downstream Task Performance
-
-**Long Document QA (QuALITY benchmark):**
-
-| Model | Context | EM | F1 |
-|-------|---------|----|----|
-| GPT-2 (4K BPE) | 3K words | 42.3 | 58.7 |
-| Longformer (16K) | 12K words | 51.8 | 67.2 |
-| STT (4K codes) | 25K words | **58.4** | **73.6** |
-
-**Document Summarization (ArXiv-L):**
-
-| Model | Input length | ROUGE-L |
-|-------|--------------|---------|
-| GPT-2 | 4K tokens | 31.2 |
-| LED [Beltagy et al., 2020] | 16K tokens | 38.6 |
-| STT | Full paper | **43.7** |
-
-**Semantic Retrieval (BEIR average):**
-
-| Model | nDCG@10 |
-|-------|---------|
-| BM25 | 48.7 |
-| Dense retrieval (E5) | 54.3 |
-| STT codes as index | **57.8** |
-
-The semantic codes serve as natural units for retrieval, outperforming both sparse and dense baselines.
+We deliberately do **not** predict that STT will outperform
+state-of-the-art long-context models (e.g., Longformer, LED) at matched
+training compute; that is an open empirical question.
 
 ### 5.5 Error Analysis
 
@@ -684,17 +680,18 @@ The semantic codes serve as natural units for retrieval, outperforming both spar
 
 ## 6. Discussion
 
-### 6.1 Why This Approach Works
+### 6.1 Why We Expect This Approach to Work
 
-The success of Semantic Tokenization Transformers can be attributed to several factors:
+We propose that, *if* the pipeline behaves as designed, the following
+mechanisms would explain its advantages:
 
-**Semantic compression matches task structure:** Most language understanding and generation tasks operate at the level of ideas, not morphemes. By aligning the model's atomic units with semantic chunks, we enable more direct learning of relevant patterns.
+**Semantic compression matches task structure:** Most language understanding and generation tasks operate at the level of ideas, not morphemes. By aligning the model's atomic units with semantic chunks, we expect more direct learning of relevant patterns.
 
-**Pre-trained embeddings as inductive bias:** Leveraging powerful teacher models provides a strong initialization for the semantic space, bootstrapping from existing knowledge without training from scratch.
+**Pre-trained embeddings as inductive bias:** Leveraging powerful teacher models should provide a strong initialization for the semantic space, bootstrapping from existing knowledge without training from scratch.
 
-**Retrieval-based decoding ensures grounding:** By constraining outputs to real text chunks, we eliminate the most common source of hallucination—generation from the model's interpolation of training data.
+**Retrieval-based decoding aims to ground outputs:** By constraining outputs to real text chunks, we aim to eliminate the most common source of hallucination — generation from the model's interpolation of training data. Whether this constraint is preserved through LLM normalization is itself a question we identify in Section 5.3.
 
-**Controlled normalization preserves fidelity:** The disciplined LLM prompt engineering, combined with validation, ensures that surface-level improvements don't compromise semantic accuracy.
+**Controlled normalization is intended to preserve fidelity:** The disciplined LLM prompt engineering, combined with validation, is *designed* to ensure that surface-level improvements don't compromise semantic accuracy. Whether the design holds under adversarial inputs is an open question.
 
 ### 6.2 Comparison to Related Approaches
 

@@ -575,6 +575,20 @@ recursais é automático quando há modificação.
 
 ---
 
+## Nota sobre o escopo
+
+Este artigo é um **trabalho doutrinário de natureza argumentativa**:
+defende uma tese interpretativa sobre o escopo dos vícios sanáveis
+pelos embargos de declaração e sobre a natureza dos efeitos
+infringentes no CPC 2015. Não contém pesquisa empírica, levantamento
+sistemático de jurisprudência nem revisão exaustiva da literatura;
+os acórdãos eventualmente referidos são ilustrativos e não
+constituem amostra estatisticamente representativa. As conclusões
+devem ser lidas como tese submetida ao debate doutrinário, não como
+descrição neutra do estado da arte.
+
+---
+
 ## Referências
 
 ASSIS, Araken de. *Manual dos recursos*. 9. ed. São Paulo: Revista
