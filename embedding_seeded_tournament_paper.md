@@ -148,8 +148,9 @@ step.
 
 **Bias and reliability.** Known biases in LLM judges include
 positional bias (favoring the first-presented response),
-verbosity bias (favoring longer responses), and self-preference
-bias (a model judging its own outputs more favorably). COURTREASONER
+verbosity bias (favoring longer responses), and self-enhancement
+bias (a model rating its own outputs more favorably) (Zheng et al.,
+2023). COURTREASONER
 (Han et al., EMNLP 2025) specifically reports that LLM judges of
 legal reasoning are "fragile and inconsistent" and can be misled
 by rhetorically persuasive but logically invalid arguments — a
@@ -341,7 +342,7 @@ context) may not be the criterion that makes B better than C
 (procedural completeness in a tax context), generating cycles.
 
 **Connection to known bias sources.** Positional bias and
-verbosity bias (documented in the LLM-as-judge bias literature) are amplified when compared
+verbosity bias (Zheng et al., 2023) are amplified when compared
 items are semantically distant, because the judge has less
 stable criteria to override surface-level heuristics (position,
 length). ESHTR's clustering reduces semantic distance within

@@ -32,11 +32,36 @@ Cada entrada registra: data, frente atacada, resultado (commit/PR ou skip), e fi
 - Lista de referências: 2 entradas mantidas com `†` (Bowers & Ludäscher, Raju et al.)
 - Nota prefatorial da seção de referências atualizada para refletir estado atual
 
-**PR:** [a criar]
+**PR:** #4 (mergeada em 2026-05-12)
 
 **Fila para próxima sessão:**
 1. Verificar Bowers & Ludäscher (2025) CEUR Vol-4157 — existe o volume?
 2. Identificar Raju et al. (2024) — encontrar paper exato sobre stratified sampling para LLM evaluation diversity.
-3. Identificar survey de biases em LLM judges ("[CITE survey 2025]" foi removido do texto pela sessão anterior, mas a referência bibliográfica correspondente nunca foi adicionada — o texto agora lista os três biases sem citar nenhuma fonte específica).
+3. ~~Identificar survey de biases em LLM judges~~ — **resolvido na Sessão 2** (ver abaixo).
 4. Verificar se a venue AAAI 2026 do UDA foi confirmada subsequentemente.
 5. STT: as predições P1–P6 estão sem referência cruzada com o método descrito no Seção 3 — verificar consistência.
+
+---
+
+## 2026-05-12 — Sessão 2
+
+**Frente:** Integridade epistêmica — biases sem citação no ESHTR.
+
+**Contexto:** Sessão 1 havia removido o marcador `[CITE survey 2025]` do parágrafo de biases (§2.1), mas não havia adicionado citação real. O texto listava positional bias, verbosity bias e self-preference bias sem nenhuma fonte.
+
+**Trabalho desta sessão:** Identificar e adicionar a citação correta.
+
+**Verificação:** Busca confirmou que Zheng et al. (2023) "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena" (NeurIPS 2023, arXiv:2306.05685) documenta explicitamente "position, verbosity, and self-enhancement biases." Paper já estava nas referências verificadas do ESHTR.
+
+**Mudanças commitadas:**
+- §2.1 (Bias and reliability): adicionado `(Zheng et al., 2023)` ao final da enumeração de biases; termo "self-preference" alinhado ao termo de Zheng et al. ("self-enhancement").
+- §5.3 (Connection to known bias sources): substituído "documented in the LLM-as-judge bias literature" por `(Zheng et al., 2023)`.
+- `session_log.md` atualizado.
+
+**PR:** #5
+
+**Fila para próxima sessão:**
+1. Verificar Bowers & Ludäscher (2025) CEUR Vol-4157 — existe o volume CEUR?
+2. Identificar Raju et al. (2024) — paper exato sobre stratified sampling para LLM evaluation.
+3. Verificar venue AAAI 2026 do UDA (Zhang et al., arXiv:2508.09724).
+4. STT: as predições P1–P6 estão sem referência cruzada com o método descrito na Seção 3 — verificar consistência interna.
