@@ -695,13 +695,31 @@ mechanisms would explain its advantages:
 
 ### 6.2 Comparison to Related Approaches
 
-**vs. Traditional VQ-VAE:** We use a pre-trained teacher instead of end-to-end training, enabling better semantic quality and faster iteration. We also operate on text rather than continuous modalities.
+*The comparisons below describe **design differences** between STT and
+prior approaches, not measured advantages.*
 
-**vs. Retrieval-augmented generation:** STT internalizes retrieval into the training process rather than using an external datastore at inference time. This enables learning of transition patterns and global document structure.
+**vs. Traditional VQ-VAE:** STT uses a pre-trained teacher instead of
+end-to-end training, with the intent of leveraging existing semantic
+knowledge and shortening the iteration loop. It is also designed for
+text rather than continuous modalities. Whether teacher-based
+quantization yields better semantic quality than end-to-end VQ-VAE
+on text is an open empirical question.
 
-**vs. Hierarchical tokenization:** We operate at a much coarser granularity (phrases/sentences rather than characters/words) and use learned embeddings rather than rule-based hierarchy.
+**vs. Retrieval-augmented generation:** STT proposes to internalize
+retrieval into the training process rather than using an external
+datastore at inference time, with the goal of learning transition
+patterns and global document structure. We do not claim this is
+strictly better than RAG for all use cases.
 
-**vs. Prompt compression:** Our approach is learned and deterministic, with explicit codes, rather than relying on LLM-based lossy summarization.
+**vs. Hierarchical tokenization:** STT operates at a coarser
+granularity (phrases/sentences) and uses learned embeddings rather
+than rule-based hierarchy. The tradeoffs of coarse vs. fine
+granularity are not yet measured.
+
+**vs. Prompt compression:** STT is designed to be learned and
+deterministic, with explicit codes, rather than relying on LLM-based
+lossy summarization. Whether this design choice translates into
+better downstream performance is to be tested per Section 5.
 
 ### 6.3 Limitations and Failure Cases
 
@@ -774,18 +792,36 @@ Train and release open-source lightweight decoders for common domains (news, boo
 
 ## 8. Conclusion
 
-We have presented Semantic Tokenization Transformers (STT), a novel approach to language model pre-training that shifts the fundamental unit from subwords to semantic chunks. By leveraging pre-trained embeddings, vector quantization, and faithful decoding via medoids, we achieve:
+We have presented Semantic Tokenization Transformers (STT) as a
+**proposal** for language model pre-training that shifts the
+fundamental unit from subwords to semantic chunks. The contribution
+of this position paper is the design — combining pre-trained
+embeddings, residual vector quantization, and retrieval-based
+decoding via medoids — together with a falsifiable evaluation
+protocol (Section 5). We do not report measurements.
 
-1. **Dramatic sequence compression** (5-10x over BPE), enabling modeling of much longer contexts
-2. **Improved training efficiency** (2-3x faster convergence) due to shorter sequences
-3. **Strong performance** on long-document tasks (QA, summarization, retrieval)
-4. **Faithful reconstruction** with minimal hallucination (<0.5% error rate)
+The design predicts, and the protocol of Section 5 is intended to
+test, that STT should yield:
 
-Our approach is practical and modular, with clear paths to production deployment. The core insight—that language models should reason at the level of ideas, not morphemes—opens new avenues for scaling to longer contexts, improving interpretability, and grounding generation in real text.
+1. **Substantial sequence compression** over BPE (target ≥5x; failure
+   criterion in P1), enabling modeling of longer contexts at a fixed
+   token budget.
+2. **Lower training cost per token modeled** due to shorter sequences
+   (P4).
+3. **Competitive performance** on long-document tasks where context
+   length is the binding constraint (P5–P6).
+4. **Bounded hallucination** under retrieval-grounded decoding, with
+   a pre-registered ceiling enforced by the protocol of Section 5.3.
 
-The combination of offline semantic tokenization, efficient Transformer training, and retrieval-based decoding represents a compelling alternative to the BPE paradigm that has dominated the field for the past decade. As models continue to scale and tasks demand longer contexts, we believe semantic tokenization will become increasingly important.
+Each of these is stated as a prediction with an explicit `Falsified
+if:` clause, not as a result.
 
-All code, trained models, and codebooks will be released open-source to facilitate further research and applications.
+The core conjecture — that language models can usefully reason at
+the level of ideas rather than morphemes — is, if borne out, a path
+toward longer contexts, more interpretable representations, and
+generation more directly grounded in retrievable text. Whether the
+specific pipeline proposed here realizes that conjecture is an
+empirical question we leave open.
 
 ---
 
