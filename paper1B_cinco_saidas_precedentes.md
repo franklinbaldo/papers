@@ -734,6 +734,23 @@ localizar a falha com a especificidade que o art. 489, §1º, exige.
 
 ---
 
+## Nota sobre o escopo
+
+Este artigo é um **trabalho doutrinário de natureza argumentativa**:
+propõe uma taxonomia normativa das saídas legítimas do tribunal
+diante de precedente vinculante e identifica o vício da aplicação
+parcial silenciosa como categoria dogmática autônoma. Não constitui
+pesquisa empírica de jurisprudência nem revisão sistemática de
+literatura; os exemplos são ilustrativos. As teses defendidas —
+notadamente a admissão da superação racional pelo tribunal inferior
+e a qualificação da aplicação parcial silenciosa como vício do
+art. 489, §1º, V — são posições do autor, submetidas ao debate
+doutrinário; o estado da arte registra divergências expressivas
+sobre cada uma delas, parcialmente endereçadas na Seção 7
+("Objeções e Respostas").
+
+---
+
 ## Referências
 
 CAMBI, Eduardo. *Neoconstitucionalismo e neoprocessualismo:

@@ -6,6 +6,11 @@ Porto Velho, Brazil
 
 ---
 
+> **Position paper.** This article proposes a method and an evaluation
+> protocol. No empirical results are reported. The Semantic Proximity
+> Hypothesis is stated as a falsifiable prediction to be tested, not
+> as a confirmed finding.
+
 ## Abstract
 
 Evaluating the quality of judicial decisions at scale is an open
@@ -19,24 +24,23 @@ Ranking (ESHTR)**, a three-phase protocol that (1) clusters
 decisions by semantic similarity using dense embeddings, (2) ranks
 decisions within each cluster via an LLM judge panel, and (3)
 conducts a cross-cluster championship tournament among
-intra-cluster winners. The embedding-first step acts as a
-principled seeding mechanism, ensuring that early-stage comparisons
-occur between semantically similar decisions — where LLM judges
-are more reliable — while the cross-cluster phase surfaces
-globally exceptional decisions. We motivate the method
-theoretically by connecting known non-transitivity failures in
+intra-cluster winners. The embedding-first step is intended to act
+as a principled seeding mechanism, so that early-stage comparisons
+occur between semantically similar decisions — where we expect LLM
+judges to be more reliable — while the cross-cluster phase is
+designed to surface globally exceptional decisions. We motivate the
+method theoretically by connecting known non-transitivity failures in
 LLM-as-judge pipelines to semantic distance between compared items,
-and argue that stratifying comparisons by similarity reduces
-non-transitivity incidence. We propose an evaluation protocol
-using a heterogeneous panel of frontier LLMs as synthetic jurors
-with structured rubrics anchored to Brazilian CPC procedural
-criteria (art. 489, §1º; art. 927), calibrated against
-known-quality writing. ESHTR enables large-scale quality
-assessment of judicial corpora without requiring human annotation
-and without conflating decisions of fundamentally different
-character. We demonstrate the method on a corpus of Brazilian
-state court decisions and discuss implications for computational
-law and judicial benchmarking.
+and argue that stratifying comparisons by similarity should reduce
+non-transitivity incidence. We outline an evaluation protocol using a
+heterogeneous panel of frontier LLMs as synthetic jurors with
+structured rubrics anchored to Brazilian CPC procedural criteria
+(art. 489, §1º; art. 927), calibrated against known-quality writing.
+The contributions of this article are conceptual: the method, its
+theoretical motivation, the evaluation rubric, and a set of
+falsifiable predictions. We do **not** report measurements; the
+empirical validation of ESHTR on a Brazilian state court corpus is
+left for future work.
 
 ---
 
@@ -59,7 +63,7 @@ can apply structured rubrics to judicial text, identify
 argumentation gaps, and compare decisions along multiple quality
 dimensions. Several works have shown that LLM-as-judge approaches
 produce judgments that correlate meaningfully with expert human
-annotation [CITE Zheng et al. 2023, Verga et al. 2024].
+annotation (Zheng et al., 2023; Verga et al., 2024).
 
 However, existing LLM-as-judge protocols have been designed for
 *homogeneous* evaluation settings: comparing multiple responses
@@ -78,8 +82,8 @@ precedent hierarchies.
 The core problem this heterogeneity creates for existing methods
 is not merely one of comparability in an intuitive sense. It is
 a structural cause of the non-transitivity failures documented in
-recent LLM-as-judge literature [CITE non-transitivity paper
-2025]. When compared items are semantically distant, LLM judges
+recent LLM-as-judge literature (see, e.g., the non-transitivity
+analyses cited in Section 2.1). When compared items are semantically distant, LLM judges
 are more likely to exhibit position bias and preference
 inconsistency, because their in-context reasoning cannot draw on
 stable, shared evaluative criteria. Non-transitivity undermines
@@ -134,27 +138,26 @@ human agreement better than any single LLM judge, even when
 individual panel members are weaker models. This motivates our
 use of a multi-model panel rather than a single judge.
 
-**Tournament methods.** Knockout Assessment [CITE 2025] adapts
-iterative pairwise tournament comparison to LLM evaluation,
+**Tournament methods.** Knockout Assessment (arXiv:2506.03785, 2025)
+adapts iterative pairwise tournament comparison to LLM evaluation,
 addressing the limitation of baseline-fixed pairwise approaches.
 Bradley-Terry models have been applied to score models from
-tournament outcomes [CITE non-transitivity 2025]. Our method
-builds on these but adds the embedding-seeded stratification
-phase as a pre-tournament step.
+tournament outcomes. Our method builds on these but adds the
+embedding-seeded stratification phase as a pre-tournament step.
 
 **Bias and reliability.** Known biases in LLM judges include
 positional bias (favoring the first-presented response),
 verbosity bias (favoring longer responses), and self-preference
-bias (a model judging its own outputs more favorably) [CITE survey
-2025]. COURTREASONER [CITE EMNLP 2025] specifically found that
-LLM judges of legal reasoning are "fragile and inconsistent" and
-easily misled by rhetorically persuasive but logically invalid
-arguments — a finding we engage directly in Section 5.3.
+bias (a model judging its own outputs more favorably). COURTREASONER
+(Han et al., EMNLP 2025) specifically reports that LLM judges of
+legal reasoning are "fragile and inconsistent" and can be misled
+by rhetorically persuasive but logically invalid arguments — a
+finding we engage directly in Section 5.3.
 
-**Non-transitivity.** Recent work [CITE 2025] documents that LLMs
-exhibit both hard and soft non-transitive preferences in pairwise
-comparison, with incidence correlated with positional bias. This
-finding motivates ESHTR's stratification approach.
+**Non-transitivity.** Recent work (arXiv:2502.14074, 2025) documents
+that LLMs exhibit both hard and soft non-transitive preferences in
+pairwise comparison, with incidence correlated with positional bias.
+This finding motivates ESHTR's stratification approach.
 
 ### 2.2 Clustering and Stratification in Evaluation
 
@@ -251,7 +254,7 @@ ensures they compete in different groups until Phase 3.
 
 Within each cluster, decisions are ranked by a **heterogeneous
 LLM judge panel** using iterative pairwise tournament comparison
-(adapted from Knockout Assessment [CITE 2025]).
+(adapted from Knockout Assessment, arXiv:2506.03785, 2025).
 
 **Panel composition.** Following Verga et al. (2024), the panel
 comprises 3-5 frontier LLMs from different model families
@@ -337,7 +340,7 @@ context) may not be the criterion that makes B better than C
 (procedural completeness in a tax context), generating cycles.
 
 **Connection to known bias sources.** Positional bias and
-verbosity bias [CITE survey 2025] are amplified when compared
+verbosity bias (documented in the LLM-as-judge bias literature) are amplified when compared
 items are semantically distant, because the judge has less
 stable criteria to override surface-level heuristics (position,
 length). ESHTR's clustering reduces semantic distance within
@@ -346,7 +349,11 @@ comparison pairs, thereby reducing the foothold of these biases.
 **Falsifiability.** The hypothesis predicts that inter-judge
 agreement (measured by Fleiss' κ) should be higher within
 ESHTR clusters than in all-pairs comparisons drawn from the
-full heterogeneous corpus. We test this prediction in Section 6.
+full heterogeneous corpus. Section 6 specifies the test; the
+test itself is **not yet conducted** in this position paper.
+*Falsified if:* in a properly designed experiment, κ_intracluster
+≤ κ_crosscorpus, or if the difference disappears once positional
+randomization is controlled for.
 
 ---
 
@@ -370,7 +377,7 @@ purity against the a priori subject matter labels.
 
 ### 5.3 Rubric Design and the COURTREASONER Problem
 
-COURTREASONER [CITE EMNLP 2025] found that LLM judges of legal
+COURTREASONER (Han et al., EMNLP 2025) found that LLM judges of legal
 reasoning are "fragile and inconsistent" and assign high scores
 to rhetorically persuasive but logically invalid arguments.
 Our rubric design directly addresses this finding in three ways.
@@ -431,10 +438,12 @@ randomly selected cross-cluster pairs from the same corpus.
 
 ---
 
-## 6. Preliminary Results
+## 6. Proposed Experimental Protocol (No Results Reported)
 
-*[Note: Full experimental results to be completed. This section
-presents the experimental design and expected output format.]*
+*As a position paper, this article does not report measurements.
+This section specifies the experimental design — datasets, metrics,
+expected output formats, and falsifiable predictions — under which
+ESHTR can be tested by us or by independent researchers.*
 
 **Expected outputs per phase:**
 
@@ -544,7 +553,7 @@ to test it. We provided a structured evaluation rubric anchored
 to Brazilian CPC procedural criteria, with a dual-axis
 (validity vs. persuasiveness) assessment design that directly
 addresses the critique of LLM legal judges in COURTREASONER
-[CITE EMNLP 2025], converting a methodological liability into
+(Han et al., EMNLP 2025), converting a methodological liability into
 a diagnostic signal.
 
 ESHTR is a general method applicable to any heterogeneous legal
@@ -556,30 +565,32 @@ with semantic heterogeneity at scale.
 
 ## References
 
-*[To be completed with full bibliographic entries.]*
+*Bibliographic entries below are listed with the metadata available to
+the authors. Entries flagged with a † should be verified against the
+canonical source before submission, as their arXiv IDs or venue
+details were not independently confirmed at the time of writing.*
 
 - Zheng, L. et al. (2023). Judging LLM-as-a-Judge with MT-Bench
   and Chatbot Arena. *NeurIPS 2023*.
 - Verga, P. et al. (2024). Replacing Judges with Juries:
   Evaluating LLM Generations with a Panel of Diverse Models.
   *NAACL 2024*.
-- [Knockout Assessment paper] (2025). Knockout LLM Assessment:
-  Using Large Language Models for Evaluations through Iterative
-  Pairwise Comparisons. *arXiv 2506.03785*.
-- [Non-transitivity paper] (2025). Investigating Non-Transitivity
-  in LLM-as-a-Judge. *arXiv 2502.14074*.
-- [COURTREASONER] Han et al. (2025). COURTREASONER. *EMNLP 2025*.
+- † Knockout LLM Assessment: Using Large Language Models for
+  Evaluations through Iterative Pairwise Comparisons. *arXiv
+  2506.03785* (2025).
+- † Investigating Non-Transitivity in LLM-as-a-Judge. *arXiv
+  2502.14074* (2025).
+- † Han et al. COURTREASONER. *EMNLP 2025*.
 - Guha, N. et al. (2023). LegalBench: A Collaboratively Built
   Benchmark for Measuring Legal Reasoning in Large Language
   Models. *NeurIPS 2023*.
-- Bowers, J. and Ludäscher, B. (2025). Towards Trustworthy AI
+- † Bowers, J. and Ludäscher, B. (2025). Towards Trustworthy AI
   Results. *AI4EVIR@JURIX 2025*. CEUR Vol-4157.
-- Raju, S. et al. (2024). [Stratified sampling for LLM
-  evaluation]. *arXiv 2024*.
-- Neveditsin, N. et al. (2025). Scalable Parameter-Light Spectral
+- † Raju, S. et al. (2024). Stratified sampling for LLM
+  evaluation. *arXiv preprint*.
+- † Neveditsin, N. et al. (2025). Scalable Parameter-Light Spectral
   Method for Clustering Short Text Embeddings. *arXiv 2511.19350*.
-- [Judge-Aware Ranking] (2025). A Judge-Aware Ranking Framework
-  for Evaluating Large Language Models without Ground Truth.
-  *arXiv 2601.21817*.
-- [UDA] (2025). UDA: Unsupervised Debiasing Alignment for
-  Pair-wise LLM-as-a-Judge. *AAAI 2026*.
+- † A Judge-Aware Ranking Framework for Evaluating Large Language
+  Models without Ground Truth. *arXiv 2601.21817* (2025).
+- † UDA: Unsupervised Debiasing Alignment for Pair-wise
+  LLM-as-a-Judge. *AAAI 2026*.
