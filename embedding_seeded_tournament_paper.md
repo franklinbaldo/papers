@@ -138,12 +138,13 @@ human agreement better than any single LLM judge, even when
 individual panel members are weaker models. This motivates our
 use of a multi-model panel rather than a single judge.
 
-**Tournament methods.** Knockout Assessment (arXiv:2506.03785, 2025)
+**Tournament methods.** Knockout Assessment (Sandan et al., 2025)
 adapts iterative pairwise tournament comparison to LLM evaluation,
 addressing the limitation of baseline-fixed pairwise approaches.
 Bradley-Terry models have been applied to score models from
-tournament outcomes. Our method builds on these but adds the
-embedding-seeded stratification phase as a pre-tournament step.
+tournament outcomes (Xu et al., 2025). Our method builds on these
+but adds the embedding-seeded stratification phase as a pre-tournament
+step.
 
 **Bias and reliability.** Known biases in LLM judges include
 positional bias (favoring the first-presented response),
@@ -154,7 +155,7 @@ legal reasoning are "fragile and inconsistent" and can be misled
 by rhetorically persuasive but logically invalid arguments — a
 finding we engage directly in Section 5.3.
 
-**Non-transitivity.** Recent work (arXiv:2502.14074, 2025) documents
+**Non-transitivity.** Recent work (Xu et al., 2025) documents
 that LLMs exhibit both hard and soft non-transitive preferences in
 pairwise comparison, with incidence correlated with positional bias.
 This finding motivates ESHTR's stratification approach.
@@ -254,7 +255,7 @@ ensures they compete in different groups until Phase 3.
 
 Within each cluster, decisions are ranked by a **heterogeneous
 LLM judge panel** using iterative pairwise tournament comparison
-(adapted from Knockout Assessment, arXiv:2506.03785, 2025).
+(adapted from Knockout Assessment, Sandan et al., 2025).
 
 **Panel composition.** Following Verga et al. (2024), the panel
 comprises 3-5 frontier LLMs from different model families
@@ -565,32 +566,42 @@ with semantic heterogeneity at scale.
 
 ## References
 
-*Bibliographic entries below are listed with the metadata available to
-the authors. Entries flagged with a † should be verified against the
-canonical source before submission, as their arXiv IDs or venue
-details were not independently confirmed at the time of writing.*
+*Entries without † were confirmed against the canonical source during
+revision. Entries marked with † require verification before submission.*
 
 - Zheng, L. et al. (2023). Judging LLM-as-a-Judge with MT-Bench
   and Chatbot Arena. *NeurIPS 2023*.
 - Verga, P. et al. (2024). Replacing Judges with Juries:
   Evaluating LLM Generations with a Panel of Diverse Models.
   *NAACL 2024*.
-- † Knockout LLM Assessment: Using Large Language Models for
-  Evaluations through Iterative Pairwise Comparisons. *arXiv
-  2506.03785* (2025).
-- † Investigating Non-Transitivity in LLM-as-a-Judge. *arXiv
-  2502.14074* (2025).
-- † Han et al. COURTREASONER. *EMNLP 2025*.
+- Sandan, I. B., Dinh, T. A., and Niehues, J. (2025). Knockout
+  LLM Assessment: Using Large Language Models for Evaluations
+  through Iterative Pairwise Comparisons. In *Proceedings of the
+  Generation, Evaluation, and Metrics (GEM) Workshop at ACL 2025*.
+  arXiv:2506.03785.
+- Xu, Y., Ruis, L., Rocktäschel, T., and Kirk, R. (2025).
+  Investigating Non-Transitivity in LLM-as-a-Judge. In
+  *Proceedings of the 42nd International Conference on Machine
+  Learning (ICML 2025)*. Spotlight. arXiv:2502.14074.
+- Han, S. S., Takashima, Y., Shen, S. Z., Liu, C., Liu, Y.,
+  Thuo, R. K., Knowlton, S., Piskac, R., Shapiro, S. J., and
+  Cohan, A. (2025). CourtReasoner: Can LLM Agents Reason Like
+  Judges? In *Proceedings of EMNLP 2025*.
 - Guha, N. et al. (2023). LegalBench: A Collaboratively Built
   Benchmark for Measuring Legal Reasoning in Large Language
   Models. *NeurIPS 2023*.
 - † Bowers, J. and Ludäscher, B. (2025). Towards Trustworthy AI
   Results. *AI4EVIR@JURIX 2025*. CEUR Vol-4157.
 - † Raju, S. et al. (2024). Stratified sampling for LLM
-  evaluation. *arXiv preprint*.
-- † Neveditsin, N. et al. (2025). Scalable Parameter-Light Spectral
-  Method for Clustering Short Text Embeddings. *arXiv 2511.19350*.
-- † A Judge-Aware Ranking Framework for Evaluating Large Language
-  Models without Ground Truth. *arXiv 2601.21817* (2025).
-- † UDA: Unsupervised Debiasing Alignment for Pair-wise
-  LLM-as-a-Judge. *AAAI 2026*.
+  evaluation. *arXiv preprint*. [Title and full authors not confirmed.]
+- Neveditsin, N., Lingras, P., and Mago, V. (2025). Scalable
+  Parameter-Light Spectral Method for Clustering Short Text
+  Embeddings with a Cohesion-Based Evaluation Metric.
+  arXiv:2511.19350.
+- Xu, M., Tan, X., Wu, J., and Zhou, D. (2026). A Judge-Aware
+  Ranking Framework for Evaluating Large Language Models without
+  Ground Truth. arXiv:2601.21817.
+- Zhang, Y., Wang, C., Wu, L., Yu, W., Wang, Y., Bao, G., and
+  Tang, J. (2025). UDA: Unsupervised Debiasing Alignment for
+  Pair-wise LLM-as-a-Judge. arXiv:2508.09724. [Conference venue
+  not confirmed; listed as arXiv preprint.]
