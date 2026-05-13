@@ -17,138 +17,171 @@ compared items" (Section 4).
 The method's practical justification rests on this hypothesis. If semantic
 proximity — as measured by embedding cosine similarity — predicts LLM judge
 reliability, then clustering by embeddings produces groups within which
-judges are reliably coherent, and the non-transitivity problem can be
-managed by confining dangerous cross-domain comparisons to Phase 3, where
-a modified criterion handles them.
+judges are reliably coherent, and the non-transitivity problem can be managed
+by confining dangerous cross-domain comparisons to Phase 3.
 
 ---
 
 ## 2. Faithful Reconstruction
 
-The strongest form of the argument is as follows.
+The strongest form of the argument now includes an independent cognitive
+mechanism that grounds the Semantic Proximity Hypothesis — the contingent
+frame construction account from behavioral decision theory.
 
-LLM judges are unstable when comparing semantically distant items because
-they must construct incompatible implicit evaluative frames. The criteria
-that make one decision better than another depend on the domain, the
-procedural context, and the substantive standards applicable. When two
-compared decisions share semantic context — same subject matter, same
-procedural stage — the judge can draw on a stable set of criteria: it
-knows what "good reasoning" looks like in this domain. When the decisions
-are semantically distant (a criminal ruling vs. a tax ruling), the judge
-must reconcile evaluative criteria that differ not in degree but in kind,
-generating the positional bias and preference inconsistency that produce
-non-transitive cycles.
+When an LLM judge compares two items A and B, it constructs an implicit
+evaluative frame: a weighting of which features are relevant and how much
+each matters. Tversky (1969) showed that preference intransitivity arises
+not from random error but from systematic criterion switches across pairs:
+an agent that applies criterion d₁ to adjudicate A vs. B, d₂ for B vs. C,
+and d₃ for A vs. C can generate cycles where each individual judgment is
+locally correct. Tversky (1977) further showed that which features are
+most salient in a comparison depends on the specific pair, not only on the
+feature inventory shared by the items.
 
-Embedding-based clustering captures exactly this semantic context: decisions
-embedded nearby in vector space share topic, vocabulary, procedural stage,
-and substantive domain. By restricting Phase 2 comparisons to within-cluster
-pairs, ESHTR ensures that the implicit evaluative frame remains stable across
-comparisons, reducing non-transitivity.
+Applied to LLM judges: an LLM that has learned domain-specific criterion
+mappings from legal corpora will weight evaluative features differently
+depending on the pair it is comparing. Within a semantic cluster — say,
+administrative disciplinary decisions — items share the same subject matter,
+vocabulary, and doctrinal framework, so the features that most discriminate
+any given pair are drawn from the same constrained criterion set. The
+comparison frame is stable, and cycles are less likely. Across clusters —
+comparing a criminal sentencing decision to a tax injunction ruling — the
+discriminating features shift between pairs, generating cycles even when
+each individual judgment is accurate under its own frame.
 
-The Semantic Proximity Hypothesis thus has a principled theoretical basis
-even before empirical validation: it follows, on this account, from the
-structure of how LLM judges construct in-context evaluative criteria.
+This mechanism is additive to, not a replacement for, ESHTR's bias-amplification
+account (Section 4): cross-cluster comparisons both destabilize the criterion
+frame and amplify positional and verbosity biases that the judge cannot
+override when no stable criteria anchor the evaluation.
+
+Under this account, embedding-based clustering is motivated because embedding
+proximity tracks the semantic context that determines which criterion set an
+LLM judge will activate. Clustering by semantic proximity is clustering by
+implicit criterion set, and clusters with stable criterion sets produce
+reliable, transitive rankings.
 
 ---
 
 ## 3. The Attack
 
-The argument depends on an identification that does not hold in general:
-**semantic distance as measured by text embeddings is not the same as
-evaluative frame distance as experienced by an LLM judge**. The method
-conflates two distinct notions of proximity, and the conflation is
-systematic rather than incidental.
+The argument depends on an identification that the cognitive mechanism, once
+accepted, reveals cannot hold in general: **within-cluster criterion
+stability is not derivable from pairwise embedding proximity**, and the
+operationalization gap between what embeddings measure and what the mechanism
+requires is systematic and has a specific structure.
 
-### 3.1 What Embeddings Measure
+### 3.1 What the Mechanism Actually Requires
 
-Dense text embeddings — multilingual-e5-large-instruct, the model proposed
-in Section 5.2 — are trained to place semantically similar texts nearby in
-vector space, where "semantically similar" is operationalized through
-contrastive or next-sentence objectives on natural language. These models
-cluster documents by topical similarity: two criminal sentencing decisions
-will be embedded nearby because they share vocabulary, cited statutes, and
-argumentation patterns. Two tax law rulings will also cluster. The embedding
-distance between these two clusters is large.
+The contingent frame construction account (Tversky 1969, 1977; as developed
+in the supportive paper `yesindeed/frame-stability-sph.md`) identifies a
+precise structural unit for non-transitivity risk: the **triple** {A, B, C}.
+A cycle arises in a triple when the pair (A, B) is most discriminated on
+criterion set S₁, the pair (B, C) on S₂, and the pair (A, C) on S₃, with
+S₁, S₂, S₃ not all equal. The mechanism is triple-level, not pair-level.
 
-Embedding similarity is a reliable proxy for topical similarity. It is not,
-without further argument, a reliable proxy for the stability of an LLM
-judge's evaluative frame when comparing two documents within a topic.
+ESHTR's Phase 1 clustering controls pairwise semantic distance. The resulting
+clusters group items that are similar to each other in embedding space. But
+grouping by pairwise similarity does not guarantee triple criterion-consistency.
+A set of three items {A, B, C} can all fall within a single high-density
+cluster — mutually similar in embedding space — while still forming a
+criterion-switching triple if A and B are most differentiated on one quality
+dimension, B and C on a second, and A and C on a third.
 
-### 3.2 Why Evaluative Frame Stability Is a Different Property
+The mechanism-operationalization gap is therefore not merely that embeddings
+track topic proximity rather than evaluative frame stability (the point of
+the original attack). It is more specific: *even if embedding proximity
+perfectly predicted pairwise frame affinity, that would not prevent
+criterion-switching cycles arising from within-cluster variation across
+quality dimensions*. The mechanism demands triple-level criterion homogeneity,
+and pairwise clustering cannot deliver it.
 
-Within a semantically coherent embedding cluster — say, a criminal law
-cluster — a judicial corpus contains decisions that differ along dimensions
-that matter for LLM judge evaluative stability:
+### 3.2 The Within-Cluster Stability Claim Is Asserted, Not Derived
 
-- **Procedural stage**: First-instance sentencing, appellate revision,
-  post-conviction relief, and habeas corpus all appear in "criminal law"
-  clusters. The evaluative standards for first-instance sentencing
-  (proportionality of the custodial measure, weighing of aggravating and
-  mitigating factors) differ substantially from those for appellate habeas
-  review (existence of a constrangimento ilegal, preservation of rights
-  during arrest). An LLM judge comparing a first-instance sentencing
-  decision to a habeas ruling is evaluating across different doctrinal
-  frameworks — even though both decisions land in the same cluster.
+The supportive paper (`yesindeed/frame-stability-sph.md`, Section 3.2)
+argues:
 
-- **Quality-level distance**: A cluster champion may be a decision that
-  applies a detailed proportionality analysis across twelve mitigating
-  factors. Its intra-cluster adversary may be a two-paragraph dispositif
-  citing a generic formula. The evaluative criteria needed to distinguish
-  them (criterion C2: enfrentamento de argumentos; criterion C3: ausência de
-  motivos genéricos) are straightforward. But comparing a top-10 decision
-  in criminal sentencing to a top-10 decision in criminal evidence admission
-  may require reconciling doctrinal frameworks that share vocabulary
-  ("fundamentação", "ratio decidendi") while applying incommensurable
-  substantive standards.
+> "Within a semantic cluster, items share subject matter, structural
+> conventions, vocabulary, and domain-specific reasoning standards. The
+> features that meaningfully discriminate one item from another within the
+> cluster are drawn from a constrained, shared repertoire... the comparison
+> frame is stable within the cluster."
 
-- **Domain-internal heterogeneity vs. domain-external homogeneity**:
-  Rigorous statutory interpretation — careful textual analysis, systematic
-  engagement with legislative history, coherent precedent application —
-  appears across criminal law, tax law, administrative law, and
-  constitutional law. Two decisions that exemplify identical interpretive
-  methodologies may cluster in different embedding domains but require the
-  same evaluative frame. Conversely, two decisions that cluster together
-  (both "labor law") may require different evaluative frameworks depending
-  on whether they address collective bargaining procedures or individual
-  termination rights.
+This argument moves from *shared feature repertoire* to *stable criterion
+weighting across pairs*. The Tversky mechanism does not license this move.
+Tversky's finding is that which features from the shared repertoire are most
+*salient* — most discriminating — depends on the specific pair, not on the
+repertoire. A shared repertoire with multiple quality dimensions is a
+necessary condition for within-cluster stability, not a sufficient one.
 
-The Semantic Proximity Hypothesis predicts that embedding-proximate
-comparisons exhibit lower non-transitivity. The mismatch identified here
-suggests the hypothesis may hold as a rough correlation (topical similarity
-is a noisy proxy for evaluative stability) while being insufficient as a
-*design principle* for clustering. The noise is systematic rather than
-random: the cases where embedding proximity and evaluative stability come
-apart are not exceptional edge cases but structural features of legal
-corpora.
+Consider a cluster of administrative disciplinary decisions. Items in this
+cluster share subject matter (administrative sanctions), vocabulary, and
+doctrinal standards. Their shared feature repertoire includes:
+thoroughness of fact-finding, coherence of proportionality reasoning,
+and adequacy of procedural safeguard analysis. Decision A is excellent on
+fact-finding but adequate on proportionality; decision B is adequate on
+fact-finding but excellent on proportionality; decision C is adequate on
+fact-finding but excellent on procedural safeguards.
 
-### 3.3 The Hypothesis Is Introduced Without the Evidence It Needs
+The triple {A, B, C} generates criterion-switching under the Tversky
+mechanism: A vs. B is discriminated primarily on fact-finding (A wins);
+B vs. C is discriminated primarily on procedural safeguards (B or C);
+A vs. C is discriminated on a combination where C's procedural strength
+may dominate. The criterion frame shifts across the three pairings even
+though all three decisions are in the same embedding cluster. ESHTR's
+Phase 2 Bradley-Terry ranking is designed precisely to resolve exactly
+this kind of within-cluster comparison — but if the Bradley-Terry scores
+are themselves determined by criterion-switching, the scores reflect which
+criterion is most activated by the cluster's distribution of pairings,
+not a stable underlying quality ordering.
 
-Section 4 of the paper offers an "informal argument" that evaluative frame
-instability is the mechanism connecting semantic distance to non-transitivity.
-This argument is plausible but circular in the context of ESHTR's design. The
-paper first defines evaluative frame instability as the mechanism (an LLM
-constructing different implicit criteria for semantically distant items), then
-uses embedding-based clustering as the operationalization of "same semantic
-context," then cites the mechanism as the justification for the
-operationalization.
+This is not an exotic edge case. Legal corpora within any subject-matter
+cluster are heterogeneous along multiple quality dimensions simultaneously.
+The distribution of decisions along each dimension does not covary perfectly
+with embedding distance. The supportive paper's stability claim would need
+empirical support from the same ESHTR experimental protocol it is meant to
+support — making the argument circular in the same way as the original.
 
-The circularity matters because it conceals a gap: the informal argument does
-not establish that the embedding models used (multilingual-e5-large-instruct
-or its fine-tuned variants) track the distinctions relevant for LLM judge
-stability. The paper states that "embeddings capture semantic similarity
-across topical clusters... procedural stages... and subject matter" (Section
-3.1). But the claim that they also track evaluative frame stability — the
-property that actually matters for the Semantic Proximity Hypothesis — is
-asserted, not argued.
+### 3.3 The Mechanism Identifies a Better Operationalization
 
-The falsifiability condition stated in Section 4 is *κ_intracluster >
-κ_crosscorpus*. This test, if run, would reveal whether embedding-based
-clusters produce higher judge agreement. But it would not, even if
-confirmed, establish that the mechanism is evaluative frame stability rather
-than a trivially confounded variable (e.g., clusters tend to contain
-decisions of similar length, and verbosity bias interacts with length).
+The Tversky mechanism, if accepted as the correct explanation for SPH,
+implies that the relevant clustering unit is *criterion-set homogeneity
+within triples*, not pairwise embedding proximity. An operationalization
+aligned with the mechanism would cluster items such that any triple within
+a cluster activates approximately the same criterion set across all three
+pairings. This is a stronger property than pairwise embedding similarity,
+and it requires knowing (or estimating) which quality dimensions are most
+discriminating for which pairs — information not available from the
+embedding model alone.
 
-### 3.4 Phase 3 Does Not Solve the Residual Problem; It Replaces the Criterion
+The supportive paper's contribution is to identify the mechanism clearly.
+But a mechanism, once identified, also identifies what the operationalization
+must track. Embedding proximity is a noisy proxy for pairwise semantic
+context; pairwise semantic context is a noisy proxy for the pair's most
+discriminating criterion set; and criterion-set consistency within pairs
+is a necessary but not sufficient condition for criterion-set stability
+across triples. The mechanism paper's grounding, accepted in full, reveals
+that ESHTR's clustering addresses the first link in this chain while the
+non-transitivity risk lives at the third link.
+
+### 3.4 The Hypothesis Is Introduced Without the Evidence It Needs
+
+Section 4 of ESHTR offers an "informal argument" and the mechanism paper
+provides independent grounding. But neither establishes the critical
+empirical claim: that the embedding clusters produced by
+multilingual-e5-large-instruct (or fine-tuned variants) are sufficiently
+criterion-homogeneous within triples to materially reduce non-transitivity.
+
+The mechanism paper explicitly acknowledges that it provides plausibility,
+not proof. The mechanism could be correct — criterion switching is the
+source of non-transitivity — while the embedding-clustering operationalization
+fails to control it adequately at the triple level. Whether the proxy is
+good enough is an empirical question, and it requires tests beyond the
+aggregate κ comparison specified in Section 5.5 of ESHTR. Specifically:
+the ESHTR experiment would need to measure non-transitivity incidence *within
+clusters*, not only compare within-cluster κ to cross-corpus κ, to reveal
+whether residual within-cluster cycles are systematic.
+
+### 3.5 Phase 3 Does Not Solve the Residual Problem; It Replaces the Criterion
 
 Even granting the Phase 2 argument, Phase 3 explicitly compares cluster
 champions across semantically distant clusters — the criminal law champion
@@ -156,89 +189,87 @@ against the tax law champion, the RPPS pension champion against the
 administrative disciplinary champion. This is exactly the cross-domain
 comparison that motivated the design of Phase 2.
 
-Section 3.3 addresses this by adding an evaluation criterion for Phase 3:
+Section 3.3 of ESHTR addresses this by adding a criterion for Phase 3:
 "whether the reasoning quality evident in the decision would transfer to
-adjacent subject matters" (contextual generalizability). This addition does
-not solve the cross-cluster problem; it substitutes a different evaluation
+adjacent subject matters" (contextual generalizability). This does not
+solve the cross-cluster problem; it substitutes a different evaluation
 objective.
 
 Phase 2 ranks decisions by criteria C1–C5, anchored to domain-specific
-standards. These criteria measure whether a decision correctly applies the
-ratio of a binding precedent to the case at hand (C1, C4), addresses
-material arguments (C2), avoids generic boilerplate (C3), and produces a
-complete dispositif (C5). These are domain-sensitive: what counts as a
-"determining ground" in criminal sentencing differs from what counts as one
-in tax law.
+procedural standards (art. 489, §1º CPC; art. 927 CPC). These criteria
+are domain-sensitive: what counts as "correct application of a binding
+precedent" in criminal sentencing differs from what counts in tax law.
+Phase 3 ranks cluster champions by contextual generalizability — a property
+that C1–C5 does not measure and that is not equivalent to quality under
+domain-specific standards.
 
-Phase 3 ranks cluster champions by "contextual generalizability" — a
-property that C1–C5 does not measure and that is not equivalent to quality
-under domain-specific standards. A criminal sentencing decision that is the
-highest-quality decision in its cluster under C1–C5 may score poorly on
-"contextual generalizability" because criminal sentencing employs technical
-statutory formulas specific to the Código Penal that do not transfer to
-adjacent domains. A moderately-ranked decision in a tax law cluster may
-score highly on "contextual generalizability" because it applies a
-domain-agnostic interpretive method whose logical structure is transparent.
-
-The global ranking produced by combining Phase 2 cluster rankings with Phase 3
-rankings is therefore not a single unified quality ordering. It is a composite
-of two incommensurable rankings: Phase 2 ranks on C1–C5, Phase 3 ranks on
-contextual generalizability. A decision ranked second in its cluster under
-C1–C5 (eliminated in Phase 2, absent from Phase 3) may be globally
-superior under any unified standard that the method could have applied —
-but it is invisible in the final ranking.
+The global ranking produced by combining Phase 2 cluster rankings with
+Phase 3 is therefore not a unified quality ordering. A decision ranked
+second in its cluster under C1–C5 (eliminated in Phase 2, absent from
+Phase 3) may be globally superior under any unified quality standard the
+method could have applied — but it is invisible in the final ranking.
 
 The paper claims (Abstract) that Phase 3 "surfaces globally exceptional
-decisions." But "globally exceptional under C1–C5" and "highest-scoring on
-contextual generalizability" are categorically different properties. The
-champion identified by Phase 3 is the decision that most generalizes across
-subject matters — not necessarily the decision of highest quality in the
-Brazilian CPC sense that motivates the rubric.
+decisions." But "globally exceptional under C1–C5" and "highest-scoring
+on contextual generalizability" are categorically different properties.
+The champion identified by Phase 3 is the decision that most generalizes
+across subject matters — not necessarily the decision of highest quality
+under the Brazilian CPC standards that motivate the rubric.
 
-### 3.5 The Added Criterion Is Subject to the Same Non-Transitivity Concern
+### 3.6 The Added Criterion Is Subject to the Same Non-Transitivity Concern
 
-Section 3.3 asks LLM judges to assess "whether the reasoning quality
-evident in the decision would transfer to adjacent subject matters." This
-cross-domain evaluation is exactly the kind of judgment the paper argues
-LLM judges perform poorly: one that requires bridging different contextual
-frames and applying criteria that are not anchored to a specific domain.
-The mechanism invoked in Section 4 to explain non-transitivity
-("bridging different contextual frames, introducing instability") applies
-directly to contextual generalizability assessments.
+Section 3.3 of ESHTR asks LLM judges to assess "whether the reasoning
+quality evident in the decision would transfer to adjacent subject matters."
+Under the mechanism account, this cross-domain evaluation is exactly the
+kind of judgment most susceptible to criterion-switching: the LLM must
+bridge the criterion sets of different domains to evaluate transferability,
+which is precisely the operation the mechanism attributes as the source of
+cross-cluster non-transitivity.
 
-Phase 3 therefore introduces a criterion that is likely to exhibit the very
-non-transitivity it was introduced to manage. The method has not eliminated
-the cross-domain evaluation problem; it has deferred it to a criterion that
-is less, not more, stable than C1–C5.
+Phase 3 therefore introduces a criterion that, under the mechanism paper's
+own account, is likely to exhibit the very non-transitivity it was introduced
+to manage. The method has not eliminated the cross-domain evaluation problem;
+it has deferred it to a criterion that is structurally more, not less,
+susceptible to frame instability.
 
 ---
 
 ## 4. Anticipated Reply and Why It Does Not Suffice
 
-The anticipated reply is: the Phase 3 "contextual generalizability" criterion
-is appropriate precisely because direct application of C1–C5 is unreliable
-at the cross-cluster stage. The Phase 2 champions have already been validated
-on C1–C5; Phase 3 asks which of those champions has reasoning that rises above
-domain-specific content. This is consistent with identifying globally
-exceptional decisions.
+The most direct reply now available to the author is: the mechanism paper's
+sub-predictions (structured cycles, directional predictability, asymmetric
+cluster-pair gradient) provide a more demanding test than the aggregate κ
+comparison. If the ESHTR experiment shows that non-transitive cycles are
+concentrated in triples with maximal pairwise semantic distance asymmetry,
+and that the asymmetric gradient holds across cluster pairs, this would
+confirm that the operationalization is tracking the mechanism's relevant
+property — even if imperfectly.
 
-This reply does not suffice for two reasons.
+This reply does not suffice for three reasons.
 
-First, it confirms that Phase 3 operates on a different criterion — which
-accepts that the global ranking combines incommensurable local rankings. If
-"globally exceptional" is defined by contextual generalizability rather than
-by C1–C5, then the method should say so explicitly. The paper's stated goal
-is quality evaluation of judicial decisions under Brazilian CPC standards;
-contextual generalizability is at best a correlate of quality, not a measure
-of it.
+First, the sub-predictions distinguish between within-cluster and
+cross-cluster non-transitivity at the aggregate level, but they cannot
+distinguish between *within-cluster criterion-switching* and *genuine
+within-cluster frame stability*. If within-cluster κ is higher than
+cross-corpus κ, this is consistent with (a) within-cluster items sharing
+a single dominant criterion (the proxy is working) and (b) within-cluster
+items generating moderate criterion-switching while cross-cluster items
+generate severe switching (the proxy reduces the problem without solving it).
+The experiment does not separately measure within-cluster triple cycle
+incidence, which is the quantity the mechanism attack targets.
 
-Second, the reply does not address the specific mechanism by which Phase 3's
-criterion is expected to be more stable than C1–C5 under cross-cluster
-comparison. Given that the paper's own Section 4 attributes non-transitivity
-to the need to bridge incompatible contextual frames, a criterion that
-explicitly requires bridging ("would transfer to adjacent subject matters")
-should be *more* susceptible to the instability, not less. The reply would
-need to explain why this expectation is wrong.
+Second, the asymmetric gradient prediction (closer cluster pairs show smaller
+κ degradation) addresses whether embedding distance is a good proxy for
+*cross-cluster* non-transitivity. It does not address whether within-cluster
+pairwise similarity prevents *triple-level* criterion inconsistency. These
+are separate tests.
+
+Third, even if the aggregate experimental results support the SPH in its
+rough form, the Phase 3 attack stands independently. The experiment is
+designed to test within-cluster vs. cross-corpus κ comparison (Section 5.5);
+it is not designed to test whether Phase 3's contextual generalizability
+criterion is more stable than C1–C5 in cross-cluster comparison, or whether
+the global ranking it produces is coherent under any unified quality standard.
 
 ---
 
@@ -246,55 +277,63 @@ need to explain why this expectation is wrong.
 
 This attack targets ESHTR's stated ambition to produce a *global quality
 ranking* of judicial decisions and the use of embedding similarity as a
-design principle for evaluative stability. It does not challenge:
+design principle for evaluative stability. The attack has been sharpened,
+relative to its initial form, by accepting the contingent frame construction
+mechanism as the best available account of why the SPH should hold. The
+mechanism reveals that the operationalization gap is more specific than
+a general mismatch between topical proximity and frame stability: it
+concerns the triple-level criterion-consistency requirement that pairwise
+clustering cannot guarantee.
 
-- The value of Phase 2 intra-cluster ranking, which may be a useful tool
-  for domain-specific quality assessment even if the Semantic Proximity
-  Hypothesis is a rough approximation.
+This attack does not challenge:
+
+- The value of Phase 2 intra-cluster ranking as a domain-specific quality
+  assessment tool, even if residual within-cluster non-transitivity remains.
 - The structured rubric design (C1–C5) or the LLM panel methodology
-  (following Verga et al., 2024), which are independently motivated
-  contributions.
-- The calibration protocol (Section 5.4), which addresses a distinct concern.
+  (following Verga et al., 2024), which are independently motivated.
+- The calibration protocol (Section 5.4).
 - The paper's intellectual honesty in presenting ESHTR as a position paper
-  with falsifiable predictions, not a system with reported results.
-
-The attack is specifically directed at (a) the assumption that embedding
-distance tracks evaluative frame stability in a way sufficient to ground
-the clustering step and (b) the coherence of combining Phase 2 and Phase 3
-into a single unified global ranking when Phase 3 substitutes a different
-evaluation criterion.
+  with falsifiable predictions.
+- The mechanism account of non-transitivity itself. The Tversky (1969, 1977)
+  grounding is accepted as the best available explanation. The attack is
+  on the operationalization, not the mechanism.
 
 ---
 
 ## 6. Surrender Conditions
 
 The attack would not hold, or would hold only partially, under the following
-conditions:
+conditions.
 
-1. **Empirical confirmation of the clustering effect, with within-cluster
-   heterogeneity controls**: If experiments show that embedding-based
-   clustering produces significantly higher LLM judge agreement (Fleiss' κ)
-   and that this effect persists when controlling for within-cluster
-   procedural-stage heterogeneity and quality-level variance, the attack on
-   Phase 2's design rationale is substantially weakened. The paper's own
-   falsifiability condition (Section 4) is the appropriate test, but the
-   controls matter.
+1. **Triple-level within-cluster homogeneity confirmed**: If experiments show
+   that within-cluster triples produce cycle incidence statistically
+   indistinguishable from that expected under a single stable criterion,
+   the within-cluster attack falls. This requires measuring not only
+   aggregate κ but the distribution of non-transitive triples and testing
+   whether cycles are concentrated at within-cluster quality-dimension
+   boundaries (as the attack predicts) or uniformly distributed (as
+   stability would predict).
 
-2. **Criterion consistency across phases**: If the author can demonstrate
-   that "contextual generalizability" is a component of quality already
-   measured by C1–C5 — specifically, that a decision scoring highly on C1–C5
-   is necessarily one whose reasoning generalizes — the Phase 3 criterion
-   substitution does not change the evaluation objective, and the global
-   ranking is more coherent than the attack suggests. This requires a
-   normative argument connecting CPC procedural criteria to domain-agnostic
+2. **The mechanism paper's sub-predictions confirmed with structure**: If
+   the experiment shows (a) structured cycles concentrated in triples with
+   maximal inter-pair semantic distance, (b) directionally predictable
+   cycles across cluster pairs, and (c) an asymmetric gradient across
+   cluster-pair semantic distances — and if these patterns hold with
+   within-cluster residual non-transitivity controlled — the proxy is
+   functioning with sufficient precision for the design goal.
+
+3. **Criterion consistency across phases**: If the author can demonstrate
+   that contextual generalizability is a component of quality already
+   measured by C1–C5 — specifically, that high-C1–C5 decisions necessarily
+   have reasoning that generalizes — the Phase 3 criterion substitution
+   does not change the evaluation objective. This requires a normative
+   argument connecting CPC procedural criteria to domain-agnostic
    reasoning quality.
 
-3. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
-   within-cluster quality rankings (not a unified global ranking), the Phase
-   3 attack is moot. The method would be valuable for domain-specific quality
-   assessment. This requires retracting or substantially qualifying the claim
-   that Phase 3 "surfaces globally exceptional decisions," which appears in
-   the Abstract and Section 3.3.
+4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
+   within-cluster quality rankings (not a global ranking), the Phase 3
+   attack is moot. This requires retracting or qualifying the Abstract's
+   claim that Phase 3 "surfaces globally exceptional decisions."
 
 ---
 
@@ -303,6 +342,16 @@ conditions:
 Baldo, F. S. (2025). Embedding-Seeded Hierarchical Tournament Ranking:
 A Scalable Method for Evaluating Judicial Decision Quality with LLM Panels.
 `embedding_seeded_tournament_paper.md` (this repository).
+
+Frame Stability and the Semantic Proximity Hypothesis: A Cognitive Mechanism
+for Non-Transitivity in LLM Judges. `yesindeed/frame-stability-sph.md`
+(this repository).
+
+Tversky, A. (1969). Intransitivity of preferences. *Psychological Review*,
+76(1), 31–48.
+
+Tversky, A. (1977). Features of similarity. *Psychological Review*, 84(4),
+327–352.
 
 Verga, P. et al. (2024). Replacing Judges with Juries: Evaluating LLM
 Generations with a Panel of Diverse Models. *NAACL 2024*.
