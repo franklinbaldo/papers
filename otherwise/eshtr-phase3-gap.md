@@ -24,51 +24,47 @@ by confining dangerous cross-domain comparisons to Phase 3.
 
 ## 2. Faithful Reconstruction
 
-The strongest form of the argument now includes an independent cognitive
-mechanism that grounds the Semantic Proximity Hypothesis — the contingent
-frame construction account from behavioral decision theory.
+The strongest form of the argument now includes two independent theoretical
+supports for the Semantic Proximity Hypothesis and a coherent account of
+Phase 3's global ranking.
 
-When an LLM judge compares two items A and B, it constructs an implicit
-evaluative frame: a weighting of which features are relevant and how much
-each matters. Tversky (1969) showed that preference intransitivity arises
-not from random error but from systematic criterion switches across pairs:
-an agent that applies criterion d₁ to adjudicate A vs. B, d₂ for B vs. C,
-and d₃ for A vs. C can generate cycles where each individual judgment is
-locally correct. Tversky (1977) further showed that which features are
-most salient in a comparison depends on the specific pair, not only on the
-feature inventory shared by the items.
-
-Applied to LLM judges: an LLM that has learned domain-specific criterion
-mappings from legal corpora will weight evaluative features differently
-depending on the pair it is comparing. Within a semantic cluster — say,
-administrative disciplinary decisions — items share the same subject matter,
+**Support 1 — Cognitive mechanism.** When an LLM judge compares two items A
+and B, it constructs an implicit evaluative frame: a weighting of which
+features are relevant and how much each matters. Tversky (1969) showed that
+preference intransitivity arises not from random error but from systematic
+criterion switches across pairs: an agent that applies criterion d₁ to
+adjudicate A vs. B, d₂ for B vs. C, and d₃ for A vs. C can generate cycles
+where each individual judgment is locally correct. Applied to LLM judges:
+an LLM that has learned domain-specific criterion mappings from legal corpora
+will weight evaluative features differently depending on the pair it is
+comparing. Within a semantic cluster, items share the same subject matter,
 vocabulary, and doctrinal framework, so the features that most discriminate
-any given pair are drawn from the same constrained criterion set. The
-comparison frame is stable, and cycles are less likely. Across clusters —
-comparing a criminal sentencing decision to a tax injunction ruling — the
-discriminating features shift between pairs, generating cycles even when
-each individual judgment is accurate under its own frame.
+any given pair are drawn from the same constrained criterion set. Across
+clusters, the discriminating features shift between pairs, generating cycles
+even when each individual judgment is accurate under its own frame.
 
-This mechanism is additive to, not a replacement for, ESHTR's bias-amplification
-account (Section 4): cross-cluster comparisons both destabilize the criterion
-frame and amplify positional and verbosity biases that the judge cannot
-override when no stable criteria anchor the evaluation.
+**Support 2 — Phase 3 coherence through method-level unity.** The defense
+in `yesindeed/phase3-coherence-defense.md` argues that C1-C5 tests reasoning
+*method*, not domain-specific *content*. Identifying a precedent's ratio
+(C1), engaging material arguments (C2), avoiding generic boilerplate (C3),
+applying precedents with genuine principled understanding (C4), producing a
+coherent dispositif (C5) — these are domain-general cognitive operations,
+tested through domain-specific instantiations. A judge who reasons correctly
+in criminal law in the C1-C5 sense is a judge who would reason correctly in
+administrative law, because the method is the same. "Contextual
+generalizability" in Phase 3 is therefore not a substitute criterion; it is
+the same reasoning-method quality criterion applied at a higher level of
+abstraction. Phase 3 asks: among the cluster champions who each demonstrated
+domain-quality reasoning, whose method is most visible as quality across
+domain boundaries? Both phases answer to the same underlying property.
 
-Under this account, embedding-based clustering is motivated because embedding
-proximity tracks the semantic context that determines which criterion set an
-LLM judge will activate. Clustering by semantic proximity is clustering by
-implicit criterion set, and clusters with stable criterion sets produce
-reliable, transitive rankings.
+Under this account, the global ranking is coherent: every decision in the
+combined ranking is ordered by the same property (quality of reasoning
+method), at different levels of aggregation.
 
 ---
 
 ## 3. The Attack
-
-The argument depends on an identification that the cognitive mechanism, once
-accepted, reveals cannot hold in general: **within-cluster criterion
-stability is not derivable from pairwise embedding proximity**, and the
-operationalization gap between what embeddings measure and what the mechanism
-requires is systematic and has a specific structure.
 
 ### 3.1 What the Mechanism Actually Requires
 
@@ -181,95 +177,189 @@ the ESHTR experiment would need to measure non-transitivity incidence *within
 clusters*, not only compare within-cluster κ to cross-corpus κ, to reveal
 whether residual within-cluster cycles are systematic.
 
-### 3.5 Phase 3 Does Not Solve the Residual Problem; It Replaces the Criterion
+### 3.5 Phase 3 Is Not Rescued by the Method/Content Distinction
 
-Even granting the Phase 2 argument, Phase 3 explicitly compares cluster
-champions across semantically distant clusters — the criminal law champion
-against the tax law champion, the RPPS pension champion against the
-administrative disciplinary champion. This is exactly the cross-domain
-comparison that motivated the design of Phase 2.
+The Phase 3 defense in `yesindeed/phase3-coherence-defense.md` concedes the
+criterion-substitution framing but contests the premise: C1-C5 is not
+domain-specific; it tests reasoning method, which is inherently
+domain-general. Contextual generalizability is therefore not a substitute
+criterion but an application of the same criterion at a higher level of
+abstraction.
 
-Section 3.3 of ESHTR addresses this by adding a criterion for Phase 3:
-"whether the reasoning quality evident in the decision would transfer to
-adjacent subject matters" (contextual generalizability). This does not
-solve the cross-cluster problem; it substitutes a different evaluation
-objective.
+This argument is accepted in its conceptual form. C1-C5, read carefully, does
+target domain-general operations: isolating the ratio from obiter dicta (C1),
+engaging material arguments (C2), avoiding formulaic shortcuts (C3), applying
+precedents through genuine principled understanding (C4), producing a coherent
+dispositif (C5). These operations have a domain-general form.
 
-Phase 2 ranks decisions by criteria C1–C5, anchored to domain-specific
-procedural standards (art. 489, §1º CPC; art. 927 CPC). These criteria
-are domain-sensitive: what counts as "correct application of a binding
-precedent" in criminal sentencing differs from what counts in tax law.
-Phase 3 ranks cluster champions by contextual generalizability — a property
-that C1–C5 does not measure and that is not equivalent to quality under
-domain-specific standards.
+Accepting this, however, reveals a structural problem that the defense does
+not resolve: **the method/content unity argument is self-undermining as a
+rationale for Phase 3's design**.
 
-The global ranking produced by combining Phase 2 cluster rankings with
-Phase 3 is therefore not a unified quality ordering. A decision ranked
-second in its cluster under C1–C5 (eliminated in Phase 2, absent from
-Phase 3) may be globally superior under any unified quality standard the
-method could have applied — but it is invisible in the final ranking.
+If C1-C5 is already measuring a domain-general property — reasoning method
+quality, equally applicable in criminal, tax, and administrative law — then
+Phase 3 comparisons are, by the defense's own account, comparisons of items
+along the same underlying quality dimension that Phase 2 used. A cross-cluster
+comparison of criminal and tax law champions under C1-C5 is not crossing
+into incommensurable criteria; it is applying the same domain-general criterion
+to items from different clusters. But then the Phase 3 comparison is a
+*cross-cluster C1-C5 comparison* — precisely the operation that ESHTR's
+hierarchical design was constructed to avoid, on the grounds that cross-cluster
+LLM-panel evaluation produces non-transitive results (Section 4 of ESHTR).
 
-The paper claims (Abstract) that Phase 3 "surfaces globally exceptional
-decisions." But "globally exceptional under C1–C5" and "highest-scoring
-on contextual generalizability" are categorically different properties.
-The champion identified by Phase 3 is the decision that most generalizes
-across subject matters — not necessarily the decision of highest quality
-under the Brazilian CPC standards that motivate the rubric.
+The defense is therefore caught in a dilemma:
 
-### 3.6 The Added Criterion Is Subject to the Same Non-Transitivity Concern
+- **Horn 1:** If C1-C5 is domain-general (as the defense argues), then Phase 3
+  comparisons under "contextual generalizability" are conceptually equivalent
+  to cross-cluster C1-C5 comparisons. The design rationale for the hierarchical
+  structure collapses: if comparing cluster champions on domain-general
+  reasoning quality is the same operation as applying C1-C5 cross-cluster, the
+  two-phase architecture provides no protection against the non-transitivity
+  it was designed to prevent. Phase 3 is not a coherent next step; it repeats
+  the problem Phase 2 was supposed to solve.
 
-Section 3.3 of ESHTR asks LLM judges to assess "whether the reasoning
-quality evident in the decision would transfer to adjacent subject matters."
-Under the mechanism account, this cross-domain evaluation is exactly the
-kind of judgment most susceptible to criterion-switching: the LLM must
-bridge the criterion sets of different domains to evaluate transferability,
-which is precisely the operation the mechanism attributes as the source of
-cross-cluster non-transitivity.
+- **Horn 2:** If "contextual generalizability" is not simply C1-C5 applied
+  cross-cluster — if it asks something additional, something that makes
+  Phase 3 comparisons genuinely different from and more tractable than
+  direct cross-cluster C1-C5 comparison — then the criterion is not the same
+  as C1-C5. The criterion substitution stands.
 
-Phase 3 therefore introduces a criterion that, under the mechanism paper's
-own account, is likely to exhibit the very non-transitivity it was introduced
-to manage. The method has not eliminated the cross-domain evaluation problem;
-it has deferred it to a criterion that is structurally more, not less,
-susceptible to frame instability.
+The defense attempts to occupy a middle position: contextual generalizability
+is C1-C5 "at a higher level of abstraction," distinct enough to anchor the
+frame more stably than unconstrained cross-cluster comparison, but still the
+same criterion. This middle position is unstable. What additional analytical
+work does "at a higher level of abstraction" do? If it changes what the LLM
+judge evaluates, the criterion is different; if it does not change what the
+judge evaluates, the design offers no advantage over direct cross-cluster
+application.
+
+### 3.6 Method/Content Inseparability in LLM Implementation
+
+The defense rests on a conceptual analysis of what C1-C5 should measure. The
+question of what LLM judges *actually* track when instructed to apply C1-C5
+to domain-specific legal documents is distinct.
+
+Legal reasoning method is expressed through domain-specific doctrinal
+categories. Identifying the *fundamentos determinantes* (ratio) of a criminal
+sentencing precedent (C1) requires recognizing that, in criminal law, the
+determining grounds of a sentencing ratio include the constitutional
+proportionality framework, the application of mitigating and aggravating
+factor categories, and the doctrinal structure distinguishing *pena-base* from
+adjustments. These are not incidental to identifying the ratio; they are how
+the ratio is constituted in this domain. An LLM judge that applies C1 "at the
+level of reasoning method" either:
+
+(a) applies domain-specific legal knowledge to identify the ratio through its
+domain-specific doctrinal structure — in which case the C1 score is sensitive
+to domain content in precisely the way the defense denies, or
+
+(b) applies a domain-agnostic template ("which elements of the judgment are
+the ones that logically necessitate the outcome?") that may miss
+domain-specific elements that are, in fact, load-bearing for the ratio's
+correct identification.
+
+Option (a) means C1-C5 scores are domain-sensitive in practice, even if the
+criteria are domain-general in formulation. Option (b) means C1-C5 scores
+track a generic logical-coherence dimension that loses the doctrinal precision
+that makes the criteria useful as legal quality assessors in the first place.
+Neither option supports the defense's claim that C1-C5 is domain-general in
+its implementation without loss of validity.
+
+The defense acknowledges this in its failure conditions: "If the practical
+implementation of 'contextual generalizability' in the LLM judge prompt fails
+to separate content-transferability from reasoning-quality-transferability...
+the conceptual argument is sound but the implementation does not capture it."
+This framing treats the implementation gap as a peripheral prompt-engineering
+concern. It is not peripheral; it is the central empirical question for both
+Phase 2 and Phase 3 coherence.
+
+### 3.7 The Champion Population Argument Does Not Stabilize Phase 3
+
+The defense argues that Phase 3 comparators — cluster champions — are a more
+homogeneous population than arbitrary cross-domain pairs, because all
+champions share the property of domain-reasoning-quality excellence. This
+reduces the frame-instability mechanism's operation.
+
+Two problems.
+
+First, whether a decision is a "cluster champion" depends on Phase 2's
+tournament ranking, which the attack in Sections 3.1-3.2 argues may itself
+be driven by within-cluster criterion-switching. A tournament ordered by
+criterion-switching cycles does not reliably identify the highest-quality
+decision in each cluster; it identifies the decision that wins the specific
+pairings the tournament arranges. The champion may not be the highest-quality
+decision under any stable quality standard. The champion population's supposed
+homogeneity (all are domain-quality exemplars) cannot be guaranteed by a
+process that may itself be non-transitive.
+
+Second, even granting that champions genuinely represent domain-quality peaks,
+the question "whose reasoning quality transfers most across domains?" requires
+the LLM judge to bridge criterion sets across the compared champions' domains.
+A criminal law champion and a tax law champion both demonstrate domain
+excellence. Determining which champion's *method* is "more transferable" asks
+the judge to compare the generalizability of two different high-quality
+reasoning styles — precisely the kind of cross-domain bridging that the
+contingent frame-construction mechanism identifies as the source of
+non-transitivity. The champion population's shared excellence does not
+eliminate the criterion-switching problem; it concentrates it among the most
+sophisticated and domain-integrated examples of legal reasoning, where
+domain-general and domain-specific method are most tightly intertwined and
+therefore hardest to separate.
 
 ---
 
 ## 4. Anticipated Reply and Why It Does Not Suffice
 
-The most direct reply now available to the author is: the mechanism paper's
+The Phase 3 defense explicitly invokes my surrender condition §6(3):
+"If the author can demonstrate that 'contextual generalizability' is a
+component of quality already measured by C1–C5 — specifically, that a
+decision scoring highly on C1–C5 is necessarily one whose reasoning
+generalizes — the Phase 3 criterion substitution does not change the
+evaluation objective." The defense claims to meet this condition through
+the conceptual analysis of C1-C5 as a method criterion (§4.1-4.3 of the
+defense paper).
+
+**Why this does not meet the surrender condition.** My condition requires a
+*necessary* implication: a high-C1-C5 score necessarily implies
+generalizability. The defense provides a conceptual argument for why the
+implication should hold by the nature of what the criteria measure. But the
+necessary implication, if it held, would make Phase 3 redundant: if every
+high-C1-C5 decision is necessarily generalizable, and the goal is to identify
+the most generalizable champion, the method can simply select the
+highest-aggregate-C1-C5 decision across all clusters. That it cannot do this
+(without introducing cross-cluster non-transitivity) is the entire design
+rationale for the hierarchical structure. Surrender condition §6(3) cannot
+be met by a conceptual argument that, if valid, makes Phase 3 unnecessary.
+
+The condition can only be met by resolving the dilemma identified in Section
+3.5: demonstrating either that cross-cluster C1-C5 comparison does *not*
+exhibit the non-transitivity that motivated the hierarchical design (in which
+case Phase 3's problem disappears, along with Phase 2's rationale), or that
+"contextual generalizability" provides a genuinely different evaluation frame
+from C1-C5 that is more tractable for cross-cluster comparison — in which
+case the criterion is different, not identical. The defense does not address
+this dilemma.
+
+The most direct remaining reply available to the Phase 3 defense is to
+argue that "contextual generalizability" functions as a simplified, more
+tractable *implementation* of C1-C5 cross-cluster — not conceptually
+different, but operationally more stable because the explicit abstraction
+instruction reduces the salience of domain-specific content features that
+drive non-transitivity. This version of the argument requires empirical
+support: measurements showing that Phase 3 pairwise comparisons under the
+contextual-generalizability instruction exhibit lower non-transitivity rates
+than Phase 2 cross-cluster comparisons would under C1-C5. Without this
+evidence, the claim that the instruction stabilizes the frame is the same
+kind of informal argument the ESHTR paper makes for SPH itself — a
+plausible conjecture, not an established result.
+
+Separately, for the Phase 2 sections (3.1-3.4): the mechanism paper's
 sub-predictions (structured cycles, directional predictability, asymmetric
-cluster-pair gradient) provide a more demanding test than the aggregate κ
-comparison. If the ESHTR experiment shows that non-transitive cycles are
-concentrated in triples with maximal pairwise semantic distance asymmetry,
-and that the asymmetric gradient holds across cluster pairs, this would
-confirm that the operationalization is tracking the mechanism's relevant
-property — even if imperfectly.
-
-This reply does not suffice for three reasons.
-
-First, the sub-predictions distinguish between within-cluster and
-cross-cluster non-transitivity at the aggregate level, but they cannot
-distinguish between *within-cluster criterion-switching* and *genuine
-within-cluster frame stability*. If within-cluster κ is higher than
-cross-corpus κ, this is consistent with (a) within-cluster items sharing
-a single dominant criterion (the proxy is working) and (b) within-cluster
-items generating moderate criterion-switching while cross-cluster items
-generate severe switching (the proxy reduces the problem without solving it).
-The experiment does not separately measure within-cluster triple cycle
-incidence, which is the quantity the mechanism attack targets.
-
-Second, the asymmetric gradient prediction (closer cluster pairs show smaller
-κ degradation) addresses whether embedding distance is a good proxy for
-*cross-cluster* non-transitivity. It does not address whether within-cluster
-pairwise similarity prevents *triple-level* criterion inconsistency. These
-are separate tests.
-
-Third, even if the aggregate experimental results support the SPH in its
-rough form, the Phase 3 attack stands independently. The experiment is
-designed to test within-cluster vs. cross-corpus κ comparison (Section 5.5);
-it is not designed to test whether Phase 3's contextual generalizability
-criterion is more stable than C1–C5 in cross-cluster comparison, or whether
-the global ranking it produces is coherent under any unified quality standard.
+cluster-pair gradient) provide more diagnostic sharpness than aggregate κ.
+But these predictions address between-cluster non-transitivity patterns. They
+do not separately measure within-cluster triple cycle incidence, which is the
+quantity the Phase 2 attack targets. The experiment as designed does not
+generate the data needed to test the within-cluster component of this attack.
 
 ---
 
@@ -279,11 +369,10 @@ This attack targets ESHTR's stated ambition to produce a *global quality
 ranking* of judicial decisions and the use of embedding similarity as a
 design principle for evaluative stability. The attack has been sharpened,
 relative to its initial form, by accepting the contingent frame construction
-mechanism as the best available account of why the SPH should hold. The
-mechanism reveals that the operationalization gap is more specific than
-a general mismatch between topical proximity and frame stability: it
-concerns the triple-level criterion-consistency requirement that pairwise
-clustering cannot guarantee.
+mechanism as the best available account of why the SPH should hold, and by
+accepting the defense's conceptual claim that C1-C5 tests domain-general
+reasoning method — while showing that this acceptance generates a structural
+dilemma for Phase 3's design rationale rather than resolving it.
 
 This attack does not challenge:
 
@@ -297,6 +386,9 @@ This attack does not challenge:
 - The mechanism account of non-transitivity itself. The Tversky (1969, 1977)
   grounding is accepted as the best available explanation. The attack is
   on the operationalization, not the mechanism.
+- The conceptual claim that C1-C5 targets domain-general reasoning method.
+  This is accepted. The attack is that the acceptance generates a dilemma
+  for Phase 3 rather than resolving it.
 
 ---
 
@@ -322,13 +414,16 @@ conditions.
    within-cluster residual non-transitivity controlled — the proxy is
    functioning with sufficient precision for the design goal.
 
-3. **Criterion consistency across phases**: If the author can demonstrate
-   that contextual generalizability is a component of quality already
-   measured by C1–C5 — specifically, that high-C1–C5 decisions necessarily
-   have reasoning that generalizes — the Phase 3 criterion substitution
-   does not change the evaluation objective. This requires a normative
-   argument connecting CPC procedural criteria to domain-agnostic
-   reasoning quality.
+3. **The Phase 3 dilemma resolved by empirical evidence**: The criterion-
+   substitution attack holds unless evidence shows that Phase 3 comparisons
+   under the contextual-generalizability instruction exhibit substantially
+   lower non-transitivity rates than Phase 2 cross-cluster comparisons
+   under C1-C5, while correlating with Phase 2 quality rankings within each
+   cluster. If Phase 3 rankings correlate highly with Phase 2 cluster-quality
+   rankings and exhibit lower non-transitivity than cross-cluster C1-C5
+   application, this would support the interpretation that contextual
+   generalizability functions as a tractable implementation of cross-cluster
+   method-quality comparison. The conceptual analysis alone cannot settle this.
 
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3
@@ -342,6 +437,9 @@ conditions.
 Baldo, F. S. (2025). Embedding-Seeded Hierarchical Tournament Ranking:
 A Scalable Method for Evaluating Judicial Decision Quality with LLM Panels.
 `embedding_seeded_tournament_paper.md` (this repository).
+
+Phase 3 Is Not a Criterion Substitution: On the Coherence of ESHTR's Global
+Ranking. `yesindeed/phase3-coherence-defense.md` (this repository).
 
 Frame Stability and the Semantic Proximity Hypothesis: A Cognitive Mechanism
 for Non-Transitivity in LLM Judges. `yesindeed/frame-stability-sph.md`
