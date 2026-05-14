@@ -20,6 +20,10 @@ Position papers and working drafts.
 - `embedding_seeded_tournament_paper.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers (1).md` — STT (position paper)
 
+## Eixo alignment / agent-bounding
+
+- `paper_affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
+
 ## Eixo empírico
 
 - `paper5_empirical_evaluation.md` — avaliação empírica em corpus do TJRO
