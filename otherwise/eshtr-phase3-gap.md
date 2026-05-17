@@ -78,6 +78,29 @@ whether within-cluster non-transitive cycles are unstructured relative to
 quality-dimension asymmetry profiles (Prediction 4, from
 `yesindeed/frame-stability-sph.md`, §3.4).
 
+The supportive paper has since responded directly to the §§3.2–3.3 attacks
+(`yesindeed/frame-stability-sph.md`, updated 2026-05-16). Against the
+rubric-independence objection: C1-C5's logical independence establishes
+completeness of coverage, not statistical independence of scores; instruments
+with logically distinct subscales exhibit positive intercorrelations in expert
+populations due to an underlying analytical-care disposition. Against case-driven
+quality-dimension variation: criteria like C3 and C5 are properties of writing
+disposition rather than responses to party arguments; case-specific demands
+determine which dimensions receive the most elaborate treatment, not which
+dimensions score low. Against routinization: uniform C3 failure compresses C3
+variance toward a floor, making C3 the least discriminating feature in pairings
+between similarly formulaic items; the mechanism is a "localized effect" on the
+exceptional item that deviates from the pattern, not a cluster-wide mechanism.
+Against item-level persistent criterion activation: the Tversky (1977) account
+identifies the most discriminating feature as pair-specific — determined jointly
+by both items. Decision A's fact-finding excellence activates fact-finding as the
+most salient criterion in a pairing with B only when A's advantage on fact-finding
+exceeds B's counter-advantage on every other dimension; in a pairing with C who
+matches A on fact-finding, the most discriminating feature shifts. Persistent
+activation across all of A's pairings is an extreme condition requiring A to be a
+clear outlier on one dimension relative to the entire cluster, not the modal
+configuration in clusters with graded quality variation across multiple dimensions.
+
 **Support 3 — Phase 3 coherence through method-level unity.** The defense
 in `yesindeed/phase3-coherence-defense.md` now offers a multi-layered defense of
 Phase 3's coherence. The core factual move (§4.3): ESHTR §3.3 explicitly describes
@@ -158,22 +181,25 @@ dimensions. Positive correlations reduce the frequency of maximally asymmetric
 quality-dimension profiles — the profiles that generate criterion-switching
 triples.
 
-The rubric C1-C5 comprises five criteria defined in CPC art. 489, §1º and
-art. 927, §1º, each an independent named failure condition. Each criterion
-identifies a specific, distinct way a judicial decision can be inadequately
-reasoned, regardless of how it performs on the other four. The CPC treats
-these as separable failures because they are, in practice, separable: a
-decision can correctly identify a ratio (C1) while nonetheless addressing
-arguments with generic boilerplate (C3 failure), or engage material arguments
-carefully (C2) while applying the resulting precedent without genuine
-principled understanding (C4 failure). If quality dimensions were strongly
-positively correlated in the target corpus — if care on one dimension reliably
-predicted care on all others — a single criterion would function as an adequate
-proxy for overall quality, and the five-criterion rubric would add noise rather
-than signal. The rubric's independence structure and the legislative history
-of CPC art. 489, §1º both reflect an expectation that Brazilian appellate
-decisions do, in practice, fail on individual dimensions while performing
-adequately on others.
+The supportive paper correctly distinguishes logical independence from statistical
+independence: defining C1-C5 as five separable failure conditions in CPC art. 489,
+§1º establishes completeness of coverage, not a prediction about the joint
+distribution of dimension scores in the target corpus. This distinction is accepted.
+The adversarial argument does not rest on inferring statistical independence from
+logical structure. It is grounded in the legislative purpose: the CPC framework
+enumerated five independent failure conditions because Brazilian appellate decisions
+were observed to fail on specific dimensions while performing adequately on others —
+the criteria were designed to address independently occurring failures. A decision
+can correctly identify a ratio (C1) while addressing arguments with generic
+boilerplate (C3 failure); it can engage material arguments carefully (C2) while
+applying the resulting precedent without principled understanding of its scope (C4
+failure). The legislature's recognition that these failure modes occur separately
+in Brazilian appellate practice is evidence that cross-dimension divergence is
+present in the target population. Whether the specific corpus targeted by ESHTR
+exhibits sufficient divergence to generate criterion-switching triples is empirically
+open, but the legislative history establishes cross-dimension divergence as the
+expected prior for this corpus, not a theoretical assumption derived from logical
+structure.
 
 Beyond rubric design, appellate decisions have quality-dimension profiles
 shaped by what each case required, not only by the judge's overall analytical
@@ -190,7 +216,18 @@ Within a cluster of decisions on the same doctrinal question, the cases that
 reach the appellate level arrived there for different reasons — different
 dimensions of the shared question were contested in different cases — producing
 systematically different quality-dimension profiles across cluster members
-even among decisions authored by careful judges.
+even among decisions authored by careful judges. The supportive paper argues
+that a judge's writing disposition maintains adequate scores on under-exercised
+dimensions: C3 and C5, as properties of analytical writing care, are applied
+regardless of case demands. This holds for C3 and C5. It does not hold for C2 —
+the requirement to engage arguments capable of affecting the outcome — because C2
+performance at the scoring level is constrained by what material arguments were
+available. A case where the opposing party's most powerful argument was genuinely
+unmeritorious produces thin C2 performance in even the most careful judge, not
+from a writing-disposition deficit but because there was no strong material argument
+to engage. C2 variation within a doctrinal cluster reflects both judge-level
+engagement skill and the case-level quality of the adversarial record — a compound
+that judge-level writing disposition cannot smooth into cross-case uniformity.
 
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
@@ -254,60 +291,101 @@ This contrast is asserted as a structural property of within-cluster vs.
 cross-cluster comparison. It is not derived from the mechanism, and it is
 not obviously true.
 
-The Tversky mechanism identifies a route by which within-cluster
-criterion-switching is systematic at the item level: **persistent structural
-feature activation**. By the mechanism, the most discriminating feature of a
-specific pairing determines criterion salience. A decision with a distinctively
-prominent structural feature — an unusually extensive and carefully organized
-fact-finding analysis, a notably elaborate chain of precedent application
-spanning multiple analogous cases, a systematic engagement with opposing
-arguments across several paragraphs rather than a single dismissive sentence —
-is distinctive along one quality dimension relative to its cluster neighbors.
-This distinctiveness is the most discriminating aspect of any pairing involving
-this decision within the cluster, because it is what sets this decision apart
-from any opponent it is compared against. The Tversky mechanism then predicts
-that this feature activates its associated criterion as the primary evaluative
-dimension for every pairing in which this decision participates.
+The supportive paper's pair-specificity response is accepted on its own terms:
+the most discriminating feature of a pairing is determined jointly by both items,
+not by one item's absolute profile. Decision A's fact-finding excellence is the
+most salient criterion in a pairing with B only when A's fact-finding advantage
+over B exceeds B's counter-advantage over A on every other quality dimension. In
+a pairing with opponent C who closely matches A on fact-finding but is distinctly
+weaker on proportionality, the most discriminating feature shifts to proportionality.
+The prior claim that distinctive strength activates a criterion in *every* pairing
+was too strong; it is withdrawn.
 
-The activation is persistent because the structural feature is persistent: it
-is a property of the decision text that does not change across pairings. Decision
-A, which is notable for its thorough fact-finding, activates fact-finding
-thoroughness as the most salient criterion in every within-cluster pairing
-involving A — not from stochastic error in criterion selection, but because
-A's fact-finding quality is what most discriminates A from each of its opponents
-within the shared doctrinal neighborhood.
+The narrowed claim: criterion activation is systematic in **cross-strength
+pairings** — pairings where one item is stronger on a quality dimension and its
+opponent is not. When A is among the cluster's strongest on fact-finding and faces
+an opponent who is weaker on that dimension, A's fact-finding advantage is by
+definition the feature that most distinguishes the two items. The Tversky mechanism
+then predicts fact-finding activates as the primary evaluative dimension for that
+comparison. In a cluster where most items are not strong fact-finders, the majority
+of A's pairings are of this cross-strength type, making fact-finding the
+most-discriminating feature in the majority of A's pairings — not from persistent
+activation regardless of pairing, but from the cluster composition generating
+predominantly cross-strength pairings for an item that specializes in a scarce
+dimension.
 
-The Bradley-Terry score aggregated over many within-cluster pairings then
-reflects A's performance under the criterion A's structure persistently elicits.
-If A is the strongest fact-finder in its cluster but only adequate on
-proportionality analysis, A wins pairings where the opponent is weaker on
-fact-finding and loses pairings where the opponent is stronger. The aggregate
-score reflects A's relative standing on the fact-finding dimension that A's
-persistent structural feature activates. This is not random variance that
-averages out over many pairings; it is a systematic function of the interaction
-between A's structural features and the criterion-activation dynamics the
-Tversky mechanism describes.
+**The structural dependency on quality-dimension correlation.** The pair-specificity
+response rescues the aggregation defense only under strong positive correlation
+among quality dimensions. Under positive correlation, opponents who are weaker than A
+on fact-finding are also weaker on proportionality — so their counter-advantage on
+proportionality is small, and A's fact-finding advantage is the most discriminating
+feature in most of A's pairings regardless. Bradley-Terry then aggregates A's overall
+quality advantage across its pairings, converging on a valid quality signal.
 
-Item A may be systematically underranked if the cluster's pairing distribution
-generates more comparisons that activate proportionality or procedural-safeguard
-criteria (dimensions where A is merely adequate) than comparisons that activate
-fact-finding (where A excels). The Bradley-Terry score in this scenario is not
-a neutral aggregate over a stable quality criterion — it is a weighted average
-of A's performance under criteria whose frequencies in the pairing distribution
-are determined by the cluster's overall quality-dimension composition, not by
-any single quality dimension that A or any other item possesses.
+Under weak or zero correlation — where opponents weaker on fact-finding may be
+strong on proportionality — the counter-advantage on proportionality can exceed A's
+fact-finding advantage in specific pairings, shifting criterion activation to
+proportionality in those pairings. Whether fact-finding or proportionality is most
+discriminating then varies by opponent, generating a criterion-activation distribution
+across A's pairings that depends on the specific quality-dimension profiles of the
+cluster members A faces. The aggregate Bradley-Terry score reflects this composition
+of pairing types — not a stable quality standard.
 
-The non-systematic assumption would require that no decision in a cluster has
-persistently distinctive structural features — that all decisions are similarly
-positioned across all quality dimensions, so no individual decision reliably
-activates any specific criterion more than others do in pairings. But this
-assumption removes the premise for running a tournament at all. The tournament
-presupposes meaningful within-cluster quality variation; quality variation
-requires that some decisions are distinctively stronger on some dimensions
-than their cluster neighbors; distinctive strength on a dimension is precisely
-the structural property that persistently activates that dimension's criterion
-in pairings. The non-systematic assumption and the design motivation for
-within-cluster ranking cannot be simultaneously maintained.
+The pair-specificity response thus succeeds under strong positive correlation and
+fails under weak correlation. The §3.2 arguments establish structural reasons to
+expect weak correlation in Brazilian appellate corpora: case-driven quality-dimension
+variation (especially C2 constrained by adversarial record quality), high-volume
+routinization of C3 independently of C1/C4, and fine-grained doctrinal clustering
+concentrating within-cluster dimensional asymmetry. The aggregation defense and the
+pair-specificity response share a single load-bearing premise with §3.2's attack:
+whether Brazilian appellate corpora exhibit sufficiently strong quality-dimension
+correlation. Under strong correlation, the defense wins both §3.2 and §3.3. Under
+weak correlation, the defense loses both. These are not independent structural
+arguments that can hold separately.
+
+**The cluster-composition dynamic.** Systematic criterion-activation patterns arise
+from the cluster's quality-dimension composition even in the moderate case, without
+invoking extreme outlier items. In a cluster where some items are stronger on
+fact-finding (and adequate on proportionality) and others are stronger on
+proportionality (and adequate on fact-finding), pairings between two fact-finding-
+strong items activate proportionality as the most discriminating dimension — they are
+matched on fact-finding, so their largest gap lies on proportionality. Pairings between
+two proportionality-strong items activate fact-finding for the same reason. Cross-group
+pairings activate whichever dimension produces the larger gap between the specific items.
+
+A fact-finding-strong item whose pairing schedule includes more proportionality-strong
+opponents — because the cluster's composition favors proportionality specialists —
+activates its fact-finding advantage more frequently and accumulates wins under the
+fact-finding criterion more readily than a comparably-quality item in a cluster with
+the reversed composition. In a round-robin tournament, the criterion-activation
+frequencies across any item's pairings are determined by the cluster's composition —
+a fixed structural property, not a stochastic process. Bradley-Terry aggregates this
+composition effect into the final score. The score reflects how often the item's strong
+dimension is the most discriminating feature in its pairings, which depends on the
+cluster's quality-dimension population, not only on the item's own quality profile.
+
+**The routinization concession and the mechanism's scope.** The supportive paper
+explicitly acknowledges that C3-exceptional items — those deviating from the cluster's
+formulaic pattern — exhibit systematic C3 criterion activation in their pairings with
+formulaic opponents: "its C3 distinctiveness becomes the most discriminating feature in
+pairings where its C3 advantage exceeds the opponent's counter-advantages on other
+dimensions." This is described as "a localized effect on C3-exceptional items, not a
+cluster-wide mechanism." Both characterizations are accurate: the effect is concentrated
+in pairings involving the exceptional item; it does not operate uniformly across all
+cluster pairings. What neither characterization establishes is that the systematic
+character of the effect — predictable from the item's position and the pairing
+composition — makes it negligible in the aggregate Bradley-Terry score for that item.
+
+The supportive paper has no principled basis for limiting this concession to C3. The
+mechanism applies to any dimension where one item is distinctively stronger than most
+cluster members. C3 exceptionalism is one structural route to this configuration; the
+case-driven C2 variation and fine-grained doctrinal clustering described in §3.2 are
+others. The "localized" characterization describes the scope (concentrated in the
+exceptional item's pairings), not the systematic quality of the criterion activation
+within that scope. The aggregation defense requires that effects of this type are
+either absent or sufficiently uncorrelated across the pairing distribution to average
+out — a requirement that neither the "localized" characterization nor the quality-
+dimension correlation argument establishes for the target corpus.
 
 ### 3.4 The Operationalization: Best Available Does Not Mean Sufficient
 
@@ -580,6 +658,24 @@ reduces the criterion repertoire that can be activated within a cluster; it
 does not eliminate item-level persistent structural features that activate
 specific criteria within whatever repertoire remains.
 
+The pair-specificity reply — that persistent activation across all of A's
+pairings requires A to be a clear outlier on one dimension relative to the entire
+cluster, an extreme condition not the modal case — is a genuine correction accepted
+in §3.3. The reply narrows but does not defeat the §3.3 attack. Two reasons.
+First, the narrowed claim (systematic criterion activation in cross-strength
+pairings) survives: A need not activate a criterion in every pairing; it suffices
+that A's cross-strength pairings — which constitute the majority of A's schedule
+in a cluster where A's focal dimension is scarce — systematically activate the
+focal dimension, producing a criterion-activation distribution that is not stochastic.
+Second, the reply is structurally dependent on the quality-dimension correlation
+claim (§3.2): it succeeds under strong correlation (where opponents weaker on A's
+focal dimension are also weaker on other dimensions, reducing the counter-advantage
+that could displace the focal dimension as most discriminating) and fails under weak
+correlation (where opponents' dimensional profiles vary independently). The pair-
+specificity response and the aggregation defense share a single load-bearing premise
+with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
+the §3.2 correlation debate determines whether it wins §3.3 as well.
+
 **On the Phase 3 attack (§§3.6–3.8):**
 
 The defense's factual correction is accepted and incorporated into the reframed §3.6:
@@ -640,7 +736,12 @@ domain-specific criterion acquisition identified in the accepted mechanism as th
 source of within-cluster reliability creates the implementation gap Option (c) must
 bridge. On the Phase 2 front, the mechanism's own logic produces item-level
 criterion-activation patterns inconsistent with the non-systematic assumption the
-Bradley-Terry aggregation defense requires.
+Bradley-Terry aggregation defense requires; and accepting the pair-specificity
+correction to §3.3 — that persistent activation across all pairings was too strong
+a claim — while pressing the narrowed claim: systematic criterion activation in
+cross-strength pairings and the cluster-composition dynamic both produce structured
+Bradley-Terry scoring artifacts, and the pair-specificity response's success depends
+on the quality-dimension correlation claim that §3.2 contests.
 
 This attack does not challenge:
 
