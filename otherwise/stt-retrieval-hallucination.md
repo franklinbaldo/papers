@@ -60,6 +60,27 @@ rate). The paper is explicit that the decoding stage is the most uncertain
 component and deliberately separates its failure criteria from those of
 the encoding stage.
 
+A defense of the anti-hallucination claim advances three responses
+(`yesindeed/stt-corpus-scope-defense.md`). First, P4 is a prediction
+with a falsified-if clause, not an architectural guarantee: §6.1's
+language ("we aim to eliminate," "designed to," "if the pipeline
+behaves as designed") and §8's explicit position-paper status establish
+that the paper commits to a test, not a guarantee; the adversarial
+argument proves the operationalization incomplete, not that the design
+fails the test it commits to. Second, STT's primary deployment target
+is within-corpus use cases where training and inference distributions
+substantially overlap; §6.3's cold start acknowledgment marks
+out-of-distribution content generation as a known limitation, not a
+design target; for within-corpus inputs, the codebook was built from
+the same distribution, so medoid retrieval accuracy is substantially
+higher. Third, STT's primary competitive advantage over RAG is the
+internalization of retrieval into training — autoregressive
+code-sequence modeling of long-range transition patterns across
+thousands of semantic positions — which is independent of where
+inference-time inputs fall relative to training distribution; the
+anti-hallucination comparison with RAG is one component, not the
+primary competitive axis.
+
 ---
 
 ## 3. The Attack
@@ -207,6 +228,29 @@ content is not closely represented in the training corpus — new entities,
 new events, new numerical data processed at inference time — this is the
 structural behavior of the system.
 
+The within-corpus defense collapses type-level and token-level
+in-distribution membership. A document is type-level within-corpus if it
+belongs to the same domain, invokes the same conceptual framework, and
+uses the same linguistic conventions as the training corpus. It is
+token-level within-corpus only if its specific factual content — the
+particular parties, amounts, holdings, events, and numerical values — is
+represented in the training data. Medoid retrieval operates at the token
+level: the medoid for a code centroid is the specific training corpus
+chunk closest to that centroid's embedding, not a domain-type
+representative. For every new legal case in a familiar jurisdiction, the
+case-specific facts — which parties, what transaction, what precise
+holding, what proportionality ratio — are not in the training corpus,
+even though the doctrinal framework is. The nearest code centroid's
+medoid is a text fragment from a training case that shares the domain and
+framework but not the specific facts. The normalization constraint
+prevents inserting the actual case-specific facts from the current input.
+The decoded output represents the correct domain type while reproducing
+the wrong document's specific facts — F2 failure under entirely
+within-corpus conditions. Cold start is the extreme case where even
+domain-type accuracy fails; the normal within-corpus generative task on
+any new document is the case where type-level accuracy is preserved but
+token-level factual accuracy is structurally absent.
+
 ### 3.4 The Paper's Failure Mode Taxonomy Is Incomplete
 
 The paper's §5.5 lists failure modes including: domain-specific jargon,
@@ -230,51 +274,98 @@ rare codes" — addresses sparse codebook coverage but not semantic accuracy.
 A denser medoid set for a code centroid provides more candidate texts for
 that semantic neighborhood; it does not guarantee that any candidate
 accurately represents novel content that falls in that neighborhood.
+The type/token argument in §3.3 further establishes that the framing of
+"rare semantic patterns" understates the structural extent: the failure
+is not confined to the codebook periphery but applies to any new
+document's case-specific facts, which are absent from the training corpus
+even for well-populated code regions that correctly capture the domain
+type.
 
 ---
 
 ## 4. Anticipated Reply and Why It Does Not Suffice
 
-The most direct available reply is that STT is not intended primarily as
-a generative system for novel content, but as a **long-context modeling
-system for content drawn from the training corpus**. In that setting —
-a domain-specific corpus where the training data and the inference-time
-inputs draw from the same distribution — the medoid retrieval is accurate
-because the codebook was built from the same distribution as the input.
-For within-corpus use cases (semantic search over a legal corpus,
-summarization of documents from a domain the codebook was built on), the
-F2 failure mode is substantially attenuated: the medoids were constructed
-from the same distribution as the input, so retrieval of wrong content
-is less likely.
+The most developed reply has three components.
 
-This reply should be taken seriously. The synthesis of §3.3's compound
-failure is strongest for novel inputs; it weakens as the inference-time
-input distribution converges on the training distribution.
+**The prediction-not-guarantee reframe.** P4 is a prediction with a
+falsified-if clause, not an architectural guarantee; §6.1 and §8 use
+conditional language throughout ("we aim to eliminate," "designed to,"
+"if the pipeline behaves as designed"). The adversarial argument proves
+the operationalization is incomplete, not that the design fails the test
+it commits to.
 
-The reply does not suffice for two reasons.
+The reframe is accepted on its own terms: the adversarial argument does
+not require P4 to be an architectural guarantee. The argument is that a
+prediction is only as epistemically specific as its operationalization. P4
+is named "bounded hallucination under retrieval-grounded decoding."
+Retrieval-grounded decoding includes two stages: medoid selection and LLM
+normalization. The §5.3 falsified-if clause — n-gram novelty rate ≤ 1%
+between proto-text and normalized output — measures only whether the LLM
+normalization stage introduces novel text. It does not and cannot detect
+whether the medoid selection stage retrieved semantically incorrect
+content. P4's operationalization is not "bounded hallucination" but
+"bounded F1-type hallucination at the normalization stage." Under the
+current protocol, P4 passes if medoid selection returns semantically wrong
+content in every generated chunk, provided the LLM normalizer stays close
+to that wrong content. The concession that proto-text fidelity testing
+"should be added" identifies the correct extension. Until it is added,
+the prediction commits to less than its name implies.
 
-First, the paper's claims are not restricted to within-corpus use cases.
-§8 presents "bounded hallucination under retrieval-grounded decoding" as
-a general design property, not a deployment precondition. The evaluation
-protocol (§5.1) uses Wikipedia, BookCorpus, Legal corpus, and Code as
-training data, and targets downstream tasks (NarrativeQA, QuALITY, BEIR)
-that include test content which may not match the training corpus
-distribution. Whether the medoids retrieved during evaluation on those
-benchmarks accurately represent the test queries is an empirical question
-the protocol does not directly address: neither the n-gram novelty metric
-(§5.3) nor the semantic similarity metric (between proto-text and
-LLM-normalized output) tests semantic accuracy of the proto-text relative
-to the intended target.
+**The within-corpus restriction.** STT's primary deployment target is
+within-corpus use cases (legal summarization, biomedical QA) where
+training and inference distributions substantially overlap. §6.3's cold
+start acknowledgment marks out-of-distribution content generation as a
+known limitation, not a design target. For within-corpus inputs, the
+codebook was built from the same distribution, so medoid retrieval
+accuracy is substantially higher.
 
-Second, if the system's utility is restricted to content in or near the
-training corpus distribution, the claimed advantage over standard
-retrieval-augmented generation is reduced. A RAG system also grounds
-outputs in corpus documents without requiring the expensive offline
-codebook construction and Transformer pre-training. STT's value proposition
-over RAG depends on the generative modeling capability of the code-sequence
-Transformer — which is precisely the component whose outputs are at risk
-for F2-type failures when the inference-time target diverges from the
-training distribution.
+The §3.3 type/token analysis establishes why this restriction does not
+attenuate F2 failures for normal within-corpus generative tasks. "Within-
+corpus" as a deployment condition ensures domain-type accuracy — that the
+training distribution covers the conceptual domain, legal framework, and
+linguistic conventions of the input. It does not ensure that the specific
+token-level factual content of new documents is in the training corpus.
+Legal cases in a familiar jurisdiction have specific parties, specific
+facts, specific holdings that are not represented by any training case,
+even one from the same jurisdiction on the same doctrine. For any
+generative summarization or factual QA task on a new document, the output
+must reproduce case-specific facts. Medoid retrieval for each code
+produces a training corpus fragment from the right domain type but from
+a different document's specific content. The normalization constraint
+prevents the normalizer from inserting the actual case-specific facts.
+F2 failure is structurally present in normal within-corpus deployment —
+not only at the cold-start extreme.
+
+The high-stakes application context the paper invokes — §2.4 and §6.4
+identify legal and medical domains as primary targets "where factual
+accuracy is paramount" — is precisely the context where token-level
+factual accuracy about specific new documents is the operative
+requirement. For a medical QA system answering questions about new patient
+records, or a legal summarization system processing new cases, domain
+familiarity does not provide the case-specific factual accuracy that the
+anti-hallucination claim implies.
+
+**The RAG competitive axis.** STT's primary competitive advantage over RAG
+is the autoregressive code-sequence Transformer's internalized long-range
+modeling — transition patterns across thousands of semantic positions
+learned into weights — which is independent of the within-corpus
+restriction. Restricting anti-hallucination to within-corpus use cases
+does not eliminate the long-context modeling advantage. The earlier framing
+of this attack — "if scope is restricted, the claimed advantage over RAG
+is reduced" — overstated the case against STT's full competitive profile.
+
+The narrower adversarial position survives: for specifically generative
+tasks requiring accurate reproduction of case-specific facts from new
+input documents, STT's medoid-based decoding cannot produce case-accurate
+outputs for any new document regardless of domain familiarity, while a
+RAG system with sufficient context can place the actual input in context
+and generate from it. The long-context modeling advantage applies to
+structural tasks (sequential coherence, topic flow, argument ordering)
+where training-distribution patterns transfer to new documents in the
+same domain — not to tasks requiring accurate token-level facts from
+specific new documents. The anti-hallucination value proposition for
+high-stakes generative applications is diminished by the within-corpus
+restriction even if the overall competitive profile is not.
 
 ---
 
@@ -301,9 +392,14 @@ It does not contest:
   proposal. The attack is directed at the anti-hallucination claim
   specifically, not at the approach as a whole.
 
-The attack is conditional on the generative use case. For within-corpus
-generative use cases where training and inference distributions are
-well-aligned, the F2 failure mode is attenuated.
+The attack is conditional on the generative use case. The §3.3 type/token
+analysis extends the attack's reach: the F2 failure mode applies not
+only to out-of-corpus cold-start inputs but to any within-corpus
+generative task requiring accurate reproduction of case-specific facts
+from new documents. For retrieval tasks (P6), where the system returns
+known corpus documents rather than generating new text, the F2 failure
+mode is substantially attenuated by the corpus-relative grounding. The
+long-context modeling advantages (P1-P2, P5) are not contested.
 
 ---
 
@@ -312,13 +408,20 @@ well-aligned, the F2 failure mode is attenuated.
 The attack would not hold, or would hold only partially, under the
 following conditions.
 
-1. **Within-corpus restriction formally acknowledged.** If STT's
-   anti-hallucination claim is revised to apply only to generative
-   tasks where inference-time content is drawn from the same distribution
-   as the training corpus, and the claim is presented as a corpus-relative
-   property rather than an architectural guarantee, the F2 failure mode
-   is out of scope. This requires explicitly marking "bounded hallucination"
-   as a deployment condition, not a design feature.
+1. **Within-corpus restriction formally acknowledged, with token-level
+   accuracy demonstrated.** If STT's anti-hallucination claim is revised
+   to apply only to generative tasks where inference-time content is drawn
+   from the same distribution as the training corpus, and the claim is
+   presented as a corpus-relative property rather than an architectural
+   guarantee, the cold-start component of the F2 failure is out of scope.
+   This requires explicitly marking "bounded hallucination" as a deployment
+   condition, not a design feature. The full attack is addressed only if
+   the within-corpus restriction is additionally accompanied by empirical
+   evidence that medoid retrieval produces accurate token-level facts for
+   new documents within the target domain — not only type-level domain
+   accuracy. The type/token distinction (§3.3) establishes that within-
+   corpus domain membership does not guarantee token-level factual
+   accuracy for any new document's case-specific content.
 
 2. **Out-of-distribution fidelity demonstrated empirically.** If the
    experimental protocol (§5) is extended to evaluate semantic accuracy
