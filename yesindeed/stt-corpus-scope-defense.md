@@ -117,6 +117,47 @@ tasks. The STT paper's evaluation design (legal corpus, Wikipedia, BookCorpus as
 training data; downstream benchmarks using documents from the same or adjacent
 corpora) is consistent with a within-corpus experimental scope.
 
+The adversarial paper's §3.3 (updated) sharpens the within-corpus argument by
+introducing the type/token distinction. *Type-level* within-corpus membership
+means a document's domain, conceptual framework, and linguistic conventions
+match the training data. *Token-level* within-corpus membership means the
+document's specific factual content — particular parties, amounts, holdings, and
+events — is represented in the training corpus. Medoid retrieval, as the
+adversarial paper correctly observes, operates at the token level: each code
+position's medoid is the specific training chunk closest to that centroid's
+embedding. Domain-type accuracy in the embedding space is compatible with
+token-level inaccuracy when the nearest medoid comes from a different specific
+document.
+
+The adversarial paper's formulation — that in any new legal case in a familiar
+jurisdiction, the case-specific facts "are not in the training corpus, even
+though the doctrinal framework is" — asserts that token-level facts are uniformly
+novel per document. This assertion overstates token-level uniqueness in
+specialized legal corpora with narrow jurisdictional scope. Several categories
+of case-specific content exhibit high recurrence across documents in such corpora:
+institutional parties (government entities, regulatory agencies, and
+repeat-litigant corporations that appear across hundreds to thousands of decisions
+from a single court), standardized legal amounts (monetary values indexed to the
+salário mínimo or fixed statutory penalty scales that recur across thousands of
+decisions in the same jurisdiction), and binding-summary language (STF and STJ
+súmula holdings whose specific formulations appear verbatim across the corpus).
+For code positions whose semantic regions correspond to these recurrent facts,
+medoid selection frequently produces token-level-accurate content because the
+relevant tokens are densely represented in training data.
+
+The residual token-level gap is real: transaction-specific facts that are
+genuinely unique per case — exact monetary amounts in single-occurrence disputes,
+parties and events with no prior training-corpus representation — will not be
+well-covered by the medoid pool, and F2 failure in the adversarial sense applies
+to this category. The scope question is what proportion of the semantic content
+in typical specialized legal summaries consists of genuinely novel token-level
+facts versus recurrent institutional and doctrinal content. In single-jurisdiction
+specialized corpora, this proportion is substantially lower than in general-domain
+settings, and substantially lower than the adversarial argument's universal
+formulation implies. The deployment context's specific corpus characteristics
+determine the practical extent of F2 failure under normal within-corpus
+conditions.
+
 ### 3.3 The RAG Comparison Does Not Weaken Under Corpus Restriction
 
 The adversarial paper argues (§4) that if STT's anti-hallucination claim is
@@ -199,12 +240,25 @@ is a correctly framed engineering constraint: the system requires a training
 corpus representative of the deployment domain. For legal corpora, building a
 domain-specific codebook from existing case law and applying it to new cases in
 the same jurisdiction and subject matter area is a within-distribution use case
-for the medoid pool, even though each new case is a new document. The adversarial
-compound failure scenario (§3.3) — a document D whose "specific factual content —
-entities, events, numerical values — is not represented in the training corpus"
-— describes cross-corpus generalization, not within-corpus generalization.
-Within-corpus legal summarization produces new cases with familiar entity types,
-reasoning patterns, and legal concepts, not the cold start scenario.
+for the medoid pool, even though each new case is a new document.
+
+The adversarial paper's §3.3 (updated) sharpens this objection by introducing
+the type/token distinction: domain familiarity ensures type-level accuracy (the
+conceptual framework and linguistic conventions are in the training data) but not
+token-level accuracy (the specific parties, amounts, and holdings of any new
+document may not be represented). This distinction is correct. The response is
+not to deny the distinction but to contest its scope in specialized legal corpora.
+The adversarial paper's formulation — that case-specific facts "are not in the
+training corpus, even though the doctrinal framework is" — treats token-level
+uniqueness as a universal property of new documents in a domain, which overstates
+uniqueness in single-jurisdiction specialized corpora. Institutional parties,
+standardized legal amounts, and binding-summary language recur at high frequency
+in such corpora; for these categories, medoid selection produces token-level-
+accurate content (§3.2). The residual case for which F2 failure applies in the
+adversarial sense — genuinely transaction-specific facts without close training-
+corpus representatives — is real and would be identified by PTF testing; but its
+scope is narrower than the adversarial paper's universal formulation requires,
+and is corpus-specific rather than structurally guaranteed for any new document.
 
 ---
 
@@ -250,6 +304,19 @@ This defense does NOT contest:
    argument supporting §3.3 weakens: the long-context modeling claim is
    empirically unsupported, and within-corpus restriction then leaves STT
    without a decisive advantage over RAG on any dimension.
+
+4. **Token-level recurrence shown to be low in the specific deployment corpus.**
+   The §3.2 argument that F2 failure has narrower scope in specialized legal
+   corpora depends on high recurrence rates for institutional parties, standardized
+   legal amounts, and binding-summary language. If empirical analysis of the
+   deployment corpus shows that a substantial proportion of the semantic content
+   required for accurate legal summaries consists of genuinely novel token-level
+   facts — parties, amounts, holdings unique to each case with no close training-
+   corpus representative — the recurrence argument fails for that corpus, and the
+   adversarial type/token analysis applies at the scope the adversarial paper
+   claims. The recurrence argument is corpus-dependent and its force varies with
+   the jurisdictional and topical narrowness of the specific deployment corpus;
+   it does not generalize to multi-jurisdiction or general-domain legal corpora.
 
 ---
 
