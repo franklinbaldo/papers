@@ -510,6 +510,37 @@ ESHTR's original design. The mechanism argument grounds why they should help; it
 not add new empirical content to the prediction. The prediction and the test required
 to confirm it remain what surrender condition §6(3) specifies.
 
+The concrete calibration protocol in `phase3-coherence-defense.md` §4.6 advances the
+debate: it specifies three falsifiable measurements and an instruction-independence
+test using non-champion cross-cluster pairs. Two structural limits constrain what the
+protocol can establish.
+
+**Circular quality ground truth.** The quality-discrimination accuracy measurement
+constructs "quality-discrepant pairs" using within-cluster Phase 2 calibration
+rankings — one decision ranks higher within its cluster. Phase 3 instructions are
+tested for winner-accuracy: whether the Phase 3 judgment identifies the higher-ranked
+decision. For this to validate Phase 3's quality-discrimination reliability,
+within-cluster Phase 2 rankings must be valid quality ground truths. But
+within-cluster rankings are produced by the Bradley-Terry aggregation that §§3.3-3.4
+contest: if systematic criterion-switching produces item-level biases in Bradley-Terry
+scores, quality-discrepant pairs may not be discrepant in quality — they are discrepant
+in which criteria dominated their within-cluster pairings. Phase 3 agreeing with Phase 2's
+quality ordering across domain boundaries confirms Phase 3's alignment with Phase 2's
+criterion-activation pattern, not independent cross-domain quality-discrimination validity.
+An independent quality ground truth — expert human judgments on cross-cluster
+quality-discrepant pairs, not derived from Phase 2 rankings — is not specified in the
+protocol. Without it, the quality-discrimination measurement is a closed loop between
+Phase 2 and Phase 3 calibration.
+
+**Champion-scale gap.** The protocol calibrates instruction effects on non-champion
+cross-cluster decisions. Phase 3's actual comparators are domain champions — decisions
+where method and domain content are most tightly integrated (§3.8). Non-champion
+calibration evidence does not proxy for champion-scale instruction effects. §3.8
+identifies champion decisions as the harder case, not an approximation: reasoning
+method in champion decisions is expressed through, not separately from, domain-specific
+doctrinal structure in a fully realized way. The instruction-independence test provides
+evidence on the easier case and leaves the harder case untested.
+
 ### 3.7 Method/Content Inseparability in LLM Implementation
 
 The defense rests on a conceptual analysis of what C1-C5 should measure. The
@@ -709,6 +740,49 @@ makes within-cluster judgments reliable (acknowledged in `yesindeed/frame-stabil
 Phase 3 instruction bridges it is the empirical question neither the mechanism argument
 nor the current calibration protocol answers.
 
+The supportive paper (§4.5) correctly identifies an asymmetry in this adversarial
+position: SPH for Phase 2 is accepted as a warranted mechanism-grounded conjecture
+while "not sufficient" is pressed specifically against Phase 3. The asymmetry requires
+justification, and here it is.
+
+Phase 2's SPH mechanism predicts that existing LLM criterion-activation patterns
+operate more consistently within semantic proximity clusters than across them. This
+is additive: embedding-based clustering + LLM's existing criterion-domain associations
+(acquired in training) → within-cluster consistency. No new LLM behavior is required.
+The prediction is that LLMs will do what they already do, in a pairing context where
+the training-encoded criterion-domain associations are more uniformly relevant. The
+mechanism is with the grain of trained LLM behavior.
+
+Phase 3's tractability mechanism predicts that the explicit abstraction instruction
+will actively redirect criterion application away from domain-specific feature salience
+toward structural method properties. This is not additive to the Phase 2 mechanism —
+it requires the instruction-following layer to suppress the domain-specific feature
+salience that Phase 2's mechanism depends on. A model instruction that changes the
+explicit label attached to the output ("I am evaluating reasoning structure") without
+altering which features activate that output satisfies the surface requirement without
+achieving the representational override. Whether instruction-tuning reliably achieves
+the override at the level of feature salience — not only at the level of output
+labeling — is a structural question about the depth of the instruction-following
+mechanism's reach into the representation-to-output mapping. Phase 3's prediction
+requires the mechanism to work against the grain of domain-specific training, not
+with it.
+
+This structural difference justifies asymmetric evidential demands. The mechanism
+argument for Phase 3 tractability is of the same logical form as SPH — a mechanism-
+grounded conjecture with a falsifiable prediction — but the prediction requires a
+specific LLM behavior (instruction-modulated suppression of trained feature salience)
+that Phase 2's prediction does not. The "not sufficient" concern is not about logical
+form; it is about the depth of behavioral evidence needed to confirm that the required
+suppression actually occurs in practice, specifically in the domain-integrated texts of
+champion decisions where trained feature salience is strongest.
+
+The concrete calibration protocol is the right kind of test, but the two structural
+limits identified in §3.6 (circular quality ground truth; champion-scale gap) mean
+it provides behavioral evidence for the instruction effect in a non-champion
+population with a Phase-2-derived quality validator — not evidence sufficient to
+establish that the override works in the harder champion case against an independent
+quality standard.
+
 Separately, for the Phase 2 sections (§§3.1–3.5): the mechanism paper's
 sub-predictions provide more diagnostic sharpness than aggregate κ, but address
 between-cluster non-transitivity patterns. They do not separately measure
@@ -791,13 +865,40 @@ conditions.
    instruction-specific attenuation from champion-selection effects: Phase 3
    non-transitivity should be lower than what champion-population homogeneity alone
    would predict, indicating that the explicit abstraction instruction contributes
-   independently to non-transitivity reduction. Without this separation, evidence of
-   lower Phase 3 non-transitivity supports the champion-population argument but not
-   the mechanism-level instruction claim. If Phase 3 rankings correlate with Phase 2
-   quality rankings, exhibit lower non-transitivity than the cross-cluster baseline,
-   and this reduction is attributable in part to the instruction's frame-setting
-   function (not entirely to champion selection alone), the instruction-based
-   tractability claim is empirically supported.
+   independently to non-transitivity reduction.
+
+   The calibration protocol in `phase3-coherence-defense.md` §4.6 is the right
+   framework for this test. For the evidence to satisfy this surrender condition,
+   the calibration protocol requires three specific extensions beyond its current
+   design:
+
+   **(a) Independent quality ground truth for the quality-discrimination measurement.**
+   The mixed-quality pairs used in the quality-discrimination accuracy test must be
+   quality-discrepant on the basis of an independent criterion — expert human
+   quality judgments on cross-cluster decisions, not within-cluster Phase 2
+   Bradley-Terry rankings — to break the closed loop between Phase 2 and Phase 3
+   calibration. If Phase 2 rankings serve as the ground truth for the Phase 3
+   calibration test, confirming that Phase 3 agrees with Phase 2 across domain
+   boundaries establishes coherence between the two phases, not Phase 3's independent
+   quality-discrimination validity.
+
+   **(b) Champion-scale instruction-effect evidence.** The instruction-independence
+   test should include actual Phase 3 champion decisions, not only non-champion
+   cross-cluster calibration decisions. If Phase 3 instructions produce higher κ on
+   non-champion cross-cluster pairs but show no improvement on champion cross-cluster
+   pairs, the instruction effect does not transfer to Phase 3's actual comparator
+   population, and the mechanism-level argument for instruction-modulated structural
+   reading at champion scale is not confirmed.
+
+   **(c) κ threshold referenced to within-cluster reliability.** Cross-cluster κ
+   under Phase 3 instructions must approach within-cluster Phase 2 κ levels —
+   not merely exceed cross-cluster Phase 2 κ — for the global ranking claim to
+   meet a reliability standard comparable to Phase 2's within-domain reliability.
+   The claim is that Phase 3 produces a coherent global ranking; a ranking whose
+   inter-judge reliability substantially falls below Phase 2's within-domain
+   reliability level does not meet the standard that "coherent global ranking"
+   implies. Evidence of improvement over the Phase 2 cross-domain baseline is
+   necessary but not sufficient.
 
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3 attack is
