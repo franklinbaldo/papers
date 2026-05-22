@@ -24,6 +24,11 @@ Position papers and working drafts.
 
 - `paper_affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
 
+## Eixo interpretabilidade
+
+- `pontifex_position_paper.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
+- `o3-orinality-assessement.md` — avaliação de originalidade do Pontifex (companion)
+
 ## Eixo empírico
 
 - `paper5_empirical_evaluation.md` — avaliação empírica em corpus do TJRO
