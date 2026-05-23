@@ -60,7 +60,7 @@ rate). The paper is explicit that the decoding stage is the most uncertain
 component and deliberately separates its failure criteria from those of
 the encoding stage.
 
-A defense of the anti-hallucination claim advances three responses
+A defense of the anti-hallucination claim advances four responses
 (`yesindeed/stt-corpus-scope-defense.md`). First, P4 is a prediction
 with a falsified-if clause, not an architectural guarantee: §6.1's
 language ("we aim to eliminate," "designed to," "if the pipeline
@@ -79,7 +79,21 @@ code-sequence modeling of long-range transition patterns across
 thousands of semantic positions — which is independent of where
 inference-time inputs fall relative to training distribution; the
 anti-hallucination comparison with RAG is one component, not the
-primary competitive axis.
+primary competitive axis. Fourth, the type/token argument overstates
+token-level uniqueness in specialized single-jurisdiction legal corpora.
+Three categories of case-specific content exhibit high recurrence across
+decisions in such corpora: institutional parties (government entities,
+regulatory agencies, and repeat-litigant corporations appearing across
+hundreds to thousands of decisions from a single court), standardized
+legal amounts (monetary values indexed to the *salário mínimo* or fixed
+statutory penalty scales recurring across thousands of decisions in the
+same jurisdiction), and binding-summary language (STF and STJ súmula
+holdings appearing verbatim across the corpus). For code positions
+corresponding to these semantic regions, medoid selection frequently
+produces token-level-accurate content. The residual token-level gap —
+genuinely transaction-specific facts unique to each case — is real and
+PTF-detectable, but its scope is corpus-dependent and narrower than the
+adversarial universal formulation requires.
 
 ---
 
@@ -281,6 +295,56 @@ document's case-specific facts, which are absent from the training corpus
 even for well-populated code regions that correctly capture the domain
 type.
 
+### 3.5 The Normalizer Constraint Structurally Forecloses F2 Correction
+
+The decoding pipeline's anti-generation-hallucination guarantee is
+enforced at the normalization step by an explicit instruction: "DO NOT
+Add new information or facts" (§3.3.3). This instruction defines the
+normalizer's role as surface-polishing — resolving boundary artifacts,
+smoothing grammar — rather than content-generating. It is the
+architectural mechanism by which F1-type generation failures are blocked
+at the normalization stage.
+
+This same instruction structurally forecloses F2 correction. When the
+proto-text contains a medoid that is factually wrong for the intended
+content — a salary-minimum multiplier of 10x where the input document D
+specifies 8x, a party name drawn from a different institutional litigant
+in the training corpus, a súmula formulation whose applicability
+conditions do not match the specific case's facts — the normalizer cannot
+insert the correct value from D. Inserting "8x" where the proto-text has
+"10x" is adding new information not present in the proto-text. The
+instruction blocks this regardless of whether the correct value is
+available in the normalizer's context.
+
+The supportive defense (`yesindeed/stt-corpus-scope-defense.md`, §3.4)
+characterizes the validation gap as a protocol extension problem: "the
+blind spot is in the evaluation layer, not in the design layer." This
+characterization is incorrect on the design-layer half. The normalizer
+instruction is a design decision — not an evaluation setting — and it
+creates a structural asymmetry: F2 failures can be detected (by adding
+PTF to the evaluation protocol) but cannot be corrected (because the
+architecture prevents the normalizer from using D to fix proto-text
+errors). Adding PTF to the evaluation would change the epistemic status
+of F2 failures from undetected to detected; it would not change their
+uncorrectability.
+
+The design choice is internally consistent: a normalizer permitted to
+insert facts from D would reintroduce F1 risk at the normalization step —
+the risk the instruction is designed to eliminate. The constraint achieves
+F1 prevention at the cost of permanent F2 uncorrectability. Once a medoid
+is selected incorrectly, the pipeline has no mechanism to detect this
+before output (absent PTF) and no mechanism to correct it after detection
+(due to the normalizer constraint). F2 errors propagate to output silently
+and without a correction pathway within the current design.
+
+This argument is independent of where the input falls relative to the
+training distribution. It applies to cold-start inputs (where F2 failure
+is near-certain) and to within-corpus inputs with high-recurrence content
+(where F2 failure is case-specific but structurally uncorrectable when it
+occurs). The recurrence argument reduces the frequency of F2 failures for
+particular semantic categories; it does not provide a correction mechanism
+for those that occur.
+
 ---
 
 ## 4. Anticipated Reply and Why It Does Not Suffice
@@ -344,6 +408,51 @@ requirement. For a medical QA system answering questions about new patient
 records, or a legal summarization system processing new cases, domain
 familiarity does not provide the case-specific factual accuracy that the
 anti-hallucination claim implies.
+
+The recurrence counter (`yesindeed/stt-corpus-scope-defense.md`, §3.2)
+contests the universality of the type/token argument by identifying three
+categories of high-recurrence content in specialized single-jurisdiction
+legal corpora: institutional parties, standardized legal amounts, and
+binding-summary language. The existence of these categories is accepted —
+they are genuine in narrow-jurisdiction corpora and do provide some
+token-level coverage. The question is what proportion of the *operative
+content* of a legal summary — the content a reader must accurately extract
+to act on the decision — comes from high-recurrence categories versus
+transaction-specific determinations.
+
+A legal summary's operative content consists of three components that are
+predominantly transaction-specific. First, the specific holding on this
+dispute: which party prevailed, on what grounds, under which legal
+framework as applied to the specific facts of this case. Súmulas state
+legal principles and their applicability conditions; they do not specify
+the holding on any individual dispute. Second, the factual findings: what
+conduct was established, what amounts are at issue, what events the court
+found proven. Institutional party names appear as boilerplate; the
+specific acts and claims involving those parties are unique to each case.
+Third, the remedy: what relief was granted, at what specific amounts and
+rates applicable to this plaintiff's situation. Salary-minimum multipliers
+establish scales; the specific calculation applied to this employee's
+employment period and violations is transaction-specific.
+
+The high-stakes applications that require anti-hallucination protection
+are those where operative content matters — not the procedural boilerplate.
+A legal practitioner relying on STT's output needs to know who prevailed
+and on what grounds, what was awarded, and what conduct the court found
+established. Each of these is either transaction-specific or requires
+case-specific application of standardized categories that the medoid pool
+cannot supply from the input document. The recurrence argument is
+strongest for the procedural and doctrinal scaffolding of a summary; it
+is weakest for the substantive determinations that give the summary its
+value.
+
+The normalizer constraint (§3.5) applies equally to the residual failures
+within high-recurrence categories. A medoid that retrieves the correct
+institutional party but assigns it the wrong procedural role
+(plaintiff/defendant inverted), or retrieves the correct salary-minimum
+scale but the wrong multiplier from a different case, is a token-level
+inaccuracy that the normalizer cannot correct from D. High-recurrence
+categories reduce the frequency of F2 failures; they do not reduce their
+uncorrectability.
 
 **The RAG competitive axis.** STT's primary competitive advantage over RAG
 is the autoregressive code-sequence Transformer's internalized long-range
@@ -447,6 +556,20 @@ following conditions.
    it is empirically demonstrated that the model learns to generate code
    sequences whose medoids faithfully represent out-of-distribution target
    content, the training-decoding objective mismatch is empirically closed.
+
+5. **Normalizer redesigned to permit F2 correction from input document.**
+   If the normalizer instruction were modified to allow the LLM to correct
+   factual errors in the proto-text using information from the input
+   document D — with an explicit mechanism distinguishing F1 prevention
+   (blocking generation of content ungrounded in any source) from F2
+   correction (fixing proto-text errors using D as evidence) — and if
+   empirical testing showed that this modification does not reintroduce
+   F1-type generation failures at the normalization step, the
+   architectural silencer argument would be answered. Such a redesign
+   would need to demonstrate that the normalizer can identify proto-text
+   factual errors and correct them from D without generating novel content
+   ungrounded in D. Under the current normalizer instruction, this
+   correction path is closed by design.
 
 ---
 
