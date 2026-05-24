@@ -542,14 +542,31 @@ following conditions.
    documents not in the training corpus), the scope of F2 failures
    is empirically bounded.
 
-3. **Validation protocol extended to test proto-text fidelity.** If a
-   second validation step is added that tests whether the proto-text
-   (medoid concatenation) is semantically accurate to the intended output
-   — not only whether the LLM normalizer stayed close to the proto-text —
-   the evaluation's blind spot for F2 failures is addressed. Such a test
-   could compare the proto-text's embedding to the target embedding,
-   measuring whether the medoid retrieval is semantically on-target
-   independent of the LLM normalization constraint.
+3. **Validation protocol extended to test proto-text fidelity, with
+   accompanying normalizer modification.** If a second validation step
+   is added that tests whether the proto-text (medoid concatenation) is
+   semantically accurate to the intended output — not only whether the
+   LLM normalizer stayed close to the proto-text — the evaluation's blind
+   spot for F2 failures is addressed. Such a test could compare the
+   proto-text's embedding to the target embedding, measuring whether the
+   medoid retrieval is semantically on-target independent of the LLM
+   normalization constraint.
+
+   PTF testing is necessary but not sufficient to address the attack.
+   §3.5 establishes that adding PTF to the evaluation layer reveals
+   errors that the pipeline's architecture cannot correct: when the
+   proto-text's medoids misrepresent the intended content, the
+   normalizer's constraint ("DO NOT Add new information or facts")
+   prevents correction from the input document even when the accurate
+   content is in context. Fully satisfying this surrender condition
+   therefore requires either (a) permitting the normalizer to correct
+   PTF failures from the input document — revising the normalizer's
+   operating mode and P4's falsified-if clause accordingly — or
+   (b) demonstrating empirically that PTF failures are sufficiently rare
+   in the specific target deployment corpus that the architectural
+   constraint has negligible practical consequence. PTF measurement
+   alone, without one of these additions, reveals the failure category
+   while leaving the output unchanged.
 
 4. **Alignment loss as primary objective with demonstrated downstream
    effect.** If the alignment loss weight is substantially increased and
