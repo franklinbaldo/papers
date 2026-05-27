@@ -186,7 +186,7 @@ distribution. The adversarial §4.2 conflates the full competitive profile with
 the anti-hallucination component, and infers that a limitation on one component
 undermines the comparison with RAG as a whole. This inference fails.
 
-### 3.4 The Validation Gap Identifies a Protocol Extension, Not a Design Flaw
+### 3.4 The Normalizer Constraint Is an Explicit Design Tradeoff
 
 The adversarial paper's surrender condition 3 specifies the missing test:
 a second validation step that measures whether the proto-text (medoid
@@ -203,21 +203,56 @@ PTF is implementable within the existing evaluation framework: it requires a
 reference output for each evaluated example (already implicit in benchmark
 evaluation on NarrativeQA, QuALITY) and an embedding similarity computation
 using the teacher model already present in the pipeline. It does not require
-redesigning the decoding architecture or the training objective. The blind spot
-is in the evaluation layer, not in the design layer.
+redesigning the decoding architecture or the training objective. PTF resolves
+the detection gap: it identifies F2 failures before they propagate to output.
+
+The normalizer constraint, however, is not only an evaluation-layer concern.
+The "DO NOT Add new information or facts" instruction is a design decision with
+a structural consequence: F2 failures are detectable by adding PTF but not
+correctable under the current instruction. The adversarial paper is correct on
+this point — "the blind spot is in the evaluation layer, not in the design
+layer" was incomplete. When the proto-text contains a wrong medoid, inserting
+the correct value from D is adding new information not present in the
+proto-text, which the instruction blocks regardless of whether D contains the
+correct value.
+
+The tradeoff is explicit, not hidden. The same instruction that prevents F1
+generation hallucination at the normalization stage forecloses F2 correction at
+that same stage. This is internally consistent: a normalizer permitted to insert
+facts from D would reintroduce F1 risk at the normalization step — the risk the
+instruction is designed to eliminate. The design prioritizes F1 elimination (the
+dominant failure mode in the targeted deployment context, per §6.1) at the cost
+of F2 uncorrectability within the current instruction.
+
+The remediation is named. Surrender condition 5 specifies the V2 design: a
+revised normalizer instruction that permits D-grounded corrections while blocking
+ungrounded additions. The current instruction is binary — it cannot distinguish
+"insert 8x from D to correct the proto-text's 10x" (D-grounded, correction) from
+"generate additional content not in either proto-text or D" (ungrounded,
+generation). SC5 requires demonstrating that this distinction can be operationalized
+without reintroducing F1 risk. Until that demonstration, the V1 tradeoff stands.
+
+The adversarial paper's "rare but permanently wrong" characterization correctly
+describes the V1 design's failure mode: F2 failures that escape PTF detection
+(absent PTF) or are detected but uncorrectable (with PTF but without SC5) propagate
+to output silently. With SC5 implemented, the risk profile converts from "rare
+and uncorrectable" to "rare and correctable." The two arguments are independent
+and complementary: §3.2 addresses how often F2 failures occur in high-recurrence
+legal corpora; §3.4 addresses what happens when they do and what is required to
+enable correction.
 
 The adversarial paper's §3.2 training-decoding objective mismatch provides the
-theoretical mechanism for why PTF might fail: the alignment loss (λ=0.1) may be
-insufficient to close the gap between code transition probability and downstream
-text fidelity, especially under distribution shift. This is a legitimate design
-concern about the sufficiency of the alignment loss weight. Whether it is
-actually insufficient — whether PTF would fail even for within-corpus inputs —
-is an empirical question the adversarial paper does not resolve by
-theoretical argument alone. The statement that 0.1 is "too weak" requires a
-claim about the interaction dynamics between L_AR and L_ALIGN under the specific
-training setup, which the adversarial paper approximates via distribution-shift
-intuition rather than derivation. Adding PTF to the evaluation protocol would
-directly answer whether the mismatch produces actual failures in practice.
+theoretical mechanism for why PTF might fail independently: the alignment loss
+(λ=0.1) may be insufficient to close the gap between code transition probability
+and downstream text fidelity, especially under distribution shift. This is a
+legitimate design concern about the sufficiency of the alignment loss weight.
+Whether it is actually insufficient — whether PTF would fail even for within-corpus
+inputs — is an empirical question the adversarial paper does not resolve by
+theoretical argument alone. The statement that 0.1 is "too weak" requires a claim
+about the interaction dynamics between L_AR and L_ALIGN under the specific training
+setup, which the adversarial paper approximates via distribution-shift intuition
+rather than derivation. Adding PTF to the evaluation protocol would directly answer
+whether the mismatch produces actual failures in practice.
 
 ---
 
@@ -260,6 +295,16 @@ corpus representatives — is real and would be identified by PTF testing; but i
 scope is narrower than the adversarial paper's universal formulation requires,
 and is corpus-specific rather than structurally guaranteed for any new document.
 
+The adversarial paper's updated SC3 requires more than PTF testing: PTF detection
+of F2 failures is necessary but not sufficient to satisfy the attack. Fully
+addressing SC3 requires either (a) normalizer modification per SC5 — revising the
+instruction to permit D-grounded corrections and demonstrating that F1 risk is not
+reintroduced — or (b) empirical evidence that PTF failure rates in the specific
+deployment corpus are sufficiently low that the architectural constraint has
+negligible practical consequence. Both paths are accepted as valid. The current
+paper's prior concession that PTF "should be added" acknowledges detection-necessity;
+it does not satisfy either (a) or (b) without the additional step each requires.
+
 ---
 
 ## 5. Scope of This Support
@@ -282,6 +327,12 @@ This defense does NOT contest:
   limitation.
 - That the "high-stakes domains" framing creates demand for stronger
   guarantees that the current protocol does not provide.
+- That the normalizer instruction is a design decision with a structural
+  consequence (F2 uncorrectability under V1) — the adversarial paper's §3.5
+  is correct on this point.
+- That P4's current operationalization tests F1-type failures at the
+  normalization stage only; full F2 coverage requires either SC5 implementation
+  or empirical negligibility evidence per SC3-b.
 
 ---
 
@@ -292,11 +343,15 @@ This defense does NOT contest:
    content generation — if the high-stakes applications it targets are not
    within-corpus use cases — the scope argument fails.
 
-2. **Within-corpus PTF failure demonstrated.** If proto-text fidelity testing
-   were added and showed that even for in-distribution inputs, medoid retrieval
+2. **Within-corpus PTF failure demonstrated at non-negligible rate.** If proto-text
+   fidelity testing shows that even for in-distribution inputs, medoid retrieval
    frequently fails semantically (high PTF error rate), the attenuation argument
-   fails. The §3.2 training-decoding mismatch would then produce within-corpus
-   F2 failures, not only out-of-distribution ones.
+   fails. The §3.2 training-decoding mismatch would then produce within-corpus F2
+   failures, not only out-of-distribution ones. Under this condition, SC3-b
+   (empirical negligibility) would not be satisfied, making SC5 (normalizer
+   redesign) necessary for P4's F2 coverage. The adversarial paper's "rare but
+   permanently wrong" risk profile would apply at non-negligible frequency, which
+   cannot be adequately characterized by the frequency argument alone.
 
 3. **RAG competitive parity on long-context benchmarks.** If RAG with
    sufficiently large retrieval windows performs equivalently to STT on the
