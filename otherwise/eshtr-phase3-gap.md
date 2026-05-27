@@ -541,6 +541,60 @@ method in champion decisions is expressed through, not separately from, domain-s
 doctrinal structure in a fully realized way. The instruction-independence test provides
 evidence on the easier case and leaves the harder case untested.
 
+**Variance-source confound in measurement 2.** Measurement 2 compares per-criterion
+score variance across two cross-domain decisions under Phase 2 versus Phase 3
+conditions. Its diagnostic logic: domain-specific criterion mapping drives larger
+within-pair criterion-profile differences under Phase 2 (domain-appropriate criteria
+favor the in-domain decision); structural-reading mode suppresses this and reduces
+criterion-profile variance; circularity produces no reduction. The falsification
+criterion is explicit: criterion-profile variance not reduced under Phase 3 conditions
+would disconfirm structural-reading mode; variance reduced under Phase 3 would
+disconfirm circularity.
+
+The logic requires that within-pair criterion-profile variance under Phase 2 cross-
+cluster conditions is primarily driven by domain-specific criterion mapping. But the
+accepted adversarial mechanism predicts that criterion activation in any pairing is
+determined jointly by both items' quality-dimension profiles — pair-specifically, not
+by domain label alone. For a cross-cluster pair, within-pair criterion-profile
+differences under Phase 2 arise from two sources: (i) domain-specific criterion
+mapping that differentially weights domain-appropriate quality dimensions, and (ii)
+pair-specific quality-dimension-profile differences between the two specific decisions,
+which activate different dominant criteria even within a single domain. Both sources
+produce within-pair criterion-score asymmetry; measurement 2 measures their sum.
+
+Source (ii) is not eliminated by the Phase 3 instruction. When structural-reading mode
+suppresses source (i), source (ii) becomes relatively more prominent — quality-dimension-
+profile differences between two high-quality champions from different structural
+specializations remain, and in the absence of domain-specific mapping, they become the
+dominant driver of within-pair criterion variation. The net effect on total within-pair
+criterion-profile variance under Phase 3 depends on the relative magnitudes of sources
+(i) and (ii) in the specific calibration pairs used. If source (ii) is comparable in
+magnitude to source (i) — which the adversarial mechanism's own pair-specificity account
+makes plausible for high-quality champion comparisons — Phase 3 instructions may reduce
+total criterion-profile variance only moderately even when structural-reading mode is
+fully functioning.
+
+The interpretive gap concerns the intermediate outcome. Large variance reduction
+confirms structural-reading mode; zero reduction is consistent with circularity.
+Moderate reduction — which the adversarial mechanism predicts is the likely outcome
+when source (ii) partially replaces the suppressed source (i) — is consistent with
+both effective structural-reading mode and partial circularity. The stated falsification
+criterion ("variance not reduced") provides confirmatory power when reduction is large
+but fails to arbitrate the intermediate case that the accepted mechanism predicts.
+
+Measurements 1 and 3 add independent evidence but do not resolve the variance-source
+confound. An LLM panel that achieves improved cross-cluster κ (measurement 1) and
+better quality-discrimination accuracy (measurement 3) under Phase 3 conditions could
+be converging on quality-dimension-profile-driven criteria rather than structural-method
+criteria — agreement for reasons consistent with the mechanism's source-(ii) prediction
+that measurements 1 and 3 cannot distinguish from genuine structural-reading mode
+without variance-source decomposition. The supportive paper notes that the combination
+of all three measurements is "more diagnostic" than any single one; but the expected
+pattern of results across the three measurements under each hypothesis — structural-
+reading, circularity, and source-(ii) dominance — is not specified in the protocol.
+Specifying those patterns in advance is what converts three measurements from a
+descriptively richer observation into a discriminating test.
+
 ### 3.7 Method/Content Inseparability in LLM Implementation
 
 The defense rests on a conceptual analysis of what C1-C5 should measure. The
@@ -776,12 +830,18 @@ form; it is about the depth of behavioral evidence needed to confirm that the re
 suppression actually occurs in practice, specifically in the domain-integrated texts of
 champion decisions where trained feature salience is strongest.
 
-The concrete calibration protocol is the right kind of test, but the two structural
-limits identified in §3.6 (circular quality ground truth; champion-scale gap) mean
-it provides behavioral evidence for the instruction effect in a non-champion
-population with a Phase-2-derived quality validator — not evidence sufficient to
-establish that the override works in the harder champion case against an independent
-quality standard.
+The concrete calibration protocol is the right kind of test, but the three structural
+limits identified in §3.6 (circular quality ground truth; champion-scale gap;
+variance-source confound in measurement 2) mean it provides behavioral evidence for
+the instruction effect in a non-champion population with a Phase-2-derived quality
+validator and a variance diagnostic whose intermediate results the accepted mechanism
+renders ambiguous — not evidence sufficient to establish that the override works in
+the harder champion case against an independent quality standard under an unconfounded
+diagnostic. The expected pattern of results across measurements 1, 2, and 3 under
+each competing hypothesis — structural-reading mode, circularity, and pair-specific
+quality-dimension-profile dominance (source ii active after domain-mapping suppression)
+— is not pre-specified in the protocol, which is what would convert three measurements
+from a descriptively richer result into a discriminating test.
 
 Separately, for the Phase 2 sections (§§3.1–3.5): the mechanism paper's
 sub-predictions provide more diagnostic sharpness than aggregate κ, but address
@@ -899,6 +959,26 @@ conditions.
    reliability level does not meet the standard that "coherent global ranking"
    implies. Evidence of improvement over the Phase 2 cross-domain baseline is
    necessary but not sufficient.
+
+   **(d) Variance-source decomposition for measurement 2.** The criterion-profile
+   variance reduction test requires controlling for pair-specific quality-dimension-
+   profile effects to cleanly attribute variance reduction to domain-specific criterion
+   suppression rather than to quality-dimension-profile rearrangement under Phase 3
+   conditions. Two methods are available. First, construct cross-cluster calibration
+   pairs that are quality-dimension-profile-matched: pairs where the two domain
+   decisions have been assessed (via Phase 2 per-criterion scores or expert judgment)
+   to have similar overall quality-dimension profiles, so that within-pair criterion-
+   profile differences under Phase 2 conditions are primarily attributable to domain-
+   specific mapping rather than to quality-dimension-profile differences. For such
+   pairs, the variance reduction signal from Phase 3 instructions is cleaner: any
+   remaining within-pair criterion-profile variance after profile-matching is more
+   confidently attributable to domain-specific effects. Second, specify the expected
+   pattern of results across measurements 1, 2, and 3 jointly for each competing
+   hypothesis — structural-reading mode, circularity, and pair-specific quality-
+   dimension-profile dominance after domain-mapping suppression — prior to data
+   collection. Without this pre-specification, moderate variance reduction combined
+   with improved κ and quality-discrimination accuracy is consistent with multiple
+   hypotheses and the protocol cannot adjudicate among them.
 
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3 attack is
