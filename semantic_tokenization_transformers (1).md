@@ -637,6 +637,26 @@ underlying mechanism is correct:
 target metric, or if LLM normalization introduces a hallucination rate
 above the pre-registered threshold.
 
+**Note on failure-mode scope.** The pre-registered ceiling in step 5
+applies to F1-type hallucination: content the normalizer generates that
+is not present in the proto-text. The normalizer instruction ("DO NOT
+Add new information or facts") is designed to prevent this class of
+failure. A structurally distinct failure mode — F2 retrieval error —
+occurs upstream: a wrong medoid is selected for a code, so the
+proto-text itself contains semantically incorrect content. F2 failures
+are detectable via proto-text fidelity testing (PTF: comparing the
+proto-text to the source document D from which the medoid was drawn)
+but are not correctable by the V1 normalizer, whose instruction treats
+inserting a fact from D as "adding new information" regardless of
+whether the proto-text's content is wrong. F2 failures that escape PTF
+detection propagate to output silently. F2 failures detected by PTF
+require either a V2 normalizer redesign (SC5: an instruction that
+distinguishes D-grounded corrections from ungrounded additions) or
+downstream human review; they are not addressed by the current protocol
+alone. See also §6.3 for the architectural implications of this
+tradeoff. Cite: `otherwise/stt-retrieval-hallucination.md` §3.5;
+`yesindeed/stt-corpus-scope-defense.md` §3.4.
+
 Ablations to be reported: number of medoids per code (1, 3, 5, 10);
 coherence weight β ∈ {0, 0.5, 1.0, 1.5}; with and without LCS merging;
 with and without LLM normalization.
@@ -689,7 +709,7 @@ mechanisms would explain its advantages:
 
 **Pre-trained embeddings as inductive bias:** Leveraging powerful teacher models should provide a strong initialization for the semantic space, bootstrapping from existing knowledge without training from scratch.
 
-**Retrieval-based decoding aims to ground outputs:** By constraining outputs to real text chunks, we aim to eliminate the most common source of hallucination — generation from the model's interpolation of training data. Whether this constraint is preserved through LLM normalization is itself a question we identify in Section 5.3.
+**Retrieval-based decoding aims to ground outputs:** By constraining outputs to real text chunks, we aim to eliminate the most common source of hallucination — generation from the model's interpolation of training data (F1 failures). Whether this constraint is preserved through LLM normalization is itself a question we identify in Section 5.3. A structurally distinct failure mode, F2 retrieval error (wrong medoid selected for a code), is not eliminated by this grounding strategy and is not correctable by the current normalizer design; it requires separate detection (proto-text fidelity testing, PTF) and is addressed by a V2 normalizer redesign (SC5) rather than by the retrieval constraint itself. The anti-hallucination claim made in Section 5.3 and the conclusion pertains to F1 failures; F2 coverage is a separate empirical and design question.
 
 **Controlled normalization is intended to preserve fidelity:** The disciplined LLM prompt engineering, combined with validation, is *designed* to ensure that surface-level improvements don't compromise semantic accuracy. Whether the design holds under adversarial inputs is an open question.
 
@@ -732,6 +752,8 @@ better downstream performance is to be tested per Section 5.
 **Training data requirements:** Building a good codebook requires a large, diverse corpus. For specialized domains with limited data, code quality may suffer.
 
 **Cold start problem:** The model cannot easily generate text about topics entirely absent from the corpus (though the LLM normalizer provides some flexibility).
+
+**Normalizer instruction creates an F1/F2 design tradeoff:** The "DO NOT Add new information or facts" instruction prevents F1 generation hallucination at the normalization stage. This same instruction forecloses F2 correction: when the proto-text contains a wrong medoid, inserting the correct content from D is "adding new information" that the instruction blocks, regardless of whether D contains the correct value. The tradeoff is explicit and internally consistent — a normalizer permitted to insert facts from D would reintroduce F1 risk. F2 failures are therefore detectable (via PTF) but not correctable in the V1 design. A V2 normalizer redesign (SC5) that operationalizes a D-grounded correction mode distinct from ungrounded additions would address F2 correctability at the cost of requiring empirical demonstration that F1 risk is not reintroduced. Until SC5 is implemented, the "bounded hallucination" claim in the conclusion should be understood as covering F1-type failures only; full F2 coverage requires SC5 or empirical evidence that PTF failure rates in the target deployment corpus are negligible. Cite: `otherwise/stt-retrieval-hallucination.md` §§3.4–3.5; `yesindeed/stt-corpus-scope-defense.md` §§3.4, 5.
 
 ### 6.4 Societal Impacts
 
@@ -810,8 +832,14 @@ test, that STT should yield:
    (P4).
 3. **Competitive performance** on long-document tasks where context
    length is the binding constraint (P5–P6).
-4. **Bounded hallucination** under retrieval-grounded decoding, with
-   a pre-registered ceiling enforced by the protocol of Section 5.3.
+4. **Bounded hallucination** at the normalization stage against F1-type
+   generation failures, with a pre-registered ceiling enforced by the
+   protocol of Section 5.3. *Scope:* this prediction covers F1 failures
+   (content the normalizer adds not present in the proto-text); F2
+   failures (wrong medoid from retrieval) are detectable via PTF but not
+   correctable within the V1 normalizer design (see §§5.3, 6.3). Full
+   F2 coverage requires either a V2 normalizer redesign (SC5) or
+   empirical negligibility evidence for the target deployment corpus.
 
 Each of these is stated as a prediction with an explicit `Falsified
 if:` clause, not as a result.
