@@ -20,9 +20,11 @@ de mérito, contradição entre fundamentos meritórios e obscuridade
 no alcance do dispositivo relativamente ao mérito são vícios
 plenamente sanáveis. O segundo diz respeito à natureza dos efeitos
 infringentes: demonstra-se, a partir do art. 1.024, §3º, que a
-modificação da decisão embargada é consequência automática do
-acolhimento quando a sanação do vício a implicar, não pretensão
-autônoma que se deva formular subsidiariamente. A fórmula reiterada
+modificação da decisão embargada materializa-se sem necessidade de
+pedido subsidiário quando o tribunal, ao integrar a decisão, determinar
+que a sanação do vício a implica — é consequência processual do
+acolhimento, não pretensão autônoma que se deva formular
+subsidiariamente. A fórmula reiterada
 na prática forense de "subsidiariamente, requer-se a atribuição de
 efeitos infringentes" é dogmaticamente imprecisa e deve ser
 substituída. O artigo propõe formulação correta e examina as
@@ -48,10 +50,11 @@ that omissions about merit questions, contradictions between merit
 grounds, and obscurity in the reach of the dispositif regarding
 the merits are fully curable defects. The second concerns the nature
 of infringement effects: it is demonstrated, from art. 1,024, §3,
-that modification of the clarified decision is an automatic
-consequence of granting the motion when curing the defect implies
-such modification, not an autonomous claim to be formulated
-subsidiarily. The formula routinely used in forensic practice of
+that modification of the clarified decision materializes without a
+subsidiary claim when the court's integration of the decision implies
+it — it is a procedural consequence of granting the motion (no separate
+petition required once the court determines that integration implies
+modification), not an autonomous claim to be formulated subsidiarily. The formula routinely used in forensic practice of
 "subsidiarily, requests infringement effects" is dogmatically
 imprecise and should be replaced. The article proposes a correct
 formulation and examines the procedural consequences of the
@@ -319,10 +322,15 @@ Há implicações processuais relevantes para essa distinção.
 
 **Primeira implicação: o tribunal não pode rejeitar a modificação
 com base em que "não foram pedidos efeitos infringentes".** Se o
-acolhimento dos embargos implica logicamente modificação do julgado,
-a modificação deve ocorrer independentemente de ter sido pedida
-como pretensão autônoma. O pedido principal é a sanação do vício;
-a modificação é consequência automática quando a sanação a implicar.
+acolhimento dos embargos implica modificação do julgado, a modificação
+deve ocorrer independentemente de ter sido pedida como pretensão
+autônoma. O pedido principal é a sanação do vício; a modificação
+materializa-se sem pedido subsidiário quando o tribunal, ao integrar
+a decisão, determina que a sanação a implica. O condicional do art.
+1.024, §3º — "caso o acolhimento dos embargos de declaração implique
+modificação" — marca que essa determinação é contingente ao resultado
+da integração, não automática no sentido de logicamente necessária
+independente da nova apreciação que o acolhimento demanda.
 
 **Segunda implicação: a modificação não requer fundamentação
 adicional além da que sustenta o acolhimento dos embargos.** A
@@ -540,6 +548,66 @@ dispõe de fundamento para acolher os embargos, e o controle
 recursal opera no vazio. A crítica hermenêutica é complementar,
 não substitutiva, à reconstrução dogmática proposta.
 
+### 5.6 A crítica da cognição integrativa
+
+**Objeção.** Uma crítica mais profunda à tese do §5.3 distingue
+dois tipos de atividade cognitiva: cognição de recall — o tribunal
+recupera e explicita o que sua decisão já havia implicitamente
+decidido — e cognição geratória — o tribunal forma julgamento
+substantivo que não havia formado antes. O argumento é que as
+violações do art. 489, §1º, IV que chegam genuinamente aos
+embargos de declaração são precisamente as que demandam cognição
+geratória, não apenas de recall. Isso porque dois filtros
+estruturais removem do art. 489, §1º, IV os casos de recall: (a)
+o limiar da decisividade — argumentos cujo desfecho o marco do
+tribunal já determina tendem a ser enfrentados explicitamente ou
+dispostos por rejeição implícita; (b) a doutrina da rejeição
+implícita — argumentos que a estrutura fundamentativa da decisão
+logicamente descarta não constituem omissão genuína. O que resta
+past esses dois filtros — as omissões genuínas — é,
+disproportionately, aquilo que o marco não determinou: casos em
+que o tribunal precisa, pela primeira vez, formar julgamento
+substantivo sobre o argumento. Nesses casos, diz a crítica, os
+embargos não completam o iter argumentativo; eles o inauguram, ao
+menos em relação àquele argumento.
+
+**Resposta.** A crítica identifica com precisão o limite de §5.3:
+a proposição "não há nova cognição autônoma" é mais seguramente
+sustentada para os casos de recall e de rejeição implícita do que
+para as omissões genuínas no extremo contestado do espectro. O
+texto do art. 489, §1º, IV — ao exigir que o argumento seja
+"capaz de, em tese, infirmar a conclusão" — admite graduação:
+parte das omissões genuínas envolve argumentos cujo desfecho o
+marco do tribunal determina de forma suficientemente clara que a
+integração é essencialmente recognitiva; outra parte envolve
+argumentos em que o tribunal deve, de fato, eleger entre opções
+compatíveis com o marco.
+
+A questão empiricamente relevante é a distribuição das omissões
+genuínas do art. 489, §1º, IV entre essas duas categorias na
+prática dos tribunais brasileiros de segundo grau. A crítica
+sustenta que o efeito-seleção — produzido pelos dois filtros —
+direciona os casos remanescentes para o extremo geratório. A
+defesa sustenta que omissões sobre precedentes vinculantes,
+dispositivos legais de alcance consolidado e consistência interna
+ainda constituem o centro empírico. Essa é uma questão
+empiricamente resolúvel por levantamento sistemático de julgados;
+o argumento estrutural, por si só, não a decide em nenhum dos
+sentidos.
+
+O que a crítica estabelece, e que este artigo aceita, é que o
+alcance de §5.3 depende da distribuição empírica: onde o marco
+determina o desfecho, os embargos completam; onde não determina,
+os embargos inauguram. A tese do artigo é mais forte para a
+categoria de recall e mais vulnerável para o extremo geratório. A
+substituição da fórmula "subsidiariamente, requer-se a atribuição
+de efeitos infringentes" pela formulação proposta no §3.3 —
+consequência processual sem pedido subsidiário — permanece
+defensável em qualquer dos extremos: a questão de como o pedido
+deve ser formulado é logicamente independente de quanto de
+cognição nova o acolhimento demandará. Cite:
+`otherwise/ed-cognition-constraint.md` §§3.1–3.5.
+
 ---
 
 ## 6. Conclusão
@@ -556,12 +624,19 @@ contradição ou obscuridade, não é. A distinção relevante é entre
 modalidade e matéria, não entre formal e meritório.
 
 Quanto à natureza dos efeitos infringentes: a modificação da decisão
-embargada é consequência automática do acolhimento dos embargos
-quando a sanação do vício a implicar. Não é pretensão autônoma;
-não é objeto de pedido subsidiário; não é categoria distinta de
-recurso. O art. 1.024, §3º, trata a modificação como pressuposto
-de um direito — o direito do embargado de complementar razões
-recursais —, não como objeto de pedido. A fórmula "subsidiariamente,
+embargada materializa-se sem necessidade de pedido subsidiário quando
+o acolhimento dos embargos — e a integração da decisão que ele realiza
+— a implicar. Não é pretensão autônoma; não é objeto de pedido
+subsidiário; não é categoria distinta de recurso. O art. 1.024, §3º,
+trata a modificação como pressuposto contingente de um direito — o
+direito do embargado de complementar razões recursais —, não como
+objeto de pedido. A expressão "caso o acolhimento implique modificação"
+revela a contingência: se a integração realizada pelo tribunal, ao
+enfrentar o argumento antes omitido, resultar em conclusão diversa,
+a modificação segue sem necessidade de pedido autônomo. O que é
+automático é a dispensa do pedido subsidiário; o que é contingente é
+a determinação, pelo tribunal integrante, de que a sanação implica
+resultado diverso. A fórmula "subsidiariamente,
 requer-se a atribuição de efeitos infringentes" deve ser substituída
 pela formulação correta: pedido de sanação dos vícios com registro
 de que, na medida em que a integração importe modificação, seja
