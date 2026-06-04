@@ -22,8 +22,12 @@ the two-axis divergence (high persuasiveness / low validity)
 identifies the COURTREASONER pathology in our evaluation setting;
 and (3) whether the ESHTR clustering methodology reduces non-
 transitivity in LLM judge comparisons, testing the Semantic Proximity
-Hypothesis. The experimental design is pre-registered; results
-section to be completed upon data collection.
+Hypothesis (Phase 2), and whether Phase 3's cross-cluster championship
+comparison achieves tractability under the abstraction instruction,
+assessed via a calibration protocol with pre-specified hypothesis
+patterns distinguishing structural-reading mode from circularity.
+The experimental design is pre-registered; results section to be
+completed upon data collection.
 
 **Keywords**: legal AI evaluation; LLM-as-judge; Brazilian civil
 procedure; Lean 4; empirical legal research; ESHTR; precedent
@@ -52,7 +56,10 @@ that pure persuasiveness metrics would miss?
 
 **Q3 (ESHTR validation)**: Does ESHTR clustering reduce non-
 transitivity in LLM judge comparisons, as predicted by the Semantic
-Proximity Hypothesis?
+Proximity Hypothesis (Phase 2)? Does Phase 3's cross-cluster
+championship comparison achieve tractability under the abstraction
+instruction, as assessed by the Phase 3 calibration protocol
+(§2.7)?
 
 ---
 
@@ -162,6 +169,61 @@ For the 200-decision corpus, we:
 6. Measure Fleiss' κ for intra-cluster pairs and cross-cluster pairs
 7. Test: κ_intracluster > κ_crosscluster (Semantic Proximity Hypothesis)
 
+### 2.7 Phase 3 Calibration Protocol
+
+Phase 3 of ESHTR conducts a cross-cluster championship tournament in which
+cluster champions are compared under an explicit abstraction instruction
+("abstract from subject-specific vocabulary to underlying argumentation
+quality"). The tractability of this cross-cluster comparison depends on
+whether the instruction successfully redirects LLM judge evaluation from
+domain-specific feature salience toward structural reasoning properties.
+
+A variance-source confound in the criterion-profile variance measurement
+prompted a protocol extension (`otherwise/eshtr-phase3-gap.md` §3.6,
+surrender condition §6(d); `yesindeed/phase3-coherence-defense.md` §4.6).
+Within-pair criterion-profile differences under Phase 2 cross-cluster
+conditions arise from two separable sources: (i) domain-specific criterion
+mapping that differentially weights domain-appropriate quality dimensions,
+and (ii) pair-specific quality-dimension-profile differences between the
+two decisions, which activate different dominant criteria independent of
+domain label. Phase 3 instructions suppress source (i); source (ii)
+persists. Moderate criterion-profile variance reduction under Phase 3 is
+consistent with both full structural-reading mode (source i suppressed;
+source ii now dominant) and partial structural-reading mode (source i
+incompletely suppressed). Profile-matched pairs are the diagnostic
+resolution.
+
+**Evaluation conditions**: Each cross-cluster calibration pair is
+evaluated under two conditions using the same LLM panel:
+
+- *Phase 2 condition*: Standard C1-C5 rubric, no abstraction instruction.
+- *Phase 3 condition*: C1-C5 rubric with Phase 3 abstraction instruction.
+
+**Pair types**: The calibration set includes both *standard* cross-cluster
+pairs and *profile-matched* cross-cluster pairs. Profile-matched pairs are
+selected so that the two domain decisions have similar per-criterion score
+profiles within their respective clusters, as established by Phase 2
+per-criterion calibration scores. For profile-matched pairs, within-pair
+criterion-profile differences under Phase 2 conditions are primarily
+attributable to source (i); source (ii) is controlled by selection.
+
+**Three measurements**:
+
+- **M1 (Cross-cluster κ shift)**: Fleiss' κ across the LLM panel for
+  cross-cluster pairs under Phase 3 vs. Phase 2 instruction conditions.
+  Tests whether the abstraction instruction improves inter-judge agreement.
+  Threshold: Phase 3 cross-cluster κ must approach Phase 2 within-cluster
+  κ levels (not merely exceed Phase 2 cross-cluster κ).
+- **M2 (Criterion-profile variance)**: Per-criterion score variance between
+  the two domain decisions under Phase 2 vs. Phase 3 conditions. Measured
+  separately for standard and profile-matched pairs. Profile-matched M2 is
+  the key diagnostic: large reduction confirms structural-reading mode; zero
+  reduction confirms circularity, independent of source-(ii) magnitude.
+- **M3 (Quality-discrimination accuracy)**: Winner-accuracy on
+  quality-discrepant cross-cluster pairs (one decision higher-ranked within
+  its cluster under Phase 2 calibration). Tests whether Phase 3 instructions
+  improve quality discrimination across domain boundaries.
+
 ---
 
 ## 3. Results
@@ -204,6 +266,40 @@ We will report:
 Expected finding: κ_intracluster > κ_crosscluster, with the
 difference largest for cluster pairs that are most semantically
 distant (e.g., RPPS decisions vs. criminal sentencing decisions).
+
+### 3.4 Expected Output: Phase 3 Calibration
+
+The following hypothesis patterns are pre-specified prior to data
+collection (`yesindeed/phase3-coherence-defense.md` §4.6):
+
+**Structural-reading mode** (instruction suppresses domain-specific
+criterion mapping): M1 substantially improved over Phase 2 cross-cluster
+κ, approaching Phase 2 within-cluster κ; M2 large reduction for
+profile-matched pairs, moderate for standard pairs (source ii partially
+compensates for suppressed source i in standard pairs); M3 substantially
+higher than Phase 2 cross-cluster accuracy.
+
+**Circularity** (Phase 3 reproduces Phase 2 domain-criterion activation):
+M1 not improved over Phase 2 cross-cluster κ; M2 no reduction for either
+standard or profile-matched pairs; M3 not consistently better than Phase 2
+cross-cluster accuracy.
+
+**Partial structural-reading mode** (instruction suppresses source i
+incompletely): M1 moderately improved but not approaching Phase 2
+within-cluster κ; M2 small to moderate reduction for standard pairs,
+moderate but not large for profile-matched pairs; M3 moderately improved.
+
+**Source-(ii) dominance** (instruction fully suppresses source i but
+source ii is large): M2 moderate reduction for standard pairs, large
+reduction for profile-matched pairs. This pattern indicates structural-
+reading mode in a corpus where quality-dimension-profile differences are
+pronounced within cross-domain pairs; it is compatible with structural-
+reading mode and does not constitute a failure condition. Detectable
+through the standard/profile-matched M2 contrast.
+
+The matched-pair M2 result is the key diagnostic: it separates structural-
+reading mode from circularity regardless of source-(ii) magnitude in the
+standard pair set.
 
 ---
 
