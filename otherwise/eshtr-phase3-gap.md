@@ -249,6 +249,42 @@ weak-argument cases with explicit conditional calibration on argument character.
 Without such an extension, the conduct/quality distinction holds at the definitional
 level but not at the scoring level where LLM judges actually operationalize it.
 
+The most targeted response to this operationalization argument identifies three
+structural features present in Brazilian appellate decisions regardless of argument
+strength: explicit identification of what the argument claims, citation to the
+applicable legal standard as the operative criterion, and a logical statement of
+why the argument fails under that standard. An annotator or calibrated LLM judge can
+detect these features' presence without independent knowledge of argument character;
+the gap is therefore a protocol design insufficiency closable by including weak-argument
+calibration examples, not a structural opacity that infects C2 measurement regardless
+of calibration design. This response reframes the contested claim usefully: the
+operative question is not whether such features are absent in weak-argument contexts
+(they are present in any adequately-reasoned decision) but whether their presence closes
+the *ranking* calibration problem.
+
+It does not. The three features function as adequacy thresholds — distinguishing
+conclusory dismissal from reasoned disposal — not as ranking signals within the
+adequacy range. For a pairwise *ranking* task, which is what ESHTR's tournament
+requires, both a minimally adequate disposal of a weak argument and an expert engagement
+with a strong argument exhibit the three features; the features establish that both
+decisions cleared the adequacy floor but cannot discriminate between them. The
+calibration gradient operative for tournament ranking runs on within-adequacy
+discrimination, and here elaboration depth — how extensively each feature is developed,
+how many standards are cited, how complex the logical chain — scales with argument
+strength even when all three features are formally present. A strong argument that
+raises multiple contested sub-claims requires identification of several claims, citation
+to competing authorities, and a multi-step logical chain; the same features appear in
+both the weak-argument and strong-argument contexts, but their elaborateness is
+argument-strength-sensitive. LLM judges calibrated on human preference annotations over
+complete decision texts acquire their within-adequacy ranking signal from this
+elaboration depth, not from feature presence alone. Calibration examples for SC6(a)
+must therefore be constructed as *pairwise ranking* examples — where a
+brief-but-adequate disposal of a weak argument ranks above an inadequate disposal of
+the same weak argument, despite potentially similar or greater text length in the
+inadequate version — training judgment of conduct quality within the adequacy range.
+Calibration examples that merely include weak-argument contexts satisfy the structural
+move but not the design specificity that closes the within-adequacy gap.
+
 Within fine-grained doctrinal clusters, C1 and C4 score variance is compressed by
 shared precedential context in ways that C2 variance is not. In a cluster of
 decisions applying the same leading precedents and doctrinal framework, C1 (ratio
@@ -268,6 +304,54 @@ already compressed toward a common doctrinal profile. Within the cluster's
 compressed C1/C4 space, C2 variation is relatively wider and more independent —
 producing the profile asymmetry between cluster members that generates C2-specific
 criterion activation in within-cluster pairings.
+
+The most direct response to the within-cluster compression argument challenges the
+selectivity assumption at its source: dense embedding models trained on legal text
+encode both doctrinal vocabulary and argumentative discourse structure in the same
+representational space. Decisions with richer C2 engagement differ textually in
+argument-specific reasoning vocabulary, counter-reasoning structure, and elaboration
+discourse markers — features the embedding model represents alongside precedential
+references and procedural posture. If elaboration richness is represented in the same
+embedding space, clustering by embedding proximity groups items by elaboration
+alongside doctrinal context, compressing within-cluster C2 variance together with
+C1/C4 variance. The selectivity the adversarial compression mechanism requires —
+doctrinal dimensions compressed, argumentative elaboration dimensions not — has not
+been demonstrated for multilingual-e5-large-instruct in Brazilian legal corpora.
+
+The encoding claim is accepted; the compression inference does not follow from it.
+Encoding and clustering-compression are distinct operations. The embedding model's
+representational space contains dimensions corresponding to many textual features.
+Clustering by proximity selects items that are close in this high-dimensional space,
+but closeness is driven by the dimensions with highest between-cluster variance —
+in fine-grained doctrinal clusters, these are the doctrinal vocabulary, precedential
+reference, and procedural-posture dimensions. Within the cluster, these dimensions are
+compressed by selection: items are close on the features that drove cluster membership.
+Argumentative elaboration varies with case-specific adversarial records, determined by
+counsel's choices in each specific case — a source of variation independent of the
+shared doctrinal context. For clustering to compress elaboration variance significantly,
+elaboration richness would need to correlate strongly with doctrinal proximity in the
+target corpus. There is no structural reason for this correlation: a cluster of
+proportionality-of-sanction cases contains both cases where counsel raised sophisticated
+factual challenges (high elaboration) and cases where counsel raised only
+settled-precedent arguments (low elaboration), both equally embedding-proximate on the
+doctrinal dimensions that define the cluster's neighborhood.
+
+The response's implicit prediction also has a self-contained testable consequence.
+If elaboration richness drives embedding proximity significantly enough to produce
+meaningful within-cluster compression, the clustering step co-locates high-elaboration
+decisions with high-elaboration ones and low-elaboration with low-elaboration ones;
+within-cluster pairings are then between decisions with similar elaboration levels;
+the elaboration-asymmetric pairings where C2 criterion activation is sharpest are
+sorted into cross-cluster events rather than within-cluster ones. Under this outcome
+the adversarial concern does not vanish — it relocates to Phase 3, where cross-cluster
+comparisons include the cross-elaboration pairings clustering moved there. SC6(c)'s
+measurement of per-item C1/C2/C4 dimension scores within fine-grained clusters tests
+both predictions simultaneously: if within-cluster C2 variance is not wider than
+C1/C4 variance, either the compression is co-extensive (the fourth response's
+prediction) or adversarial records happen to be homogeneous within clusters — in
+either case the within-cluster adversarial mechanism does not operate; if C2 variance
+is systematically wider, the compression asymmetry is confirmed regardless of what
+the embedding model encodes in principle.
 
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
@@ -801,25 +885,43 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the conduct/quality and C1/C4 co-variation replies to the C2 adversarial claim.**
-The supportive paper offers two direct responses to the C2 structural distinctness
-argument in §3.2: that C2 evaluates analytical conduct quality rather than engagement
-volume, and that adversarial record quality affects C1, C2, and C4 as a correlated
-set — preventing C2-specific profile asymmetry within clusters. The §3.2 analyses
-address both. On the first: the conduct/quality distinction is correct at the criterion
-level; it fails at the operationalization level, where LLM judges trained on human
-preference data acquire a C2 calibration gradient correlated with adversarial record
-elaboration in the decision text — a gradient that a calibration protocol lacking
-weak-argument examples does not correct. On the second: the C1/C4 co-variation
-argument establishes between-case dynamics; it does not govern within-cluster dynamics
-where C1/C4 variance is compressed by shared doctrinal context while C2 varies with
-case-specific adversarial records. Within the cluster's compressed C1/C4 space, C2
-variation is relatively wider and more independent — producing the profile asymmetry
-the co-variation argument claims cannot arise. The practical implication is that
-within-cluster C2-specific criterion activation cannot be ruled out under the current
-protocol design: the calibration extension (weak-argument C2 examples with conditional
-calibration) and per-item C1/C2/C4 dimension scores within clusters remain unspecified
-in the ESHTR experimental design.
+**On the full C2 exchange (four supportive responses, four adversarial counter-replies).**
+The C2 debate has passed through four exchanges. The supportive paper argues (1) that
+C2 evaluates analytical conduct quality rather than engagement volume; (2) that
+adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
+argument-type-independent textual markers — explicit identification of the argument,
+citation to the applicable standard, logical failure statement — allow calibrated
+judges to assess conduct quality regardless of argument strength, making the calibration
+gap a protocol design insufficiency not a structural impossibility; (4) that dense
+embedding models encode argumentative elaboration alongside doctrinal vocabulary in
+the same representational space, so clustering by proximity compresses both, and
+within-cluster C2 variance is not necessarily wider than C1/C4 variance.
+
+The §3.2 analyses address all four. On (1): the conduct/quality distinction holds at
+the criterion level; it does not survive the calibration step, where LLM judges
+trained on human preference data acquire a C2 signal correlated with elaboration
+richness in the text, because annotators assessing conduct quality for legal arguments
+cannot verify argument-specific analytical precision from decision text independently
+of that text's own elaboration level. On (2): the C1/C4 co-variation argument
+establishes between-case dynamics; within a fine-grained doctrinal cluster, C1/C4
+variance is compressed by shared precedential context while C2 varies with
+case-specific adversarial records, independent of the shared doctrinal framework.
+On (3): the three structural features function as adequacy thresholds — distinguishing
+conclusory from reasoned disposal — not as ranking signals within the adequacy range;
+both minimally adequate and excellent C2 decisions exhibit the features; elaboration
+depth across the features scales with argument strength even when all three are
+formally present; the within-adequacy ranking problem is not closed by feature
+presence. SC6(a) must be constructed as pairwise ranking examples, not only as
+weak-argument context inclusions. On (4): the encoding claim is accepted; the
+compression inference does not follow; clustering compresses the dimensions that drove
+proximity — doctrinal vocabulary, precedential references, procedural posture —
+while argumentative elaboration varies with case-specific adversarial records
+independent of doctrinal context; whether elaboration is also compressed depends on
+a corpus-specific correlation that is not structurally mandated. The practical
+implication across all four exchanges: within-cluster C2-specific criterion activation
+cannot be ruled out under the current protocol design; SC6(c) — per-item C1/C2/C4
+dimension scores within fine-grained clusters — is the central empirical test and
+remains unspecified in ESHTR's experimental design.
 
 **On the Phase 3 attack (§§3.6–3.8):**
 
@@ -1057,24 +1159,30 @@ conditions.
 
 6. **C2 operationalization validated against adversarial record confound.** If the ESHTR
    §5.4 calibration protocol is extended to include: (a) calibration examples
-   demonstrating correct C2 quality assessment for weak-argument cases, with explicit
-   instruction to assess engagement conduct quality conditional on the specific
-   argument's character rather than unconditionally on engagement elaboration; (b)
-   empirical evidence showing that LLM judges calibrated under this extended protocol
-   assign C2 scores independent of adversarial record elaboration richness in the
-   decision text across a range of argument strength levels; and (c) per-item C1, C2,
-   and C4 dimension scores within fine-grained semantic clusters, showing that
-   within-cluster C2 variance is not systematically wider than C1/C4 variance (which
-   would indicate framework-compressed C1/C4 with independent C2 variation) — then
-   the C2 operationalization concern and the within-cluster C2 independence claim are
-   both addressable from a single data collection. Evidence of within-cluster C1/C2/C4
-   co-variation at levels comparable to between-cluster co-variation would undermine
-   the adversarial C2-specific mechanism; evidence of within-cluster C2 variation
-   independent of C1/C4 would confirm it. This surrender condition is partially
-   overlapping with SC5: both require per-item dimension score data collected alongside
-   Bradley-Terry rankings; the difference is that SC5 tests for non-systematic within-
-   cluster cycling overall, while SC6 tests for C2-specific profile dynamics that
-   generate systematic within-cluster criterion activation on C2.
+   demonstrating correct C2 *ranking* for weak-argument cases — specifically, pairwise
+   examples where a brief-but-adequate disposal of a weak argument ranks above an
+   inadequate disposal of the same weak argument despite similar or greater text length
+   in the inadequate version, training LLM judges to discriminate conduct quality
+   within the adequacy range and not only to detect the conclusory-vs.-reasoned
+   threshold; (b) empirical evidence showing that LLM judges calibrated under this
+   extended protocol assign C2 scores independent of adversarial record elaboration
+   richness across a range of argument strength levels, *at the ranking level*; and
+   (c) per-item C1, C2, and C4 dimension scores within fine-grained semantic clusters,
+   showing that within-cluster C2 variance is not systematically wider than C1/C4
+   variance — then the C2 operationalization concern and the within-cluster C2
+   independence claim are both addressable from a single data collection. Evidence of
+   within-cluster C1/C2/C4 co-variation at levels comparable to between-cluster
+   co-variation would undermine the adversarial C2-specific mechanism and simultaneously
+   confirm that embedding proximity compresses elaboration variance alongside doctrinal
+   variance — the fourth supportive response's implicit prediction. Evidence of
+   within-cluster C2 variation independent of C1/C4 would confirm the adversarial
+   mechanism and disconfirm the fourth response. Both hypotheses are tested by the
+   same data collection; neither requires a new experimental design beyond what SC5
+   already specifies with the addition of per-criterion dimension scores. This surrender
+   condition is partially overlapping with SC5: both require per-item dimension score
+   data collected alongside Bradley-Terry rankings; the difference is that SC5 tests
+   for non-systematic within-cluster cycling overall, while SC6 tests for C2-specific
+   profile dynamics that generate systematic within-cluster criterion activation.
 
 ---
 
