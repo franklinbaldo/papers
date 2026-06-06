@@ -24,15 +24,26 @@ available to any court facing an invoked binding precedent.
 A supportive defense (`yesindeed/paper1b-exit4-defense.md`) reconceptualizes Exit 4
 as *transparent contestation* rather than substantive authorization: an inferior court
 articulating its challenge in prescribed form, accepting reversal, and contributing a
-fully reasoned record for the STF's eventual engagement. This paper targets both the
-original thesis and its reconceptualized defense, arguing that neither can sustain the
-claim that Exit 4 constitutes a *saída legítima* in the same taxonomic sense as
-Exits 1, 2, 3, and 5.
+fully reasoned record for the STF's eventual engagement. The defense grounds
+"legitimacy" in the *invalidade/incorreção* distinction — Exit 4 decisions are
+*incorretas* but not *inválidas*, and therefore occupy the taxonomy's legitimate set —
+and locates the structural signal in art. 489, §1º, VI's presupposition structure
+rather than in art. 927, §4º. For Exit 5, the defense advances a different-legal-
+questions criterion: Exit 5 applies when the binding precedent governs a different type
+of legal question from the one the court resolves, making no distinguishing analysis
+available or necessary.
 
-This attack is not directed at Exits 1, 2, 3, or 5, nor at the silent partial
-application concept (§5). It targets the claim that Exit 4, in either formulation,
+This paper targets both the original thesis and its reconceptualized defense, arguing
+that the *invalidade/incorreção* recharacterization and the presupposition structure
+argument do not supply what "legítima" in the taxonomy requires, and that the different-
+legal-questions criterion for Exit 5 is boundary-unstable in ways that replicate the
+strategic problem it purports to solve.
+
+This attack is not directed at Exits 1, 2, 3, or 5 in their paradigm applications,
+nor at the silent partial application concept (§5). It targets the claim that Exit 4
 constitutes a *legally authorized* response that belongs in a taxonomy of five
-legitimate judicial responses.
+legitimate judicial responses, and the claim that the different-legal-questions
+criterion generates a policiable Exit 5 category at the boundary.
 
 ---
 
@@ -43,125 +54,155 @@ The strongest case for Exit 4 integrates three supports.
 **The normative support from arts. 926, 489, and 927.** Art. 926 CPC requires all
 courts to maintain coherence, integrity, and stability of jurisprudence. Art. 489,
 §1º, VI requires that departures from precedents be accompanied by "demonstration of
-the existence of distinction or supersession." Art. 927, §4º provides that
-modifications to established jurisprudence must be "fundamentadas de maneira adequada
-e específica" — a form requirement that the supportive defense reads as a structural
-signal that the CPC contemplates jurisprudential challenges from courts subject to
-art. 927. Read together, these provisions are said to ground an inference that the CPC
-design accommodates transparent departure-as-challenge, even if it does not authorize
-inferior courts to prevail in those challenges.
+the existence of distinction or supersession." The presupposition structure of art.
+489, §1º, VI — a negative form requirement specifying the form for departure-with-
+demonstration — necessarily contemplates the affirmative case: a departure-with-
+demonstration satisfies the reasoning standard. By specifying this form, the CPC 2015
+places departures-with-demonstration within the domain of acts subject to ordinary
+reasoning requirements rather than treating them as categorically excluded from the
+ordinary processing structure. If the CPC categorically prohibited such departures,
+it would not specify the reasoning standard for reasoned ones.
 
 **The rational binding theory read in both directions.** Under Marinoni's account, a
 precedent is "a reason that cannot be disregarded without a stronger reason." The
 formula runs in two directions: it binds inferior courts to observe the precedent until
 a stronger reason displaces it; it also binds the source court to engage when a
 stronger reason is advanced. An inferior court that exercises Exit 4 — articulating
-what it regards as a stronger reason in the prescribed form — activates this discursive
-obligation. The STF must respond to the challenge by affirming on review or
-reconsidering. The inferior court does not determine that binding force has lapsed; it
-argues that it should, and the STF determines by deciding whether to affirm or
-reconsider. The rational binding theory, read in both directions, is said to support
-this channel function without requiring inferior courts to serve as arbiter of when the
-stronger-reason threshold is crossed.
+what it regards as a stronger reason in the prescribed form — contributes to the record
+from which authorized petitions for reconsideration are constructed and to the
+deliberative context in which the source court's engagement is eventually triggered.
+The rational binding theory, read in both directions, supports this channel function
+without requiring inferior courts to serve as arbiter of when the stronger-reason
+threshold is crossed.
 
-**The transparent-contestation reconceptualization.** Exit 4, on the supportive
-account, is not a claim of substantive authority to produce a *legally effective*
-supersession. It is the prescribed form for transparent contestation: the inferior
-court cannot in good conscience apply a precedent it has identified as erroneous
-without articulating the error, accepts reversal knowingly, and contributes the most
-information-rich record available for the STF's eventual engagement. The decision is
-procedurally well-formed under the CPC's own requirements while knowingly inviting
-reversal under the hierarchical structure. The "legitimacy" of Exit 4 is the legitimacy
-of the prescribed form — not the legitimacy of prevailing. Art. 927, §4º's form
-requirement for modifications is a structural signal within the CPC that distinguishes
-transparent challenge from arbitrary defection.
+**The transparent-contestation reconceptualization and the *invalidade/incorreção*
+defense.** Exit 4, on the supportive account, is not a claim of substantive authority
+to produce a *legally effective* supersession. It is the prescribed form for
+transparent contestation: the inferior court cannot in good conscience apply a
+precedent it has identified as erroneous without articulating the error, accepts
+reversal knowingly, and contributes the most information-rich record available for the
+STF's eventual engagement.
 
-For Exit 5, the supportive defense supplies the ratio-independence criterion: Exit 5 is
-legitimate when the ratio decidendi of the resolution is genuinely independent of any
-question the invoked precedent addresses. The test: would a court properly applying the
-precedent have been required, in resolving this specific case, to engage the
-precedent's ratio? If yes, non-invocation is strategic. If no, Exit 5 is legitimate.
+The "legitimacy" of Exit 4 is defended through the *invalidade/incorreção* distinction.
+A decision is *inválida* when the procedural system responds through extraordinary
+nullification remedies and paths distinct from ordinary appeal. A decision is
+*incorreta* when the system processes it through ordinary reversal on the merits. Exit
+4 decisions are *incorretas* but not *inválidas*: the court has provided the
+demonstration art. 489, §1º, VI requires, is subject to reversal through ordinary
+appeal, and has not exposed itself to nullification or disciplinary proceedings.
+*Afastamento silencioso* decisions are both *incorretas* and potentially *inválidas*:
+the omission of demonstration generates a vício de fundamentação under art. 489, §1º,
+VI that may ground extraordinary remedies. "Legítima" in the taxonomy marks this
+procedural-domain line: responses processed through ordinary mechanisms occupy the
+legitimate set; responses potentially outside the ordinary processing structure do not.
+
+**The different-legal-questions criterion for Exit 5.** Exit 5 and Exit 2 apply to
+structurally distinct situations. Exit 2 presupposes that the binding precedent governs
+the same type of legal question the court is resolving, but the case's facts fall
+outside the precedent's normatively significant fact-pattern — distinguishing is a
+technique for same-question-type cases with different facts. Exit 5 applies when the
+precedent governs a different type of legal question entirely: no distinguishing
+analysis is available or necessary because the precedent does not address the court's
+question in principle. The test: does the binding precedent's ratio address the same
+legal question the court's resolution turns on? If not, the court legitimately resolves
+without invoking the precedent. The limitations-period/quality-of-performance example
+illustrates: a precedent establishing the limitations period for contractor liability
+addresses temporal admissibility; a court resolving whether the contractor fulfilled its
+quality-of-performance obligation addresses the merits of contractual performance.
+These question types are genuinely distinct; no distinguishing analysis bridges them.
 
 ---
 
 ## 3. The Attack
 
-### 3.1 The Transparent Contestation Frame Does Not Rescue the Taxonomy's Legitimacy Claim
+### 3.1 The *Invalidade/Incorreção* Recharacterization and Presupposition Structure Argument Do Not Rescue the Taxonomy
 
 The supportive defense accepts the adversarial paper's core finding: Exit 4 does not
 produce a legally effective supersession; it produces a decision contrary to binding
-law that will be reversed. The defense then argues that a third category —
-procedurally well-formed, knowingly-reversed, systemically-constructive departure —
-grounds the "legitimacy" attributed to Exit 4 in the taxonomy.
+law that will be reversed. The defense grounds "legitimacy" in the *invalidade/
+incorreção* distinction and the presupposition structure of art. 489, §1º, VI. This
+response fails on three grounds.
 
-This argument has two independent failures.
+**First, the *invalidade/incorreção* distinction establishes the remedy available for
+a defective act, not the authorization scope of the underlying conduct.** *Incorreção*
+characterizes all legally erroneous decisions the system processes through ordinary
+reversal on the merits. A court that applies the wrong precedent entirely, reasons to
+a legally incorrect conclusion for unconnected reasons, or misstates the controlling
+statutory provision commits an *ato incorreto* subject to ordinary appeal. None of
+these are "saídas legítimas" under the taxonomy. If "legítima" meant only "within the
+ordinary processing domain, subject to ordinary reversal rather than extraordinary
+nullification," every legally erroneous decision would qualify. The taxonomy would have
+no normative discriminating power within the class of erroneous responses to a binding
+precedent invocation: it could distinguish erroneous decisions from void ones, but it
+could not distinguish legitimate departures from other incorrect responses.
 
-**First, art. 927, §4º does not signal what the reconceptualization requires.** Art.
-927, §4º reads: "A modificação de enunciado de súmula, de jurisprudência pacificada
-ou de tese jurídica adotada em julgamento de casos repetitivos observará a necessidade
-de fundamentação adequada e específica, considerando os princípios da segurança
-jurídica, da proteção da confiança e da isonomia."
+The taxonomy's five entries classify responses to a binding precedent invocation by
+their normative authorization status. Exits 1, 2, 3, and 5 are responses the legal
+system endorses when faced with a binding precedent: applying it correctly,
+distinguishing it, recognizing its supervening supersession, or resolving on genuinely
+independent grounds. The taxonomy's claim for Entry 4 is that it belongs alongside
+these endorsed responses. The *invalidade/incorreção* distinction explains why Exit 4
+is less defective than *afastamento silencioso* — a claim the adversarial paper accepts
+— but it does not explain why Exit 4 belongs in the same category as Exits 1–3 and 5
+rather than in a third category of less-defective-but-still-unauthorized departures.
+These three categories are logically distinct: the *invalidade/incorreção* distinction
+collapses the second and third into one, but the taxonomy needs a criterion that places
+Exit 4 in the first.
 
-The provision's grammatical and functional subject is *modificação* — modification of
-an established norm by the court that holds it. An inferior court departing from an
-STF or STJ binding precedent is not engaging in *modificação* in the sense of §4º.
-Modification requires the authority to have established the precedent in the first
-place; inferior courts do not hold the STF/STJ binding precedents under arts. 927, I
-and II, and therefore cannot modify them. Art. 927, §4º regulates source courts when
-they revise their own previously established positions — not inferior courts departing
-from superior courts' norms.
+**Second, art. 489, §1º, VI's presupposition structure establishes a reasoning
+condition, not an authorization condition.** Art. 489, §1º specifies when decisions
+"shall not be considered reasoned" for purposes of arts. 11 and 489, §1º's
+constitutional reasoning duty under art. 93, IX CF. The provision's subject throughout
+is whether reasoning satisfies the constitutional adequacy threshold. Subsection VI
+says: reasoning that fails to demonstrate distinction or supersession when departing
+does not meet the threshold. The contrapositive — a departure that demonstrates
+supersession satisfies the reasoning requirement — establishes that the decision is
+*fundamentada*. What this establishes is reasoning quality, not authorization scope.
 
-The supportive defense reads §4º as evidence that "the CPC 2015 contemplates the
-possibility of inferior courts articulating jurisprudential challenges." The provision's
-text does not support this reading. Courts subject to art. 927 are required to
-*observe* binding precedents (caput). When those courts modify their own established
-jurisprudence — TJs modifying IRDR resolutions, TRFs revising IAC theses — §4º
-requires adequate justification for the self-modification. This is a form requirement
-on source-level self-modification. Its structural signal is that precedent changes
-require reasons. It says nothing about inferior courts challenging superior courts'
-binding norms through unauthorized departure.
+Reasoning conditions and authorization conditions are independently variable. An
+unauthorized act can be *fundamentado*: a court that reasons carefully and at length
+about its departure from a binding precedent satisfies the fundamentação threshold while
+departing without authorization. Being well-reasoned does not make an unauthorized act
+authorized. A parallel within art. 489, §1º confirms the point: subsection III bars
+generic reasoning "that would justify any other decision." The contrapositive —
+case-specific reasoning is reasoned — does not authorize all case-specifically-reasoned
+outcomes. A court can reason case-specifically toward a legally incorrect conclusion
+without thereby being authorized to reach it. Subsection VI operates identically: the
+reasoning condition and the authorization condition are distinct; subsection VI
+establishes the former and is silent on the latter.
 
-Even if §4º were read to contemplate some broader category of jurisprudential
-challenges (which its text does not support), it would be a form requirement for those
-challenges, not an authorization to make them effective. Art. 489, §1º, VI already
-provides a form requirement for departures; if §4º adds a higher form standard for
-departure-as-challenge, it presupposes the underlying authorization that the
-adversarial attack shows is absent. A form requirement can only regulate practices that
-are otherwise legally authorized; it cannot create authorization for practices the
-substantive law prohibits.
+The presupposition argument correctly establishes that the CPC 2015 processes
+departures-with-demonstration through ordinary channels rather than categorically
+excluding them at the form level. The adversarial paper's claim has never been that
+art. 489, §1º, VI's form specification prohibits Exit 4. The claim is that satisfying
+art. 489, §1º, VI's reasoning requirement while making an unauthorized departure
+produces a well-reasoned unauthorized act — correctly processed through ordinary appeal
+— not a legitimately authorized response in the taxonomy's sense.
 
-**Second, "legitimacy" in a taxonomy of saídas legítimas requires authorization, not
-form compliance.** The taxonomy's five entries — correct application (Exit 1),
-distinguishing (Exit 2), recognizing supervening supersession by the source court
-(Exit 3), transparent contestation (Exit 4, reconceptualized), and legitimate
-abstention (Exit 5) — are presented as a complete set of responses through which an
-inferior court acts within the legal system's expectations.
+**Third, "legitimacy" in a taxonomy of saídas legítimas requires authorization, not
+procedural-domain membership.** The taxonomy presents five complete endorsed responses
+to a binding precedent invocation. The supportive defense argues the taxonomy
+coherently contains two senses of "legítima": a more-demanding sense (authorized to
+prevail, no reversal exposure on the precedent question) occupied by Exits 1–3 and 5,
+and a less-demanding sense (within the ordinary processing domain, subject to
+knowingly-accepted reversal) occupied by Exit 4.
 
-Exits 1–3 and 5 are legitimate in the relevant sense: each is a response the legal
-system authorizes. An inferior court that correctly applies a precedent (Exit 1) has
-done what the system requires. An inferior court that distinguishes (Exit 2) has
-exercised a recognized legal technique. An inferior court that recognizes supervening
-supersession (Exit 3) has tracked a change the system produced. An inferior court that
-legitimately abstains (Exit 5) has resolved the case on grounds that do not engage the
-precedent's question.
+A taxonomy with two internally inconsistent senses of its organizing predicate is not
+a coherent taxonomy; it is a list with a misleading label. A reader encountering "cinco
+saídas legítimas" as a doctrinal instrument expects a unified criterion for inclusion.
+The defense's acknowledgment that Exit 4 is "legítima" in a different and weaker sense
+from the other four entries does not rescue the taxonomy's coherence; it concedes the
+taxonomy's organizing predicate is used in two distinct senses across its five entries.
 
-Exit 4, on the transparent-contestation reconceptualization, is categorically
-different: a response that is *authorized in form* (it has the required reasoning)
-while being *contrary to binding law in substance* (it departs from a precedent the
-inferior court is obligated to observe, without the source court having modified it).
-The supportive defense acknowledges this directly: "The decision remains contrary to
-binding law; but the court's conduct in issuing it is the prescribed conduct for a
-court that has identified error and cannot in good conscience apply the precedent
-without articulating the identified error."
-
-A taxonomy titled "cinco saídas legítimas" cannot coherently include a response that
-the defense itself characterizes as "contrary to binding law." The word "legítima" in
-the legal-procedural context refers to responses the legal system authorizes — not
-responses that meet formal requirements while being substantively erroneous. A well-
-reasoned decision contrary to binding law is not thereby a legitimate judicial response;
-it is a well-reasoned erroneous decision. The taxonomy presents one response that is,
-on the reconceptualized account's own terms, legally erroneous alongside four
-authorized ones. This is taxonomic misdescription.
+The adversarial surrender condition 2 stated: if the paper acknowledges that Exit 4 is
+not "legitimate" in the same sense as Exits 1–3 and 5 — that it is a form-compliant
+deviation institutionally valuable without being authorized — the taxonomy incoherence
+objection is answered at the cost of revising the paper's framing. The defense has not
+executed this revision: it has argued that the taxonomy coherently contains two senses
+of legitimacy rather than acknowledging that Exit 4 occupies a different doctrinal
+category. SC2 requires restructuring the taxonomy — four endorsed responses and one
+institutionally valuable but unauthorized departure — not defending the current
+structure through a predicate redefined to accommodate two senses.
 
 The normative difference between Exit 4 and *afastamento silencioso* that the defense
 invokes — the Exit 4 court has reasoned, identified the precedent, and exposed itself
@@ -188,20 +229,20 @@ challenge in its reasons.
 
 The STF's response to an unauthorized Exit 4 departure is reversal — the hierarchical
 correction of an erroneous decision. The STF that reviews and reverses an Exit 4
-departure need not engage the inferior court's reasons for departing; it confirms
-that the binding precedent applies and cassa the decision. This is not "declining to
-engage the challenge"; it is making the authorized determination that the challenge
-does not succeed. The inferior court's articulated reasons are in the record; the STF
-may or may not find them sufficient to initiate reconsideration through proper
-procedures; it is not obligated to do so in the reversal proceeding.
+departure need not engage the inferior court's reasons for departing; it confirms that
+the binding precedent applies and cassa the decision. This is not "declining to engage
+the challenge"; it is making the authorized determination that the challenge does not
+succeed. The inferior court's articulated reasons are in the record; the STF may or may
+not find them sufficient to initiate reconsideration through proper procedures; it is
+not obligated to do so in the reversal proceeding.
 
-The formula's two-directional structure activates the STF's engagement obligation
-when a challenge is properly advanced through authorized procedures. An inferior
-court's unauthorized departure, however well-reasoned, is not a properly advanced
-challenge; it is a deviation from binding law that happens to articulate a challenge
-in its reasons. The deliberative response the rational binding theory supports runs
-through authorized petitions for reconsideration and review proceedings — not through
-the inferior court's unilateral departure.
+The formula's two-directional structure activates the STF's engagement obligation when
+a challenge is properly advanced through authorized procedures. An inferior court's
+unauthorized departure, however well-reasoned, is not a properly advanced challenge;
+it is a deviation from binding law that happens to articulate a challenge in its
+reasons. The deliberative response the rational binding theory supports runs through
+authorized petitions for reconsideration and review proceedings — not through the
+inferior court's unilateral departure.
 
 ### 3.3 The Constitutional Monopoly and the Infraconstitutional Domain
 
@@ -244,135 +285,167 @@ hierarchical systems — rather than a direct import of the predictive mechanism
 clarification is accepted. The anticipatory overruling parallel addressed authorization,
 not mechanism; the authorization question remains the primary attack.
 
-### 3.5 The Exit 5 Ratio-Independence Criterion Collapses Into Exit 2
+### 3.5 The Exit 5 Different-Legal-Questions Criterion Is Boundary-Unstable
 
-The supportive defense provides the following criterion for Exit 5: legitimate when
-the ratio decidendi of the resolution is genuinely independent of any question the
-invoked precedent addresses — when the grounds actually determinative of the resolution
-do not engage the question the precedent's ratio speaks to. The test: would a court
-properly applying the precedent have been required, in resolving this specific case,
-to engage the precedent's ratio? If yes, non-invocation is strategic; if no, Exit 5
-is legitimate.
+The supportive defense distinguishes Exit 5 from Exit 2 at the structural level. Exit
+2 presupposes the binding precedent governs the same type of legal question the court
+is resolving; distinguishing identifies cases where the precedent is applicable in
+principle but the specific facts fall outside its normatively significant fact-pattern.
+Exit 5 applies when the precedent governs a different type of legal question entirely —
+not different facts within the same question type, but a different question — making
+no distinguishing analysis available or necessary. The limitations-period/quality-of-
+performance example illustrates a case where the question types are genuinely distinct.
 
-This criterion collapses into Exit 2 (distinguishing) at the operative level.
+The structural distinction between same-question/different-facts (Exit 2 domain) and
+different-questions (Exit 5 domain) is coherent for clearly separated question types.
+The adversarial attack does not contest it at that level. The attack targets the
+criterion's behavior at the boundary — where question-type characterization is
+genuinely contested.
 
-Exit 2 is the recognized technique by which a court determines that a binding
-precedent's ratio does not extend to the case's particular facts. A court correctly
-distinguishing a precedent concludes: the precedent's ratio addresses question Q on
-facts *f*; the present case turns on question Q on facts *g*, where *g* is outside
-the precedent's normatively significant fact-pattern; the precedent therefore does not
-control. Exit 2, correctly exercised, produces the conclusion that the precedent's
-ratio does not reach the resolution's grounds.
+**The question-type characterization is itself a legal determination subject to the
+same strategic pressures the criterion is designed to police.** Determining "what legal
+question does this precedent address?" requires interpreting the precedent's ratio
+decidendi. Courts characterize precedents' questions at varying levels of abstraction,
+and the level chosen determines whether the precedent addresses "the same question"
+as the case. A court facing a result-inconvenient precedent can characterize P's
+question narrowly and C's question broadly, producing a different-questions
+determination that supports Exit 5; or characterize P's question broadly, producing a
+same-question-different-facts determination that requires Exit 2 engagement. Both
+characterizations may be principled-sounding. The criterion cannot discriminate between
+a good-faith different-questions characterization and a strategic one, because both
+produce the same answer to the criterion's question.
 
-The ratio-independence criterion as stated: the grounds actually determinative of the
-resolution do not engage the question the precedent's ratio addresses. This is the
-same determination as distinguishing, made without the formal acknowledgment Exit 2
-requires. A case where Exit 5 is legitimate — the resolution's grounds are genuinely
-independent of the precedent's question — is a case where careful distinguishing
-analysis would have concluded the precedent is inapplicable. Exit 5 on this criterion
-is sub-silentio Exit 2: the court has effectively distinguished without using the word
-"distinction" and without the explicit engagement Exit 2 prescribes.
+**A concrete boundary case.** A binding STJ precedent establishes the applicable
+limitations period for consumer product liability claims under art. 26, §3º CDC
+(apparent or hidden product defects). A subsequent case involves whether a
+manufacturer's failure to issue a safety recall after discovering a defect constitutes:
+(a) a defect in the product itself, triggering the limitations scheme the precedent
+addresses — in which case Exit 2 analysis is required and the case may fall within the
+precedent's scope; or (b) a breach of the affirmative duty of information and safety
+under art. 6, III CDC, generating a question for which the limitations precedent's
+ratio does not govern — in which case Exit 5 becomes available. Both characterizations
+are principled-sounding. The court that prefers a longer limitations period or no
+limitations bar at all has the (b) characterization available; the court that prefers
+the limitations bar has the (a) characterization available. The Exit 5 criterion —
+"does P govern C's legal question?" — does not discriminate between them because the
+criterion's input is the court's own characterization of C's legal question.
 
-The practical consequence: the only operative difference between legitimate Exit 5 and
-Exit 2 is whether the court explicitly acknowledges and analyzes the precedent's
-inapplicability. Exit 2 requires the acknowledgment; Exit 5 permits the court to
-resolve on alternative grounds without it. But the paper condemns failure to
-acknowledge applicable precedents as *afastamento silencioso* (§§1, 5.1). If
-legitimate Exit 5 is sub-silentio Exit 2, the legitimate cases of Exit 5 are cases
-where Exit 2 should have been used but was not — the very procedurally imperfect
-practice the paper targets.
+**The defense's anticipated-objection section confirms that the manipulation vector is
+structural.** The supportive paper acknowledges that "courts can always characterize
+their question as 'different' from the binding precedent's question" and responds that
+this is "a general feature of legal reasoning, present equally in Exit 2's
+fact-characterization." This response reveals that Exit 5 adds a second independent
+strategic manipulation vector — question-type characterization — to the vector already
+present in Exit 2's domain (fact characterization). The addition of Exit 5 as a
+legitimate category provides courts with an additional avenue for strategic non-
+invocation, operating at a more abstract and harder-to-detect level than Exit 2's
+fact-distinguishing vector. The criterion does not reduce strategic non-invocation;
+it provides a new principled-sounding defense for it.
 
-The supportive defense identifies this collapse as a failure condition: "if every case
-where P's ratio is genuinely independent of the resolution's grounds is a case where
-the court has implicitly distinguished the case from P, then Exit 5 adds nothing to
-Exit 2." This is precisely what the ratio-independence criterion produces. The
-criterion does not prevent the collapse; it makes it explicit. The taxonomy therefore
-adds a label for a practice whose legitimate instances are Exit 2 used informally and
-whose illegitimate instances are *afastamento silencioso*. No genuine third category
-is established.
+Moreover, the manipulation at Exit 5's level is harder to police than at Exit 2's
+level. Exit 2 review asks: do C's facts fall within P's normatively significant fact-
+pattern? This is a factual determination with an established legal method — analogical
+reasoning about normative significance. Exit 5 review asks: does P address the same
+legal question as C? Determining what question P addresses requires the reviewing court
+to retroactively characterize a precedent it may not have issued, using the same
+interpretive judgments that generated the dispute at the original court. Both the
+original court and the reviewing court have degrees of freedom in this characterization
+that are at least equal to those available in Exit 2's fact-level characterization,
+and the second-order nature of the question-type determination makes divergent
+characterizations harder to adjudicate.
 
-The residual difficulty the defense identifies — courts can mischaracterize their
-grounds as independent — does not address this. A court that mischaracterizes its
-grounds as independent has committed *afastamento silencioso*; this is not a residual
-difficulty in applying the criterion but a description of the illegitimate case. The
-criterion sorts cases into: legitimate Exit 5 (= sub-silentio Exit 2) and illegitimate
-Exit 5 (= *afastamento silencioso*). No analytically independent category is added;
-the partition reproduces existing categories under a new label.
+The original collapse premise — every legitimate Exit 5 case (ratio genuinely
+independent of grounds) is a case where Exit 2 would have found P inapplicable — was
+contested by the defense on the grounds that Exit 2 presupposes P governs the same
+question type. This response correctly limits the collapse argument for cases where
+the question types are genuinely and clearly distinct. But the argument does not reach
+the boundary cases — where question-type characterization is genuinely contested —
+which is precisely where the criterion needs to do its work. At those cases, the
+criterion either yields an indeterminate answer (the characterization is genuinely
+ambiguous) or yields a determinate answer based on the court's characterization, which
+may be strategic. Neither outcome constitutes a stable, policiable category distinct
+from the combination of Exit 2 and *afastamento silencioso*.
 
 ---
 
 ## 4. Anticipated Reply and Why It Does Not Suffice
 
-**On the transparent contestation frame and the taxonomy claim (§3.1):** The reply
-will argue that the normative difference between Exit 4 and *afastamento silencioso*
-is not merely formal but substantive: a court that exercises Exit 4 behaves with
-integrity, accepts correction, and contributes to the system's deliberative health; a
-court committing *afastamento silencioso* neither contributes nor accepts correction.
-This normative difference is real.
+**On the *invalidade/incorreção* recharacterization (§3.1):** The reply will argue
+that the *invalidade/incorreção* distinction is a distinction in legal status — not
+merely in conduct quality — and that the taxonomy's "legítima" predicate can coherently
+track procedural-domain membership. Exit 4 decisions are processed within ordinary
+channels; *afastamento silencioso* may not be. This is a genuine legal-status
+difference.
 
-But the reply confuses the evaluation of judicial *conduct* with the legal status of
-the judicial *decision*. An inferior court judge who issues a well-reasoned, honest,
-transparent departure from binding law exhibits admirable integrity as a matter of
-judicial conduct; this does not make the departure legally authorized. The legal system
-distinguishes the quality of reasoning conduct from the authorization of outcomes.
-Exit 4, on the transparent-contestation account, is conduct of high quality that
-produces an outcome contrary to binding law. Characterizing this as a "saída legítima"
-alongside four authorized responses conflates the procedural quality of the conduct
-with the substantive authorization of the outcome.
+But the reply establishes that Exit 4 is better than *afastamento silencioso* without
+establishing that Exit 4 belongs alongside authorized responses. *Incorreção* is a
+background condition of all legally erroneous decisions; a taxonomy criterion that
+reduces to "all decisions processed through ordinary appeal" has no discriminating
+power within the class of departures the taxonomy aims to classify. The adversarial
+surrender condition 2 required the paper to restructure the taxonomy — acknowledging
+Exit 4 occupies a different doctrinal category from Exits 1–3 and 5 — not to redefine
+"legítima" to encompass both outcome-authorized and ordinarily-processed responses.
 
-**On art. 927, §4º (§3.1):** The reply will argue that §4º applies to all courts
-subject to art. 927 that establish binding precedents at any level, and that the
-provision therefore signals a design choice accommodating formal jurisprudential
-challenges. This is correct that §4º applies to courts modifying their own
-established jurisprudence (TJs for IRDR decisions, etc.). But this does not extend the
-provision to inferior courts departing from STF/STJ binding precedents. A court that
-establishes an IRDR resolution and then modifies it under §4º is modifying its own
-norm — the correct subject of §4º. An inferior court departing from an STF/STJ
-binding precedent is departing from a norm it did not establish and cannot modify.
-The structural signal §4º carries is that self-modification requires adequate reasons;
-it is silent on the authorization status of departures from other courts' norms.
+**On the presupposition structure of art. 489, §1º, VI (§3.1):** The reply will argue
+that a negative form specification necessarily implies the practice it specifies a form
+for: if departures-with-demonstration were categorically prohibited, the CPC would not
+specify a reasoning standard for them; by doing so, it places them within the ordinary
+processing domain.
+
+This establishes correctly that art. 489, §1º, VI processes departures-with-
+demonstration through ordinary channels — which the adversarial paper accepts. But
+the provision's subject is reasoning quality (when is a decision *fundamentada*?), not
+authorization scope (what decisions is the court permitted to issue?). The
+presupposition structure establishes that a departure-with-demonstration is
+*fundamentada*; it does not establish that the departure is authorized. A court can
+be fully *fundamentado* while exceeding its authorized scope — these are distinct
+conditions. The parallel in subsection III confirms this: case-specific reasoning
+is *fundamentada*, but this does not authorize all case-specifically-reasoned
+conclusions.
 
 **On the rational binding theory's channel function (§3.2):** The reply will argue
 that the channel function operates even through unauthorized departures: the STF
-receives the record, processes it, and determines the outcome. The deliberative process
-occurs regardless of whether the inferior court's departure was authorized.
+receives the record, processes it, and determines the outcome.
 
-This reply misreads the channel function. Exit 4 is presented as *activating* a
-discursive obligation on the STF to engage the challenge. The STF's reversal of an
-unauthorized departure is not "engagement with the challenge" in the relevant sense;
-it is hierarchical correction of an erroneous decision. The STF that reviews an Exit 4
-departure need not address the inferior court's reasons for departing; it need only
-confirm that the binding precedent applies and issue the cassação. The discursive
-engagement the rational binding theory supports — when a stronger reason is properly
-advanced — is triggered by properly advanced challenges through authorized procedures,
-not by unauthorized departures that articulate reasons in their text.
+Exit 4 is presented as *activating* a discursive obligation on the STF to engage the
+challenge. The STF's reversal of an unauthorized departure is not "engagement with the
+challenge" in the relevant sense; it is hierarchical correction of an erroneous
+decision. The STF that reviews an Exit 4 departure need not address the inferior
+court's reasons for departing; it need only confirm that the binding precedent applies
+and issue the cassação. The discursive engagement the rational binding theory supports
+is triggered by properly advanced challenges through authorized procedures, not by
+unauthorized departures that articulate reasons in their text.
 
 **On the constitutional monopoly (§3.3):** The reply will argue that restricting Exit 4
-to the infraconstitutional domain is sufficient to sustain the paper's core
-contribution, since most inferior courts most frequently interact with STJ statutory
-precedents. The domain restriction is accepted as concession; but the paper's original
-claim presented Exit 4 as part of a complete taxonomy covering all binding precedents
-under art. 927. A restriction to infraconstitutional precedents produces a
-substantially narrower thesis than the paper states.
+to the infraconstitutional domain sustains the paper's core contribution, since most
+inferior courts most frequently interact with STJ statutory precedents. The domain
+restriction is accepted as concession; but the paper's original claim presented Exit 4
+as part of a complete taxonomy covering all binding precedents under art. 927. A
+restriction to infraconstitutional precedents produces a substantially narrower thesis.
 
-**On the Exit 5 collapse (§3.5):** The reply will argue that Exit 5 and Exit 2 differ
-in their explicit procedural requirements: Exit 2 requires an explicit acknowledgment
-that the precedent was considered and why it doesn't apply; Exit 5 proceeds without
-this acknowledgment when the precedent genuinely doesn't apply. This formal difference
-is real. But it is the formal difference the paper's own prescriptive framework
-condemns: a court that should have acknowledged the precedent under Exit 2 and instead
-resolved without acknowledgment is exercising the very practice the paper identifies
-as *afastamento silencioso*. Exit 5's legitimate instances — genuinely independent
-grounds — should have been processed as Exit 2 sub-silentio; its illegitimate instances
-are *afastamento silencioso*. The category provides no guidance for courts facing the
-precise case the taxonomy was designed to address.
+**On the Exit 5 different-questions criterion and its boundary instability (§3.5):**
+The reply will argue that the different-questions/different-facts distinction generates
+distinct reviewing-court inquiries — Exit 2 review asks about fact-pattern scope; Exit
+5 review asks about question-type scope — and that appellate courts are competent to
+answer both.
+
+This correctly distinguishes the two inquiries at the conceptual level. The adversarial
+attack targets the inquiry's determinacy at the boundary: determining "does P address
+C's question?" is a legal characterization subject to the same strategic choice of
+abstraction level that Exit 2's fact-characterization is subject to. The defense's own
+anticipated-objection section acknowledges the characterization difficulty and calls it
+"a general feature of legal reasoning" — confirming that Exit 5 adds a manipulation
+vector structurally parallel to Exit 2's, at a more abstract and harder-to-detect
+level. Adding a legitimate category with an equally-manipulable criterion does not
+reduce strategic non-invocation.
 
 ---
 
 ## 5. Scope of the Attack
 
-This attack targets Exit 4 — in its original authorization form and in the
-transparent-contestation reconceptualization — and the Exit 5 coherence problem.
+This attack targets Exit 4 — in its original authorization form and in the transparent-
+contestation reconceptualization with its *invalidade/incorreção* and presupposition-
+structure defenses — and the Exit 5 boundary instability problem.
 
 This attack does not challenge:
 
@@ -391,7 +464,14 @@ This attack does not challenge:
 - The observation that Exit 4's transparent-contestation form is normatively superior
   to *afastamento silencioso* as a description of judicial *conduct*. The attack
   contests the classification of this conduct as a "saída legítima" in the taxonomy's
-  legal-authorization sense.
+  authorization sense.
+- The *invalidade/incorreção* characterization itself: Exit 4 decisions are correctly
+  characterized as *incorretas* but not *inválidas*. The adversarial claim is that this
+  characterization, while accurate, does not supply what "legítima" in the taxonomy
+  requires.
+- The Exit 5 different-questions criterion for clearly and unambiguously distinct
+  question types. The adversarial attack targets boundary instability, not the
+  paradigm cases.
 
 ---
 
@@ -404,37 +484,53 @@ conditions.
    of the CPC 2015, of the CF/88, or of constitutional doctrine specifically authorizes
    inferior courts to depart from binding STF/STJ precedents on the basis of qualified
    argument identifying error in the ratio — independently of the source court's own
-   subsequent decisions — the inference gap is closed. Art. 927, §4º, as argued above,
-   does not supply this authorization. Identifying a provision that does would be the
-   clearest path to rescuing Exit 4.
+   subsequent decisions — the inference gap is closed. Art. 489, §1º, VI, as argued,
+   establishes a reasoning condition rather than an authorization condition. Art. 927,
+   §4º governs source-court self-modification and does not extend to inferior courts
+   departing from superior courts' norms. Identifying a provision that affirmatively
+   authorizes the act of departure would be the clearest path to rescuing Exit 4.
 
-2. **The taxonomy is explicitly recharacterized to distinguish authorized exits from
-   an institutionally valuable deviant response.** If the paper acknowledged that Exit 4
-   is not "legitimate" in the same sense as Exits 1–3 and 5 — that it is a form-
-   compliant deviation that is institutionally valuable without being authorized — the
-   taxonomy's incoherence objection would be answered at the cost of revising the
-   paper's framing. A taxonomy of four authorized exits plus one normatively-superior-
-   but-unauthorized departure is a coherent structure; it is not the structure the
-   paper currently presents under the title "cinco saídas legítimas."
+2. **The taxonomy is restructured to distinguish authorized exits from an institutionally
+   valuable deviant response.** If the paper acknowledges that Exit 4 is not "legitimate"
+   in the same sense as Exits 1–3 and 5 — that it occupies a third category of form-
+   compliant, institutionally valuable, unauthorized departure distinct from both
+   authorized responses and *afastamento silencioso* — the taxonomy incoherence objection
+   is answered at the cost of revising the paper's framing. The *invalidade/incorreção*
+   distinction correctly explains why Exit 4 is preferable to *afastamento silencioso*;
+   it does not explain why both categories should not be outside the "legitimate exits"
+   taxonomy. A revised taxonomy of four authorized exits plus one normatively-superior-
+   but-unauthorized departure is a coherent structure. Defending the current five-entry
+   structure requires a unified criterion for all five entries, which the *invalidade/
+   incorreção* distinction does not provide.
 
-3. **A principled criterion for Exit 5 that does not collapse into Exit 2 is
-   developed.** The ratio-independence criterion, as argued, collapses legitimate Exit 5
-   into sub-silentio Exit 2. A criterion that identifies a genuine third category —
-   not "distinguishable case resolved without mentioning the precedent" (Exit 2) and
-   not "applicable precedent avoided" (*afastamento silencioso*) — would rescue the
-   Exit 5 taxonomy entry.
+3. **A principled criterion for Exit 5 that generates determinate results at the boundary
+   is developed.** The different-legal-questions criterion is coherent for clearly
+   separated question types. The surrender condition requires either: (a) showing that
+   question-type characterization is significantly less susceptible to strategic
+   manipulation than fact characterization — identifying an institutional or doctrinal
+   mechanism that constrains question-level choices in ways that Exit 2's fact-level
+   characterization lacks; or (b) showing that the Exit 5 manipulation vector (question-
+   type characterization) is adequately policed by reviewing courts through a method more
+   determinate than Exit 2's analogical fact-pattern analysis. If neither can be shown,
+   the criterion adds a new manipulation avenue without a corresponding doctrinal gain.
 
-4. **Exit 4 is grounded in authorized procedures for formally petitioning for
-   reconsideration.** If Exit 4 is reconceptualized not as an inferior court issuing a
-   departure contrary to binding law but as a court formally petitioning — through
-   whatever mechanisms the CPC provides — for precedent reconsideration while resolving
-   the pending case as required by current binding law, the authorization gap would be
-   addressed at the procedural level. This would require Exit 4 to take a different
-   institutional form: not a decision contrary to binding law pending reversal, but a
-   proceeding through which the challenge is formally advanced and the current binding
-   law is simultaneously applied. Whether such a procedure exists in the CPC is
-   tractable; if it does, it would provide the authorization source Exit 4 currently
-   lacks.
+4. **Evidence that Brazilian superior courts treat Exit 4 departures as disciplinable
+   rather than merely reversible would test the *invalidade/incorreção* defense.** If
+   the STJ or STF systematically treats Exit 4 departures as sanctionable judicial
+   misconduct rather than as incorrect decisions subject to ordinary reversal, the
+   *incorreção* (not *invalidade*) characterization is contradicted by institutional
+   practice. Conversely, consistent reversal without further sanction would confirm the
+   *incorreção* characterization — strengthening the defense at the *invalidade/
+   incorreção* level while leaving the taxonomic legitimacy question open.
+
+5. **Exit 4 is reconceptualized as authorized petition for precedent reconsideration.**
+   If Exit 4 is reformulated not as an inferior court issuing a departure contrary to
+   binding law but as a court formally petitioning — through whatever mechanisms the CPC
+   provides — for precedent reconsideration while resolving the pending case as required
+   by current binding law, the authorization gap would be addressed. This requires Exit 4
+   to take a different institutional form: not a decision contrary to binding law pending
+   reversal, but a proceeding through which the challenge is formally advanced and the
+   current binding law is simultaneously applied.
 
 ---
 
@@ -445,7 +541,8 @@ Vinculação Racional e Superação no CPC 2015." `paper1B_cinco_saidas_preceden
 (this repository).
 
 `yesindeed/paper1b-exit4-defense.md` — "Exit 4 as Transparent Contestation: A Defense
-of Paper 1B Against the Inference-Gap Attack" (supportive paper, this repository).
+of Paper 1B Against Inference-Gap, Taxonomy-Incoherence, and Exit-5-Collapse Attacks"
+(supportive paper, this repository).
 
 BRASIL. Constituição da República Federativa do Brasil, 1988. Art. 102, *caput*;
 art. 105, *caput*.
