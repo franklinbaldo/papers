@@ -353,6 +353,107 @@ either case the within-cluster adversarial mechanism does not operate; if C2 var
 is systematically wider, the compression asymmetry is confirmed regardless of what
 the embedding model encodes in principle.
 
+A fifth supportive response shifts the within-adequacy ranking analysis from
+the per-argument level to the argument-set level. The adversarial counter to
+the three-features response — that those features function as adequacy
+thresholds rather than ranking signals within the adequacy range — is accepted
+at the individual-argument level. The fifth response contests it at the
+argument-set level. Art. 489, §1º, IV is a coverage criterion over the set
+of material arguments: the primary within-adequacy ranking dimension is not
+per-argument elaboration depth but coverage completeness — the proportion of
+material arguments identified and explicitly disposed of. A decision that
+applies the three structural features briefly to all five material arguments
+outranks a decision that applies them elaborately to three and ignores two.
+Coverage completeness is argument-type-independent in that counting
+argument-identification statements against the case record of arguments raised
+is sufficient to determine coverage without argument-strength knowledge.
+SC6(a) accordingly requires two types of calibration pairings: Type 1 (correct
+C2 ranking for a single argument within the adequacy range) and Type 2 (coverage
+completeness across the argument space, constructable from the case record alone).
+
+The coverage-completeness argument is accepted as identifying a valid ranking
+dimension under art. 489, §1º, IV. The adversarial concern it generates is
+structural: coverage completeness is observable only with access to both the
+decision text and the case record. Determining the proportion of material
+arguments covered requires knowing what arguments counsel raised — information
+residing in the party submissions, not in the decision itself. ESHTR's protocol
+(§5.4) specifies decision texts as the input provided to the LLM evaluation
+panel; party submissions are not described as part of the evaluator's input.
+Without the case record, an LLM judge cannot determine coverage completeness
+independently of textual proxies available from the decision alone: total token
+count (more covered arguments produce more text), argument-identification
+statement density (more coverage generates more identification tokens), and the
+reversal relationship between coverage breadth and per-argument elaboration
+depth. In a complete-but-thin decision covering five arguments briefly and a
+selective-but-elaborate decision covering three arguments extensively, the
+complete-but-thin decision may be shorter in total text, but the LLM judge
+receiving only the decision text cannot determine whether the shorter decision
+covered fewer arguments or covered more arguments more briefly — the source of
+the length difference is not recoverable from the decision alone. The fifth
+response therefore requires a protocol extension — providing the case record
+as LLM judge input at evaluation time — to make coverage tracking
+argument-type-independent in the way it claims. This extension is distinct from
+the SC6(a) calibration requirement: it changes what information the evaluator
+receives, not only how it is trained. Type 2 calibration pairings annotated
+against the case record during calibration design can establish coverage as the
+relevant ranking dimension; they do not validate that LLM judges track coverage
+when evaluating naturalistic decisions without case record input at evaluation time.
+
+A further constraint follows from the calibration pairing structure. Type 2
+pairings are deliberately anti-naturalistic: the complete-but-thin decision is
+shorter than the selective-but-elaborate one, reversing the naturalistic positive
+co-variation between coverage breadth and total text length. In a naturalistic
+decision corpus, longer decisions tend to cover more arguments and also elaborate
+each argument more fully; coverage breadth, total text length, and per-argument
+elaboration depth all co-vary positively under natural conditions. Type 2
+calibration trains the LLM judge to suppress the coverage-volume correlation
+in reversed-relationship pairs. SC6(b) asks whether trained judges track
+coverage completeness rather than elaboration depth at the ranking level. The
+implicit generalization requirement — that performance on anti-naturalistic
+pairs transfers to naturalistic decisions where the standard coverage-volume
+co-variation is present — is an additional empirical question the Type 2 design
+does not itself answer. SC6(b) must therefore include a test of LLM judges'
+coverage-completeness tracking under naturalistic pairings where coverage and
+volume co-vary in the standard direction, not only in the artificially reversed
+pairs the calibration design constructs.
+
+The sixth supportive response addresses the disjunctive structure of the fourth
+adversarial response's self-undermining implication. Under prong 1 of the C2
+adversarial disjunction (elaboration richness does not significantly drive
+embedding proximity, so within-cluster C2 variance is systematically wider than
+C1/C4 variance), the within-cluster C2 independence mechanism operates and
+SC6(c) tests it directly. Under prong 2 (elaboration richness does drive
+proximity, so cross-elaboration pairings sort to Phase 3), the sixth response
+holds that the relocated concern falls under SC6(3). The structural
+clarification is accepted: prong 1 and prong 2 correspond to different
+operational levels, and SC6(c) determines which prong obtains.
+
+What the sixth response does not resolve: SC6(3) was specified for the
+cross-domain non-transitivity concern — whether Phase 3's abstraction
+instruction ("abstract from subject-specific vocabulary to underlying
+argumentation quality") successfully redirects LLM evaluation from
+domain-specific feature activation toward reasoning-method assessment across
+doctrinal domains. The cross-elaboration concern that prong 2 relocates to
+Phase 3 has a different structure. Under prong 2, clustering co-locates
+high-elaboration decisions; each cluster's champion tends to be the
+highest-elaboration decision within its cluster. Phase 3 compares
+high-elaboration champions from different clusters. The between-champion
+differences include both domain-specific vocabulary differences (which the
+abstraction instruction targets) and elaboration richness differences arising
+from cluster-level adversarial record heterogeneity (which the instruction does
+not specifically address). A champion from a high-adversarial-record cluster
+has elaborate reasoning because demanding arguments were available; a champion
+from a low-adversarial-record cluster has elaborate reasoning because the judge
+applied analytical care against undemanding arguments. Whether LLM judges
+applying the Phase 3 instruction assign rankings independent of these
+between-champion elaboration richness differences — rather than tracking them
+as components of "argumentation quality" — is not addressed by SC6(3)'s current
+specification, which was designed for the domain-vocabulary non-transitivity
+concern. SC6(3) extended to govern prong 2 requires a cross-elaboration-specific
+test alongside its cross-domain test: whether Phase 3 judges rank champions
+independently of elaboration richness differences arising from cluster-level
+adversarial record variation, not only from domain-vocabulary differences.
+
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
 case types. High-volume processing creates institutional pressures to routinize
@@ -885,8 +986,8 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (four supportive responses, four adversarial counter-replies).**
-The C2 debate has passed through four exchanges. The supportive paper argues (1) that
+**On the full C2 exchange (six supportive responses, six adversarial counter-replies).**
+The C2 debate has passed through six exchanges. The supportive paper argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
 argument-type-independent textual markers — explicit identification of the argument,
@@ -895,9 +996,14 @@ judges to assess conduct quality regardless of argument strength, making the cal
 gap a protocol design insufficiency not a structural impossibility; (4) that dense
 embedding models encode argumentative elaboration alongside doctrinal vocabulary in
 the same representational space, so clustering by proximity compresses both, and
-within-cluster C2 variance is not necessarily wider than C1/C4 variance.
+within-cluster C2 variance is not necessarily wider than C1/C4 variance; (5) that
+coverage completeness at the argument-set level is the within-adequacy ranking signal,
+observable from the case record without argument-strength knowledge, and requiring
+SC6(a) Type 2 calibration pairings; (6) that the C2 adversarial disjunction resolves
+structurally — prong 1 activates SC6(c) directly; prong 2 relocates to Phase 3 and
+activates SC6(3).
 
-The §3.2 analyses address all four. On (1): the conduct/quality distinction holds at
+The §3.2 analyses address all six. On (1): the conduct/quality distinction holds at
 the criterion level; it does not survive the calibration step, where LLM judges
 trained on human preference data acquire a C2 signal correlated with elaboration
 richness in the text, because annotators assessing conduct quality for legal arguments
@@ -917,11 +1023,25 @@ compression inference does not follow; clustering compresses the dimensions that
 proximity — doctrinal vocabulary, precedential references, procedural posture —
 while argumentative elaboration varies with case-specific adversarial records
 independent of doctrinal context; whether elaboration is also compressed depends on
-a corpus-specific correlation that is not structurally mandated. The practical
-implication across all four exchanges: within-cluster C2-specific criterion activation
-cannot be ruled out under the current protocol design; SC6(c) — per-item C1/C2/C4
-dimension scores within fine-grained clusters — is the central empirical test and
-remains unspecified in ESHTR's experimental design.
+a corpus-specific correlation that is not structurally mandated. On (5): coverage
+completeness is a valid ranking dimension under art. 489, §1º, IV; but tracking it
+independently of text-volume proxies requires the case record as LLM judge input at
+evaluation time — an input-protocol extension ESHTR's design does not currently
+specify; additionally, Type 2 calibration on anti-naturalistic pairs (where the
+complete-but-thin decision is shorter) must demonstrate generalization to naturalistic
+pairs where coverage and text volume co-vary in the standard positive direction.
+On (6): the disjunctive structure clarification is accepted; SC6(3) as currently
+specified addresses the cross-domain criterion-switching concern; it does not address
+the cross-elaboration concern prong 2 relocates to Phase 3, where champions may differ
+in elaboration richness arising from cluster-level adversarial record heterogeneity
+rather than domain-vocabulary differences — a distinction the abstraction instruction
+does not explicitly target. The practical implication across all six exchanges:
+within-cluster C2-specific criterion activation cannot be ruled out under the current
+protocol design; coverage completeness as a within-adequacy ranking signal requires
+both a case-record input extension and calibration generalization validation, not only
+Type 2 SC6(a) examples; SC6(c) determines which prong of the C2 disjunction applies;
+under prong 2, SC6(3) requires extension before it governs the relocated
+cross-elaboration concern.
 
 **On the Phase 3 attack (§§3.6–3.8):**
 
@@ -1142,6 +1262,28 @@ conditions.
    with improved κ and quality-discrimination accuracy is consistent with multiple
    hypotheses and the protocol cannot adjudicate among them.
 
+   **(e) Cross-elaboration extension under prong 2 of the C2 disjunction.** If
+   SC6(c) yields prong 2 — within-cluster C2 variance is not systematically
+   wider than C1/C4 variance because elaboration richness is co-compressed by
+   clustering — the within-cluster cross-elaboration concern relocates to Phase 3.
+   Under this outcome, between-champion elaboration richness differences in Phase 3
+   arise from cluster-level adversarial record heterogeneity rather than from
+   domain-vocabulary differences. The Phase 3 abstraction instruction specifies
+   what to evaluate (reasoning method quality) but does not specify whether
+   reasoning method quality is assessed independently of elaboration richness
+   generated by adversarial record differences. A champion from a cluster dominated
+   by high-adversarial-record cases has elaborate reasoning because demanding
+   arguments were available; a champion from a low-adversarial-record cluster has
+   elaborate reasoning because the judge applied analytical care against undemanding
+   arguments. The Phase 3 instruction does not distinguish these two sources of
+   elaboration richness. To satisfy SC6(3) under prong 2, the Phase 3 calibration
+   evidence must include a cross-elaboration test — whether LLM judges applying
+   the abstraction instruction assign rankings independent of between-champion
+   elaboration richness differences arising from cluster-level adversarial record
+   variation, not only from domain-vocabulary differences. This cross-elaboration
+   test is a distinct empirical requirement from the cross-domain κ measurement
+   SC6(3) currently specifies; both are required if SC6(c) yields prong 2.
+
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3 attack is
    moot. This requires retracting or qualifying the Abstract's claim that Phase 3
@@ -1158,15 +1300,23 @@ conditions.
    the ESHTR protocol's current design (§5.5, §6) that it does not currently output.
 
 6. **C2 operationalization validated against adversarial record confound.** If the ESHTR
-   §5.4 calibration protocol is extended to include: (a) calibration examples
-   demonstrating correct C2 *ranking* for weak-argument cases — specifically, pairwise
-   examples where a brief-but-adequate disposal of a weak argument ranks above an
-   inadequate disposal of the same weak argument despite similar or greater text length
-   in the inadequate version, training LLM judges to discriminate conduct quality
-   within the adequacy range and not only to detect the conclusory-vs.-reasoned
-   threshold; (b) empirical evidence showing that LLM judges calibrated under this
-   extended protocol assign C2 scores independent of adversarial record elaboration
-   richness across a range of argument strength levels, *at the ranking level*; and
+   §5.4 calibration protocol is extended to include: (a) two types of calibration
+   examples for C2 ranking — Type 1: pairwise examples where a brief-but-adequate
+   disposal of a weak argument ranks above an inadequate disposal of the same weak
+   argument despite similar or greater text length in the inadequate version, training
+   LLM judges to discriminate conduct quality within the adequacy range for individual
+   arguments; and Type 2: pairings where a decision covering all material arguments
+   briefly (complete-but-thin) outranks a decision covering some arguments elaborately
+   while ignoring others (selective-but-elaborate), constructed from the case record of
+   arguments raised by counsel, evaluated with the case record provided as part of the
+   LLM judge's input alongside the decision text; (b) empirical evidence showing that
+   LLM judges calibrated under this extended protocol (i) assign C2 scores independent
+   of adversarial record elaboration richness across a range of argument strength levels,
+   *at the ranking level*, and (ii) track coverage completeness independently of text
+   volume or per-argument elaboration depth when evaluating naturalistic decisions where
+   coverage breadth and total text length co-vary in the standard positive direction —
+   not only in the artificially reversed Type 2 calibration pairs where the
+   complete-but-thin decision is shorter; and
    (c) per-item C1, C2, and C4 dimension scores within fine-grained semantic clusters,
    showing that within-cluster C2 variance is not systematically wider than C1/C4
    variance — then the C2 operationalization concern and the within-cluster C2
