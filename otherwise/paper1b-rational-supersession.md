@@ -96,6 +96,22 @@ VI that may ground extraordinary remedies. "Legítima" in the taxonomy marks thi
 procedural-domain line: responses processed through ordinary mechanisms occupy the
 legitimate set; responses potentially outside the ordinary processing structure do not.
 
+The defense further grounds this position through a functional-taxonomy reading:
+"saídas legítimas" classifies recognized response types at the type level rather than
+authorization profiles at the review-outcome level. Exits 2 and 3 confirm this — both
+are classified as "legitimate" even when individual instances are incorrectly executed
+and reversed; the taxonomy operates at the response-type level. Exit 4 is of the same
+kind: a recognized response type processed through ordinary appeal channels. The
+structural signal for this classification comes from art. 489, §1º, VI's act-specific
+form requirement. Unlike subsection III, which imposes a reasoning quality standard
+act-neutrally across all decisions, subsection VI governs the specific act of departing
+from a binding norm. This act-specific form specification places departure within the
+domain of acts subject to ordinary reasoning requirements rather than among void acts:
+a categorically prohibited act would not receive a reasoning standard; it would simply
+be null. The Exit 2/3 analogy secures this framing: the taxonomy classifies both
+as "legitimate" exits regardless of whether a reviewing court confirms the
+classification in any individual instance.
+
 **The different-legal-questions criterion for Exit 5.** Exit 5 and Exit 2 apply to
 structurally distinct situations. Exit 2 presupposes that the binding precedent governs
 the same type of legal question the court is resolving, but the case's facts fall
@@ -209,6 +225,89 @@ invokes — the Exit 4 court has reasoned, identified the precedent, and exposed
 to correction — is real as a matter of procedural form and judicial conduct. It is not
 a difference in *legitimacy* in the taxonomic sense. The quality of the court's conduct
 does not determine the legal status of the outcome that conduct produces.
+
+**Fourth, the Exit 2/3 analogy reveals an authorization asymmetry rather than
+supporting it.** The functional-taxonomy reading holds that "saídas legítimas"
+classifies recognized response types processed through ordinary channels rather than
+authorization profiles at the outcome level. Exits 2 and 3 are invoked as evidence:
+they are classified as "legitimate" even when individual instances are incorrectly
+executed and reversed, so the taxonomy operates at the response-type level. Exit 4 is
+of the same kind.
+
+The analogy fails because Exits 2 and 3 carry type-level authorization that Exit 4
+lacks. The legal system authorizes inferior courts to perform distinguishing: art.
+1.037, §§9º–13º CPC establishes procedural infrastructure for the distinguishing
+inquiry; the entire arts. 926–927 framework presupposes courts have the authority to
+distinguish binding precedents. The legal system also authorizes — and indeed requires
+— courts to recognize supervening supersession: a court that fails to apply the current
+binding norm is itself in violation of art. 927. For Exits 2 and 3, the "recognized
+response type" and "response type with authorized instances" criteria converge: the
+type is authorized, and individual instances that are correctly executed produce valid
+outcomes. The taxonomy's "legitimate" label tracks this type-level authorization.
+
+Exit 4 has no type-level authorization. No provision authorizes inferior courts to
+depart from binding precedents on the basis of their own assessment that the ratio is
+wrong. The defense accepts this — it acknowledges Exit 4 decisions are "contrary to
+binding law" and that all instances will be reversed. There are no correctly-executed
+instances of Exit 4 that produce valid outcomes as to the precedent question. This is
+not contingent on execution quality, as it is for incorrectly-applied Exit 2 instances;
+it is a structural property of the exit type.
+
+Under the functional-taxonomy criterion — "recognized response type processed through
+ordinary channels" — *afastamento silencioso* also qualifies: it is reversed through
+ordinary appeal, not nullified. The defense uses the *invalidade/incorreção* distinction
+to separate Exit 4 from *afastamento silencioso* within the ordinary processing domain.
+But this sub-classification operates within the unauthorized group (both are
+unauthorized; Exit 4 is less defective). It does not move Exit 4 into the authorized
+group alongside Exits 1–3 and 5. The Exit 2/3 analogy establishes that the taxonomy
+classifies response types; what it does not establish is that response-type
+classification is sufficient for "legítima" when the type lacks authorization. Exits 2
+and 3 satisfy both the response-type criterion and the type-level authorization
+criterion; Exit 4 satisfies only the former.
+
+**Fifth, the subsection III/VI structural disanalogy confirms the adversarial
+position.** The defense correctly distinguishes art. 489, §1º, III (act-neutral form
+requirement applicable to any decision) from subsection VI (act-specific form
+requirement governing departure from a binding norm). The act-specific character of
+subsection VI places departure within the domain of acts subject to reasoning
+requirements rather than among void acts: a categorically prohibited act would not
+receive a reasoning standard; it would be null.
+
+This point is accepted. Exit 4 decisions are reversible, not void — the adversarial
+paper has never contested this. The subsection III/VI disanalogy establishes what the
+adversarial paper has accepted throughout: Exit 4 is *ato incorreto*, not *ato
+inválido*. What the disanalogy does not establish is type-level authorization.
+
+Art. 489, §1º, V is an act-specific form requirement governing the act of invoking a
+precedent: the decision is not considered reasoned if it invokes a precedent "without
+identifying its fundamentos determinantes nor demonstrating that the case under
+judgment fits those grounds." This is an act-specific standard — targeted at precedent
+invocation specifically, not all decisions. By the defense's logic, subsection V's
+act-specific form specification would also place precedent invocation "within the
+domain of acts subject to reasoning requirements," implying authorization. But
+subsection V's form condition does not authorize any particular invocation to prevail
+on the merits. A court that satisfies subsection V's form condition while invoking a
+precedent whose ratio does not govern the case commits a substantive legal error; the
+act-specific form specification establishes a reasoning condition, not an authorization
+condition.
+
+Subsection VI operates identically. The act-specific character of VI's form
+requirement — departure must be accompanied by demonstration of distinction or
+supersession — specifies the reasoning condition for *fundamentado* departure.
+Meeting this condition makes the departure *fundamentada*. It does not authorize the
+departure to produce the departed-from result. A court can satisfy subsection VI's form
+condition while exceeding its authorized scope under art. 927. The reasoning condition
+and the authorization condition are independently variable, and the act-specific
+targeting of VI establishes the former without addressing the latter.
+
+The defense's "categorically prohibited act would be null" inference does not help
+here. It correctly distinguishes between (a) void acts and (b) reversible acts. The
+adversarial paper has always placed Exit 4 in category (b). The inference says nothing
+about the distinction between (b1) reversible-authorized acts and (b2) reversible-
+unauthorized acts. Exits 2 and 3 are type (b1); Exit 4 is type (b2). The subsection
+III/VI disanalogy establishes that Exit 4 is not type (a) without distinguishing
+between (b1) and (b2). The authorization question is in the (b1)/(b2) distinction, and
+the disanalogy does not address it.
 
 ### 3.2 The Rational Binding Theory's Two-Directional Reading Does Not Authorize the Channel
 
@@ -366,42 +465,116 @@ ambiguous) or yields a determinate answer based on the court's characterization,
 may be strategic. Neither outcome constitutes a stable, policiable category distinct
 from the combination of Exit 2 and *afastamento silencioso*.
 
+The functional-taxonomy defense offers three responses to the boundary instability
+attack. None succeeds.
+
+*First response — Exit 2 faces the same strategic pressure.* The defense accepts that
+Exit 5 adds "the same type of risk at a different analytical level." This concession
+confirms the adversarial point: adding Exit 5 adds a second independent manipulation
+vector at a higher level of abstraction. Two cumulative manipulation vectors impose a
+greater verification burden on reviewing courts than one, even when they are of the
+same type. The defense's "general feature of legal reasoning" observation does not
+reduce the cumulative burden; it explains why all entries in a precedent taxonomy face
+manipulation pressure — which is compatible with adding Exit 5 adding more of it.
+
+More significantly: Exit 2's manipulation risk is accepted because Exit 2 is an
+authorized distinction mechanism — it is the correct procedural response when P applies
+to C's question type but C's facts fall outside the ratio. Its manipulation risk is the
+cost of an authorized doctrinal function. Whether Exit 5 has a comparably authorized
+doctrinal function as a distinct category is what the adversarial attack contests. If
+Exit 5 lacks type-level authorization as a separate recognized category — because the
+function it claims is already available within Exit 2's threshold analysis — then its
+manipulation vector is a pure cost with no offsetting doctrinal gain.
+
+*Second response — statutory anchoring constrains question-type characterization.*
+The defense argues that Brazilian civil law's statutory structure anchors
+question-type characterization: the safety recall case's ambiguity is exceptional —
+arising from simultaneous CDC provision applicability — rather than a general criterion
+failure. The defense acknowledges the ambiguity arises from both art. 26, §3º CDC and
+art. 6, III CDC being potentially applicable to the same conduct.
+
+The defense has located the problem in its own response. Statutory anchoring operates
+where a single provision unambiguously governs the legal question at issue; it fails
+where multiple provisions could govern the same conduct from different angles. Brazilian
+civil law provisions regularly address the same conduct from different substantive
+angles — the safety recall example is typical of how consumer protection, tort, and
+contract provisions overlap in the CDC, not an exceptional drafting anomaly. The
+constraint the defense invokes operates exactly where Exit 5's manipulation risk does
+not arise (single applicable provision, no strategic choice available); it fails exactly
+where Exit 5's manipulation risk is realized (multiple provisions potentially
+applicable, characterization is available). The exception the defense characterizes as
+exceptional is the standard boundary case.
+
+*Third response — the correct comparator is Exit 5 versus its absence.* The defense
+argues that without Exit 5, courts in genuinely different-question-type cases face
+only a pointless Exit 2 analysis or an *afastamento silencioso* characterization. Exit
+5 as a recognized category avoids both.
+
+The correct comparator is Exit 5 versus extended Exit 2 scope, not Exit 5 versus its
+absence. Exit 2's distinguishing analysis includes a threshold inquiry: is the binding
+precedent applicable in principle to the type of legal question before the court? A
+negative threshold finding — the precedent does not govern the court's question in
+principle — is a complete Exit 2 analysis, concluding no invocation is required.
+Courts can resolve on genuinely independent grounds when this threshold analysis
+concludes inapplicability in principle; no separate exit category is required for this
+outcome. Exit 5 as a labeled category adds no authorized function unavailable within
+Exit 2's threshold analysis. It merely relabels a finding available within Exit 2's
+scope while introducing an independent manipulation vector at the question-type level.
+Relabeling within Exit 2's scope framework preserves Exit 2's existing manipulation
+constraints; creating a separate exit category bypasses them.
+
 ---
 
 ## 4. Anticipated Reply and Why It Does Not Suffice
 
-**On the *invalidade/incorreção* recharacterization (§3.1):** The reply will argue
-that the *invalidade/incorreção* distinction is a distinction in legal status — not
-merely in conduct quality — and that the taxonomy's "legítima" predicate can coherently
-track procedural-domain membership. Exit 4 decisions are processed within ordinary
-channels; *afastamento silencioso* may not be. This is a genuine legal-status
-difference.
+**On the *invalidade/incorreção* recharacterization and the functional-taxonomy
+reading (§3.1):** The defense develops two arguments. First, the *invalidade/incorreção*
+distinction: Exit 4 decisions are *incorretos* but not *inválidos*, processed through
+ordinary correction mechanisms. Second, the functional-taxonomy reading: "saídas
+legítimas" classifies recognized response types at the type level rather than
+authorization profiles at the outcome level; Exits 2 and 3 confirm the taxonomy
+operates at the response-type level, supporting the analogy that places Exit 4 in the
+same class.
 
-But the reply establishes that Exit 4 is better than *afastamento silencioso* without
-establishing that Exit 4 belongs alongside authorized responses. *Incorreção* is a
-background condition of all legally erroneous decisions; a taxonomy criterion that
-reduces to "all decisions processed through ordinary appeal" has no discriminating
-power within the class of departures the taxonomy aims to classify. The adversarial
-surrender condition 2 required the paper to restructure the taxonomy — acknowledging
-Exit 4 occupies a different doctrinal category from Exits 1–3 and 5 — not to redefine
-"legítima" to encompass both outcome-authorized and ordinarily-processed responses.
+The *invalidade/incorreção* reply does not suffice for the reasons in §3.1's first and
+third grounds: the distinction explains why Exit 4 is preferable to *afastamento
+silencioso* without explaining why Exit 4 belongs alongside authorized exits. The
+functional-taxonomy reply does not suffice for the fourth ground: the Exit 2/3 analogy
+reveals an authorization asymmetry. Exits 2 and 3 have type-level authorization — the
+legal system authorizes inferior courts to perform distinguishing and to recognize
+supervening supersession; individual instances may fail, but they are instances of an
+authorized type. Exit 4 has no type-level authorization: all instances are reversed
+regardless of execution quality. The "recognized response type processed through
+ordinary channels" criterion places Exit 4 alongside *afastamento silencioso* (both
+unauthorized, both within ordinary correction mechanisms); the *invalidade/incorreção*
+distinction then draws a sub-classification within the unauthorized group. It does not
+move Exit 4 into the authorized group that Exits 1–3 and 5 occupy.
 
-**On the presupposition structure of art. 489, §1º, VI (§3.1):** The reply will argue
-that a negative form specification necessarily implies the practice it specifies a form
-for: if departures-with-demonstration were categorically prohibited, the CPC would not
-specify a reasoning standard for them; by doing so, it places them within the ordinary
-processing domain.
+**On the presupposition structure of art. 489, §1º, VI and the subsection III/VI
+structural disanalogy (§3.1):** The defense advances two related arguments. The
+presupposition argument: art. 489, §1º, VI's specification of a form for departure-
+with-demonstration necessarily implies departure is within the ordinary processing
+domain; a categorically prohibited act would not receive a reasoning standard but would
+be null. The disanalogy argument: subsection VI is act-specific (governs departure from
+binding norms) while subsection III is act-neutral; the act-specific form specification
+places departure within the domain of acts subject to reasoning requirements.
 
-This establishes correctly that art. 489, §1º, VI processes departures-with-
-demonstration through ordinary channels — which the adversarial paper accepts. But
-the provision's subject is reasoning quality (when is a decision *fundamentada*?), not
-authorization scope (what decisions is the court permitted to issue?). The
-presupposition structure establishes that a departure-with-demonstration is
-*fundamentada*; it does not establish that the departure is authorized. A court can
-be fully *fundamentado* while exceeding its authorized scope — these are distinct
-conditions. The parallel in subsection III confirms this: case-specific reasoning
-is *fundamentada*, but this does not authorize all case-specifically-reasoned
-conclusions.
+Both arguments establish that Exit 4 decisions are reversible, not void — which the
+adversarial paper has accepted throughout. Neither addresses the authorization question.
+Art. 489, §1º, V provides the decisive comparison (§3.1, fifth ground): subsection V
+is also an act-specific form requirement governing precedent invocation; it specifies
+the form conditions for *fundamentada* invocation without authorizing any particular
+invocation to prevail. A court that satisfies subsection V's form condition while
+invoking a precedent whose ratio does not govern the case commits a substantive error;
+form compliance and authorization are independently variable. Subsection VI operates
+identically: the act-specific character of VI's form requirement specifies the reasoning
+condition for *fundamentada* departure without establishing that the departure is
+authorized. A court can be *fundamentada* while exceeding its authorized scope; these
+are distinct conditions. The subsection III/VI disanalogy confirms that Exit 4 is not
+void — which is category (a) in the void/reversible distinction — without distinguishing
+between (b1) reversible-authorized acts and (b2) reversible-unauthorized acts. The
+authorization question is in the (b1)/(b2) distinction, which the disanalogy
+does not address.
 
 **On the rational binding theory's channel function (§3.2):** The reply will argue
 that the channel function operates even through unauthorized departures: the STF
@@ -424,28 +597,35 @@ as part of a complete taxonomy covering all binding precedents under art. 927. A
 restriction to infraconstitutional precedents produces a substantially narrower thesis.
 
 **On the Exit 5 different-questions criterion and its boundary instability (§3.5):**
-The reply will argue that the different-questions/different-facts distinction generates
-distinct reviewing-court inquiries — Exit 2 review asks about fact-pattern scope; Exit
-5 review asks about question-type scope — and that appellate courts are competent to
-answer both.
+The reply now advances three responses: (1) Exit 2 faces the same strategic pressure,
+so Exit 5's manipulation risk is not distinctive; (2) statutory anchoring in Brazilian
+civil law constrains question-type characterization; (3) the correct comparator is Exit
+5 versus its absence, not Exit 5 versus Exit 2.
 
 This correctly distinguishes the two inquiries at the conceptual level. The adversarial
 attack targets the inquiry's determinacy at the boundary: determining "does P address
 C's question?" is a legal characterization subject to the same strategic choice of
-abstraction level that Exit 2's fact-characterization is subject to. The defense's own
-anticipated-objection section acknowledges the characterization difficulty and calls it
-"a general feature of legal reasoning" — confirming that Exit 5 adds a manipulation
-vector structurally parallel to Exit 2's, at a more abstract and harder-to-detect
-level. Adding a legitimate category with an equally-manipulable criterion does not
-reduce strategic non-invocation.
+abstraction level that Exit 2's fact-characterization is subject to. The defense's
+concession that Exit 5 adds "the same type of risk at a different analytical level"
+confirms that Exit 5 adds a cumulative manipulation vector — two vectors are worse than
+one even when of the same type. Statutory anchoring fails at the contested boundary
+precisely where strategic characterization is available: it operates where a single
+provision unambiguously governs, which is not the boundary case. The correct comparator
+is Exit 5 versus extended Exit 2, not Exit 5 versus its absence: Exit 2's threshold
+inquiry can already conclude that a precedent does not govern a court's question in
+principle, rendering Exit 5 as a separate labeled category redundant as to its doctrinal
+function while adding an independent manipulation vector. These three responses are
+developed in §3.5.
 
 ---
 
 ## 5. Scope of the Attack
 
 This attack targets Exit 4 — in its original authorization form and in the transparent-
-contestation reconceptualization with its *invalidade/incorreção* and presupposition-
-structure defenses — and the Exit 5 boundary instability problem.
+contestation reconceptualization with its *invalidade/incorreção*, presupposition-
+structure, functional-taxonomy, and subsection III/VI disanalogy defenses — and the
+Exit 5 boundary instability problem including the three defenses in §4.6 of the
+supportive paper.
 
 This attack does not challenge:
 
