@@ -135,6 +135,15 @@ with Phase 3's structural controls (champion population, explicit instruction, s
 making cross-cluster comparison tractable in ways that uncontrolled cross-cluster
 comparison is not.
 
+In round 6 of the C2 debate, the supportive camp additionally accepts the input-protocol
+gap for coverage completeness tracking — characterizing providing the party brief as a
+minor input-specification change under Brazilian processo eletrônico (Lei nº 11.419/2006),
+not an architectural redesign — and specifies SC6(b-2) as a concrete naturalistic
+validation test with an explicit falsification criterion, and proposes a cross-elaboration
+calibration pair methodology for SC6(3): champions matched on doctrinal area but
+differentiated by cluster-level adversarial record richness, with independent expert
+assessment of reasoning-operation quality establishing quality-discrepant pairs.
+
 ---
 
 ## 3. The Attack
@@ -453,6 +462,142 @@ concern. SC6(3) extended to govern prong 2 requires a cross-elaboration-specific
 test alongside its cross-domain test: whether Phase 3 judges rank champions
 independently of elaboration richness differences arising from cluster-level
 adversarial record variation, not only from domain-vocabulary differences.
+
+**Seventh adversarial response — round 7: input-protocol extension introduces
+a materiality-identification step; SC6(b-2) accepted as specified; the
+cross-elaboration test's expert-assessment protocol is question-begging.**
+
+The supportive round 6 paper addresses all three adversarial requirements from
+round 5. Three adversarial responses follow.
+
+*Input-protocol extension: the materiality-identification gap.* The supportive
+camp accepts the input-protocol gap and characterizes the required extension as
+architecturally minor: Brazilian processo eletrônico (Lei nº 11.419/2006) makes
+appellate party briefs publicly accessible as digitized case-record components;
+for appellate decisions the relevant brief is typically one document; providing
+it alongside the decision text changes the evaluator's input package without
+altering panel architecture, calibration rubric, or Bradley-Terry aggregation.
+
+The adversarial position is that this framing understates a new processing
+requirement the extension introduces. Coverage completeness under art. 489,
+§1º, IV requires identifying which arguments in the brief are material —
+capable, in principle, of affecting the outcome ("capazes de, em tese, infirmar
+a conclusão") — so that coverage is assessable as a proportion of material
+arguments addressed. The party brief contains all arguments counsel chose to
+raise: meritorious arguments, marginal arguments, and arguments that are
+legally foreclosed on settled doctrine. Determining which arguments cross the
+materiality threshold requires assessing argument strength: does this argument,
+if accepted, require a different dispositif? This assessment is C2-adjacent.
+It requires engagement with argument substance — what the argument claims, what
+the applicable standard is, whether accepting the argument's premise would
+require the court to decide differently — precisely the analytical step the
+C2 debate has established is not straightforwardly separable from elaboration
+richness in the text.
+
+Brief arguments that are long and well-developed are more likely to have been
+identified by counsel as strong and to satisfy the materiality condition; brief
+arguments stated in a few lines are more likely to be marginal. The
+elaboration-quality correlation that infects C2 scoring in the decision text
+is present in the party brief in the same structural form: more elaborate
+arguments correlate with higher likelihood of materiality under art. 489, §1º,
+IV. The input extension therefore shifts the processing challenge rather than
+resolving it. Instead of asking the LLM judge to infer coverage from the
+decision text, it asks the LLM judge to identify material arguments from the
+brief and then assess coverage. Both tasks involve assessments that correlate
+with elaboration richness.
+
+SC6(a) Type 2 calibration examples constructed with (decision text + party
+brief) input must include a demonstration that the LLM correctly identifies
+the set of material arguments from the raw brief — not only that it correctly
+ranks coverage completeness once the material argument set is given. In the
+realistic evaluation condition, the LLM receives (decision text + party brief)
+and must perform argument materiality identification before coverage ranking.
+Calibration that tests the conditional task (rank coverage given the material
+argument set) but not the identification task (identify which brief arguments
+are material) leaves the realistic evaluation task incompletely validated.
+Without a separate demonstration of correct materiality identification from raw
+brief material, the coverage-completeness ranking signal is validated only for
+a task structure that does not match the evaluation condition.
+
+*SC6(b-2): accepted as appropriately specified.* The supportive camp specifies
+SC6(b-2) as a naturalistic test with an explicit falsification criterion:
+judges trained on anti-naturalistic SC6(b-1) pairs (where the complete decision
+is shorter) must correctly rank the complete-and-elaborate decision as higher
+in naturalistic SC6(b-2) pairs (where the complete decision is also longer).
+This specification addresses the naturalistic generalization requirement the
+adversarial paper introduced. SC6(b-2) as specified tests what it claims to
+test. This requirement is accepted as appropriately operationalized.
+
+*SC6(3) cross-elaboration test: the expert-assessment protocol is
+question-begging.* The supportive camp proposes a specific cross-elaboration
+methodology: two champions matched on doctrinal area, differentiated by
+cluster-level adversarial record richness, with independent expert assessment
+of reasoning-operation quality used to construct quality-discrepant pairs. The
+falsification criterion: if higher-elaboration champions consistently win at
+rates substantially above chance independent of expert-assessed
+reasoning-operation quality, the abstraction instruction has not separated
+argumentation quality from adversarial-record-driven elaboration.
+
+The adversarial position is that the expert-assessment protocol is
+question-begging. The test requires independent experts to assess
+"reasoning-operation quality" in a way that is "in principle separable from
+elaboration level generated by adversarial record richness." But this
+separability is what the cross-elaboration test is designed to investigate;
+specifying it as a condition on the expert assessment presupposes rather than
+establishes it.
+
+The problem appears in operationalizing the expert-assessment protocol for
+ratio isolation (C1). In a high-adversarial-record case, the parties have
+contested which precedential grounds are fundamentos determinantes; ratio
+isolation requires distinguishing competing candidate rationes and identifying
+which grounds are load-bearing for the holding. In a low-adversarial-record
+case, the applicable ratio is more nearly settled; the isolation requires
+identifying and articulating a ratio that is not seriously contested. Both are
+instances of ratio isolation. An expert asked to assess which champion
+demonstrates "higher reasoning-operation quality" on ratio isolation faces a
+choice between two assessment standards.
+
+Under a complexity-relative standard, the expert calibrates quality against
+what the operation must accomplish — quality is assessed relative to how
+difficult the isolation is. Under this standard, the expert's quality judgment
+is adversarial-record-relative: what each champion had to accomplish is
+factored in. The comparison across champions then tracks the adversarial record
+that generated their respective difficulties, not a record-independent quality
+level. The quality judgment is not independent of elaboration in the relevant
+sense — it is calibrated to the elaboration that the case demanded.
+
+Under a universal scale, the expert applies a single quality dimension
+regardless of adversarial record context. Under this standard, a champion from
+a high-adversarial-record cluster will systematically produce a more elaborately
+structured ratio isolation — because the contested candidate rationes required
+sustained discrimination — and expert judges applying the same universal scale
+will identify that more elaborately structured isolation as higher quality. The
+test would then confirm what the adversarial mechanism predicts: elaboration
+richness arising from adversarial record differences systematically tracks what
+independent experts identify as higher reasoning-operation quality.
+
+The cross-elaboration test's validity requires the expert assessment to apply
+the complexity-relative standard to produce quality judgments genuinely
+independent of elaboration. But the complexity-relative standard requires
+calibration: what is the appropriate quality level for ratio isolation given a
+case of a specific adversarial record complexity? This calibration is not
+operationalized in the proposed methodology. Inter-rater reliability on a
+complexity-relative quality standard has not been established, and there is no
+basis for expecting independent experts to agree on what "quality given record
+difficulty" looks like when the record difficulties differ across clusters.
+Without this operationalization, the expert-assessment protocol lacks the
+specification needed to distinguish complexity-relative quality judgments from
+complexity-insensitive elaboration-tracking. The falsification criterion — "if
+higher-elaboration champions consistently win at rates substantially above
+chance independent of expert-assessed reasoning-operation quality" — is
+testable only if the expert assessments are genuinely independent of
+elaboration. If experts implicitly apply a universal quality scale, their
+assessments will correlate with elaboration, and the test will confirm that LLM
+judges agree with experts — not that LLM judges are tracking something other
+than elaboration-correlated quality. The expert-assessment protocol must
+operationalize the complexity-relative standard and establish inter-rater
+reliability on it as a prior empirical requirement of the cross-elaboration
+test. That operationalization is not a feature of the current proposal.
 
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
@@ -986,8 +1131,8 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (six supportive responses, six adversarial counter-replies).**
-The C2 debate has passed through six exchanges. The supportive paper argues (1) that
+**On the full C2 exchange (seven supportive responses, seven adversarial counter-replies).**
+The C2 debate has passed through seven exchanges. The supportive camp argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
 argument-type-independent textual markers — explicit identification of the argument,
@@ -1001,9 +1146,12 @@ coverage completeness at the argument-set level is the within-adequacy ranking s
 observable from the case record without argument-strength knowledge, and requiring
 SC6(a) Type 2 calibration pairings; (6) that the C2 adversarial disjunction resolves
 structurally — prong 1 activates SC6(c) directly; prong 2 relocates to Phase 3 and
-activates SC6(3).
+activates SC6(3); and (7) that the input-protocol gap for coverage completeness is a
+minor input-specification change under Brazilian processo eletrônico, SC6(b-2) provides
+a concrete naturalistic test, and a cross-elaboration calibration pair methodology with
+independent expert assessment addresses SC6(3) under prong 2.
 
-The §3.2 analyses address all six. On (1): the conduct/quality distinction holds at
+The §3.2 analyses address all seven. On (1): the conduct/quality distinction holds at
 the criterion level; it does not survive the calibration step, where LLM judges
 trained on human preference data acquire a C2 signal correlated with elaboration
 richness in the text, because annotators assessing conduct quality for legal arguments
@@ -1035,13 +1183,26 @@ specified addresses the cross-domain criterion-switching concern; it does not ad
 the cross-elaboration concern prong 2 relocates to Phase 3, where champions may differ
 in elaboration richness arising from cluster-level adversarial record heterogeneity
 rather than domain-vocabulary differences — a distinction the abstraction instruction
-does not explicitly target. The practical implication across all six exchanges:
-within-cluster C2-specific criterion activation cannot be ruled out under the current
-protocol design; coverage completeness as a within-adequacy ranking signal requires
-both a case-record input extension and calibration generalization validation, not only
-Type 2 SC6(a) examples; SC6(c) determines which prong of the C2 disjunction applies;
-under prong 2, SC6(3) requires extension before it governs the relocated
-cross-elaboration concern.
+does not explicitly target. On (7): the input extension introduces a materiality-
+identification step that the minor-specification-change framing does not address —
+identifying which brief arguments are material under art. 489, §1º, IV requires
+C2-adjacent argument-strength assessment, and the elaboration-quality correlation that
+infects C2 scoring in the decision text is present in the party brief in the same
+structural form; SC6(b-2) is accepted as appropriately specified; the cross-elaboration
+test's expert-assessment protocol is question-begging — the two candidate standards for
+assessing "reasoning-operation quality independently of elaboration level" (complexity-
+relative and universal-scale) both reintroduce the adversarial record as a determinant,
+the former as the comparison frame and the latter as the quality signal, and neither is
+operationalized in the proposed methodology with inter-rater reliability established.
+The practical implication across all seven exchanges: within-cluster C2-specific
+criterion activation cannot be ruled out under the current protocol design; coverage
+completeness as a within-adequacy ranking signal requires the case-record input
+extension, calibration generalization validation via SC6(b-2), and separate validation
+of the materiality-identification step from raw brief material; SC6(c) determines which
+prong of the C2 disjunction applies; under prong 2, SC6(3) requires a cross-elaboration
+test whose expert-assessment protocol must operationalize the complexity-relative quality
+standard and establish inter-rater reliability on it before the test can function as
+claimed.
 
 **On the Phase 3 attack (§§3.6–3.8):**
 
@@ -1284,6 +1445,24 @@ conditions.
    test is a distinct empirical requirement from the cross-domain κ measurement
    SC6(3) currently specifies; both are required if SC6(c) yields prong 2.
 
+   The proposed cross-elaboration methodology (supportive round 6) requires
+   independent expert assessment of reasoning-operation quality that is "in principle
+   separable from elaboration level generated by adversarial record richness." As
+   argued in §3.2 (seventh adversarial response), this condition is not
+   operationalized in the proposed methodology. For the cross-elaboration test to
+   satisfy SC6(3)(e), the expert-assessment protocol must specify a
+   complexity-relative quality standard — quality assessed relative to what the
+   reasoning operation must accomplish given the case's adversarial record difficulty
+   — and must establish inter-rater reliability on that standard across matched-domain
+   champions from different adversarial record contexts. Without this
+   operationalization, the test cannot distinguish between LLM judges tracking quality
+   that experts assessed as higher under a genuine complexity-relative standard and
+   LLM judges tracking elaboration that experts assessed as higher under an implicit
+   universal scale where more elaborately structured reasoning operations score better
+   regardless of what the case demanded. Both outcomes would produce the same pattern
+   of LLM agreement with expert rankings; only the operationalized complexity-relative
+   standard with established inter-rater reliability can distinguish them.
+
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3 attack is
    moot. This requires retracting or qualifying the Abstract's claim that Phase 3
@@ -1319,16 +1498,28 @@ conditions.
    complete-but-thin decision is shorter; and
    (c) per-item C1, C2, and C4 dimension scores within fine-grained semantic clusters,
    showing that within-cluster C2 variance is not systematically wider than C1/C4
-   variance — then the C2 operationalization concern and the within-cluster C2
-   independence claim are both addressable from a single data collection. Evidence of
-   within-cluster C1/C2/C4 co-variation at levels comparable to between-cluster
-   co-variation would undermine the adversarial C2-specific mechanism and simultaneously
-   confirm that embedding proximity compresses elaboration variance alongside doctrinal
-   variance — the fourth supportive response's implicit prediction. Evidence of
-   within-cluster C2 variation independent of C1/C4 would confirm the adversarial
-   mechanism and disconfirm the fourth response. Both hypotheses are tested by the
-   same data collection; neither requires a new experimental design beyond what SC5
-   already specifies with the addition of per-criterion dimension scores. This surrender
+   variance; and
+   (d) SC6(a) Type 2 calibration examples constructed with (decision text + party brief)
+   input demonstrating that LLM judges correctly identify the set of material arguments
+   from the raw party brief — not only correctly rank coverage completeness once the
+   material argument set is pre-specified in the calibration pair. In the realistic
+   evaluation condition, the LLM receives (decision text + party brief) and must perform
+   argument materiality identification under art. 489, §1º, IV's "capable of affecting
+   the outcome" standard before coverage ranking. Calibration examples that pre-specify
+   which brief arguments are material test the coverage ranking task but not the
+   identification task. Both must be validated to confirm that coverage-completeness
+   tracking under the proposed input-extension protocol functions reliably at evaluation
+   time —
+   then the C2 operationalization concern and the within-cluster C2 independence claim
+   are both addressable from a single data collection. Evidence of within-cluster
+   C1/C2/C4 co-variation at levels comparable to between-cluster co-variation would
+   undermine the adversarial C2-specific mechanism and simultaneously confirm that
+   embedding proximity compresses elaboration variance alongside doctrinal variance —
+   the fourth supportive response's implicit prediction. Evidence of within-cluster C2
+   variation independent of C1/C4 would confirm the adversarial mechanism and
+   disconfirm the fourth response. Both hypotheses are tested by the same data
+   collection; neither requires a new experimental design beyond what SC5 already
+   specifies with the addition of per-criterion dimension scores. This surrender
    condition is partially overlapping with SC5: both require per-item dimension score
    data collected alongside Bradley-Terry rankings; the difference is that SC5 tests
    for non-systematic within-cluster cycling overall, while SC6 tests for C2-specific
