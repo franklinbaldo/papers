@@ -400,9 +400,10 @@ o volume dos argumentos ignorados.
 
 ### 4.3 O ponto de inflexão
 
-Há um ponto — não definível com precisão, mas estruturalmente
-necessário — em que o custo de reafirmar autoridade sem enfrentar
-argumentos supera o benefício de não enfrentar. Nesse ponto, o
+Há um ponto — não definível com precisão, e cuja existência depende
+de condições empíricas ainda parcialmente verificadas — em que o custo
+de reafirmar autoridade sem enfrentar argumentos supera o benefício de
+não enfrentar. Nesse ponto, o
 STF tem incentivo para mudar a estratégia: enfrentar os melhores
 argumentos, distinguir quando a distinção é genuína, revisar quando
 o argumento revela erro real.
@@ -431,6 +432,15 @@ custos seja acompanhada de redução diferencial maior para argumentos
 de qualidade do que para argumentos ruins — hipótese razoável para
 instrumentos que incorporam estrutura argumentativa explícita, mas
 não garantida para instrumentos que apenas aceleram produção textual.
+Mesmo para os primeiros, a redução diferencial é maior para os
+componentes textuais da argumentação jurídica do que para os
+componentes analíticos — identificação de distinção genuína, avaliação
+de robustez da ratio, articulação de inconsistência entre precedentes —
+que dependem de conhecimento contextual não facilmente sistematizável.
+O argumento probabilístico desta seção opera com força maior sobre uma
+classe marginal de argumentos cuja principal barreira de produção é
+textual — não sobre todos os argumentos de qualidade que o sistema
+demandaria.
 
 A redução de custos não resolve o problema da assimetria de
 informação: o STF pode não reconhecer a qualidade de um argumento
@@ -524,6 +534,35 @@ Se todos os agentes podem produzir argumentos de qualidade a baixo
 custo, o STF pode elevar o padrão de argumento que considera
 suficiente para enfrentar — mantendo, em novo patamar, o equilíbrio
 (β, β) em relação ao padrão elevado.
+
+**Limite do limiar endógeno**: a redução de custos altera os parâmetros
+do jogo, mas o STF pode responder elevando o limiar de argumento que
+considera suficiente para produzir engajamento — limiar que o próprio
+STF fixa e autoavalia. O ajuste de limiar não é custo-zero: o art. 93,
+IX, da CF e o art. 1.022, II, do CPC criam obrigação de fundamentação
+para recusas, e elevar o padrão sem fundamentar é vício impugnável via
+embargos de declaração. Mas o constrangimento é autoaplicado: é o STF
+que decide se o argumento apresentado satisfaz o limiar que ele mesmo
+determinou. Se essa autoavaliação pode ser exercida de modo a neutralizar
+sistematicamente o efeito da redução de custos é questão que depende
+de como o STF calibra o engajamento na prática — não resolvível a priori
+pela estrutura do jogo.
+
+**Limite da lacuna de formação de padrão**: o "efeito de visibilidade"
+descrito no §4.2 pressupõe que argumentos ignorados tornam-se visíveis
+para atores com capacidade de documentar a falha de engajamento. A
+imprensa jurídica especializada (JOTA, Consultor Jurídico) realiza
+predominantemente acompanhamento de resultados — registro de procedência,
+improcedência, afirmação de precedente —, não avaliação comparativa da
+qualidade do engajamento. A documentação de falha de engajamento requer
+análise doutrinária-comparativa a uma profundidade que o jornalismo em
+tempo real não realiza sistematicamente. O canal da imprensa especializada
+resolve o problema de ação coletiva do acompanhamento de *resultados*;
+não resolve com igual eficácia o problema de documentação da *qualidade*
+do engajamento. O efeito de visibilidade opera com maior força na classe
+de casos em que o argumento ignorado é suficientemente saliente para
+atrair análise doutrinária independente — classe mais estreita do que o
+argumento, em sua formulação mais ampla, poderia sugerir.
 
 ---
 
