@@ -309,6 +309,93 @@ III/VI disanalogy establishes that Exit 4 is not type (a) without distinguishing
 between (b1) and (b2). The authorization question is in the (b1)/(b2) distinction, and
 the disanalogy does not address it.
 
+**Sixth, the prospective-taxonomy argument mischaracterizes the adversarial authorization
+criterion, and the legislative-history asymmetry addresses a different legal question than
+the authorization gap.**
+
+The round 4 defense advances a prospective-taxonomy argument: whether a given Exit 2
+instance is authorized — that is, whether the distinction will be confirmed on review —
+is known only post-review. A taxonomy classifying by "does this type have confirmed
+instances?" would require courts to know reviewing courts' future outcomes before
+classifying their own response. This correctly shows that instance-level retrospective
+confirmation is not a workable prospective taxonomy criterion. But the adversarial
+paper's authorization criterion has never been instance-level. The criterion asks whether
+the CPC 2015's enacted framework authorizes the TYPE of act as a matter of law in force
+before the court acts.
+
+At the time a court faces a binding precedent and considers its response, the court can
+answer prospectively from the CPC's provisions: (a) is distinguishing authorized as a
+type? Art. 1.037, §§9º–13º establishes a procedural infrastructure for the
+distinguishing inquiry, conferring type-level authorization from the moment of the CPC's
+enactment — yes, prospectively; (b) is recognizing supervening supersession authorized
+as a type? Art. 927 requires courts to observe currently binding norms, which
+necessarily includes recognizing when a binding norm has been superseded — yes,
+prospectively; (c) is departing from a binding precedent on the basis of error in the
+ratio authorized as a type? No provision answers yes. The court cannot point to any
+CPC provision authorizing inferior courts to depart from a binding STJ or STF precedent
+by identifying error in its ratio, as it can point to art. 1.037 for distinguishing and
+to art. 927's framework for recognizing supervening supersession.
+
+The prospective-taxonomy argument's legitimate core — that doctrinal taxonomy criteria
+must be usable prospectively by the courts they govern — applies with full force to
+type-level framework authorization, and under that criterion Exit 4 has no
+authorization. The prospective-taxonomy argument therefore confirms rather than
+undermines the adversarial position.
+
+The defense confuses two distinct criteria: (A) instance-level retrospective
+confirmation ("will reviewing courts confirm this specific instance?") and (B)
+type-level prospective framework authorization ("does the CPC, as enacted, authorize
+this type of act?"). The adversarial paper relies on (B), not (A). The
+prospective-taxonomy argument correctly defeats (A); it does not reach (B). The
+correction it proposes — from instance-level to type-level — is already what the
+adversarial criterion requires. Applying the prospective-taxonomy argument to criterion
+(B) as the adversarial camp uses it: can courts prospectively determine whether
+distinguishing is an authorized type? Yes — art. 1.037. Can courts prospectively
+determine whether departing from a binding precedent by error-in-ratio argument is an
+authorized type? No provision confers that authorization. The prospective answer for
+Exit 4 is the same no matter when the court looks.
+
+The round 4 defense also advances a legislative-history asymmetry: historically, the
+practice of departing from binding precedents was legally contested while invocation's
+status was uncontested; the CPC 2015's specification of form for departure in art. 489,
+§1º, VI resolved this historical contest, establishing departure as a recognized
+practice within the framework. This correctly identifies a genuine legislative asymmetry.
+It does not, however, establish that art. 489, §1º, VI resolved the authorization
+question rather than the fundamentação question the provision explicitly addresses.
+
+The CPC 2015 enacted simultaneously two distinct regimes governing departures: art. 927
+(which creates binding force and obliges all courts to observe binding norms) and art.
+489, §1º, VI (which specifies the form requirement for departures-with-demonstration
+for purposes of meeting the constitutional and statutory fundamentação threshold). These
+provisions address different legal questions. Art. 927 concerns the hierarchy of
+judicial norms and the allocation of modification authority across the judicial system.
+Art. 489, §1º, VI concerns whether a departure decision satisfies the fundamentação
+standard of art. 489. A court can simultaneously satisfy art. 489, §1º, VI (producing
+a fundamentada decision with the required demonstration) and violate art. 927 (departing
+without having modification authority). These conditions are independently variable;
+they are addressed by different provisions for a reason.
+
+The historical contest the defense invokes — whether inferior courts can depart from
+binding precedents — is an art. 927 question about hierarchical authority. Art. 489,
+§1º, VI does not address this question; it addresses whether departure, when it occurs,
+is accompanied by sufficient reasoning to count as fundamentada. The legislature's
+choice to specify form for departure through art. 489, §1º, VI without providing
+substantive authorization through art. 927 or any parallel provision is therefore
+consistent with the reading that the authorization question remained governed by art.
+927's terms — terms under which modification authority belongs to source courts, not
+inferior courts exercising departure on their own initiative.
+
+Moreover, the legislature's awareness of the historical authorization contest
+(evidenced by the defense's own argument that the contest existed) makes the omission
+of substantive authorization more telling, not less. If the legislature intended art.
+489, §1º, VI to resolve the authorization question in favor of inferior-court departures,
+the legislative record would show engagement with that intent. Form specification for a
+historically contested practice, without accompanying substantive authorization of that
+practice, is not authorization by form designation: it is the CPC's choice to regulate
+how a practice should be conducted if it occurs, while leaving the practice's
+authorization status to be governed by the hierarchy provisions that were always the
+correct framework for that question.
+
 ### 3.2 The Rational Binding Theory's Two-Directional Reading Does Not Authorize the Channel
 
 The supportive defense invokes the two-directional structure of Marinoni's formula:
@@ -617,15 +704,49 @@ principle, rendering Exit 5 as a separate labeled category redundant as to its d
 function while adding an independent manipulation vector. These three responses are
 developed in §3.5.
 
+**On the prospective-taxonomy argument and legislative-history asymmetry (§3.1, sixth
+ground):** The round 4 defense advances two connected arguments. The prospective-taxonomy
+argument: the adversarial authorization criterion requires prospective determinability,
+and type-level authorization is not prospectively knowable because instance-level
+confirmation is retrospective. The legislative-history asymmetry: the CPC 2015's
+specification of form for departure in art. 489, §1º, VI resolved a historical contest
+about departures' legal status, establishing Exit 4 as a recognized practice within the
+framework.
+
+The prospective-taxonomy argument fails because it addresses the wrong version of the
+adversarial criterion. Type-level framework authorization — whether enacted provisions
+authorize the type of act — is fully prospectively determinable from the CPC's text at
+the time of enactment. Art. 1.037, §§9º–13º authorizes distinguishing prospectively;
+art. 927 authorizes recognizing supervening supersession prospectively; no provision
+authorizes inferior-court departure by error-in-ratio argument. The court can determine
+this before acting, from provisions in force. The prospective-taxonomy argument's
+substantive import — that taxonomy criteria should be prospectively applicable — is
+already satisfied by the adversarial criterion. It defeats only the instance-level
+retrospective criterion, which the adversarial camp has never used.
+
+The legislative-history argument fails because art. 489, §1º, VI resolved the
+fundamentação question (whether departure satisfies the reasoning standard) not the
+authorization question (whether departure is hierarchically authorized under art. 927).
+Fundamentação quality and hierarchical authority are independently variable: a court can
+produce a fundamentada departure — satisfying art. 489, §1º, VI — while exceeding its
+authorized scope under art. 927. These conditions are addressed by different provisions
+operating at different levels of the CPC's design. Form specification for a historically
+contested practice is not authorization of that practice: it is the legislature's choice
+to regulate how the practice should be conducted if it occurs, leaving authorization to
+the hierarchy provisions that were always the governing framework. The legislature's
+awareness of the authorization question, proven by the defense's own argument, makes the
+omission of substantive authorization through art. 927 or any parallel provision
+significant rather than incidental.
+
 ---
 
 ## 5. Scope of the Attack
 
 This attack targets Exit 4 — in its original authorization form and in the transparent-
 contestation reconceptualization with its *invalidade/incorreção*, presupposition-
-structure, functional-taxonomy, and subsection III/VI disanalogy defenses — and the
-Exit 5 boundary instability problem including the three defenses in §4.6 of the
-supportive paper.
+structure, functional-taxonomy, subsection III/VI disanalogy, prospective-taxonomy, and
+legislative-history asymmetry defenses — and the Exit 5 boundary instability problem
+including its three responses in the supportive paper.
 
 This attack does not challenge:
 
@@ -668,7 +789,16 @@ conditions.
    establishes a reasoning condition rather than an authorization condition. Art. 927,
    §4º governs source-court self-modification and does not extend to inferior courts
    departing from superior courts' norms. Identifying a provision that affirmatively
-   authorizes the act of departure would be the clearest path to rescuing Exit 4.
+   authorizes the act of departure would be the clearest path to rescuing Exit 4. A
+   secondary path exists through the legislative history of the CPC 2015: if the record
+   of legislative deliberation established that art. 489, §1º, VI was enacted as an
+   authorization provision for inferior-court departures — not merely as a fundamentação
+   specification — the sixth ground's argument (that the provision addresses the
+   reasoning question while leaving authorization to art. 927) would fail. This requires
+   showing not merely that the legislature was aware of the authorization question
+   (the defense's own historical asymmetry argument proves this) but that art. 489,
+   §1º, VI was intended to resolve it affirmatively in favor of inferior courts' power
+   to depart.
 
 2. **The taxonomy is restructured to distinguish authorized exits from an institutionally
    valuable deviant response.** If the paper acknowledges that Exit 4 is not "legitimate"
