@@ -281,6 +281,33 @@ substancialmente. A resposta "a súmula vinculante assim determina"
 não é fundamentação; é circularidade que o art. 489, §1º, IV,
 proíbe expressamente.
 
+**Objeção antecipada: conformidade e mérito na reclamação.** A objeção
+mais precisa ao argumento desta seção sustenta que o dever de
+fundamentação do art. 489, §1º, IV, não alcança o julgamento de
+reclamação constitucional porque o objeto da reclamação é distinto do
+objeto do mérito: a reclamação verifica se a decisão reclamada foi
+formalmente adequada ao precedente — questão A (conformidade) —, não se
+o precedente é substancialmente correto — questão B (mérito). As razões
+expostas pelo órgão inferior endereçam a questão B e não seriam, nessa
+leitura, objeto que a reclamação deva enfrentar.
+
+Essa separação entre conformidade formal e correção substancial é
+analiticamente defensável em uma classe específica de casos: aqueles em
+que o afastamento fundamentado não envolve distinção ou superação
+genuína, mas mera divergência de resultado. Nesses casos, a verificação
+formal é suficiente: o STF constata que a decisão diverge da súmula sem
+fundamento adequado e cassa com base nessa constatação.
+
+A separação não está disponível, porém, para a classe de casos em que o
+afastamento envolve *feature* inovadora — distinção ou superação que não
+foi antecipada na formulação original da súmula. Nesses casos, verificar
+se o afastamento satisfaz os requisitos do art. 489, §1º, VI requer que
+o STF avalie se a distinção ou superação alegada é genuína. A questão A
+e a questão B tornam-se processualmente inseparáveis: a conformidade
+formal pressupõe posição sobre o mérito do argumento exposto. Para essa
+classe de casos, o dever de fundamentação simétrico permanece em sua
+plenitude.
+
 ### 3.3 A simetria e a hierarquia
 
 A tese da simetria pode parecer incompatível com a hierarquia: se
@@ -498,6 +525,32 @@ precisam ser revistos. O diálogo, acumulado ao longo de vários
 julgamentos de reclamação, produz material para a revisão que
 o processo formal de cancelamento ou revisão de súmula pode
 incorporar.
+
+**Condição de contorno: a lacuna do direito puramente estadual.** A
+estrutura de diálogo aqui descrita pressupõe que o argumento exposto
+pelo órgão inferior alcança o STF por via processualmente adequada.
+Essa pressuposição tem uma lacuna identificável: casos de direito
+puramente estadual nos quais não existe via recursal extraordinária
+apta a levar a questão ao STF ou ao STJ, e em que a reclamação por
+violação de súmula vinculante é o único mecanismo de controle
+disponível. Nessa classe, o canal de diálogo funciona somente se a
+reclamação é admitida e o STF se pronuncia sobre o argumento exposto.
+
+O alcance do art. 103-A, §3º, da CF é objeto de disputa relevante
+para essa classe. A leitura que a tese deste artigo pressupõe — que
+o dispositivo autoriza o STF a determinar o alcance da súmula ao
+julgar a reclamação — é contestada por leitura alternativa segundo a
+qual o art. 103-A, §3º, opera somente quando a reclamação é julgada
+procedente ("julgando-a procedente"), governando a forma do provimento
+(anulação do ato administrativo ou cassação da decisão judicial), não
+a competência do STF para deliberar sobre a aplicabilidade da súmula
+à *feature* específica do caso. Nessa leitura alternativa, reclamações
+denegadas por razão formal não produzem pronunciamento sobre o alcance
+da súmula, e a cobertura desta permanece indeterminada para a classe
+de casos envolvida. A via de revisão formal da súmula (art. 103-A, §2º,
+da CF) existe mas requer iniciativa voluntária dos legitimados. O
+presente artigo registra essa condição de contorno sem pretender
+resolvê-la.
 
 ### 5.4 O caso dos juizados especiais
 
