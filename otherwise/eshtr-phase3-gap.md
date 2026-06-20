@@ -599,6 +599,120 @@ operationalize the complexity-relative standard and establish inter-rater
 reliability on it as a prior empirical requirement of the cross-elaboration
 test. That operationalization is not a feature of the current proposal.
 
+**Eighth adversarial response — round 8: SC6(b-1) tests coverage-by-length
+calibration, not general materiality identification; categorical composite
+presupposes record-relative reference answers; three-measure composite omits
+C3 and C4.**
+
+The supportive round 8 paper addresses all three adversarial requirements from
+round 7 with three responses: (1) SC6(b-1) anti-naturalistic pairs already
+constitute the full-pipeline materiality-identification test, because an
+elaborate-biased brief reader fails them; (2) SC6(b-2) acceptance is
+acknowledged as a convergence point; (3) the cross-elaboration question-begging
+is resolved by three categorical/ordinal measures — ratio identification
+precision (ordinal 0/1/2, targeting C1), material argument engagement
+completeness (proportion, targeting C2), and logical entailment validity of
+dispositif (binary, targeting C5) — whose reference answers are established
+"from the decision text and brief independently of adversarial record richness."
+Three adversarial responses follow.
+
+*SC6(b-1) pipeline coverage: anti-naturalistic pairs test one form of
+elaboration-length bias, not the general materiality-identification task.*
+SC6(b-1) calibration pairs are constructed with a pre-specified coverage
+structure: annotators design one decision to cover all material arguments
+briefly and another to cover some elaborately. An LLM trained on these pairs
+learns to rank coverage over length when the naturalistic length-coverage
+correlation is reversed. The pipeline claim is that passing this test
+demonstrates the LLM correctly identifies material arguments from the brief
+before assessing coverage.
+
+The pipeline claim conflates the calibration setup with the realistic evaluation
+condition. In calibration, the material argument set is embedded in the pair's
+construction logic — annotators who know which arguments are material build the
+pair around that pre-specified set. In realistic evaluation, the LLM receives a
+(decision text + party brief) pair and must identify the material set from raw
+brief content before coverage ranking. SC6(b-1) validates the downstream step
+(coverage ranking when the material set is effectively given by pair
+construction) but not the upstream step (materiality identification from novel
+brief material with no pre-specification).
+
+An LLM that learns "prefer shorter decisions on coverage when length and
+coverage diverge" passes SC6(b-1) without having acquired correct
+materiality-identification behavior from novel brief content. It could
+simultaneously apply elaboration-biased materiality thresholds — treating
+elaborately stated brief arguments as material regardless of legal foreclosure,
+and briefly stated arguments as immaterial regardless of substantive strength —
+while passing the anti-naturalistic pairs, because those pairs' pre-specified
+material sets were established by annotators rather than constructed by the LLM
+from the raw brief. The pipeline test the round 7 argument specified —
+calibration pairs that directly test argument-level materiality judgment from
+raw brief content, where the LLM receives a brief with no pre-specified material
+set and must identify which arguments cross the art. 489, §1º, IV threshold
+before coverage ranking — is not what SC6(b-1)'s anti-naturalistic structure
+provides.
+
+*Categorical composite reference answers presuppose adversarial-record-sensitive
+construction.* The C1 measure's reference answer specifies the cited precedent's
+fundamentos determinantes. In a high-adversarial-record case, the parties
+contested which candidate grounds were determinantes; the court resolved that
+contest. Establishing the reference answer requires identifying which candidate
+ratio the court actually relied upon as determinante for the dispositif — a
+determination whose analytical difficulty correlates with the number of contested
+candidate rationes and the complexity of their resolution. For a
+low-adversarial-record case where the applicable ratio is settled, the reference
+answer requires identifying an uncontested ratio; for a high-adversarial-record
+case, it requires resolving an interpretive question about the court's reasoning
+structure. The 0/1/2 scoring scale is formally record-neutral; the reference
+answer the scale is applied to is not.
+
+The C2 measure's reference answer specifies the material argument list — which
+brief arguments satisfy the art. 489, §1º, IV materiality threshold. This
+requires exactly the materiality-identification assessment the round 7 argument
+identified as C2-adjacent: whether a given argument, if accepted, would require
+a different dispositif under the applicable legal standard. The categorical
+composite relocates the complexity-relative problem from the scoring step to the
+reference-answer construction step. The binary/ordinal scales provide
+record-neutral output given the reference answers; they presuppose that the
+reference answers themselves were constructed without adversarial-record-sensitive
+analysis.
+
+The operative diagnostic is differential inter-rater reliability: whether expert
+annotators achieve comparable agreement on reference-answer construction for
+matched high-adversarial-record and low-adversarial-record champions.
+Uniform reliability across adversarial record contexts confirms the composite is
+record-neutral at the construction level. Systematically lower reliability for
+high-adversarial-record champions would confirm that reference-answer
+construction is record-sensitive — that the complexity-relative problem has been
+relocated rather than resolved. The supportive camp's failure condition refers to
+"low inter-rater reliability" without specifying the diagnostic form: whether the
+failure applies globally (agreement fails across the full sample) or
+differentially (agreement is specifically lower for high-adversarial-record
+cases). Differential reliability — not global reliability — is the operative
+failure test for the specific claim that reference-answer construction is
+adversarial-record-independent.
+
+*Three-measure composite incompleteness: falsification criterion is ambiguous
+for unmeasured dimensions.* The composite covers C1, C2, and C5 but not C3 or
+C4. A champion from a high-adversarial-record cluster may be indistinguishable
+from a matched low-adversarial-record champion on the three measured dimensions
+while having genuinely higher C4 quality — contested-precedent cases required
+more precise argumentation about which precedent applies and how its scope limits
+the present case — or lower C3 quality — high-volume processing creates
+routinization pressure on boilerplate avoidance independently of C1/C4
+precision. Quality-discrepant cross-elaboration pairs constructed from the
+three-measure composite may be quality-equivalent on the measured dimensions
+while having real C4 or C3 differences undetected by the composite. LLM
+rankings that partly reflect these unmeasured dimension differences produce the
+same observable outcome as rankings driven by elaboration-richness from
+adversarial record differences: the higher-elaboration champion consistently
+wins at rates above chance independent of the three measured quality scores. The
+falsification criterion cannot distinguish between these two interpretations.
+A five-dimension composite, covering C4 through a record-neutral measure —
+whether the decision correctly quotes or paraphrases the determinante in applying
+the cited precedent — and C3 through a formulaic-language marker count
+independent of case demands, would make the falsification criterion
+interpretively unambiguous.
+
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
 case types. High-volume processing creates institutional pressures to routinize
@@ -1131,8 +1245,8 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (seven supportive responses, seven adversarial counter-replies).**
-The C2 debate has passed through seven exchanges. The supportive camp argues (1) that
+**On the full C2 exchange (eight supportive responses, eight adversarial counter-replies).**
+The C2 debate has passed through eight exchanges. The supportive camp argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
 argument-type-independent textual markers — explicit identification of the argument,
@@ -1146,12 +1260,17 @@ coverage completeness at the argument-set level is the within-adequacy ranking s
 observable from the case record without argument-strength knowledge, and requiring
 SC6(a) Type 2 calibration pairings; (6) that the C2 adversarial disjunction resolves
 structurally — prong 1 activates SC6(c) directly; prong 2 relocates to Phase 3 and
-activates SC6(3); and (7) that the input-protocol gap for coverage completeness is a
+activates SC6(3); (7) that the input-protocol gap for coverage completeness is a
 minor input-specification change under Brazilian processo eletrônico, SC6(b-2) provides
 a concrete naturalistic test, and a cross-elaboration calibration pair methodology with
-independent expert assessment addresses SC6(3) under prong 2.
+independent expert assessment addresses SC6(3) under prong 2; and (8) that the
+materiality-identification gap is addressed because SC6(b-1) anti-naturalistic pairs
+already constitute the full pipeline test, the SC6(b-2) convergence is acknowledged,
+and the question-begging in the cross-elaboration expert assessment is resolved by
+three categorical/ordinal measures whose reference answers are established from the
+decision text and brief independently of adversarial record richness.
 
-The §3.2 analyses address all seven. On (1): the conduct/quality distinction holds at
+The §3.2 analyses address all eight. On (1): the conduct/quality distinction holds at
 the criterion level; it does not survive the calibration step, where LLM judges
 trained on human preference data acquire a C2 signal correlated with elaboration
 richness in the text, because annotators assessing conduct quality for legal arguments
@@ -1194,15 +1313,28 @@ assessing "reasoning-operation quality independently of elaboration level" (comp
 relative and universal-scale) both reintroduce the adversarial record as a determinant,
 the former as the comparison frame and the latter as the quality signal, and neither is
 operationalized in the proposed methodology with inter-rater reliability established.
-The practical implication across all seven exchanges: within-cluster C2-specific
+On (8): SC6(b-1) anti-naturalistic pairs test coverage ranking when the material set
+is implicitly pre-specified by pair construction — they do not test the upstream
+materiality-identification step where the LLM must identify which brief arguments
+satisfy art. 489, §1º, IV from raw brief content with no pre-specification; the
+categorical composite relocates rather than resolves the complexity-relative problem —
+reference-answer construction for ratio identification precision and material argument
+engagement completeness requires record-sensitive analytical work whose difficulty
+correlates with adversarial record complexity; and the three-measure composite omits
+C3 and C4, leaving the falsification criterion ambiguous for quality differences on
+the unmeasured dimensions.
+The practical implication across all eight exchanges: within-cluster C2-specific
 criterion activation cannot be ruled out under the current protocol design; coverage
 completeness as a within-adequacy ranking signal requires the case-record input
 extension, calibration generalization validation via SC6(b-2), and separate validation
-of the materiality-identification step from raw brief material; SC6(c) determines which
-prong of the C2 disjunction applies; under prong 2, SC6(3) requires a cross-elaboration
-test whose expert-assessment protocol must operationalize the complexity-relative quality
-standard and establish inter-rater reliability on it before the test can function as
-claimed.
+of the materiality-identification step from raw brief material via calibration pairs
+that test argument-level materiality judgment with no pre-specified material set;
+SC6(c) determines which prong of the C2 disjunction applies; under prong 2, SC6(3)
+requires a cross-elaboration test whose categorical composite must (a) satisfy a
+differential inter-rater reliability condition — agreement on reference-answer
+construction for high-adversarial-record champions must be comparable to agreement for
+matched low-adversarial-record champions — and (b) be extended to cover all five C1-C5
+dimensions to make the falsification criterion interpretively unambiguous.
 
 **On the Phase 3 attack (§§3.6–3.8):**
 
@@ -1463,6 +1595,34 @@ conditions.
    of LLM agreement with expert rankings; only the operationalized complexity-relative
    standard with established inter-rater reliability can distinguish them.
 
+   **(f) Differential inter-rater reliability on categorical composite reference
+   answers.** The three categorical measures (C1 ratio identification precision, C2
+   material argument engagement completeness, C5 logical entailment validity) resolve
+   the question-begging at the scoring step by replacing expert judgment of degree with
+   structured scales. The adequacy of this resolution depends on whether reference-answer
+   construction for each measure achieves comparable inter-rater reliability across
+   adversarial record contexts. Expert annotators constructing reference answers for
+   high-adversarial-record champions (where the fundamentos determinantes were contested
+   and the material argument list is longer) must achieve agreement levels comparable to
+   annotators constructing reference answers for matched low-adversarial-record champions.
+   Systematic agreement deficits for high-adversarial-record reference answers would
+   confirm that the construction step — not the scoring step — is the locus of
+   adversarial-record sensitivity. For this surrender condition to be met, the
+   cross-elaboration test must report inter-rater reliability separately for the two
+   arms of the adversarial-record contrast, not as a pooled statistic.
+
+   **(g) Five-dimension composite for interpretively unambiguous falsification.** The
+   three-measure composite covers C1, C2, and C5 but not C3 or C4. Quality-discrepant
+   cross-elaboration pairs constructed from this composite may be genuinely different on
+   unmeasured dimensions: C4 quality (precision of precedent application in
+   contested-scope cases) and C3 quality (boilerplate avoidance under routinization
+   pressure) are not assessed. LLM rankings that partly track these unmeasured
+   differences produce the same falsification-criterion outcome as rankings driven by
+   elaboration richness. A composite that adds a record-neutral C4 measure — whether
+   the decision correctly characterizes the cited precedent's operative grounds in its
+   application step — and a C3 measure based on formulaic-language marker frequency
+   independent of case demands would make the falsification criterion unambiguous.
+
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3 attack is
    moot. This requires retracting or qualifying the Abstract's claim that Phase 3
@@ -1509,7 +1669,16 @@ conditions.
    which brief arguments are material test the coverage ranking task but not the
    identification task. Both must be validated to confirm that coverage-completeness
    tracking under the proposed input-extension protocol functions reliably at evaluation
-   time —
+   time; and
+   (e) SC6(b-1) anti-naturalistic calibration pairs must be extended to include
+   argument-level materiality-identification tests from raw brief content: pairs where
+   the LLM receives a party brief with no pre-specified material set and must identify
+   which arguments satisfy the art. 489, §1º, IV materiality threshold before coverage
+   ranking. SC6(b-1)'s current anti-naturalistic structure tests the downstream coverage-
+   ranking step given an implicit pre-specification embedded in pair construction; it
+   does not validate that the LLM correctly performs the upstream materiality-
+   identification step in the realistic evaluation condition where no pre-specification
+   is provided —
    then the C2 operationalization concern and the within-cluster C2 independence claim
    are both addressable from a single data collection. Evidence of within-cluster
    C1/C2/C4 co-variation at levels comparable to between-cluster co-variation would
