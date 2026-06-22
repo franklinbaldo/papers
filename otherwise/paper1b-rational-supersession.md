@@ -396,6 +396,72 @@ how a practice should be conducted if it occurs, while leaving the practice's
 authorization status to be governed by the hierarchy provisions that were always the
 correct framework for that question.
 
+**Seventh, the two-dimensional decomposition correctly identifies two distinct legislative
+choices but does not resolve which dimension "legítima" tracks.**
+
+The round 5 defense accepts the adversarial's criterion-clarification point as accurate
+and responds with a two-dimensional decomposition of the historical contest: the dispute
+about departure's legal status had two independent dimensions — (a) authorization (who
+has the legal power to depart?), addressed by art. 927; and (b) domain-status (is
+departure-without-demonstration invalid or merely incorrect?), addressed by art. 489,
+§1º, VI. The defense concedes that the sixth ground's "significant omission" argument
+correctly establishes VI's silence on dimension (a). It maintains that VI's resolution
+of dimension (b) provides the structural signal for the functional-taxonomy reading.
+
+The criterion-clarification concession confirms that both the adversarial criterion (B)
+and the functional-taxonomy reading's criterion are prospectively determinable from the
+CPC's text. Prospective determinability does not discriminate between the two criteria.
+A court can prospectively determine whether Exit 4 is an authorized type under criterion
+(B) — no provision authorizes it — and can prospectively determine whether Exit 4 is
+within the ordinary processing domain under the functional criterion — it is, as VI's
+form requirement applies to it. Both criteria are prospectively operable from the same
+enacted text, and both reach different conclusions about Exit 4. The criterion-which-
+criterion question is not answered by showing that both criteria are prospectively
+determinable; it requires affirmative support for whichever dimension "legítima" is
+claimed to track.
+
+The two-dimensional decomposition maps two legislative choices onto two provisions with
+precision. What it does not do is argue for why "legítima" in the taxonomy tracks
+dimension (b) rather than dimension (a). The defense claims VI's resolution of dimension
+(b) supplies the structural signal for the functional-taxonomy reading. This claim
+requires that "legítima" in a taxonomy of responses to binding precedent invocations
+tracks domain-status membership rather than authorization. That "legítima" tracks
+dimension (b) is exactly what the functional-taxonomy reading asserts; the two-
+dimensional decomposition names the dimension the defense relies on without establishing
+why it is the organizing criterion.
+
+Dimension (b) on the defense's own account is the invalidade/incorreção distinction.
+VI's resolution of dimension (b) establishes that departures-with-demonstration are
+incorretos but not inválidos — within the ordinary processing domain. This places Exit 4
+in the same domain as afastamento silencioso: both are reversed through ordinary appeal,
+not nullified. The invalidade/incorreção distinction then sub-classifies within this
+domain: Exit 4 is less defective than afastamento silencioso by virtue of satisfying
+VI's form requirement. The first and third grounds establish why this sub-classification
+does not supply what "legítima" requires: a taxonomy organized around judicial responses
+to a binding precedent invocation needs a criterion placing Exit 4 alongside authorized
+exits, not merely a criterion placing it above afastamento silencioso within the
+unauthorized group. Dimension (b)'s resolution sub-classifies within the unauthorized
+group; it does not bridge into the authorized group.
+
+The two-dimensional decomposition is a genuine architectural advance over the simple
+invalidade/incorreção argument: it correctly shows the adversarial's "significant
+omission" argument applies only to dimension (a), not to dimension (b), and that the
+defense's structural signal derives from a distinct provision addressing a distinct
+question. This precision is accepted. The substantive question it clarifies is the same:
+dimension (b)'s resolution establishes that VI regulated the procedural form of a
+historically contested practice; it does not establish that dimension (b) is what
+"legítima" constitutively tracks in a taxonomy organized around the art. 927 binding
+force regime. Both readings are coherent interpretive options from the available
+statutory text, and both require affirmative textual or doctrinal support for their
+account of what "legítima" constitutively requires. After eleven rounds of bilateral
+development, neither side has produced that support. No primary Brazilian procedural
+authority — judicial decision, doctrinal work, or legislative record of the CPC 2015 —
+has been located that establishes what "saídas legítimas" as a term of art constitutively
+requires. The structural arguments on both sides are honest and well-developed; they
+establish two coherent interpretive options from the CPC's text. They are not, and
+cannot be, a substitute for the primary source that would definitively resolve the
+criterion-which-criterion question.
+
 ### 3.2 The Rational Binding Theory's Two-Directional Reading Does Not Authorize the Channel
 
 The supportive defense invokes the two-directional structure of Marinoni's formula:
@@ -738,6 +804,39 @@ awareness of the authorization question, proven by the defense's own argument, m
 omission of substantive authorization through art. 927 or any parallel provision
 significant rather than incidental.
 
+**On the two-dimensional decomposition and criterion-which-criterion (§3.1, seventh
+ground):** The round 5 defense accepts the criterion clarification (criterion B was
+always the adversarial criterion; the prospective-taxonomy argument addressed criterion A
+and is accepted as doing so accurately), then decomposes the historical contest into
+dimension (a) (authorization; governed by art. 927) and dimension (b) (domain-status/
+invalidade vs. incorreção; governed by art. 489, §1º, VI). The defense concedes the
+sixth ground establishes VI's silence on dimension (a). It maintains that VI's resolution
+of dimension (b) supplies the structural signal for the functional-taxonomy reading.
+
+The criterion clarification concession is accepted. The two-dimensional decomposition's
+architectural accuracy is accepted: VI addresses dimension (b); art. 927 addresses
+dimension (a); they are distinct legislative choices for distinct questions. Neither
+acceptance closes the criterion-which-criterion gap. Prospective determinability of both
+criteria — confirmed by the concession — means the question of which dimension "legítima"
+tracks cannot be answered by showing that both criteria are prospectively operable. The
+functional-taxonomy reading's claim that "legítima" tracks dimension (b) requires
+affirmative support for why dimension (b) is the organizing criterion of a taxonomy
+structured around responses to the art. 927 binding force regime. The two-dimensional
+decomposition names the dimension the defense relies on; it does not argue for why that
+dimension organizes "legítima" rather than dimension (a).
+
+The substantive structure of the seventh ground's response is: dimension (b) = invalidade/
+incorreção. VI's resolution of dimension (b) places Exit 4 in the ordinary processing
+domain alongside afastamento silencioso. The invalidade/incorreção sub-classification
+within that domain makes Exit 4 less defective than afastamento silencioso, not alongside
+authorized exits. The first and third grounds of §3.1 establish this gap; the seventh
+ground establishes that the two-dimensional decomposition, while architecturally more
+precise, does not bridge it. Both readings remain coherent interpretive options from the
+available statutory text; neither is established as decisively correct by available
+structural argument alone. The structural ceiling is a primary doctrinal authority on
+what "saídas legítimas" constitutively requires; after eleven rounds of bilateral
+development, neither side has produced it.
+
 ---
 
 ## 5. Scope of the Attack
@@ -793,12 +892,13 @@ conditions.
    secondary path exists through the legislative history of the CPC 2015: if the record
    of legislative deliberation established that art. 489, §1º, VI was enacted as an
    authorization provision for inferior-court departures — not merely as a fundamentação
-   specification — the sixth ground's argument (that the provision addresses the
-   reasoning question while leaving authorization to art. 927) would fail. This requires
-   showing not merely that the legislature was aware of the authorization question
-   (the defense's own historical asymmetry argument proves this) but that art. 489,
-   §1º, VI was intended to resolve it affirmatively in favor of inferior courts' power
-   to depart.
+   specification — the sixth and seventh grounds' arguments (that the provision addresses
+   the reasoning question while leaving authorization to art. 927, and that the two-
+   dimensional decomposition establishes which dimension VI resolved without resolving
+   which dimension "legítima" tracks) would fail together. This requires showing not
+   merely that the legislature was aware of the authorization question (the defense's own
+   historical asymmetry argument proves this) but that art. 489, §1º, VI was intended to
+   resolve it affirmatively in favor of inferior courts' power to depart.
 
 2. **The taxonomy is restructured to distinguish authorized exits from an institutionally
    valuable deviant response.** If the paper acknowledges that Exit 4 is not "legitimate"
@@ -841,6 +941,31 @@ conditions.
    to take a different institutional form: not a decision contrary to binding law pending
    reversal, but a proceeding through which the challenge is formally advanced and the
    current binding law is simultaneously applied.
+
+6. **Primary Brazilian procedural authority on what "saídas legítimas" constitutively
+   requires is produced.** The structural arguments developed in this paper and in the
+   supportive paper establish two coherent interpretive options from the CPC's text: an
+   authorization-based reading (in which "legítima" tracks dimension (a) — what the art.
+   927 binding force regime authorizes or requires — and Exit 4 fails for lack of
+   type-level authorization) and a domain-status-based reading (in which "legítima" tracks
+   dimension (b) — ordinary-processing-domain membership — and Exit 4 qualifies as less
+   defective than *afastamento silencioso* by virtue of satisfying VI's form requirement).
+   Both readings are structurally coherent; both are prospectively determinable from the
+   CPC's text; neither has been established as definitively correct against the other by
+   available structural arguments alone. After eleven bilateral rounds, neither side has
+   located a primary Brazilian procedural authority — a judicial decision, a doctrinal
+   work, or the CPC 2015's legislative record — establishing what "saídas legítimas" as a
+   term of art constitutively requires in Brazilian procedure scholarship. If such authority
+   affirms the authorization-based reading, this attack is confirmed. If such authority
+   affirms the domain-status-based reading — or shows that the functional-taxonomy
+   reading's account of "legítima" is what Brazilian procedural tradition has adopted —
+   the attack fails at its criterion-which-criterion premise. The adversarial paper's
+   structural case for the authorization-based reading is: the five exits are
+   systematically organized around what the art. 927 binding force regime authorizes or
+   requires, and "legítima" in a taxonomy structured around the former tracks dimension
+   (a). This structural case is honest and well-developed. It does not, and cannot, serve
+   as a substitute for the primary source that would definitively resolve which dimension
+   the Brazilian procedural tradition has adopted. Both readings remain open.
 
 ---
 
