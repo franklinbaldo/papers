@@ -713,6 +713,187 @@ the cited precedent — and C3 through a formulaic-language marker count
 independent of case demands, would make the falsification criterion
 interpretively unambiguous.
 
+**Ninth adversarial response — round 9: C1 post-decision text-reading distinction
+fails structurally in the high-adversarial-record arm through three text-level
+features; C3 stylometric operationalization conflates legally mandated verbatim
+text with formulaic reasoning avoidance; SC6(b-1)-ID presupposes dispositif
+determinacy that complex cases do not guarantee.**
+
+The supportive round 9 paper addresses all three adversarial requirements from
+round 8 with three responses. Three adversarial responses follow.
+
+*C1 post-decision text-reading: formally valid distinction, structurally undermined
+in the cases that determine the differential inter-rater reliability test.* The
+formal distinction between pre-decision analytical difficulty and post-decision
+text-reading difficulty is accepted: annotators reading the court's text are not
+performing the legal analysis that made the ratio hard to determine before the
+decision was issued. The question is whether the decision text presents an
+unambiguous ratio for annotators to read, specifically in the high-adversarial-record
+arm where arm-specific differential reliability is the operative diagnostic.
+
+Three structural features of high-adversarial-record cases produce text-level
+ambiguity in the court's own ratio presentation that low-adversarial-record cases
+do not exhibit.
+
+First, negation-heavy reasoning structure. Courts in complex cases engage extensively
+with the competing ratio characterizations that the parties contested — explaining
+at length why each alternative interpretation fails before settling on the accepted
+one. The decision text in high-adversarial-record cases therefore contains substantial
+treatment of rejected characterizations, in the court's first-person judicial voice,
+using the same rhetorical register as the court's affirmative ratio. Annotators must
+distinguish passages where the court (i) states its accepted ratio from passages where
+the court (ii) characterizes and then rejects the alternative argued by the losing
+party. Both appear in the text as judicial reasoning; the structural signals
+distinguishing them — rejection markers such as "não é correto afirmar que...",
+"ao contrário...", "equivoca-se a parte quando..." — are often subtle and may be
+parsed differently by different annotators. Low-adversarial-record decisions contain
+no extended engagement with alternative characterizations: the court states its ratio
+without sustained treatment of rejected alternatives. The ratio identification task
+in low-adversarial-record text is correspondingly simpler.
+
+Second, conjunctive and alternative grounds. Courts in high-adversarial-record cases
+frequently provide multiple grounds for the same holding, without explicitly
+designating which is the fundamento determinante for C1 purposes. Conditional
+alternative formulations ("Mesmo que X não bastasse para sustentar a conclusão, o
+resultado segue independentemente de Y") and conjunctive formulations ("A conclusão
+decorre da conjunção de X e Y, sendo insuficiente qualquer um isoladamente") both
+present X and Y as the court's reasoning. Whether X is the fundamento determinante
+(Y being obiter), Y is (X being obiter), both are (conjunctive grounds), or neither
+independently suffices (alternative grounds, neither alone being determinante) is not
+resolved by the presence of both in the text. The decision text presents the court's
+reasoning through both X and Y; annotators must determine which — if any — is the
+fundamento determinante. This ambiguity is structurally more prevalent in
+high-adversarial-record cases, where contested questions generate multi-ground
+responses, than in low-adversarial-record cases with single-issue holdings where
+the court's ratio characterization occupies a single paragraph.
+
+Third, collegial fragmentation in multi-justice courts. In STF plenary decisions on
+contested constitutional questions — the class of cases that ESHTR's cross-cluster
+Phase 3 is specifically designed to rank, given the corpus focus on superior court
+constitutional adjudication — the decision consists of multiple individual votes
+(votos), each justice characterizing the ratio differently, emphasizing different
+grounds, and reaching the same holding through different analytical paths. There is
+no single text that presents "the court's own ratio characterization"; the court's
+collective ratio must be synthesized from multiple concurrent characterizations. The
+acórdão's ementa, which summarizes the holding, is produced by the court's
+secretariat through interpretive work after the votes are registered; it is not the
+justices' direct ratio characterization in the text of their opinions. For
+high-adversarial-record STF plenary decisions — the cases most likely to appear in
+clusters of constitutionally contested decisions — annotators constructing C1
+reference answers must synthesize across fragmented collegial opinions rather than
+reading a single court-authored ratio statement. This fragmentation is
+adversarial-record-correlated: contested constitutional questions are precisely the
+cases that reach the STF in plenary on divided votes, generating multi-opinion
+decisions where synthesis difficulty is highest.
+
+These three features are structural consequences of high adversarial record complexity:
+more contested proceedings generate more extended judicial treatment of rejected
+alternatives (Feature 1), more multi-ground holdings (Feature 2), and in the Brazilian
+superior court context, more fragmented collegial opinions on the contested questions
+that reach STF plenary (Feature 3). The supportive prediction of "comparable arm-
+specific reliability" for C1 faces a structural counter-prediction: the post-decision
+text in the high-adversarial-record arm is more ambiguous for annotators to read —
+not from what the court had to determine before deciding, but from the textual
+characteristics of how courts produce decisions when the pre-decision contest was
+more complex. Pre-decision difficulty leaves post-decision textual traces that
+generate arm-specific annotation difficulty for C1 reference-answer construction.
+
+*C3 stylometric operationalization: within-cluster frequency thresholds cannot
+distinguish legally mandated verbatim text from formulaic reasoning avoidance.* The
+five-dimension composite's C3 operationalization — recurring phrases of five or more
+consecutive words appearing in the reasoning sections of two or more cluster
+decisions — adopts the adversarial camp's round 8 requirement for a
+record-neutral C3 measure. The specific operationalization introduces a confound
+that no frequency threshold can resolve: legally mandated verbatim text is
+structurally indistinguishable from genuinely formulaic reasoning under within-cluster
+frequency analysis.
+
+Within ESHTR's fine-grained doctrinal clusters, decisions that correctly engage their
+doctrinal question necessarily share mandatory verbatim text: statutory provisions
+are quoted verbatim in reasoning sections as part of the analytical demonstration;
+holding formulations of the leading precedents on the clustered question are quoted
+verbatim as the authoritative statement of the applicable rule; procedural formulas
+required by Brazilian appellate practice appear verbatim in every qualifying decision
+of that type. In a fine-grained cluster of proportionality-of-sanction cases, every
+decision that correctly engages the proportionality framework quotes the operative
+statutory text and the leading STJ or STF holding on sanction proportionality.
+Under the 5-word/2-decision threshold, this universally present mandatory text
+generates cross-decision recurring phrases in the reasoning section of every cluster
+decision — scoring every decision at the most severe (0) level on the stylometric
+measure by structural necessity, regardless of whether the reasoning in which those
+mandatory quotations are embedded is formulaic or case-specific.
+
+CPC art. 489, §1º, III targets a different phenomenon: formulaic invocation of
+authority without substantive engagement with the specific case — "se limitar a
+invocar precedente ou enunciado de súmula, sem identificar seus fundamentos
+determinantes nem demonstrar que o caso sob julgamento se amolda àqueles
+fundamentos." The criterion is about reasoning engagement, not text novelty. A
+decision that quotes the operative statute and leading precedent verbatim while
+providing highly specific, case-tailored proportionality reasoning would score as
+severe boilerplate under the stylometric measure but as high-quality under the
+criterion. A decision that quotes the same authority verbatim while providing entirely
+formulaic proportionality reasoning would score identically. The measure cannot
+distinguish these cases because both use the same mandatory quotations — the
+mandatory quotations generate the same cross-decision recurring phrases in both.
+
+The adversarial camp's round 8 requirement was for a "formulaic-language marker
+count independent of case demands." The adopted within-cluster phrase frequency is
+independent of case demands in one sense (frequency is measured across the cluster
+without case-specific analysis) but fails to count formulaic language in the relevant
+sense: it counts text recurrence regardless of whether that recurrence reflects
+mandatory citation practice or optional formulaic reasoning. Separating these two
+sources of cross-decision text recurrence requires identifying which phrases are
+legally mandated versus optionally formulaic — a categorization that requires
+substantive legal content analysis, which the stylometric approach is designed to
+avoid. The problem is categorical, not scalar: no frequency threshold distinguishes
+mandatory from optional repetition because mandatory repetition appears in every
+cluster decision and optional formulaic repetition appears in some — both generating
+frequencies at or above the threshold in fine-grained clusters where mandatory
+citation concentrates.
+
+*SC6(b-1)-ID tractability: the outcome-dependency materiality standard presupposes
+dispositif determinacy that adversarial record complexity erodes.* The supportive
+characterizes the SC6(b-1)-ID materiality-identification task as tractable through
+a structural assessment: an argument is material if accepting its conclusion would
+require a different dispositif — a determination that requires reading what the
+argument claims and what the court decided, without full adversarial record analysis.
+
+In cases with determinate single-component dispositifs, this assessment is tractable.
+In cases where the dispositif has multiple components — partial grants and partial
+denials, holdings on multiple issues, rulings on sequenced sub-findings — the
+outcome-dependency assessment requires a prior mapping: which component of the
+dispositif does this argument address, and is that component independently supported
+by other grounds? An argument that, if accepted, would affect one component of a
+holding independently supported by additional grounds that remain unchallenged is
+non-material under outcome-dependency — the conclusion would not change even if the
+argument were accepted, because the remaining grounds sustain it. An argument that
+attacks one of two disjunctive alternative grounds for the same holding is similarly
+non-material under strict outcome-dependency if the other alternative independently
+suffices.
+
+The difficulty of this mapping — ground independence, conjunctive/disjunctive
+structure, which components of the dispositif each argument addresses — scales
+directly with adversarial record complexity. High-adversarial-record cases produce
+complex dispositifs for the same reason they produce negation-heavy texts and
+multi-ground holdings: the parties contested multiple issues simultaneously, generating
+multiple decisional components and multiple independent grounds. The tractability that
+the outcome-dependency standard provides in simple cases — read the argument,
+read the holding, check if they conflict — gives way in complex cases to a dispositif-
+parsing step whose difficulty tracks adversarial record complexity.
+
+"Clearly-material, clearly-immaterial, and borderline cases" in calibration examples
+operationalize the outcome-dependency standard for calibration-visible cases. They do
+not establish that the trained LLM achieves comparable materiality-identification
+reliability across arms when encountering novel high-adversarial-record brief-
+dispositif pairs where dispositif complexity makes the argument-to-component mapping
+non-trivial. The differential inter-rater reliability concern the round 8 adversarial
+response identified for reference-answer construction at the scoring step applies at
+the SC6(b-1)-ID calibration annotation step itself: whether annotators establishing
+the material argument set for high-adversarial-record brief-dispositif pairs achieve
+agreement levels comparable to annotators working on low-adversarial-record pairs is
+an empirical question the tractability claim assumes but the calibration design must
+separately establish.
+
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
 case types. High-volume processing creates institutional pressures to routinize
@@ -1245,8 +1426,8 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (eight supportive responses, eight adversarial counter-replies).**
-The C2 debate has passed through eight exchanges. The supportive camp argues (1) that
+**On the full C2 exchange (nine supportive responses, nine adversarial counter-replies).**
+The C2 debate has passed through nine exchanges. The supportive camp argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
 argument-type-independent textual markers — explicit identification of the argument,
@@ -1263,14 +1444,26 @@ structurally — prong 1 activates SC6(c) directly; prong 2 relocates to Phase 3
 activates SC6(3); (7) that the input-protocol gap for coverage completeness is a
 minor input-specification change under Brazilian processo eletrônico, SC6(b-2) provides
 a concrete naturalistic test, and a cross-elaboration calibration pair methodology with
-independent expert assessment addresses SC6(3) under prong 2; and (8) that the
+independent expert assessment addresses SC6(3) under prong 2; (8) that the
 materiality-identification gap is addressed because SC6(b-1) anti-naturalistic pairs
 already constitute the full pipeline test, the SC6(b-2) convergence is acknowledged,
 and the question-begging in the cross-elaboration expert assessment is resolved by
 three categorical/ordinal measures whose reference answers are established from the
-decision text and brief independently of adversarial record richness.
+decision text and brief independently of adversarial record richness; and (9) that the
+SC6(b-1) pipeline structural limitation is accepted and supplemented by SC6(b-1)-ID
+calibration pairs that test materiality identification from raw brief content under the
+outcome-dependency standard — an argument is material if accepting its conclusion
+would require a different dispositif, a determination requiring argument-conclusion-
+to-dispositif mapping rather than doctrinal-strength assessment; the C1 post-decision
+text-reading distinction is the session's key concession-with-response, accepting the
+formal validity of pre-decision/post-decision separation while predicting comparable
+arm-specific inter-rater reliability for C1 because annotators read the court's own
+ratio characterization in the decision text rather than independently determining what
+the ratio should have been; and the five-dimension composite is adopted, incorporating
+C4 through decision-to-cited-precedent characterization comparison and C3 through
+within-cluster formulaic-language frequency analysis.
 
-The §3.2 analyses address all eight. On (1): the conduct/quality distinction holds at
+The §3.2 analyses address all nine. On (1): the conduct/quality distinction holds at
 the criterion level; it does not survive the calibration step, where LLM judges
 trained on human preference data acquire a C2 signal correlated with elaboration
 richness in the text, because annotators assessing conduct quality for legal arguments
@@ -1323,7 +1516,37 @@ engagement completeness requires record-sensitive analytical work whose difficul
 correlates with adversarial record complexity; and the three-measure composite omits
 C3 and C4, leaving the falsification criterion ambiguous for quality differences on
 the unmeasured dimensions.
-The practical implication across all eight exchanges: within-cluster C2-specific
+On (9): the formal pre-decision/post-decision C1 distinction is accepted; the
+structural counter-prediction is that post-decision texts in high-adversarial-record
+cases are harder for annotators to read for three reasons internal to the text —
+negation-heavy reasoning structure (courts explaining why rejected characterizations
+fail, in the same judicial voice as the accepted characterization, producing text where
+both are present for annotators to disentangle); conjunctive/alternative grounds
+(multi-ground holdings where the text presents both X and Y as the court's reasoning
+without explicitly designating which is the fundamento determinante); and collegial
+fragmentation in STF plenary decisions (multiple individual votes each characterizing
+the ratio differently, with no single court-authored synthesis, requiring annotators
+to aggregate across fragmented opinions) — each feature is adversarial-record-correlated
+and produces annotation difficulty in the high-adversarial-record arm independent of
+the pre-decision difficulty the supportive's distinction correctly rules out; the C3
+stylometric operationalization conflates legally mandated verbatim text with formulaic
+reasoning avoidance — within fine-grained doctrinal clusters, every correctly-citing
+decision quotes the same statutory provisions and leading precedent holdings verbatim
+in its reasoning section, generating cross-decision recurring phrases at or above the
+5-word/2-decision threshold regardless of whether the reasoning embedding those
+quotations is formulaic or case-specific, and no frequency threshold can resolve this
+categorical distinction between mandatory citation practice and optional formulaic
+reasoning because both produce recurrence that the threshold flags equally; and
+SC6(b-1)-ID presupposes dispositif determinacy — the outcome-dependency materiality
+standard requires mapping brief arguments to dispositif components and assessing
+ground independence in multi-component holdings, and the difficulty of this mapping
+scales with adversarial record complexity for the same structural reason that produces
+negation-heavy C1 texts and multi-ground holdings, so the arm-specific differential
+inter-rater reliability concern the round 8 adversarial response identified for
+reference-answer construction at the composite scoring step applies equally at the
+SC6(b-1)-ID calibration annotation step, where annotators must establish the material
+argument set for brief-dispositif pairs whose complexity varies by adversarial record.
+The practical implication across all nine exchanges: within-cluster C2-specific
 criterion activation cannot be ruled out under the current protocol design; coverage
 completeness as a within-adequacy ranking signal requires the case-record input
 extension, calibration generalization validation via SC6(b-2), and separate validation
@@ -1334,7 +1557,18 @@ requires a cross-elaboration test whose categorical composite must (a) satisfy a
 differential inter-rater reliability condition — agreement on reference-answer
 construction for high-adversarial-record champions must be comparable to agreement for
 matched low-adversarial-record champions — and (b) be extended to cover all five C1-C5
-dimensions to make the falsification criterion interpretively unambiguous.
+dimensions to make the falsification criterion interpretively unambiguous; additionally,
+the SC6(b-1)-ID calibration annotation step itself must satisfy arm-specific
+differential inter-rater reliability — annotators identifying the material argument set
+for high-adversarial-record brief-dispositif pairs (where dispositif complexity is
+greater and ground independence assessment is harder) must achieve agreement levels
+comparable to annotators working on matched low-adversarial-record pairs; and the C1
+post-decision text-reading distinction must be validated empirically rather than
+assumed — whether annotators reading the court's own ratio characterization achieve
+comparable arm-specific reliability across high- and low-adversarial-record cases
+depends on whether the three text-level features (negation-heavy structure, multi-
+ground holdings, collegial fragmentation) produce measurably higher annotation
+variance in the high-adversarial-record arm.
 
 **On the Phase 3 attack (§§3.6–3.8):**
 
@@ -1595,33 +1829,39 @@ conditions.
    of LLM agreement with expert rankings; only the operationalized complexity-relative
    standard with established inter-rater reliability can distinguish them.
 
-   **(f) Differential inter-rater reliability on categorical composite reference
-   answers.** The three categorical measures (C1 ratio identification precision, C2
-   material argument engagement completeness, C5 logical entailment validity) resolve
-   the question-begging at the scoring step by replacing expert judgment of degree with
-   structured scales. The adequacy of this resolution depends on whether reference-answer
-   construction for each measure achieves comparable inter-rater reliability across
-   adversarial record contexts. Expert annotators constructing reference answers for
-   high-adversarial-record champions (where the fundamentos determinantes were contested
-   and the material argument list is longer) must achieve agreement levels comparable to
-   annotators constructing reference answers for matched low-adversarial-record champions.
-   Systematic agreement deficits for high-adversarial-record reference answers would
-   confirm that the construction step — not the scoring step — is the locus of
-   adversarial-record sensitivity. For this surrender condition to be met, the
-   cross-elaboration test must report inter-rater reliability separately for the two
-   arms of the adversarial-record contrast, not as a pooled statistic.
+   **(f) Differential inter-rater reliability across the full calibration pipeline.**
+   The supportive round 9 response proposes three distinct annotation steps, each of
+   which introduces adversarial-record sensitivity: (1) SC6(b-1)-ID calibration
+   annotation, where annotators identify the material argument set from raw brief
+   content for cases with dispositifs of varying determinacy; (2) C1 reference-answer
+   construction, where annotators reading the court's decision text must agree on
+   which grounds the court presented as its ratio in texts that may carry
+   negation-heavy structure, conjunctive or alternative ground formulations, or
+   fragmented collegial reasoning across multiple votos; (3) C2 reference-answer
+   construction, where annotators determine the material argument list from the
+   party brief. For this surrender condition to be met, arm-specific inter-rater
+   reliability must be reported separately for high-adversarial-record and
+   low-adversarial-record cases at each of these three steps — not as a pooled
+   statistic across the pipeline. Pooled reliability can obscure arm-specific deficits
+   at any one step while showing overall acceptable agreement.
 
-   **(g) Five-dimension composite for interpretively unambiguous falsification.** The
-   three-measure composite covers C1, C2, and C5 but not C3 or C4. Quality-discrepant
-   cross-elaboration pairs constructed from this composite may be genuinely different on
-   unmeasured dimensions: C4 quality (precision of precedent application in
-   contested-scope cases) and C3 quality (boilerplate avoidance under routinization
-   pressure) are not assessed. LLM rankings that partly track these unmeasured
-   differences produce the same falsification-criterion outcome as rankings driven by
-   elaboration richness. A composite that adds a record-neutral C4 measure — whether
-   the decision correctly characterizes the cited precedent's operative grounds in its
-   application step — and a C3 measure based on formulaic-language marker frequency
-   independent of case demands would make the falsification criterion unambiguous.
+   **(g) C3 operationalization distinguishes legally mandated verbatim text from
+   formulaic reasoning avoidance.** The five-dimension composite now includes C3
+   (boilerplate avoidance under routinization pressure), operationalized as
+   within-cluster frequency of recurring phrases above a 5-word, 2-decision threshold.
+   This operationalization conflates two sources of repeated language that have
+   opposite quality implications: (i) legally mandated verbatim text — ementa structure
+   requirements, statutory quotation obligations, and collegial-court procedural
+   language that courts must reproduce regardless of reasoning quality; and (ii)
+   formulaic reasoning patterns that indicate genuine boilerplate substitution for
+   case-specific analysis. The C3 measure as specified cannot distinguish high
+   ementa-verbatim-text frequency from high formulaic-reasoning frequency; both produce
+   the same within-cluster phrase counts. For this surrender condition to be met,
+   the C3 operationalization must exclude legally mandated text categories before
+   computing the boilerplate marker frequency, or demonstrate that mandated-text
+   verbatim frequency is independent of formulaic-reasoning frequency within the
+   cluster (which would require a two-component operationalization that current
+   stylometric counts do not provide).
 
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3 attack is
