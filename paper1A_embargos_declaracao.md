@@ -509,9 +509,13 @@ defeito do iter argumentativo — a ausência de enfrentamento de
 argumento, a contradição entre premissa e conclusão, a obscuridade
 no alcance do dispositivo. A modificação eventual é efeito da
 integração: a fundamentação corrigida pode levar a dispositivo
-distinto, mas não há nova cognição autônoma. A taxatividade
-recursal segue intacta: embargos sanam vícios de fundamentação;
-apelação e recursos extraordinários enfrentam o mérito em si.
+distinto, mas não há nova cognição autônoma para a classe central
+dos casos — aquela em que o marco de comprometimentos do tribunal
+determina univocamente o desfecho do argumento omitido. A
+taxatividade recursal segue intacta para essa classe: embargos
+sanam vícios de fundamentação; apelação e recursos extraordinários
+enfrentam o mérito em si. O escopo preciso dessa afirmação é
+examinado em §5.6.
 
 ### 5.4 A jurisprudência conservadora pré-2015
 
@@ -605,8 +609,60 @@ de efeitos infringentes" pela formulação proposta no §3.3 —
 consequência processual sem pedido subsidiário — permanece
 defensável em qualquer dos extremos: a questão de como o pedido
 deve ser formulado é logicamente independente de quanto de
-cognição nova o acolhimento demandará. Cite:
-`otherwise/ed-cognition-constraint.md` §§3.1–3.5.
+cognição nova o acolhimento demandará.
+
+**Escopo preciso da defesa.** O debate em torno desta crítica
+produziu uma precisão que este artigo incorpora: a proposição
+"não há nova cognição autônoma" aplica-se quando o marco de
+comprometimentos do tribunal **determina univocamente** o desfecho
+do argumento omitido — não quando apenas o direciona. Há uma
+subclasse — casos de *direcionamento-sem-unicidade* — em que os
+comprometimentos anteriores orientam a análise mas deixam abertas
+múltiplas respostas compatíveis com eles. Essa subclasse situa-se,
+sob os dois enquadramentos disponíveis na literatura processual
+(exercício-exclusivo e alocação-jurisdicional), no extremo
+geratório que a crítica identifica. O §5.3 não os alcança; a
+qualificação empírica desta seção aplica-se a eles com plena
+força. Os casos paradigmáticos do centro empírico que este artigo
+defende — omissões sobre a aplicação de precedente vinculante,
+sobre disposição legal de alcance consolidado e sobre inconsistência
+interna da própria fundamentação — são, precisamente, aqueles em
+que o marco de comprometimentos determina univocamente a resposta.
+
+**Objeção antecipada: a distinção de registros.** A versão mais
+precisa da crítica separa dois atos lógicos: o uso de "as
+restrições determinam o desfecho" como condição suficiente para
+afastar o mecanismo de cognição geratória (registro
+cognitivo-descritivo) e um hipotético uso de framework-determinacy
+como critério constitucional autônomo de admissibilidade dos
+embargos (registro jurídico-constitucional). A distinção é
+formalmente válida: os atos lógicos são distintos. Sua força
+substantiva pressupõe, porém, que o lado crítico disponha de
+conteúdo constitucional independente no segundo registro — um
+mecanismo primário que estabeleça quando omissões sobre mérito
+cruzam a linha constitucional da função cognitiva do tribunal. Na
+literatura processual brasileira primária disponível, esse
+mecanismo independente não foi identificado. A distinção de
+registros é, portanto, formalmente disponível mas não resolve a
+lacuna doutrinária subjacente.
+
+**Lacuna doutrinária bilateral reconhecida.** O fundamento
+constitucional do teste funcional de "terceira instância" — se
+rastreia formação cognitiva ou alocação jurisdicional — é questão
+bilateral em aberto: nem a posição deste artigo nem a posição
+crítica dispõe de fonte primária da literatura processual
+brasileira que resolva a caracterização constitucional. O que a
+tese mais estreita sustenta, e que sobreviveu ao debate, é que o
+mecanismo de cognição geratória identificado pela crítica não
+alcança a classe univocamente determinada: quando o marco de
+comprometimentos do tribunal já especifica univocamente a resposta
+ao ponto omitido, a integração embargatória é recognitiva, não
+geratória. Essa defesa mais estreita, com a lacuna bilateral
+reconhecida no plano constitucional, é o resultado do debate que
+este artigo incorpora.
+
+Cite: `otherwise/ed-cognition-constraint.md` §§3.1–3.5, 3.8–3.10;
+`yesindeed/ed-nonautonomy-defense.md` rounds 9–10.
 
 ---
 
