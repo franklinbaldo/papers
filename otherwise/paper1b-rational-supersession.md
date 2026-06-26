@@ -462,6 +462,83 @@ establish two coherent interpretive options from the CPC's text. They are not, a
 cannot be, a substitute for the primary source that would definitively resolve the
 criterion-which-criterion question.
 
+**Eighth, the provision-specificity argument supplies the affirmative structural case
+for dimension (b) that the seventh ground called absent — but the case does not hold
+when tested against the taxonomy's own paradigm case.**
+
+The round 6 defense responds to the criterion-which-criterion challenge by providing a
+structural argument for why the taxonomy's organizing concept derives from art. 489,
+§1º, V and VI rather than art. 927. The argument: the taxonomy classifies judicial
+responses to binding-precedent invocations; art. 489, §1º, V and VI are the CPC 2015's
+framework for governing those response acts; art. 927 creates the antecedent obligation
+(subject matter the court must address) rather than governing the response acts
+themselves; therefore the taxonomy's organizing concept comes from the provision
+directly governing its subject matter (art. 489), not from the provision creating the
+antecedent obligation (art. 927). "Legítima" in a taxonomy of response acts tracks the
+criterion of the provision governing response acts.
+
+This argument correctly names the missing step the seventh ground identified — why
+dimension (b) rather than dimension (a) — by locating the organizing criterion in the
+provision governing the classified acts. The question is whether the inference holds.
+
+It does not, because it requires an undemonstrated premise: that a taxonomy's normative
+organizing concept derives from the provision governing the classified acts. That premise
+is false for the taxonomy's own paradigm case.
+
+Exit 1 — correct application of the binding precedent — is the clearest and most
+uncontested "saída legítima." Its normative basis, the reason it occupies the paradigm
+position, derives from art. 927's "observarão" mandate: courts must observe binding
+precedents. Art. 489, §1º, V specifies the form of Exit 1's correct performance:
+invocation must identify the fundamentos determinantes and demonstrate that the case
+fits them. But Exit 1 is "legítima" because art. 927 requires it, not because art. 489,
+§1º, V recognizes invocation-with-identification as an act type within the ordinary
+processing domain.
+
+If provision-specificity were the organizing criterion, Exit 1's classification as
+"legítima" would be constituted by art. 489, §1º, V's recognition of
+invocation-with-identification as a defined act type. This description is normatively
+incomplete: it characterizes Exit 1 as *fundamentada* — the invocation meets art. 489's
+reasoning standard — without supplying the basis for its "legitimacy." Exit 1 is
+*fundamentada* because it satisfies art. 489, §1º, V's form conditions. Exit 1 is
+*legítima* because art. 927 requires courts to observe binding precedents.
+*Fundamentada* and *legítima* are derived from distinct provisions and are not
+equivalent. Provision-specificity, applied to Exit 1, produces *fundamentada*;
+*legítima* requires art. 927.
+
+This means the inference from "art. 489 governs the classified acts" to "art. 489
+provides the organizing concept for 'legítima'" conflates two distinct questions:
+(i) which provision governs the form of the classified acts? — art. 489; and (ii)
+which provision constitutes the normative basis for whether those acts are *legítimas*?
+— as Exit 1 demonstrates, art. 927. Provision-specificity answers (i) and presents it
+as an answer to (ii). Question (ii) is the criterion-which-criterion question. The
+provision-specificity argument does not answer it; it re-presents (i) in provision-
+specific vocabulary while leaving (ii) open.
+
+The structural implication is precise. Art. 489's form framework specifies how to
+discharge an art. 927 obligation correctly. Art. 927 constitutes the normative reason
+the discharge is appropriate. A response is *legítima* when the act it represents is
+what the art. 927 framework authorizes or requires; it is *fundamentada* when it meets
+art. 489's form conditions. For Exits 1, 2, and 3, both conditions co-occur: the exits
+are authorized (or required) under art. 927 and, when correctly performed, *fundamentados*
+under art. 489. The provision-specificity argument observes the co-occurrence and
+attributes "legítima" to art. 489's dimension; the adversarial criterion attributes it to
+art. 927's dimension. The Exit 1 demonstration resolves the attribution: Exit 1 is
+"legítima" because art. 927 requires it, confirmed by art. 489's form conditions for
+correct execution. If "legítima" tracks art. 927's authorization framework for the
+paradigm case, it tracks that framework throughout the taxonomy. Exit 4 has no source in
+art. 927's authorization framework — no provision authorizes inferior-court departures
+by error-in-ratio argument — while satisfying art. 489's form conditions when properly
+performed. That it is *fundamentada* under art. 489 does not make it *legítima* in the
+sense art. 927's framework organizes.
+
+The structural ceiling established in the seventh ground remains: both readings are
+coherent interpretive options; the doctrinal gap on primary authority persists. The
+eighth ground reinforces the adversarial structural case. The authorization-based reading
+correctly accounts for the normative basis of Exit 1's "legitimacy" in a way the
+provision-specificity argument does not; if "legítima" tracks authorization for the
+paradigm case, provision-specificity's inference from art. 489's act-governance to
+art. 489's criterion-governance fails for the taxonomy as a whole.
+
 ### 3.2 The Rational Binding Theory's Two-Directional Reading Does Not Authorize the Channel
 
 The supportive defense invokes the two-directional structure of Marinoni's formula:
@@ -837,15 +914,37 @@ structural argument alone. The structural ceiling is a primary doctrinal authori
 what "saídas legítimas" constitutively requires; after eleven rounds of bilateral
 development, neither side has produced it.
 
+**On the provision-specificity argument (§3.1, eighth ground):** The round 6 defense
+supplies the affirmative structural argument for dimension (b) the seventh ground called
+missing: art. 489, §1º, V and VI govern response acts; art. 927 governs the antecedent
+obligation; the taxonomy's organizing concept comes from the provision governing its
+subject matter. The reply will argue this establishes art. 489 as the reference frame
+for "legítima" in a taxonomy of response acts.
+
+This does not suffice for the reason in §3.1's eighth ground. The argument requires
+that "legítima" inherits its organizing criterion from the provision governing the
+classified acts — a premise that is false for the taxonomy's paradigm case. Exit 1 is
+"legítima" because art. 927 requires courts to observe binding precedents; art. 489,
+§1º, V specifies the form of correct Exit 1 performance without constituting the
+normative basis for its "legitimacy." Applied to Exit 1, provision-specificity produces
+"Exit 1 is *fundamentada*" — which is true but normatively incomplete. The normative
+basis for Exit 1's "legitimacy" is art. 927's obligation. If the organizing concept for
+"legítima" comes from art. 927's authorization framework for the paradigm case, it
+comes from art. 927 for the taxonomy as a whole; the inference from "art. 489 governs
+the acts" to "art. 489 provides the organizing concept for 'legítima'" does not hold.
+The criterion-which-criterion gap remains open, now reinforced by the paradigm-case
+demonstration that "legítima" and "fundamentada" are derived from distinct provisions.
+
 ---
 
 ## 5. Scope of the Attack
 
 This attack targets Exit 4 — in its original authorization form and in the transparent-
 contestation reconceptualization with its *invalidade/incorreção*, presupposition-
-structure, functional-taxonomy, subsection III/VI disanalogy, prospective-taxonomy, and
-legislative-history asymmetry defenses — and the Exit 5 boundary instability problem
-including its three responses in the supportive paper.
+structure, functional-taxonomy, subsection III/VI disanalogy, prospective-taxonomy,
+legislative-history asymmetry, two-dimensional decomposition, and provision-specificity
+defenses — and the Exit 5 boundary instability problem including its three responses
+in the supportive paper.
 
 This attack does not challenge:
 
