@@ -894,6 +894,143 @@ agreement levels comparable to annotators working on low-adversarial-record pair
 an empirical question the tractability claim assumes but the calibration design must
 separately establish.
 
+**Tenth adversarial response — round 10: C3 official-database preprocessing accepted
+with residual institutional-convention gap; C1 ementa-reading source reduction accepted
+with two annotation-task limits — implicit-structure ementas and principle-level
+abstraction; SC6(b-1)-ID quality-filter narrowing accepted with ementa-theory
+generality as residual.**
+
+The supportive round 10 paper makes three genuine advances: (1) ementa-as-authoritative-
+ratio — the C1 annotation task reads the cited precedent's ementa rather than synthesizing
+across votos, converting collegial fragmentation from a multi-document synthesis problem to
+a single-document reading task, with protocol-specified logical-operator resolution rules
+for ementas containing explicit conjunctive/alternative connectives; (2) mandatory-text
+preprocessing — an official-database corpus (Portal da Legislação, Diário Oficial, STF/STJ
+súmulas) strips legally-mandated verbatim text from reasoning sections before within-cluster
+phrase frequency computation, with validation through cross-cluster C3 variance convergence;
+(3) court-stated-theory constraint — annotators identify the court's stated legal theory
+from the decision text and assess argument materiality under that framework, reducing the
+genuinely intractable cases to the intersection of ambiguous-court-theory and
+multi-component-dispositif, with the quality-filter further shrinking the hard-case class
+within the calibration corpus. All three are accepted as substantive advances. The residual
+concerns follow.
+
+*C3 preprocessing: official-database coverage with two residual gaps.* The preprocessing
+design is accepted as the correct approach and as addressing legally-mandated text
+conflation for the categories covered by official databases: constitutional and statutory
+provision text, formally enacted STF/STJ súmulas, and standard statutory formulas
+expressly prescribed by procedural legislation. For these categories, official-database
+matching provides tractable preprocessing independent of legal content analysis.
+
+Two residual source categories fall outside official-database coverage. First, mandatory
+text from court-specific procedural rules: Regimento Interno provisions of the STF and
+STJ generate mandatory procedural formulas — standard admissibility disposition language,
+session-record formulas, and required characterization language for specific procedural
+determinations — that appear verbatim across decisions of the relevant procedural types
+but are not in Portal da Legislação or Diário Oficial. Second, institutionally conventional
+formulas: standard dispositif language, opening and closing structures for votos and
+acórdãos, citation-style templates, and institutional phrases that have become uniform
+through appellate practice without statutory or Regimento mandate. Both categories
+generate within-cluster phrase frequencies at or above the 5-word/2-decision threshold
+in fine-grained doctrinal clusters without tracking reasoning quality, and neither is
+identified or removed by official-database preprocessing.
+
+After official-database stripping, the residual phrase frequency in reasoning sections
+reflects a mixture of genuine boilerplate reasoning avoidance (what C3 targets),
+court-specific Regimento Interno formulas, and institutionally conventional language.
+Whether these residual categories materially contaminate the C3 signal in the
+calibration corpus is an empirical question the current specification does not address.
+A cross-cluster-convention stripping step — identifying phrases appearing universally
+across multiple doctrinal clusters regardless of subject matter as institutional-convention
+candidates, and removing them before within-cluster frequency computation — would address
+both residual categories. This step is not specified in the round 10 proposal. Surrender
+condition (g) is updated to reflect that official-database preprocessing satisfies the
+condition for legally-mandated text in the covered categories; the cross-cluster-convention
+stripping step is required for the two residual categories.
+
+*C1 ementa-as-authoritative-ratio: source reduction accepted; two annotation-task limits
+remaining.* The source-reduction benefit is fully accepted: reading the ementa is simpler
+than synthesizing across votos, and collegial fragmentation at the annotation-source
+level is addressed. Protocol-specified logical-operator resolution rules eliminate
+annotator discretion for ementas containing explicit conjunctive or disjunctive
+connectives.
+
+Two annotation-task limits remain.
+
+First, implicit-structure ementas. Constitutional decisions on contested multi-issue
+holdings often produce ementas listing grounds without explicit logical operators:
+"Fundamentos: (i) violação ao art. X; (ii) ofensa ao princípio Y; (iii) contrariedade ao
+precedente Z." Whether each listed ground is independently sufficient, conjunctive-
+necessary, or hierarchically subordinated is not stated in such ementas. The protocol
+resolution rules apply when the logical structure is explicit; they do not determine the
+annotation for ementas with implicit or unlabeled multi-item ground structures, which
+require reading the underlying votos to establish the logical relationship among grounds.
+This class is not the majority case, but it is disproportionately represented in contested
+constitutional adjudication, where multi-issue holdings generate multi-item ementas
+without explicit inter-item connectives.
+
+Second, principle-level abstraction. Ementas of contested STF constitutional decisions
+characterize the ratio at the level of the governing constitutional principle, not at the
+level of the specific doctrinal construction that was the fundamento determinante. This
+abstraction is a structural property of constitutional precedential documentation: inferior
+courts and parties invoking the precedent must be able to apply it across a range of
+specific factual configurations, so the ementa characterizes the ratio at a level of
+generality sufficient for downstream application. The C1 task for ESHTR requires
+determining whether the citing court correctly identified the fundamentos determinantes
+at the level where the citing court's analysis operates — the doctrinal-specific level.
+The ementa's principle-level characterization is consistent with multiple specific
+doctrinal constructions of the ratio; the annotator must determine which construction the
+cited precedent resolved and whether the citing court's identification maps to the correct
+one. This determination requires legal judgment about what the ementa's principle-level
+statement implies at the specific doctrinal level where the cited case was decided. For
+contested STF constitutional precedents — the high-adversarial-record class — the
+underlying decision resolved which of multiple competing specific constructions was the
+fundamento determinante; the ementa documents that resolution at the principle level
+without specifying which construction.
+
+The surviving arm-specific differential IRR concern for C1: not voto-synthesis difficulty
+(addressed by ementa reading), but ementa-interpretation difficulty for decisions where
+the ementa's principle-level characterization does not directly resolve which specific
+doctrinal construction was the fundamento determinante. This class is concentrated in
+contested STF constitutional decisions — the high-adversarial-record arm.
+
+*SC6(b-1)-ID court-stated-theory constraint: narrowing accepted; ementa-theory generality
+as residual.* The court-stated-theory constraint is accepted as a genuine narrowing. The
+quality-filter argument — that high-quality calibration decisions tend not to have
+ambiguous court-stated theories — is accepted as reducing the hard-case class within the
+calibration corpus. Two residual considerations follow.
+
+First, calibration-scope representativeness. If ESHTR's evaluation target extends beyond
+quality-filter exemplars to the broader appellate corpus, the calibration's reliability
+on clearly-stated-theory cases does not establish comparable SC6(b-1)-ID reliability for
+evaluation cases with less clearly expressed court theories. The calibration scope needs
+to specify how the quality-filter boundary maps onto the evaluation target's distribution.
+
+Second, ementa-theory generality. The court's stated theory, for contested STF
+constitutional decisions, is characterized in the ementa at the same principle-level
+abstraction that generates the C1 annotation-task limit described above. Using the
+ementa's theory characterization as the operative outcome-dependency framework —
+assessing whether accepting a brief argument would require a different dispositif under
+the principle-level theory — encounters the same interpretation problem: the
+principle-level characterization is consistent with multiple specific legal constructions,
+and determining whether a particular brief argument would affect the dispositif under the
+court's specific construction requires the doctrinal judgment the court-stated-theory
+constraint is intended to avoid. This residual is concentrated in the same
+contested-constitutional class as the C1 annotation-task limit.
+
+*Note on cross-front ementa positions.* Round 9 of this paper accepted the
+ementa-as-authoritative-ratio reconceptualization for its source-reduction benefit. The
+adversarial paper on Paper 1C (`otherwise/paper1c-formalization-tractability.md`, §3.7)
+argues that STF constitutional ementas generalize to principle-level language, making SC7
+ementa cross-referencing require legal judgment rather than structural comparison. These
+positions address different annotation demands and are compatible. The ESHTR C2 concession
+addressed annotation source reduction — reading one authoritative document rather than
+synthesizing across multiple votos. The Paper 1C argument addresses annotation task demands
+at the doctrinal-specificity level required for thread-contingency determination. The
+ementa simplifies the source; its principle-level generality limits operations requiring
+doctrinal-specific identification in both contexts. Both positions are consistently
+maintained.
+
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
 case types. High-volume processing creates institutional pressures to routinize
@@ -1426,7 +1563,7 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (nine supportive responses, nine adversarial counter-replies).**
+**On the full C2 exchange (ten supportive responses, ten adversarial counter-replies).**
 The C2 debate has passed through nine exchanges. The supportive camp argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
@@ -1461,9 +1598,18 @@ arm-specific inter-rater reliability for C1 because annotators read the court's 
 ratio characterization in the decision text rather than independently determining what
 the ratio should have been; and the five-dimension composite is adopted, incorporating
 C4 through decision-to-cited-precedent characterization comparison and C3 through
-within-cluster formulaic-language frequency analysis.
+within-cluster formulaic-language frequency analysis; and (10) that the C1 annotation
+task is bounded to ementa-reading with protocol-specified logical-operator resolution
+rules for explicit conjunctive/alternative connectives, addressing collegial fragmentation
+as a source-reduction benefit; that C3 mandatory-text conflation is addressed by
+official-database preprocessing (Portal da Legislação, Diário Oficial, STF/STJ súmulas)
+stripping legally-mandated verbatim text from reasoning sections before phrase frequency
+computation; and that SC6(b-1)-ID tractability is bounded by the court's stated legal
+theory from the decision text, reducing genuinely intractable cases to the intersection
+of ambiguous-court-theory and multi-component-dispositif, with the quality-filter
+narrowing this class in the calibration corpus.
 
-The §3.2 analyses address all nine. On (1): the conduct/quality distinction holds at
+The §3.2 analyses address all ten. On (1): the conduct/quality distinction holds at
 the criterion level; it does not survive the calibration step, where LLM judges
 trained on human preference data acquire a C2 signal correlated with elaboration
 richness in the text, because annotators assessing conduct quality for legal arguments
@@ -1546,7 +1692,7 @@ inter-rater reliability concern the round 8 adversarial response identified for
 reference-answer construction at the composite scoring step applies equally at the
 SC6(b-1)-ID calibration annotation step, where annotators must establish the material
 argument set for brief-dispositif pairs whose complexity varies by adversarial record.
-The practical implication across all nine exchanges: within-cluster C2-specific
+Through rounds 1–9, the cumulative adversarial position was: within-cluster C2-specific
 criterion activation cannot be ruled out under the current protocol design; coverage
 completeness as a within-adequacy ranking signal requires the case-record input
 extension, calibration generalization validation via SC6(b-2), and separate validation
@@ -1568,7 +1714,40 @@ assumed — whether annotators reading the court's own ratio characterization ac
 comparable arm-specific reliability across high- and low-adversarial-record cases
 depends on whether the three text-level features (negation-heavy structure, multi-
 ground holdings, collegial fragmentation) produce measurably higher annotation
-variance in the high-adversarial-record arm.
+variance in the high-adversarial-record arm; these three text-level features remain the
+primary basis for the surviving arm-specific differential IRR prediction for the C1
+annotation task, now re-scoped to ementa-interpretation difficulty after the ementa-as-
+authoritative-ratio source reduction (round 10) addresses the voto-synthesis dimension.
+On (10): official-database preprocessing is accepted as addressing legally-mandated text
+conflation for the categories covered (constitutional provisions, federal statutes,
+STF/STJ súmulas); residual gaps exist for court-specific Regimento Interno formulas and
+institutionally conventional language — both generating phrase frequencies that
+official-database stripping does not remove — and a cross-cluster-convention stripping
+step is required to close them (SC6(g) updated accordingly); the ementa-as-authoritative-
+ratio source-reduction benefit is accepted, with collegial fragmentation addressed at the
+annotation-source level; two annotation-task limits remain — implicit-structure ementas
+with unlabeled multi-item ground structures (requiring limited voto engagement for
+specific cases) and principle-level abstraction (ementas of contested STF constitutional
+decisions characterize the ratio at constitutional-principle level rather than
+doctrinal-specific level, generating ementa-interpretation difficulty in the
+high-adversarial-record arm that the source-reduction move does not close); the
+court-stated-theory constraint is accepted as a genuine narrowing for quality-filter
+decisions; ementa-theory generality remains as a residual for contested constitutional
+decisions where the principle-level theory characterization does not adjudicate argument
+materiality at the doctrinal-specific level, and calibration-scope representativeness
+remains as a second residual if the evaluation target extends beyond quality-filter
+exemplars. The practical implication across all ten exchanges: within-cluster C2-specific
+criterion activation cannot be ruled out under the current protocol design; the round 10
+advances substantially address C3 conflation for officially-mandated text categories,
+collegial-fragmentation at the annotation-source level, and SC6(b-1)-ID tractability for
+quality-filter calibration decisions; the surviving arm-specific differential IRR concerns
+are ementa-interpretation ambiguity for C1 (principle-level abstraction in the contested
+constitutional class) and ementa-theory generality for SC6(b-1)-ID (same class); C3
+residual gaps require cross-cluster-convention stripping beyond official-database
+preprocessing; coverage completeness as a within-adequacy ranking signal continues to
+require the case-record input extension and materiality-identification calibration; SC6(c)
+determines which prong of the C2 disjunction applies; under prong 2, SC6(3) requires the
+cross-elaboration test with cross-cluster-convention and cross-elaboration extensions.
 
 **On the Phase 3 attack (§§3.6–3.8):**
 
@@ -1830,38 +2009,52 @@ conditions.
    standard with established inter-rater reliability can distinguish them.
 
    **(f) Differential inter-rater reliability across the full calibration pipeline.**
-   The supportive round 9 response proposes three distinct annotation steps, each of
-   which introduces adversarial-record sensitivity: (1) SC6(b-1)-ID calibration
-   annotation, where annotators identify the material argument set from raw brief
-   content for cases with dispositifs of varying determinacy; (2) C1 reference-answer
-   construction, where annotators reading the court's decision text must agree on
-   which grounds the court presented as its ratio in texts that may carry
-   negation-heavy structure, conjunctive or alternative ground formulations, or
-   fragmented collegial reasoning across multiple votos; (3) C2 reference-answer
-   construction, where annotators determine the material argument list from the
-   party brief. For this surrender condition to be met, arm-specific inter-rater
-   reliability must be reported separately for high-adversarial-record and
-   low-adversarial-record cases at each of these three steps — not as a pooled
-   statistic across the pipeline. Pooled reliability can obscure arm-specific deficits
-   at any one step while showing overall acceptable agreement.
+   The supportive round 9 response proposes three distinct annotation steps that
+   introduce adversarial-record sensitivity: (1) SC6(b-1)-ID calibration annotation,
+   where annotators identify the material argument set from raw brief content for cases
+   with dispositifs of varying determinacy; (2) C1 reference-answer construction; (3) C2
+   reference-answer construction. Round 10's ementa-as-authoritative-ratio move addresses
+   annotation source complexity for step (2): annotators read the cited precedent's ementa
+   rather than synthesizing across votos, removing collegial fragmentation as the primary
+   source of inter-rater disagreement for C1. The court-stated-theory constraint reduces
+   the hard-case class for step (1). These are genuine advances. For this surrender
+   condition to be met, two residual concerns require resolution. First, arm-specific
+   inter-rater reliability for C1 reference-answer construction must be reported separately
+   for high-adversarial-record and low-adversarial-record cases after the ementa-as-ratio
+   source reduction — specifically to determine whether ementa-interpretation ambiguity
+   (principle-level abstraction in contested constitutional decisions) generates arm-specific
+   disagreement on which specific doctrinal construction was the fundamento determinante,
+   replacing but not eliminating the voto-synthesis disagreement the ementa-as-ratio move
+   addresses. Second, arm-specific inter-rater reliability for SC6(b-1)-ID calibration
+   annotation must be reported separately across arms — the court-stated-theory constraint
+   narrows the hard-case class for quality-filter decisions but leaves ementa-theory
+   generality as a residual for the contested constitutional class. Pooled reliability
+   across both steps can obscure arm-specific deficits that the round 10 advances reduce
+   but do not eliminate.
 
    **(g) C3 operationalization distinguishes legally mandated verbatim text from
-   formulaic reasoning avoidance.** The five-dimension composite now includes C3
-   (boilerplate avoidance under routinization pressure), operationalized as
-   within-cluster frequency of recurring phrases above a 5-word, 2-decision threshold.
-   This operationalization conflates two sources of repeated language that have
-   opposite quality implications: (i) legally mandated verbatim text — ementa structure
-   requirements, statutory quotation obligations, and collegial-court procedural
-   language that courts must reproduce regardless of reasoning quality; and (ii)
-   formulaic reasoning patterns that indicate genuine boilerplate substitution for
-   case-specific analysis. The C3 measure as specified cannot distinguish high
-   ementa-verbatim-text frequency from high formulaic-reasoning frequency; both produce
-   the same within-cluster phrase counts. For this surrender condition to be met,
-   the C3 operationalization must exclude legally mandated text categories before
-   computing the boilerplate marker frequency, or demonstrate that mandated-text
-   verbatim frequency is independent of formulaic-reasoning frequency within the
-   cluster (which would require a two-component operationalization that current
-   stylometric counts do not provide).
+   formulaic reasoning avoidance.** Round 10's mandatory-text preprocessing proposal
+   (official-database corpus stripping legally-mandated text before phrase frequency
+   computation) advances toward this condition. The condition is satisfied for the
+   categories covered by official databases: constitutional and statutory provision text,
+   formally enacted STF/STJ súmulas, and standard statutory formulas from Portal da
+   Legislação and Diário Oficial. For these categories, the preprocessing provides a
+   tractable solution that does not require legal content analysis.
+   
+   For this surrender condition to be fully met, the preprocessing must additionally
+   address two residual categories that official databases do not cover: (i) court-
+   specific procedural formulas from the STF and STJ Regimento Interno (mandatory
+   within those courts' procedural practice but not in Portal da Legislação or Diário
+   Oficial), and (ii) institutionally conventional formulas that have become uniform
+   through appellate practice without statutory or Regimento mandate (standard dispositif
+   language, voto opening/closing structures, citation-style templates). Both residual
+   categories generate within-cluster phrase frequencies that the preprocessing step
+   does not strip. A cross-cluster-convention stripping step — identifying phrases
+   appearing universally across multiple doctrinal clusters regardless of subject matter
+   as institutional-convention candidates, and removing them before within-cluster
+   frequency computation — would address both. This step is not specified in the round 10
+   proposal. The surrender condition is partially met (for officially-mandated text
+   categories); full satisfaction requires the cross-cluster-convention extension.
 
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3 attack is
