@@ -539,6 +539,114 @@ provision-specificity argument does not; if "legítima" tracks authorization for
 paradigm case, provision-specificity's inference from art. 489's act-governance to
 art. 489's criterion-governance fails for the taxonomy as a whole.
 
+**Ninth, the convergence-case/level-distinction compound defense does not block the
+inference from the Exit 1 demonstration — the convergence is asymmetric and the level
+distinction cannot operate autonomously in a compliance-response taxonomy.**
+
+The round 7 defense answers the eighth ground with two connected arguments. The
+convergence-case observation: Exit 1 is a case where both art. 927 authorization and
+art. 489 response-type classification apply simultaneously; a convergence case cannot
+discriminate between two criteria that both explain the same outcome; the Exit 1
+demonstration therefore does not establish that art. 927's criterion, rather than
+art. 489's, organizes "legítima." The level distinction: *fundamentada* and *legítima*
+operate at distinct levels — L1 (normative grounding: which provision makes compliance
+obligatory) and L2 (classification criterion: which response option types are recognized
+exits); "saídas legítimas" classifies at L2 (art. 489 domain), not at L1 (art. 927
+domain); the convergence at L2 therefore does not discriminate between the criteria
+because both apply to Exit 1 at the classification level.
+
+Both components of the compound defense fail, but for different reasons. The convergence-
+case observation is correct as an observation but misidentifies what the Exit 1
+demonstration establishes. The level distinction is correct as an architectural
+description but misapplied to a compliance-response taxonomy.
+
+**On the convergence-case observation.** The eighth ground did not advance Exit 1 as a
+discrimination test between two co-primary criteria — a case where Exit 1 is in under
+criterion A (art. 927 authorization) and out under criterion B (art. 489 form-
+classification), or vice versa. No discrimination test works at Exit 1 because Exit 1 is
+the paradigm case of compliance with the art. 927 obligation and, simultaneously, the
+paradigm case of satisfying art. 489's form conditions. This is not coincidence; it is
+structural: art. 489's form conditions were designed to specify what correct compliance
+with art. 927's obligation looks like. Both criteria apply to Exit 1 because the form
+criterion tracks the compliance obligation when the obligation is correctly discharged.
+
+The Exit 1 demonstration advances a different inference: that *fundamentada* and
+*legítima* are distinct predicates drawn from distinct provisions, and that when both
+apply to Exit 1, the convergence is asymmetric — art. 489 specifies the form of correct
+compliance, while art. 927 constitutes the normative basis for the act's legitimacy.
+Exit 1 is *fundamentada* because it satisfies art. 489, §1º, V's form conditions. Exit 1
+is *legítima* because art. 927 requires it. These are not two independent reasons for the
+same conclusion; the form assessment (art. 489) and the normative-status assessment
+(art. 927) address distinct questions about distinct dimensions of the act. An asymmetric
+convergence — where the form criterion is derivative of the compliance obligation in the
+sense that it specifies how to comply correctly — distinguishes the primary criterion from
+the derivative criterion even at the classification level.
+
+The convergence-case response blocks the inference only if the convergence is symmetric:
+two independent criteria, each sufficient on its own to constitute "legítima" in the
+taxonomy, coinciding at Exit 1. On a symmetric reading, both criteria are co-primary and
+Exit 1 cannot discriminate between them. But the convergence is not symmetric. Art. 489
+specifies the form of correct compliance; it does not constitute a separate normative
+reason why the act is "legítima" independent of art. 927's mandate. The asymmetry is
+demonstrated by the hypothetical of a form-compliant unauthorized act: a court that
+correctly identifies a binding precedent's fundamentos determinantes, correctly
+demonstrates that the case fits them, and then departs from the result — fully form-
+compliant but unauthorized — would be *fundamentada* in every respect while being
+unauthorized under art. 927. At such an act, the form criterion and the authorization
+criterion diverge: *fundamentada* but not *legítima*. Symmetric co-primary criteria would
+converge at all acts satisfying either; asymmetric criteria diverge where the derivative
+criterion is satisfied but the primary is not. Exit 4 is the real-case instance of this
+divergence. The form-compliant unauthorized hypothetical confirms that the Exit 1
+convergence is asymmetric, not coincidental: art. 489 form conditions are derivative of,
+not independent of, art. 927's authorization dimension.
+
+**On the level distinction.** The level distinction proposes that L2 (classification
+criterion: which response types are recognized exits) operates independently of L1
+(normative grounding: which provision makes compliance obligatory) in this taxonomy, and
+that "legítima" at L2 derives from art. 489's response-type recognition framework. The
+architectural distinction between L1 and L2 is accurate. The claim that this taxonomy's
+classification criterion operates at L2 independently of L1 is not.
+
+"Saídas legítimas" is a compliance-response taxonomy: a taxonomy of responses available
+to courts navigating an art. 927 compliance situation. The compliance situation is
+constitutive of the taxonomy's subject matter. The exits are "saídas" only because there
+is an art. 927 obligation to navigate; they are "legítimas" insofar as they represent
+responses that the compliance framework authorizes, requires, or accepts as permissible
+navigations of that obligation. This is not an imposed reading; it is the paper's own
+framing. Paper 1B presents the five exits as the set of permissible judicial responses to
+a binding-precedent invocation under the art. 927 binding force regime. The compliance
+framework is what makes the taxonomy a taxonomy of five entries — not a list of all
+procedural act types recognizable under art. 489.
+
+In a compliance-response taxonomy, L2 (classification criterion) is not autonomous from
+L1 (normative grounding). The classification is of responses to a compliance situation,
+so the classification criterion is constitutively compliance-relative: a response is
+"legítima" at L2 when it represents a permissible compliance response at L1, not merely
+when it is a form-recognized act type. A response that violates the compliance obligation
+— a departure unauthorized under art. 927 — is not "legítima" in this compliance-
+relative sense, regardless of whether art. 489 recognizes its form within the ordinary
+processing domain. The level distinction's claim that the taxonomy classifies at L2
+independently of L1 requires that "legítima" in this context means form-recognized, not
+compliance-permissible. That is not an argument; it is the contested premise restated.
+
+The level distinction thus restates the provision-specificity inference in two-level
+vocabulary: art. 489 provides the organizing concept for "legítima" because art. 489
+governs the classified acts at L2, and L2 operates independently of L1. The eighth ground
+rejected the underlying inference — from "art. 489 governs the classified acts" to
+"art. 489 provides the organizing concept for 'legítima'" — because the inference requires
+an undemonstrated premise about which provision constitutes "legítima"'s normative
+organizing concept. The level distinction supplies the vocabulary of "L2 autonomy" in
+place of that premise without establishing the autonomy. For the level distinction to
+succeed, the defense must show one of two things: (a) "saídas legítimas" is a form-
+classification taxonomy rather than a compliance-response taxonomy — which contradicts
+the paper's own framing of the exits as responses to the art. 927 compliance situation —
+or (b) "legítima" in a compliance-response taxonomy means form-recognized rather than
+compliance-permissible — which is the criterion-which-criterion question the level
+distinction was supposed to answer, not presuppose. The round 7 defense establishes
+neither. The structural ceiling remains: both readings are coherent interpretive options
+from the CPC's text; neither side has produced primary Brazilian procedural authority
+establishing which dimension "saídas legítimas" constitutively tracks.
+
 ### 3.2 The Rational Binding Theory's Two-Directional Reading Does Not Authorize the Channel
 
 The supportive defense invokes the two-directional structure of Marinoni's formula:
@@ -935,6 +1043,49 @@ the acts" to "art. 489 provides the organizing concept for 'legítima'" does not
 The criterion-which-criterion gap remains open, now reinforced by the paradigm-case
 demonstration that "legítima" and "fundamentada" are derived from distinct provisions.
 
+**On the convergence-case/level-distinction compound defense (§3.1, ninth ground):**
+The round 7 defense advances two connected arguments against the eighth ground. The
+convergence-case observation: Exit 1 is a convergence case where both art. 927
+authorization and art. 489 response-type classification apply simultaneously; a
+convergence case cannot discriminate between two criteria that both explain the same
+outcome; the Exit 1 demonstration therefore does not establish that art. 927's criterion
+organizes "legítima." The level distinction: *fundamentada/legítima* operate at distinct
+levels — L2 (classification criterion: which response types are recognized exits) is
+distinct from L1 (normative grounding: which provision makes compliance obligatory);
+the taxonomy's classification criterion derives from art. 489's L2 response-type
+recognition framework, not from art. 927's L1 obligation structure.
+
+The convergence-case response fails because the convergence is asymmetric rather than
+symmetric. The eighth ground did not advance Exit 1 as a discrimination test between
+two co-primary criteria; it established that *fundamentada* and *legítima* are derived
+from distinct provisions in an asymmetric relationship — art. 489 specifies the form of
+correct compliance with art. 927's obligation; the form criterion tracks the compliance
+obligation when correctly discharged. An asymmetric convergence distinguishes the primary
+criterion (art. 927's normative basis) from the derivative criterion (art. 489's form
+specification): the convergence at Exit 1 is structural, not coincidental. The hypothetical
+of a form-compliant unauthorized act confirms the asymmetry: such an act would be
+*fundamentada* under art. 489 while unauthorized under art. 927 — showing that the
+criteria are not co-primary but asymmetric in their claim to constitute "legítima."
+Symmetric co-primary criteria converge at all acts satisfying either; asymmetric criteria
+diverge where the derivative is satisfied without the primary. The convergence-case
+observation establishes only that Exit 1 cannot serve as a discrimination test; it does
+not establish that the normative asymmetry the eighth ground identifies is false.
+
+The level distinction fails because L2 is not autonomous from L1 in a compliance-
+response taxonomy. "Saídas legítimas" is a taxonomy of responses to an art. 927
+compliance situation — not a form-classification taxonomy of all procedural act types
+recognized by art. 489. In a compliance-response taxonomy, L2's classification criterion
+is constitutively compliance-relative: "legítima" means compliance-permissible, not
+merely form-recognized. The level distinction restates the provision-specificity
+inference — art. 489 provides the organizing concept for "legítima" because art. 489
+governs the classified acts — in two-level vocabulary, without establishing that L2 is
+autonomous from L1 in this taxonomy. For L2 autonomy to hold, the defense must show
+either that "saídas legítimas" is not a compliance-response taxonomy or that "legítima"
+in a compliance taxonomy means only form-recognized — neither of which the round 7
+defense establishes. The level distinction's architectural accuracy does not supply the
+missing substantive argument; it relabels the provision-specificity inference's
+undemonstrated premise.
+
 ---
 
 ## 5. Scope of the Attack
@@ -942,9 +1093,9 @@ demonstration that "legítima" and "fundamentada" are derived from distinct prov
 This attack targets Exit 4 — in its original authorization form and in the transparent-
 contestation reconceptualization with its *invalidade/incorreção*, presupposition-
 structure, functional-taxonomy, subsection III/VI disanalogy, prospective-taxonomy,
-legislative-history asymmetry, two-dimensional decomposition, and provision-specificity
-defenses — and the Exit 5 boundary instability problem including its three responses
-in the supportive paper.
+legislative-history asymmetry, two-dimensional decomposition, provision-specificity, and
+convergence-case/level-distinction compound defenses — and the Exit 5 boundary
+instability problem including its three responses in the supportive paper.
 
 This attack does not challenge:
 
