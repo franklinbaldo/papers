@@ -357,6 +357,25 @@ test itself is **not yet conducted** in this position paper.
 ≤ κ_crosscorpus, or if the difference disappears once positional
 randomization is controlled for.
 
+A finer-grained empirical test concerns whether residual
+within-cluster non-transitive cycles are *structured* relative to
+quality-dimension asymmetry profiles. The Tversky (1977)
+feature-salience account predicts that criterion-switching
+concentrates at triples where items have asymmetric quality-dimension
+profiles — one item distinctively stronger on C1, another on C2 —
+rather than distributing uniformly across triples. Experimental
+evaluation should therefore report per-item dimension scores
+alongside tournament results, testing whether non-transitive cycles
+are unstructured (consistent with the design's reliance on
+embedding proximity as adequate control) or structured (indicating
+residual within-cluster criterion instability that aggregate κ does
+not detect). The design standard for Phase 1 is **relative
+reduction** in non-transitivity incidence, not elimination;
+Bradley-Terry aggregation provides robustness for non-directional
+residual cycling that does not correlate systematically with item
+identities (`otherwise/eshtr-phase3-gap.md` §3.3–3.4;
+`yesindeed/frame-stability-sph.md` §3.4).
+
 ---
 
 ## 5. Evaluation Protocol for Brazilian Judicial Decisions
@@ -430,6 +449,53 @@ fundamentação was cited approvingly in subsequent decisions
 (high-quality signal). The panel is considered calibrated if it
 correctly ranks low-quality below high-quality in ≥ 80% of
 pairs, across all judge models.
+
+**C1 annotation protocol.** Calibration for C1 (identificação de
+fundamentos determinantes) requires identifying the cited
+precedent's authoritative ratio. Annotators read the precedent's
+ementa — the court's official ratio document, produced under the
+tribunal's procedural rules — rather than synthesizing across the
+underlying votos. This converts collegial-fragmentation cases (where
+multiple justices characterize the ratio differently across individual
+votos) from a multi-document synthesis task into a single-document
+reading task. For ementas containing explicit logical connectives
+(conjunctive, alternative, disjunctive), protocol-specified resolution
+rules determine whether listed grounds are independently sufficient or
+conjunctively required. Ementas listing multiple grounds without
+explicit connectives require annotator review to establish ground
+relationships before inclusion in the calibration corpus (see §7.3).
+
+**C2 calibration.** C2 (enfrentamento de argumentos) calibration
+requires two pair types. *Type 1 (anti-naturalistic):* one calibration
+decision covers all material arguments briefly; the other covers a
+subset elaborately. Correct C2 ranking requires identifying the
+complete decision as higher despite shorter text, training the panel
+to prioritize coverage over elaboration volume. *Type 2
+(naturalistic):* the complete decision is also the more elaborate;
+this tests generalization of coverage-tracking to the standard case
+where breadth and length co-vary. Argument materiality is assessed
+relative to the court's stated legal theory as the operative
+decisional framework: an argument is material if accepting it would
+require a different dispositif under the theory the decision
+explicitly states. Calibration decisions are drawn preferentially
+from the high-quality (cited-approvingly) pool to reduce the incidence
+of ambiguous-theory cases within the calibration corpus.
+
+**C3 calibration.** C3 (ausência de motivos genéricos) measurement
+requires preprocessing of legally mandated verbatim text before
+within-cluster phrase-frequency computation. Official-database
+preprocessing — matching against Portal da Legislação, Diário Oficial,
+and formal STF/STJ súmula compilations — removes statutory citation
+text, súmula formulations, and mandatory procedural phrases from the
+analysis before frequency thresholds are applied. This preprocessing
+is required to prevent legally obligatory text recurrence from
+contaminating the boilerplate signal: within fine-grained doctrinal
+clusters, decisions that correctly engage their question necessarily
+share mandatory statutory quotations, which generate cross-decision
+recurring phrases regardless of reasoning quality. Residual
+institutional convention phrases outside official-database coverage
+are addressed by cross-cluster convention stripping before frequency
+analysis (see §7.3).
 
 ### 5.5 Inter-Judge Agreement
 
@@ -522,6 +588,45 @@ but for very large corpora (n > 10,000) and expensive frontier
 LLM judges, Phase 2 cost may still be significant. Adaptive
 sampling strategies (stopping Phase 2 early when Bradley-Terry
 scores have converged) can reduce cost further.
+
+**C1 annotation difficulty for constitutional precedents.** When
+the cited precedent's ementa characterizes the ratio at
+constitutional-principle level — as is standard for contested STF
+decisions — C1 annotation requires determining which specific
+doctrinal construction the abstract principle implies for the
+annotated case. Two annotation challenges are disproportionately
+concentrated in this class: (a) *implicit-structure ementas* that
+list grounds without explicit logical connectives, where establishing
+whether grounds are independently sufficient or conjunctively required
+necessitates synthesis from underlying votos; (b) *principle-level
+abstraction*, where the ementa's principle-level characterization is
+consistent with multiple specific doctrinal constructions of the
+fundamento determinante. Inter-annotator reliability on C1 reference
+answers is expected to vary by precedent type; calibration design
+should measure arm-specific reliability differentials between
+contested constitutional precedents and more determinate precedent
+classes (`otherwise/eshtr-phase3-gap.md` §3 rounds 9–10).
+
+**C3 preprocessing residuals.** Official-database preprocessing does
+not reach all sources of legally mandated verbatim text recurrence.
+Two residual categories fall outside official-database coverage:
+(a) court-specific *Regimento Interno* provisions of the STF and STJ,
+which generate mandatory procedural formulas — admissibility
+disposition language, session-record formulas, characterization
+language for specific procedural determinations — that appear verbatim
+across decisions of the relevant types; (b) institutionally
+conventional formulas that have become uniform through Brazilian
+appellate practice without statutory or Regimento mandate, including
+standard voto opening and closing structures, citation-style templates,
+and institutional phrases common across courts. Both categories
+generate within-cluster phrase frequencies that contaminate the C3
+boilerplate signal if unaddressed. Cross-cluster convention stripping
+— identifying phrases recurring uniformly across multiple doctrinal
+clusters regardless of subject matter — addresses these categories by
+treating high-cross-cluster-frequency phrases as institutional
+conventions rather than doctrinal markers, but adds a preprocessing
+stage requiring its own validation before C3 frequency measurement is
+interpretable (`otherwise/eshtr-phase3-gap.md` §3 round 10).
 
 ### 7.4 Implications for Judicial Accountability
 
