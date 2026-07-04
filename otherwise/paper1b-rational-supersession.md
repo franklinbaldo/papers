@@ -647,6 +647,125 @@ neither. The structural ceiling remains: both readings are coherent interpretive
 from the CPC's text; neither side has produced primary Brazilian procedural authority
 establishing which dimension "saídas legítimas" constitutively tracks.
 
+**Tenth, the independence-not-hierarchy response establishes formal separability, not
+criterion co-primacy under the normative design-relationship reading; the joint-
+constitution move correctly decomposes the provisions' functions but embeds rather than
+dissolves the criterion-which-criterion question within that structure; the false-dilemma
+escape is compatible with the adversarial position and does not address its semantic
+core.**
+
+The round 9 defense responds to the ninth ground with three connected arguments: the
+independence-not-hierarchy response contests the asymmetry demonstration; the joint-
+constitution move reconstitutes the taxonomy's two-provision architecture at a level of
+precision prior rounds did not reach; the false-dilemma escape argues that a third
+option — compliance-situation subject matter plus form-recognition classification
+criterion — is available, rendering the adversarial's L2 non-autonomy dilemma false. The
+adversarial addresses each.
+
+*On the independence-not-hierarchy response.* The defense argues that a genuinely
+derivative criterion could not be satisfied independently; since the form-compliant
+unauthorized hypothetical shows that art. 489's form conditions can be satisfied without
+authorization, the form criterion is not derivative of the authorization criterion. This
+argument conflates two senses of "derivative." The adversarial's ninth ground did not
+advance a logical-dependency claim — it did not claim that authorization is a definitional
+element of art. 489's form conditions or that satisfying form conditions requires
+authorization as a prerequisite. The ninth ground advanced a design-relationship claim:
+art. 489's form conditions were designed to specify what correct compliance with art.
+927's obligation looks like; the form criterion tracks the authorization criterion when the
+obligation is correctly discharged. Under a design-relationship reading, the form criterion
+is formally defined without reference to authorization — and therefore can be formally
+satisfied without authorization at the edge case where the form specification is met but
+the underlying obligation is not. Legislative specifications of correct compliance form
+are routinely satisfiable in deviant circumstances; this is a general feature of formal
+standards applied to non-compliant conduct, not evidence of criterion co-primacy. A court
+that identifies the *fundamentos determinantes* and demonstrates case-fit while departing
+from the result satisfies art. 489's form specification of correct compliance while
+violating art. 927's obligation — as any formal compliance standard can be formally
+satisfied in a non-compliant context without the standard thereby becoming independent of
+the obligation it specifies. The form-compliant unauthorized hypothetical illustrates
+this deviant case under the design-relationship reading; it does not refute the
+design-relationship reading by showing that formal satisfiability and authorization can
+come apart.
+
+The defense's alternative — "an 'asymmetry' where the derivative criterion is fully
+satisfiable without the primary is not a derivation; it is an independent regulatory
+variable" — correctly identifies that logical dependency (the criterion could ONLY be
+satisfied when the primary is satisfied) is not what the adversarial claims. Under
+normative design-relationship derivativeness, formal satisfiability without the primary
+is expected, not disqualifying. The independence inference requires establishing criterion
+co-primacy — that art. 489 was designed without reference to art. 927's compliance
+structure, as an independent regulatory framework — which neither the hypothetical nor
+the defense's argument establishes. Art. 489, §1º, V was designed to specify correct
+precedent invocation under the art. 927 binding regime; art. 489, §1º, VI was designed
+to specify the form of correct compliance-with-demonstration for departures from art. 927
+binding norms. Both subsections regulate how courts discharge art. 927 obligations; both
+use art. 927's compliance framework as their operative reference. This design
+relationship is incompatible with criterion co-primacy, though compatible with formal
+satisfiability in deviant cases — which is precisely what the adversarial has claimed
+throughout.
+
+*On the joint-constitution move.* The defense's most analytically precise advance
+decomposes the two provisions' distinct contributions: art. 927 constitutes the
+taxonomy's subject matter (compliance situations — the exits are "saídas" because there
+is an art. 927 obligation to navigate); art. 489 constitutes the taxonomy's
+classification criterion (exit-recognition framework — the recognized forms are
+"legítimas" because art. 489 categorizes them as response types within the ordinary
+processing domain). This decomposition is accepted as a more precise description of the
+joint structure than prior rounds' two-dimensional descriptions provided. What the
+decomposition does not determine is which dimension "legítima" tracks within that joint
+structure.
+
+Under joint-constitution, art. 927 determines scope: the exits are candidates for
+"legítima" status because they are responses to art. 927 compliance situations. Art. 489
+provides the classification criterion: recognized exit forms are categorized as distinct
+response types. "Legítima" must then determine which recognized forms, within the
+compliance-situation scope, qualify. The scope-constituting function (art. 927) is
+structurally prior: it establishes what the taxonomy classifies — responses to a
+compliance obligation — before the classification criterion operates. When the scope is
+constituted by a compliance obligation, the organizing question for "legítima" among
+responses within that scope is: which responses does the compliance obligation framework
+accept as permissible navigations of the obligation? This tracks the scope-constituting
+provision's authorization dimension (art. 927). The functional-taxonomy alternative:
+which responses does the exit-recognition framework categorize as recognized form types?
+This tracks the classification-criterion provision's domain-status dimension (art. 489).
+Both readings are expressible within the joint-constitution framework; the framework
+names what each provision contributes without determining which contribution "legítima"
+inherits its organizing criterion from. The criterion-which-criterion question is
+embedded within the joint-constitution framework, not dissolved by it.
+
+*On the false-dilemma escape.* The defense identifies a third option: the taxonomy can
+have a compliance-situation subject matter (art. 927) and a form-recognition
+classification criterion (art. 489) without these being in tension. The adversarial
+accepts that this third option is formally available and that the ninth ground's
+formulation — that L2 autonomy requires the defense to show either (a) the taxonomy is
+not compliance-response or (b) "legítima" means form-recognized — was an analytical
+constraint rather than a logical exhaustion of all possibilities. The adversarial's L2
+non-autonomy argument was a semantic observation: in a taxonomy of responses to an art.
+927 compliance situation, "legítima" most naturally denotes compliance-permissibility —
+permissible as a navigation of the compliance obligation — rather than form-recognition.
+The third option's formal availability does not address this semantic claim; it describes
+a structural configuration in which the semantic question remains open. Under the third
+option's joint-constitution framework, "legítima" still requires a determinate
+criterion, and the adversarial's position is that when the subject matter is constituted
+by a compliance obligation, the predicate "legítima" applied to responses within that
+subject matter carries compliance-relative semantic content. Whether the joint-
+constitution structure supports the compliance-permissibility reading (art. 927's
+scope-constituting function extends semantically into "legítima") or the form-recognition
+reading (art. 489's classification function is the criterion for "legítima") is the
+criterion-which-criterion question. The escape exits the dilemma's two stated options
+without exiting the substantive disagreement those options were meant to frame.
+
+The structural ceiling persists. After twelve bilateral rounds, neither the independence
+inference, the joint-constitution framework, nor the false-dilemma escape produces
+primary Brazilian procedural authority establishing which dimension "saídas legítimas"
+constitutively tracks. The tenth ground establishes: formal separability is compatible
+with the design-relationship reading the adversarial advances; the joint-constitution
+framework correctly describes the provisions' contributions while embedding rather than
+dissolving the criterion-which-criterion question; the false-dilemma escape is formally
+accurate while leaving the semantic core of the adversarial's claim unaddressed. Both
+readings — authorization-based and form-recognition-based — remain coherent interpretive
+options from the CPC's enacted text.
+
 ### 3.2 The Rational Binding Theory's Two-Directional Reading Does Not Authorize the Channel
 
 The supportive defense invokes the two-directional structure of Marinoni's formula:
@@ -1086,6 +1205,21 @@ defense establishes. The level distinction's architectural accuracy does not sup
 missing substantive argument; it relabels the provision-specificity inference's
 undemonstrated premise.
 
+**On the independence-not-hierarchy, joint-constitution, and false-dilemma compound
+defense (§3.1, tenth ground):** The round 9 defense makes three advances accepted as
+analytically precise contributions to the debate's structural description. The
+independence-not-hierarchy response correctly establishes that the adversarial's
+asymmetry claim requires normative design-relationship derivativeness rather than logical
+dependency. The joint-constitution move decomposes the two provisions' functions with
+greater precision than prior rounds. The false-dilemma escape identifies a formally
+available third option. None resolves the criterion-which-criterion question: the
+independence inference establishes formal separability but does not demonstrate criterion
+co-primacy by refuting the design-relationship claim; the joint-constitution framework
+embeds the question of which dimension "legítima" tracks within the joint structure
+rather than dissolving it; the third option's availability does not address the semantic
+observation that "legítima" in a compliance-response taxonomy carries compliance-relative
+content. Both readings remain coherent interpretive options from the CPC's text.
+
 ---
 
 ## 5. Scope of the Attack
@@ -1093,8 +1227,9 @@ undemonstrated premise.
 This attack targets Exit 4 — in its original authorization form and in the transparent-
 contestation reconceptualization with its *invalidade/incorreção*, presupposition-
 structure, functional-taxonomy, subsection III/VI disanalogy, prospective-taxonomy,
-legislative-history asymmetry, two-dimensional decomposition, provision-specificity, and
-convergence-case/level-distinction compound defenses — and the Exit 5 boundary
+legislative-history asymmetry, two-dimensional decomposition, provision-specificity,
+convergence-case/level-distinction compound, and independence-not-hierarchy/joint-
+constitution/false-dilemma compound defenses — and the Exit 5 boundary
 instability problem including its three responses in the supportive paper.
 
 This attack does not challenge:
