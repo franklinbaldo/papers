@@ -1031,6 +1031,157 @@ ementa simplifies the source; its principle-level generality limits operations r
 doctrinal-specific identification in both contexts. Both positions are consistently
 maintained.
 
+**Eleventh adversarial response — round 11: C1 relocation accepted at annotation-source
+level; annotation-task challenge preserved through citing-court characterization mismatch
+at the principle-to-application gap; type (a)/(b) demarcation presupposes established-
+application-area knowledge; implicit-structure flagging rate is a resource-constraint at
+champion scale in the contested-constitutional arm; C3 cross-cluster-convention stripping
+leaves procedural-type-specific institutional formulas unaddressed.**
+
+The supportive round 11 makes four advances: C1 principle-level abstraction relocated
+from C1 to SC6(b-1)-ID ementa-theory generality, with C1 annotation recast as textual
+comparison of the citing court's characterization against the ementa at the ementa's level;
+supplementary C3 cross-cluster-convention stripping identifying institutional-convention
+candidates through cross-corpus phrase frequency across three or more unrelated doctrinal
+clusters; mandatory C1 implicit-structure flagging routing ementas with unlabeled multi-item
+grounds to expert review; and SC6(b-1)-ID type (a)/(b) narrowing into established
+application areas (text-mapping tractable) and novel conceptual extensions (bounded hard
+core requiring expert calibration). Four adversarial responses follow.
+
+*C1 relocation: annotation-source benefit fully accepted; annotation-task challenge
+preserved through citing-court characterization mismatch.* The relocation is accepted as
+correctly identifying the annotation source: annotators read the cited precedent's ementa
+rather than synthesizing across votos. The source-reduction benefit — ementa reading is
+simpler than voto synthesis, collegial fragmentation is addressed at the source level —
+is accepted unconditionally. The concession from round 9 that accepted the ementa-as-
+authoritative-ratio source-reduction benefit is fully incorporated and not revisited.
+
+What the relocation does not establish is that C1 annotation is tractable at the
+annotation-task level. The annotation task is not ementa-reading alone; it is comparison
+of the citing court's ratio characterization against the ementa. The mismatch: the citing
+court characterizes the cited precedent's fundamentos determinantes at the specific
+doctrinal level at which it is applying the precedent — "the cited precedent establishes
+that rule R holds in situation S." The ementa characterizes the cited ratio at the abstract
+constitutional-principle level — "constitutional principle P applies." Whether rule R in
+situation S is a fundamento determinante of the cited precedent — rather than an obiter
+elaboration of principle P that the citing court incorrectly elevated to load-bearing
+status — requires determining what the ementa's principle-level characterization implies
+at the specific doctrinal level of the citing court's application. This is not ementa-
+reading at the ementa's level of characterization; it is principle-to-application-level
+gap-filling.
+
+For cases where the specific application is settled and uncontested, this gap is closed
+by precedential record: the annotator recognizes rule R in situation S as a well-
+established application of principle P. This is the type (a) class. For cases where the
+specific application is contested — where parties dispute whether rule R in situation S is
+within the established scope of the precedent's fundamentos determinantes or an overreading
+of the abstract principle — the ementa-level comparison does not resolve the annotation
+task. The ementa states principle P without specifying which competing specific
+constructions of P are fundamentos determinantes at the doctrinal level. This is the
+type (b) class, where the annotation-task challenge survives the source-reduction move.
+
+The relocation converts the annotation task from multi-voto synthesis (what is the
+precedent's ratio?) to principle-to-application mapping (is the citing court's specific
+characterization within the ementa's established scope?). The annotation-source
+simplification is genuine; the annotation-task challenge for the type (b) class is
+unchanged in kind, only re-described in terms consistent with the ementa-reading model.
+
+*Type (a)/(b) demarcation presupposes established-application-area knowledge.* The type
+(a)/(b) distinction is accepted as correctly identifying two categories. The operative
+question is whether the demarcation step is tractable without the doctrinal expertise the
+classification aims to avoid.
+
+Identifying which specific doctrinal constructions fall within the established application
+areas of a given abstract constitutional principle requires knowledge of the accumulated
+doctrinal record: how courts and parties have treated specific applications of the abstract
+principle across the precedential history. For routine constitutional applications — where
+the specific construction has been repeatedly applied and its fundamento determinante status
+is uncontested across the precedential record — type (a) classification is tractable. For
+contested constitutional applications — where parties in the citing case dispute whether
+the specific construction is within the established scope of the abstract principle's
+fundamentos determinantes — the type (a)/(b) demarcation is not determinable from the
+ementa alone. The ementa's abstract-principle characterization is consistent with both
+the established-application and the novel-extension classification for the same specific
+construction.
+
+The structural point: in the high-adversarial-record arm, "established application area"
+for the contested constitutional principle is itself the object of the dispute. A citing
+court invokes the precedent for the specific proposition that rule R applies in situation
+S; the challenging party argues this construction is a novel extension. Whether R in S is
+type (a) or type (b) is precisely what the annotation must determine. The demarcation step
+therefore imports the doctrinal-expertise requirement into the classification that precedes
+annotation: placing a citing court's characterization in type (a) or type (b) requires
+knowing the history of established applications of the abstract principle at the doctrinal
+level — the same knowledge annotators are not expected to possess for the ementa-reading
+step that the relocation makes tractable. This is not a claim that the type (a)/(b)
+distinction fails conceptually; it is a claim that the type (b) hard core is concentrated
+in the contested-constitutional cases precisely where the demarcation requires the
+doctrinal judgment the expert-review escalation is meant to catch.
+
+*Implicit-structure flagging: accepted as annotation-source solution; class-size concern
+in the contested-constitutional arm.* The mandatory-flagging step for ementas listing
+grounds without explicit logical connectives is accepted as addressing the annotation-
+source ambiguity for that class. The operative concern is the class-size distribution
+across arms.
+
+Contested constitutional adjudication at the STF plenary level — the source of the
+high-quality champions Phase 3 requires — produces multi-issue decisions whose ementas
+list grounds without explicit connectives at systematically higher rates than routine
+constitutional applications. Two structural factors drive this: complex constitutional
+cases resolve multiple contested issues simultaneously, generating multi-item ground
+listings; and secretariat-authored ementas serving as cross-court citation resources favor
+listing formats — allowing other courts to identify the relevant ground for their case —
+over logical-structure specifications that would require parsing the full deliberation. If
+the flagging rate for the contested-constitutional arm substantially exceeds the rate for
+routine constitutional applications, the mandatory-flagging solution converts the
+annotation tractability problem into an operational-capacity constraint at champion scale:
+expert review becomes the dominant annotation pathway for exactly the decisions Phase 3
+requires. The solution is architecturally valid; its operational tractability depends on
+the flagging-rate distribution across arms, which the round 11 proposal does not specify.
+Surrender condition (f) is updated to require arm-specific implicit-structure flagging
+rates alongside the arm-specific IRR data the prior rounds established.
+
+*C3 cross-cluster-convention stripping: frequency criterion addresses cross-doctrinal-
+subject universals; procedural-type-specific institutional formulas survive.* The cross-
+cluster-convention stripping step is accepted as a genuine advance for the categories it
+covers. Phrases appearing across three or more unrelated doctrinal clusters are correctly
+identified as institutional-convention candidates without requiring legal-content analysis;
+the surrender condition (g) is partially met for universally-conventional institutional
+formulas, and this advance is accepted unconditionally.
+
+The remaining gap concerns procedural-type-specific institutional formulas. Brazilian
+appellate decisions cluster by both doctrinal subject matter and procedural posture:
+habeas corpus petitions, recursos especiais, mandados de segurança, and recursos
+extraordinários each generate procedurally conventional language — standard admissibility
+characterizations, petition-opening and closing structures, reasoning-section transitions
+— that is universal within the procedural type but not distributed across doctrinal-
+subject clusters. A mandatory admissibility characterization formula for habeas corpus
+appears in all habeas corpus decisions regardless of underlying criminal-law question, but
+does not appear in tax-law recurso especial clusters or administrative-law mandado de
+segurança clusters. The three-cluster frequency criterion — applied across doctrinal-
+subject clusters — does not identify procedural-type-specific conventional language because
+its distribution is concentrated within procedural-posture clusters rather than spread
+across doctrinal-subject clusters.
+
+After both preprocessing steps, within-cluster phrase frequency analysis in procedural-
+posture clusters captures mandatory procedural formulas and optional formulaic reasoning
+equally: both appear universally within habeas corpus clusters, for instance, generating
+within-cluster recurrence at or above the threshold. The cross-cluster criterion removes
+the habeas corpus formula from doctrinal-subject clusters where it does not appear; it
+does not remove it from within the habeas corpus procedural cluster where it appears
+universally. The C3 conflation problem for this category survives both preprocessing
+steps — mandatory and optional formulaic recurrence remain indistinguishable by within-
+cluster frequency analysis after stripping, for the same categorical reason the original
+round 9 argument established.
+
+Surrender condition (g) is updated: official-database preprocessing satisfies the
+condition for universally-mandated text categories; cross-cluster-convention stripping
+satisfies it for court-universally-conventional institutional formulas; procedural-type-
+specific institutional formulas constitute a third residual category. A posture-type
+stripping step — identifying phrases appearing across instances of the same procedural
+type regardless of doctrinal subject matter — analogous to the cross-cluster step but
+applied within procedural-posture groupings, is required to close the residual.
+
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
 case types. High-volume processing creates institutional pressures to routinize
@@ -1563,7 +1714,7 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (ten supportive responses, ten adversarial counter-replies).**
+**On the full C2 exchange (eleven supportive responses, eleven adversarial counter-replies).**
 The C2 debate has passed through nine exchanges. The supportive camp argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
@@ -1736,16 +1887,42 @@ decisions; ementa-theory generality remains as a residual for contested constitu
 decisions where the principle-level theory characterization does not adjudicate argument
 materiality at the doctrinal-specific level, and calibration-scope representativeness
 remains as a second residual if the evaluation target extends beyond quality-filter
-exemplars. The practical implication across all ten exchanges: within-cluster C2-specific
-criterion activation cannot be ruled out under the current protocol design; the round 10
-advances substantially address C3 conflation for officially-mandated text categories,
-collegial-fragmentation at the annotation-source level, and SC6(b-1)-ID tractability for
-quality-filter calibration decisions; the surviving arm-specific differential IRR concerns
-are ementa-interpretation ambiguity for C1 (principle-level abstraction in the contested
-constitutional class) and ementa-theory generality for SC6(b-1)-ID (same class); C3
-residual gaps require cross-cluster-convention stripping beyond official-database
-preprocessing; coverage completeness as a within-adequacy ranking signal continues to
-require the case-record input extension and materiality-identification calibration; SC6(c)
+exemplars. On (11): the C1 relocation's annotation-source benefit (ementa reading
+over voto synthesis) is accepted unconditionally; the annotation-task challenge is
+preserved through the citing-court characterization mismatch — the citing court
+operates at the specific doctrinal level ("rule R in situation S is a fundamento
+determinante") while the ementa characterizes the ratio at the abstract-principle level
+("principle P applies"), and closing this gap requires principle-to-application-level
+mapping that goes beyond ementa-reading at the ementa's level; the type (a)/(b)
+demarcation presupposes established-application-area knowledge — determining whether
+a specific construction falls within type (a) (established) or type (b) (novel)
+requires knowing the accumulated doctrinal record of how the abstract principle has
+been applied at the specific level, which is itself contested in the high-adversarial-
+record arm; implicit-structure flagging is accepted as a solution for its class with a
+class-size concern — the flagging rate in the contested-constitutional arm (where
+multi-item ementas without explicit connectives are structurally concentrated) may be
+high enough to convert the annotation tractability problem into an operational-capacity
+constraint at champion scale, requiring arm-specific flagging rates in the empirical
+reporting; and the C3 cross-cluster-convention stripping advance is accepted for
+universally-conventional institutional formulas while a procedural-type-specific
+residual survives — phrases that are conventional within procedural-posture clusters
+(habeas corpus admission formulas, recurso especial admissibility templates) but not
+cross-doctrinal-subject in distribution are not captured by the three-cluster frequency
+criterion, requiring a posture-type stripping step to close. The practical implication
+across all eleven exchanges: within-cluster C2-specific criterion activation cannot be
+ruled out under the current protocol design; the round 10 advances substantially address
+C3 conflation for officially-mandated text categories, collegial-fragmentation at the
+annotation-source level, and SC6(b-1)-ID tractability for quality-filter calibration
+decisions; round 11's C1 relocation advances annotation-source tractability unconditionally
+while the annotation-task challenge relocates from principle-level voto-synthesis to
+principle-to-application-level gap-filling at the type (b) hard core; the surviving
+arm-specific differential IRR concerns are: (a) for C1, ementa-interpretation difficulty
+at the principle-to-doctrinal-application gap (relocated from voto-synthesis but not
+eliminated); (b) for SC6(b-1)-ID, ementa-theory generality and type (a)/(b) demarcation
+tractability in the contested-constitutional class; (c) for C3, the procedural-type-
+specific institutional formula residual that cross-cluster-convention stripping does not
+capture; coverage completeness as a within-adequacy ranking signal continues to require
+the case-record input extension and materiality-identification calibration; SC6(c)
 determines which prong of the C2 disjunction applies; under prong 2, SC6(3) requires the
 cross-elaboration test with cross-cluster-convention and cross-elaboration extensions.
 
@@ -2030,7 +2207,13 @@ conditions.
    narrows the hard-case class for quality-filter decisions but leaves ementa-theory
    generality as a residual for the contested constitutional class. Pooled reliability
    across both steps can obscure arm-specific deficits that the round 10 advances reduce
-   but do not eliminate.
+   but do not eliminate. Third, arm-specific implicit-structure flagging rates must be
+   reported: if ementas listing grounds without explicit logical connectives are
+   concentrated in the contested-constitutional arm at substantially higher rates than
+   in the routine arm, the mandatory-flagging solution converts annotation tractability
+   into an operational-capacity dependency at champion scale, and the arm-specific
+   flagging rate is the empirical quantity that determines whether the solution is
+   tractable in the evaluation target's distribution.
 
    **(g) C3 operationalization distinguishes legally mandated verbatim text from
    formulaic reasoning avoidance.** Round 10's mandatory-text preprocessing proposal
@@ -2042,19 +2225,34 @@ conditions.
    tractable solution that does not require legal content analysis.
    
    For this surrender condition to be fully met, the preprocessing must additionally
-   address two residual categories that official databases do not cover: (i) court-
-   specific procedural formulas from the STF and STJ Regimento Interno (mandatory
-   within those courts' procedural practice but not in Portal da Legislação or Diário
-   Oficial), and (ii) institutionally conventional formulas that have become uniform
-   through appellate practice without statutory or Regimento mandate (standard dispositif
-   language, voto opening/closing structures, citation-style templates). Both residual
-   categories generate within-cluster phrase frequencies that the preprocessing step
-   does not strip. A cross-cluster-convention stripping step — identifying phrases
-   appearing universally across multiple doctrinal clusters regardless of subject matter
-   as institutional-convention candidates, and removing them before within-cluster
-   frequency computation — would address both. This step is not specified in the round 10
-   proposal. The surrender condition is partially met (for officially-mandated text
-   categories); full satisfaction requires the cross-cluster-convention extension.
+   address residual categories that official databases do not cover. Round 10 identified
+   two such categories: (i) court-specific procedural formulas from the STF and STJ
+   Regimento Interno (mandatory within those courts' procedural practice but not in
+   Portal da Legislação or Diário Oficial), and (ii) institutionally conventional
+   formulas that have become uniform through appellate practice without statutory or
+   Regimento mandate (standard dispositif language, voto opening/closing structures,
+   citation-style templates). Round 11's cross-cluster-convention stripping step —
+   identifying phrases appearing across three or more unrelated doctrinal clusters as
+   institutional-convention candidates — addresses both categories and is accepted as
+   satisfying the surrender condition for them. The condition is now met for three
+   categories: universally-mandated text (official-database preprocessing), and
+   court-universally-conventional and Regimento Interno formulas (cross-cluster-
+   convention stripping).
+
+   A third residual category remains. Procedural-type-specific institutional formulas
+   — standard admissibility characterizations for habeas corpus, recurso especial
+   admissibility templates, mandado de segurança procedural formulas, and analogous
+   posture-specific language — are universal within their procedural-posture cluster
+   but not distributed across doctrinal-subject clusters. The three-cluster frequency
+   criterion does not capture them because their cross-cluster distribution is
+   procedural-posture-specific rather than doctrinal-subject-cross-cutting. After
+   official-database and cross-cluster-convention stripping, these formulas remain in
+   within-cluster phrase frequency as indistinguishable from optional formulaic
+   reasoning avoidance. Full satisfaction of this surrender condition requires a
+   posture-type stripping step — identifying phrases appearing universally across
+   instances of the same procedural posture regardless of doctrinal subject matter
+   — analogous to the cross-cluster step but applied within procedural-posture
+   groupings.
 
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3 attack is
