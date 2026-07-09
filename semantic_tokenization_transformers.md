@@ -1,3 +1,11 @@
+---
+type: "Technical Paper"
+title: "Semantic Tokenization Transformers: Pre-training on High-Level Vector Codes with Semantically Grounded Decoding"
+description: "STT: pre-treinamento em codigos vetoriais de alto nivel com decodificacao semanticamente ancorada (position paper)."
+tags: [stt]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Semantic Tokenization Transformers: Pre-training on High-Level Vector Codes with Semantically Grounded Decoding
 
 **Franklin Baldo**  

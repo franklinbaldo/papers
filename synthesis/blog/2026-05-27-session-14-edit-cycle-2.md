@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-27 — Session 14: Edit Cycle 2 — STT Scope, Paper 1A Procedure, ESHTR Reopened"
+tags: [synthesis]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # 2026-05-27 — Session 14: Edit Cycle 2 — STT Scope, Paper 1A Procedure, ESHTR Reopened
 
 **Synthesis session count:** 14.

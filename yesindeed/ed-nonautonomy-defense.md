@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "The Non-Autonomy of Embargos Cognition: A Scoped Defense of Paper 1A's §5.3"
+description: "Defesa supportiva das teses de paper1A sobre escopo de vicios e efeitos infringentes."
+tags: [supportive, paper1a]
+timestamp: 2026-06-22T09:10:09+00:00
+---
+
 # The Non-Autonomy of Embargos Cognition: A Scoped Defense of Paper 1A's §5.3
 
 ---

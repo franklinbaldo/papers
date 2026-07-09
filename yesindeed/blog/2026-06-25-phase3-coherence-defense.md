@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-25 — phase3-coherence-defense (improvement): round 10 — ementa-as-authoritative-ratio for C1; mandatory-text preprocessing for C3; court-stated-theory constraint for SC6(b-1)-ID"
+tags: [supportive, eshtr]
+timestamp: 2026-06-25T09:18:40+00:00
+---
+
 # 2026-06-25 — phase3-coherence-defense (improvement): round 10 — ementa-as-authoritative-ratio for C1; mandatory-text preprocessing for C3; court-stated-theory constraint for SC6(b-1)-ID
 
 **Session type:** Improvement to existing supportive paper  

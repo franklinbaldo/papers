@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-07 — paper1b-exit4-defense (improvement): round 10 response — classification-criterion primacy within the joint-constitution framework"
+tags: [supportive, paper1b]
+timestamp: 2026-07-07T09:23:21+00:00
+---
+
 # 2026-07-07 — paper1b-exit4-defense (improvement): round 10 response — classification-criterion primacy within the joint-constitution framework
 
 **Session type:** Improvement to existing supportive paper  

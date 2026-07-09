@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-24 — ed-recall-range-defense (new paper)"
+tags: [supportive, paper1a]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-24 — ed-recall-range-defense (new paper)
 
 **Session type:** New supportive paper  

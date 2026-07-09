@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-26 — paper1b-rational-supersession (improvement): round 7 — provision-specificity critique"
+tags: [adversarial, paper1b]
+timestamp: 2026-06-26T08:14:19+00:00
+---
+
 # 2026-06-26 — paper1b-rational-supersession (improvement): round 7 — provision-specificity critique
 
 **Session type:** Improvement to existing adversarial paper  

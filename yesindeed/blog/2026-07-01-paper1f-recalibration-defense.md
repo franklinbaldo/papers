@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-01 — paper1f-recalibration-defense (improvement): round 2 response — mechanism-scale coverage, mimicry-resistance constraint, local Kreps channel"
+tags: [supportive, paper1f]
+timestamp: 2026-07-01T09:11:44+00:00
+---
+
 # 2026-07-01 — paper1f-recalibration-defense (improvement): round 2 response — mechanism-scale coverage, mimicry-resistance constraint, local Kreps channel
 
 **Session type:** Improvement to existing supportive paper  

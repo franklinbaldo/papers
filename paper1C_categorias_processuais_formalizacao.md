@@ -1,3 +1,11 @@
+---
+type: "Dogmatic Paper"
+title: "Categorias Processuais Civis para Formalização Computacional: Pedidos, Provimentos, Pretensões Recursais e Proveniência de Afirmações no CPC 2015"
+description: "Categorias processuais civis (pedidos, provimentos, pretensoes recursais, proveniencia de afirmacoes) para formalizacao computacional."
+tags: [paper1c]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Categorias Processuais Civis para Formalização Computacional: Pedidos, Provimentos, Pretensões Recursais e Proveniência de Afirmações no CPC 2015
 
 **Franklin Silveira Baldo**

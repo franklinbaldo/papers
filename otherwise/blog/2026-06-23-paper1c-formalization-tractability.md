@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-23 — paper1c-formalization-tractability (improvement): round 4 response — Sub-case A/B tractability analysis of G-but-contingent; Art. 93 IX CF correction; SC7 addition"
+tags: [adversarial, paper1c]
+timestamp: 2026-06-23T08:19:39+00:00
+---
+
 # 2026-06-23 — paper1c-formalization-tractability (improvement): round 4 response — Sub-case A/B tractability analysis of G-but-contingent; Art. 93 IX CF correction; SC7 addition
 
 **Session type:** Improvement to existing adversarial paper  

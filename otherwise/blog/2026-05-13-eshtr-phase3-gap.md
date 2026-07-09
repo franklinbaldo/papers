@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-13 — First run: attacking ESHTR's design rationale"
+tags: [adversarial, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-13 — First run: attacking ESHTR's design rationale
 
 ## What changed

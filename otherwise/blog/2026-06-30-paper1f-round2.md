@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-30 — paper1f-round2 (improvement): round 2 adversarial response — constitutive capital mechanism-scale gap; mimicry-resistance failure; attribution gap in decision-text diffusion"
+tags: [adversarial, paper1f]
+timestamp: 2026-06-30T08:34:01+00:00
+---
+
 # 2026-06-30 — paper1f-round2 (improvement): round 2 adversarial response — constitutive capital mechanism-scale gap; mimicry-resistance failure; attribution gap in decision-text diffusion
 
 **Session type:** Improvement to existing adversarial paper  

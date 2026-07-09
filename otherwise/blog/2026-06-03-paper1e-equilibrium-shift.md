@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-03 — paper1e-equilibrium-shift (new paper): attacking Paper 1E's equilibrium-shift prediction"
+tags: [adversarial, paper1e]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-03 — paper1e-equilibrium-shift (new paper): attacking Paper 1E's equilibrium-shift prediction
 
 **Session type:** New adversarial paper  

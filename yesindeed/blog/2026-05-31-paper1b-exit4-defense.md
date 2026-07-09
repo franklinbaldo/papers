@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-31 — paper1b-exit4-defense (new paper): defending Exit 4 and Exit 5 coherence"
+tags: [supportive, paper1b]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-31 — paper1b-exit4-defense (new paper): defending Exit 4 and Exit 5 coherence
 
 **Session type:** New supportive paper  

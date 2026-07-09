@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "Threshold Adjustment Is Not Free: A Partial Defense of Paper 1E's Equilibrium-Shift Prediction"
+description: "Defesa supportiva da predicao de mudanca de equilibrio de paper1E."
+tags: [supportive, paper1e]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # Threshold Adjustment Is Not Free: A Partial Defense of Paper 1E's Equilibrium-Shift Prediction
 
 ---

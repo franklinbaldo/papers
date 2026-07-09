@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-25 — reputation-constitutive-field (new paper): attack on Paper 1F's proxy-devaluation mechanism"
+tags: [adversarial, paper1f]
+timestamp: 2026-06-25T08:14:58+00:00
+---
+
 # 2026-06-25 — reputation-constitutive-field (new paper): attack on Paper 1F's proxy-devaluation mechanism
 
 **Session type:** New adversarial paper  

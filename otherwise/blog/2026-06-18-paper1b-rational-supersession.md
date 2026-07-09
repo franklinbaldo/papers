@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-18 — paper1b-rational-supersession (improvement): round 5 — prospective-taxonomy counter and legislative-history asymmetry response"
+tags: [adversarial, paper1b]
+timestamp: 2026-06-18T08:14:21+00:00
+---
+
 # 2026-06-18 — paper1b-rational-supersession (improvement): round 5 — prospective-taxonomy counter and legislative-history asymmetry response
 
 **Session type:** Improvement to existing adversarial paper  

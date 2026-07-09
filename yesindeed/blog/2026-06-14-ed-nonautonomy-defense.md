@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-14 — ed-nonautonomy-defense (improvement): responding to the §3.7 counter-arguments to the jurisdictional-allocation reading"
+tags: [supportive, paper1a]
+timestamp: 2026-06-14T09:21:45+00:00
+---
+
 # 2026-06-14 — ed-nonautonomy-defense (improvement): responding to the §3.7 counter-arguments to the jurisdictional-allocation reading
 
 **Session type:** Improvement to existing supportive paper  

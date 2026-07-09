@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "Frame Stability and the Semantic Proximity Hypothesis: A Cognitive Mechanism for Non-Transitivity in LLM Judges"
+description: "Defesa supportiva da Hipotese da Proximidade Semantica (SPH) do ESHTR."
+tags: [supportive, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # Frame Stability and the Semantic Proximity Hypothesis: A Cognitive Mechanism for Non-Transitivity in LLM Judges
 
 ---

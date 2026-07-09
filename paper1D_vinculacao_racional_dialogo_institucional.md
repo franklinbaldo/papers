@@ -1,3 +1,11 @@
+---
+type: "Dogmatic Paper"
+title: "Vinculação Racional e Diálogo Institucional: o Dever de Fundamentação como Limite Simétrico no Sistema Brasileiro de Precedentes"
+description: "Vinculacao racional a sumula vinculante e simetria do dever de fundamentacao entre o afastamento e o julgamento da reclamacao."
+tags: [paper1d]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Vinculação Racional e Diálogo Institucional: o Dever de Fundamentação como Limite Simétrico no Sistema Brasileiro de Precedentes
 
 **Franklin Silveira Baldo**

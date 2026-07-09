@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "Departing Without Authority: The Inference Gap in Paper 1B's Rational Supersession"
+description: "Critica adversarial a tese de superacao racional (Saida 4) de paper1B."
+tags: [adversarial, paper1b]
+timestamp: 2026-07-04T08:17:31+00:00
+---
+
 # Departing Without Authority: The Inference Gap in Paper 1B's Rational Supersession
 
 ---

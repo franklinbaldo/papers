@@ -1,3 +1,11 @@
+---
+type: "Dogmatic Paper"
+title: "Embargos de Declaração no CPC 2015: Escopo Amplo dos Vícios e Infringência como Consequência"
+description: "Escopo amplo dos vicios de embargos de declaracao e efeitos infringentes como consequencia da integracao, nao pretensao autonoma."
+tags: [paper1a]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Embargos de Declaração no CPC 2015: Escopo Amplo dos Vícios e Infringência como Consequência
 
 **Franklin Silveira Baldo**

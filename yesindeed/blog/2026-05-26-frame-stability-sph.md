@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-26 — frame-stability-sph (improvement)"
+tags: [supportive, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-26 — frame-stability-sph (improvement)
 
 **Session type:** Improvement to existing supportive paper  

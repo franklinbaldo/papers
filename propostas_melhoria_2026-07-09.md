@@ -1,3 +1,10 @@
+---
+type: "Audit Report"
+title: "Propostas de melhoria — auditoria do programa de pesquisa"
+description: "Auditoria externa do programa de pesquisa e propostas de melhoria, com status de execucao por nivel de prioridade."
+timestamp: 2026-07-09T14:51:32+00:00
+---
+
 # Propostas de melhoria — auditoria do programa de pesquisa
 
 > **Status de execução (2026-07-09, mesmo dia).** Franklin revisou esta

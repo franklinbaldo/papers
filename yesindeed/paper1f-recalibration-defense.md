@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "Defending the Proxy-Devaluation Mechanism: Statutory Compliance Standards and Commitment Displacement in Legal Reputation"
+description: "Defesa supportiva do mecanismo de recalibracao reputacional de paper1F."
+tags: [supportive, paper1f]
+timestamp: 2026-07-08T09:20:50+00:00
+---
+
 # Defending the Proxy-Devaluation Mechanism: Statutory Compliance Standards and Commitment Displacement in Legal Reputation
 
 ---

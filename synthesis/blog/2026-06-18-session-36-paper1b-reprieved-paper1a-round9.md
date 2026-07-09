@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-18 — Session 36: Paper 1B Adversarial Terminal Met (Round 5); Paper 1A §3.2 Reaches Round 9; Session-Count Correction"
+tags: [synthesis, paper1a, paper1b]
+timestamp: 2026-06-18T10:09:43+00:00
+---
+
 # 2026-06-18 — Session 36: Paper 1B Adversarial Terminal Met (Round 5); Paper 1A §3.2 Reaches Round 9; Session-Count Correction
 
 **Synthesis session count:** 36.

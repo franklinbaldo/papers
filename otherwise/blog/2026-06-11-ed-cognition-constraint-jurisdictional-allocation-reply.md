@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-11 — ed-cognition-constraint (improvement): counter to the jurisdictional-allocation reading"
+tags: [adversarial, paper1a]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-11 — ed-cognition-constraint (improvement): counter to the jurisdictional-allocation reading
 
 **Session type:** Improvement to existing adversarial paper  

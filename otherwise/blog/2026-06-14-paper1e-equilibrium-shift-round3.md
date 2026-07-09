@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-14 — paper1e-equilibrium-shift (improvement): counter to (a)/(b) distinction + JOTA/ConJur aggregation argument"
+tags: [adversarial, paper1e]
+timestamp: 2026-06-14T08:14:00+00:00
+---
+
 # 2026-06-14 — paper1e-equilibrium-shift (improvement): counter to (a)/(b) distinction + JOTA/ConJur aggregation argument
 
 **Session type:** Improvement to existing adversarial paper — round 3  

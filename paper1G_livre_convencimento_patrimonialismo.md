@@ -1,3 +1,11 @@
+---
+type: "Dogmatic Paper"
+title: "O Livre Convencimento como Doutrinização do Patrimonialismo Judicial: Genealogia Histórico-Institucional do Equilíbrio de Baixa Qualidade Argumentativa no Sistema de Precedentes Brasileiro"
+description: "Genealogia historico-institucional do livre convencimento como doutrinizacao do patrimonialismo judicial."
+tags: [paper1g]
+timestamp: 2026-07-09T14:51:32+00:00
+---
+
 # O Livre Convencimento como Doutrinização do Patrimonialismo Judicial: Genealogia Histórico-Institucional do Equilíbrio de Baixa Qualidade Argumentativa no Sistema de Precedentes Brasileiro
 
 **Franklin Silveira Baldo**

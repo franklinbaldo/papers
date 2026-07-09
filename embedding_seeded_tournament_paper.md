@@ -1,3 +1,11 @@
+---
+type: "Technical Paper"
+title: "Embedding-Seeded Hierarchical Tournament Ranking: A Scalable Method for Evaluating Judicial Decision Quality with LLM Panels"
+description: "ESHTR: avaliacao por painel de LLMs de qualidade de decisoes judiciais via clustering por embedding e torneio hierarquico."
+tags: [eshtr]
+timestamp: 2026-07-09T11:04:50+00:00
+---
+
 # Embedding-Seeded Hierarchical Tournament Ranking: A Scalable Method for Evaluating Judicial Decision Quality with LLM Panels
 
 **Franklin Silveira Baldo**

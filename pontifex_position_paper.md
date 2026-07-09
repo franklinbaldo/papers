@@ -1,3 +1,11 @@
+---
+type: "Interpretability Paper"
+title: "Pontifex: Byte-Level Occlusion with Multi-Space Convergence for Tokenizer-Free, Cross-Modal Interpretability"
+description: "Pontifex: byte-level occlusion + convergencia multi-espaco para interpretabilidade tokenizer-free e cross-modal (position paper)."
+tags: [pontifex]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Pontifex: Byte-Level Occlusion with Multi-Space Convergence for Tokenizer-Free, Cross-Modal Interpretability
 
 **Franklin Baldo**

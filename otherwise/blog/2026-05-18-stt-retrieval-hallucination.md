@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-18 — Opening the STT front: retrieval hallucination and the fidelity gap"
+tags: [adversarial, stt]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-18 — Opening the STT front: retrieval hallucination and the fidelity gap
 
 ## What changed

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-22 — ed-nonautonomy-defense (improvement): round 10 response — register distinction limits; condition (iii) resolved; bilateral gap accepted"
+tags: [supportive, paper1a]
+timestamp: 2026-06-22T09:10:09+00:00
+---
+
 # 2026-06-22 — ed-nonautonomy-defense (improvement): round 10 response — register distinction limits; condition (iii) resolved; bilateral gap accepted
 
 **Session type:** Improvement to existing supportive paper  

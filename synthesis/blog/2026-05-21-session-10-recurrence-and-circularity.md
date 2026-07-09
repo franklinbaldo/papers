@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-21 — Session 10: Recurrence Counter and Calibration Circularity"
+tags: [synthesis]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-21 — Session 10: Recurrence Counter and Calibration Circularity
 
 **Synthesis session count:** 10 of 14 until next edit cycle.

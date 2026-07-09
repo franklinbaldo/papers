@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-25 — Session 43: Paper 1A §3.2 Formally Closed; ESHTR C2 Round 10 Calibrates; Paper 1F Opens"
+tags: [synthesis, paper1a, paper1f, eshtr]
+timestamp: 2026-06-25T10:10:13+00:00
+---
+
 # 2026-06-25 — Session 43: Paper 1A §3.2 Formally Closed; ESHTR C2 Round 10 Calibrates; Paper 1F Opens
 
 **Synthesis session count:** 43.

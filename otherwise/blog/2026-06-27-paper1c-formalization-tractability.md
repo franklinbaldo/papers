@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-27 — paper1c-formalization-tractability (round 5): SC7 engaged with doubly-modified scheme and ementa-specificity probe"
+tags: [adversarial, paper1c]
+timestamp: 2026-06-27T08:18:06+00:00
+---
+
 # 2026-06-27 — paper1c-formalization-tractability (round 5): SC7 engaged with doubly-modified scheme and ementa-specificity probe
 
 **Session type:** Existing paper improvement  

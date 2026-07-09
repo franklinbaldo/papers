@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-16 — paper1c-tractability-defense (improvement): recording-not-identification response + taxonomy-specificity counter + vote-level incidence counter"
+tags: [supportive, paper1c]
+timestamp: 2026-06-16T09:14:14+00:00
+---
+
 # 2026-06-16 — paper1c-tractability-defense (improvement): recording-not-identification response + taxonomy-specificity counter + vote-level incidence counter
 
 **Session type:** Improvement to existing supportive paper  

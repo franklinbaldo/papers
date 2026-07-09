@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-17 — ed-cognition-constraint (improvement): round 8 reply to Paper 1A §3.2 round 7"
+tags: [adversarial, paper1a]
+timestamp: 2026-06-17T08:17:50+00:00
+---
+
 # 2026-06-17 — ed-cognition-constraint (improvement): round 8 reply to Paper 1A §3.2 round 7
 
 **Session type:** Improvement to existing adversarial paper — round 8 of the Paper 1A §3.2 cognition-constraint debate  

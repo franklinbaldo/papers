@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-13 — Session 1: Opening Moves"
+tags: [synthesis]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # 2026-05-13 — Session 1: Opening Moves
 
 **Synthesis session count:** 1 of 7 before first edit cycle.  

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-02 — paper1c-formalization-tractability (improvement): round 6 — (A)/(B) distinction collapses for contested constitutional ementas; cross-front tension with ESHTR C2 resolved"
+tags: [adversarial, paper1c]
+timestamp: 2026-07-02T08:13:39+00:00
+---
+
 # 2026-07-02 — paper1c-formalization-tractability (improvement): round 6 — (A)/(B) distinction collapses for contested constitutional ementas; cross-front tension with ESHTR C2 resolved
 
 **Session type:** Improvement to existing adversarial paper  

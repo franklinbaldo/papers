@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "Embargos de Declaração Cannot Generate What They Can Only Recall: The Cognition Constraint on Integrative Relief"
+description: "Critica adversarial as teses de paper1A sobre escopo de vicios e efeitos infringentes, por criterio de restricao cognitiva."
+tags: [adversarial, paper1a]
+timestamp: 2026-06-21T08:18:58+00:00
+---
+
 # Embargos de Declaração Cannot Generate What They Can Only Recall: The Cognition Constraint on Integrative Relief
 
 ---

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-24 — eshtr-c2-round9 (improvement): round 9 adversarial response — C1 post-decision text ambiguity; C3 mandated-text conflation; SC6(b-1)-ID dispositif determinacy assumption"
+tags: [adversarial, eshtr]
+timestamp: 2026-06-24T08:22:42+00:00
+---
+
 # 2026-06-24 — eshtr-c2-round9 (improvement): round 9 adversarial response — C1 post-decision text ambiguity; C3 mandated-text conflation; SC6(b-1)-ID dispositif determinacy assumption
 
 **Session type:** Improvement to existing adversarial paper  

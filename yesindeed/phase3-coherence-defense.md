@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "Phase 3 Is Not a Criterion Substitution: On the Coherence of ESHTR's Global Ranking"
+description: "Defesa supportiva da coerencia do campeonato inter-cluster da Fase 3 do ESHTR."
+tags: [supportive, eshtr]
+timestamp: 2026-07-04T09:23:20+00:00
+---
+
 # Phase 3 Is Not a Criterion Substitution: On the Coherence of ESHTR's Global Ranking
 
 ---

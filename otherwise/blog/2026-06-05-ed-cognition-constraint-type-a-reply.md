@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-05 — ed-cognition-constraint (improvement): counter to the Type A/Type B scoped defense"
+tags: [adversarial, paper1a]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-05 — ed-cognition-constraint (improvement): counter to the Type A/Type B scoped defense
 
 **Session type:** Improvement to existing adversarial paper — responding to the Type A/Type B scoped defense  

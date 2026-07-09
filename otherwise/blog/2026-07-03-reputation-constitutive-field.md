@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-03 — reputation-constitutive-field (improvement): round 3 — coverage-extension bounded by utilization constraint and conditional prevalence gap; informed mimicry; local Kreps limitations"
+tags: [adversarial, paper1f]
+timestamp: 2026-07-03T08:13:52+00:00
+---
+
 # 2026-07-03 — reputation-constitutive-field (improvement): round 3 — coverage-extension bounded by utilization constraint and conditional prevalence gap; informed mimicry; local Kreps limitations
 
 **Session type:** Improvement to existing adversarial paper  

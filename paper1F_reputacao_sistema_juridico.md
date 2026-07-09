@@ -1,3 +1,11 @@
+---
+type: "Dogmatic Paper"
+title: "Reputação como Mecanismo de Coordenação no Sistema Jurídico: Assimetria de Informação, Capital Simbólico e Recalibração pela Transparência Argumentativa"
+description: "Reputacao como mecanismo de coordenacao no sistema juridico e recalibracao pela transparencia argumentativa."
+tags: [paper1f]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Reputação como Mecanismo de Coordenação no Sistema Jurídico: Assimetria de Informação, Capital Simbólico e Recalibração pela Transparência Argumentativa
 
 **Franklin Silveira Baldo**

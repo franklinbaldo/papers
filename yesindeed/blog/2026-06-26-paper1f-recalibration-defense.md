@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-26 — paper1f-recalibration-defense (new paper): direct defense of Paper 1F against adversarial reputation-constitutive-field"
+tags: [supportive, paper1f]
+timestamp: 2026-06-26T09:09:59+00:00
+---
+
 # 2026-06-26 — paper1f-recalibration-defense (new paper): direct defense of Paper 1F against adversarial reputation-constitutive-field
 
 **Session type:** New supportive paper  

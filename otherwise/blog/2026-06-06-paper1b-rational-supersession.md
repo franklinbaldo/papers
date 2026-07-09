@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-06 — paper1b-rational-supersession (improvement): counter to *invalidade/incorreção* taxonomy and different-questions Exit 5"
+tags: [adversarial, paper1b]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-06 — paper1b-rational-supersession (improvement): counter to *invalidade/incorreção* taxonomy and different-questions Exit 5
 
 **Session type:** Improvement to existing adversarial paper

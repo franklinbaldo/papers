@@ -1,3 +1,10 @@
+---
+type: "Companion Note"
+description: "Esboco exploratorio (saida de sessao de IA) de checagem de prior art para o Pontifex; nao e avaliacao independente."
+tags: [pontifex]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 > **Nota editorial (2026-07-09).** Este arquivo é a saída bruta de uma
 > sessão de navegação de um modelo de linguagem (o nome do arquivo
 > identifica o modelo), colada sem edição — **não é uma avaliação

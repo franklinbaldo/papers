@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-07 — eshtr-phase3-gap (improvement): round 11 adversarial response — C1 relocation accepted at annotation-source level; annotation-task challenge relocated to principle-to-application gap; type (a)/(b) demarcation tractability; implicit-structure flagging class-size; procedural-type C3 residual"
+tags: [adversarial, eshtr]
+timestamp: 2026-07-07T08:40:27+00:00
+---
+
 # 2026-07-07 — eshtr-phase3-gap (improvement): round 11 adversarial response — C1 relocation accepted at annotation-source level; annotation-task challenge relocated to principle-to-application gap; type (a)/(b) demarcation tractability; implicit-structure flagging class-size; procedural-type C3 residual
 
 **Session type:** Improvement to existing adversarial paper  

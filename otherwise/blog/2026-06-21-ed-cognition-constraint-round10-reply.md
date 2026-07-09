@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "Adversarial Blog — 2026-06-21"
+tags: [adversarial, paper1a]
+timestamp: 2026-06-21T08:18:58+00:00
+---
+
 # Adversarial Blog — 2026-06-21
 
 **Paper:** Paper 1A §3.2 — `otherwise/ed-cognition-constraint.md`

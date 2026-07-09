@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "The Reclamação Cannot Carry the Symmetry: A Compliance-Verification Constraint on Paper 1D's Dialogue Thesis"
+description: "Critica adversarial as teses de fundamentacao simetrica e reclamacao de paper1D."
+tags: [adversarial, paper1d]
+timestamp: 2026-06-15T08:18:20+00:00
+---
+
 # The Reclamação Cannot Carry the Symmetry: A Compliance-Verification Constraint on Paper 1D's Dialogue Thesis
 
 ---

@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "Exit 4 as Transparent Contestation: A Defense of Paper 1B Against Inference-Gap, Taxonomy-Incoherence, and Exit-5-Collapse Attacks"
+description: "Defesa supportiva da tese de superacao racional (Saida 4) de paper1B."
+tags: [supportive, paper1b]
+timestamp: 2026-07-07T09:23:21+00:00
+---
+
 # Exit 4 as Transparent Contestation: A Defense of Paper 1B Against Inference-Gap, Taxonomy-Incoherence, and Exit-5-Collapse Attacks
 
 ---

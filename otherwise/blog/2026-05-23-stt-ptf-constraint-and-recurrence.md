@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-23 — stt-retrieval-hallucination (improvement)"
+tags: [adversarial, stt]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # 2026-05-23 — stt-retrieval-hallucination (improvement)
 
 **Session type:** Improvement to existing adversarial paper  

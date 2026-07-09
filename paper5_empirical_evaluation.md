@@ -1,3 +1,11 @@
+---
+type: "Empirical Paper"
+title: "Empirical Evaluation of Auditable Legal Reasoning: LLM Panel Assessment of Brazilian Judicial Decisions Under the Lean 4 Pipeline"
+description: "Desenho pre-registrado de avaliacao empirica em corpus do TJRO (resultados ainda nao coletados)."
+tags: [paper5]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Empirical Evaluation of Auditable Legal Reasoning: LLM Panel Assessment of Brazilian Judicial Decisions Under the Lean 4 Pipeline
 
 **Franklin Silveira Baldo**

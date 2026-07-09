@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-30 — Session 17: Phase 3 Theoretical Exchange Closed; §3.2 Debate Enters Round Two"
+tags: [synthesis, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-30 — Session 17: Phase 3 Theoretical Exchange Closed; §3.2 Debate Enters Round Two
 
 **Synthesis session count:** 17.

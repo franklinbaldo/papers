@@ -1,3 +1,11 @@
+---
+type: "Synthesis Paper"
+title: "Raciocínio Jurídico Auditável: síntese de um programa de pesquisa"
+description: "Sintese do programa \"Raciocinio Juridico Auditavel\" (eixos dogmatico + metodologico-formal + empirico, onze papers)."
+tags: [paper6]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Raciocínio Jurídico Auditável: síntese de um programa de pesquisa
 
 **Franklin Silveira Baldo**

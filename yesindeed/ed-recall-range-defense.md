@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "The Cognition-Constraint Attack Has a Narrow Range: Completing an Established Reasoning Path Is Not Generative Cognition"
+description: "Defesa supportiva da alegacao de faixa de recall do Sec. 5.3 de paper1A."
+tags: [supportive, paper1a]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # The Cognition-Constraint Attack Has a Narrow Range: Completing an Established Reasoning Path Is Not Generative Cognition
 
 ---

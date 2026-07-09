@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-12 — paper1b-rational-supersession (improvement): authorization asymmetry + disanalogy counter + Exit 5 three-response reply"
+tags: [adversarial, paper1b]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-12 — paper1b-rational-supersession (improvement): authorization asymmetry + disanalogy counter + Exit 5 three-response reply
 
 **Session type:** Improvement to existing adversarial paper  

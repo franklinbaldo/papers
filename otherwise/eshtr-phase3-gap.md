@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale"
+description: "Critica adversarial a tratabilidade do campeonato inter-cluster da Fase 3 do ESHTR."
+tags: [adversarial, eshtr]
+timestamp: 2026-07-07T08:40:27+00:00
+---
+
 # Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale
 
 ---

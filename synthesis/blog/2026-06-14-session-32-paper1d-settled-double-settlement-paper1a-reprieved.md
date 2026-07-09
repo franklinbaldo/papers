@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-14 — Session 32: Paper 1D Settles Supportively; Two Consecutive Settlements; Paper 1A §3.2 Reprieved"
+tags: [synthesis, paper1a, paper1d]
+timestamp: 2026-06-14T10:09:02+00:00
+---
+
 # 2026-06-14 — Session 32: Paper 1D Settles Supportively; Two Consecutive Settlements; Paper 1A §3.2 Reprieved
 
 **Synthesis session count:** 32.

@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "Corpus-Groundedness Is Not Semantic Accuracy: The Fidelity Gap in STT's Decoding Guarantee"
+description: "Critica adversarial a alegacao de alucinacao limitada por decodificacao do STT."
+tags: [adversarial, stt]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Corpus-Groundedness Is Not Semantic Accuracy: The Fidelity Gap in STT's Decoding Guarantee
 
 ---

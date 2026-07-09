@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-29 — eshtr-c2-round10-reply (improvement): round 10 adversarial counter — C3 preprocessing accepted with residual gaps; C1 ementa source-reduction accepted with ementa-interpretation residual; SC6(b-1)-ID narrowing accepted with ementa-theory-generality residual; cross-front ementa positions resolved"
+tags: [adversarial, eshtr]
+timestamp: 2026-06-29T16:42:12+00:00
+---
+
 # 2026-06-29 — eshtr-c2-round10-reply (improvement): round 10 adversarial counter — C3 preprocessing accepted with residual gaps; C1 ementa source-reduction accepted with ementa-interpretation residual; SC6(b-1)-ID narrowing accepted with ementa-theory-generality residual; cross-front ementa positions resolved
 
 **Session type:** Improvement to existing adversarial paper  

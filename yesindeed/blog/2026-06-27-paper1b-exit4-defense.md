@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-27 — paper1b-exit4-defense (improvement): round 7 response — Exit 1 demonstration"
+tags: [supportive, paper1b]
+timestamp: 2026-06-27T09:16:14+00:00
+---
+
 # 2026-06-27 — paper1b-exit4-defense (improvement): round 7 response — Exit 1 demonstration
 
 **Session type:** Improvement to existing supportive paper  

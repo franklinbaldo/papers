@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-21 — phase3-coherence-defense (improvement): round 9 response — SC6(b-1)-ID supplementary calibration, C1 post-decision text-reading distinction, five-dimension composite"
+tags: [supportive, eshtr]
+timestamp: 2026-06-21T09:13:51+00:00
+---
+
 # 2026-06-21 — phase3-coherence-defense (improvement): round 9 response — SC6(b-1)-ID supplementary calibration, C1 post-decision text-reading distinction, five-dimension composite
 
 **Session type:** Improvement to existing supportive paper  

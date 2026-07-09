@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-30 — paper1c-tractability-defense (improvement): post-round-5 refinement — ementa-as-ratio contests probe's internal premise; cross-front tension with ESHTR C2"
+tags: [supportive, paper1c]
+timestamp: 2026-06-30T09:17:55+00:00
+---
+
 # 2026-06-30 — paper1c-tractability-defense (improvement): post-round-5 refinement — ementa-as-ratio contests probe's internal premise; cross-front tension with ESHTR C2
 
 **Session type:** Improvement to existing supportive paper  

@@ -1,3 +1,11 @@
+---
+type: "Dogmatic Paper"
+title: "Fundamentação de Embargos de Declaração e Saídas Legítimas diante de Precedente Vinculante: duas contribuições dogmáticas do CPC 2015"
+description: "Embargos de Declaracao e saidas legitimas diante de precedente vinculante (umbrella da serie dogmatica)."
+tags: [paper1-dogmatico]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Fundamentação de Embargos de Declaração e Saídas Legítimas diante de Precedente Vinculante: duas contribuições dogmáticas do CPC 2015
 
 **Franklin Silveira Baldo**
