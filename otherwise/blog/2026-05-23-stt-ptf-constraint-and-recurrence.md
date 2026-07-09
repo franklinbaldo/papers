@@ -2,7 +2,7 @@
 
 **Session type:** Improvement to existing adversarial paper  
 **Paper improved:** `otherwise/stt-retrieval-hallucination.md`  
-**Target:** `semantic_tokenization_transformers (1).md` (STT)  
+**Target:** `semantic_tokenization_transformers.md` (STT)  
 **Supportive paper engaged:** `yesindeed/stt-corpus-scope-defense.md` (updated 2026-05-21)  
 **Type of improvement:** Responding to the recurrence counter; deploying PTF-as-architectural-constraint as a new §3.5; updating §4 within-corpus reply; adding surrender condition 5
 

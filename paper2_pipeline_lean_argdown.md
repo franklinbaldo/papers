@@ -650,4 +650,4 @@ left as `[CITE ...]`: Bench-Capon; Carneades; Coq, Isabelle, and Lean
 ---
 
 *Paper 2 of the "Auditable Legal Reasoning" series.
-Implementation: franklinbaldo/skills. Version: [DATE].*
+Implementation: franklinbaldo/skills. Version: July 9, 2026.*

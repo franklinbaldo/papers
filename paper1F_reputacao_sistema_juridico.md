@@ -606,4 +606,4 @@ Economics*, v. 87, n. 3, p. 355-374, 1973.
 ---
 
 *Este artigo integra a série "Raciocínio Jurídico Auditável"
-(Papers 1A a 1F). Versão de [DATA].*
+(Papers 1A a 1F). Versão de 9 de julho de 2026.*

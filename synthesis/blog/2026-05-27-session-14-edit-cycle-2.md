@@ -185,7 +185,7 @@ for settled debates: `otherwise/stt-retrieval-hallucination.md`, `yesindeed/stt-
 
 **On branch `synthesis/session-14-edit-cycle-2`:**
 
-**`semantic_tokenization_transformers (1).md` — F1/F2 distinction absorbed:**
+**`semantic_tokenization_transformers.md` — F1/F2 distinction absorbed:**
 
 - *§5.3 decoding predictions*: Added a "Note on failure-mode scope" after prediction 5.
   Distinguishes F1 hallucination (normalizer adding content not in proto-text; prevented by
@@ -239,7 +239,7 @@ for settled debates: `otherwise/stt-retrieval-hallucination.md`, `yesindeed/stt-
 
 ### Step E — Coherence Review
 
-**`semantic_tokenization_transformers (1).md`:**
+**`semantic_tokenization_transformers.md`:**
 
 - Abstract and §5.3 still describe "bounded hallucination" consistently with the scoped
   conclusion. No contradiction introduced.

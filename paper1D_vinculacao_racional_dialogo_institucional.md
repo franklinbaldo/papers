@@ -674,4 +674,4 @@ Salvador: JusPodivm, 2019.
 ---
 
 *Este artigo integra a série "Raciocínio Jurídico Auditável"
-(Papers 1A, 1B, 1C e 1D). Versão de [DATA].*
+(Papers 1A, 1B, 1C e 1D). Versão de 17 de junho de 2026.*

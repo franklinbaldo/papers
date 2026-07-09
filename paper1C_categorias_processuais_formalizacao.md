@@ -788,5 +788,5 @@ Salvador: JusPodivm, 2019.
 
 ---
 
-*Artigo submetido para publicação em [VEÍCULO]. Versão de [DATA].
-Paper 1C da série "Raciocínio Jurídico Auditável".*
+*Artigo submetido para publicação em [VEÍCULO]. Versão de 9 de julho
+de 2026. Paper 1C da série "Raciocínio Jurídico Auditável".*

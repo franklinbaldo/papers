@@ -166,7 +166,7 @@ To our knowledge, no published architecture combines (a) byte-level
 occlusion, (b) parallel probing of more than two unaligned embedding
 spaces, and (c) a learned post-hoc convergence head over similarity
 patterns. This claim rests on the authors' own literature search, not
-on independent verification: `o3-orinality-assessement.md` in this
+on independent verification: `o3-originality-assessment.md` in this
 repository records an AI-assisted preliminary prior-art scan that
 motivated this paper, but it is not an independent assessment (see the
 editorial note at the top of that file) and its gap analysis should be
@@ -437,7 +437,7 @@ We have argued that post-hoc interpretability can be pushed below the
 tokenizer and across embedding spaces without paying the cost of
 alignment, and we have sketched the architecture, evaluation, and
 implementation plan under which that claim can be tested or refuted.
-`o3-orinality-assessement.md` records a preliminary, AI-assisted
+`o3-originality-assessment.md` records a preliminary, AI-assisted
 prior-art scan, not an independent assessment (see the note at the
 top of that file); independent verification of the novelty claim is
 still pending. This paper turns the proposal into a falsifiable
@@ -447,6 +447,6 @@ programme regardless of how that verification resolves.
 
 ## Companion documents
 
-- `o3-orinality-assessement.md` — preliminary, AI-assisted prior-art
+- `o3-originality-assessment.md` — preliminary, AI-assisted prior-art
   scan for the same idea. Not an independent assessment; see the
   editorial note at the top of that file.

@@ -375,4 +375,4 @@ claims — pending the data collection and results reporting noted above.
 ---
 
 *Paper 5 of the "Auditable Legal Reasoning" series.
-Pre-registration: [LINK]. Version: [DATE].*
+Pre-registration: [LINK]. Version: July 9, 2026.*

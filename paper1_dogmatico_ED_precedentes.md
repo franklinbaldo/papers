@@ -667,5 +667,5 @@ Tribunais, 2016.
 ---
 
 *Artigo submetido para publicação em [VEÍCULO]. Versão de
-[DATA]. Processo: Apelação Cível 7003561-54.2024.8.22.0010,
+9 de julho de 2026. Processo: Apelação Cível 7003561-54.2024.8.22.0010,
 TJRO, 2ª Câmara Especial, j. 29.04.2026.*

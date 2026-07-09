@@ -18,7 +18,7 @@ Position papers and working drafts.
 - `paper2_pipeline_lean_argdown.md` — pipeline em Lean 4 + Argdown para auditoria de raciocínio jurídico
 - `paper3_proveniencia_claims.md` — proveniência de claims
 - `embedding_seeded_tournament_paper.md` — ESHTR: avaliação por painel de LLMs
-- `semantic_tokenization_transformers (1).md` — STT (position paper)
+- `semantic_tokenization_transformers.md` — STT (position paper)
 
 ## Eixo alignment / agent-bounding
 
@@ -27,7 +27,7 @@ Position papers and working drafts.
 ## Eixo interpretabilidade
 
 - `pontifex_position_paper.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
-- `o3-orinality-assessement.md` — esboço exploratório (saída de sessão de IA) de checagem de prior art para o Pontifex; não é avaliação independente — ver nota editorial no início do arquivo
+- `o3-originality-assessment.md` — esboço exploratório (saída de sessão de IA) de checagem de prior art para o Pontifex; não é avaliação independente — ver nota editorial no início do arquivo
 
 ## Eixo empírico
 

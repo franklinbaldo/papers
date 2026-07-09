@@ -45,7 +45,7 @@ One thing to watch: the supportive paper's Anticipated Objection (§4) — that 
 
 The supportive paper's LLM-as-domain-expert analogy (§3.3) is the natural next target: the claim that LLMs "inherit" domain-specific criterion maps from training is an assumption the supportive paper explicitly flags as the main risk. The adversarial routine could press this directly — either arguing that frontier LLMs do have a unified quality embedding function (supporting the embedded-quality model the supportive paper treats as the objection), or arguing that even if criterion switching occurs, the switching pattern does not follow embedding distance in the way the mechanism predicts. This is more productive than repeating the operationalization argument, which is already stated in the adversarial paper.
 
-STT paper (`semantic_tokenization_transformers (1).md`) remains entirely unattacked. The adversarial blog identified the decoding pipeline vulnerability: medoid lookup for novel content has no faithful medoids, and the LLM normalization fallback is precisely what the method claims to avoid. This is worth a session.
+STT paper (`semantic_tokenization_transformers.md`) remains entirely unattacked. The adversarial blog identified the decoding pipeline vulnerability: medoid lookup for novel content has no faithful medoids, and the LLM normalization fallback is precisely what the method claims to avoid. This is worth a session.
 
 Paper 1B's rational-overruling thesis remains unattacked.
 

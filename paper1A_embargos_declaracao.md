@@ -758,4 +758,4 @@ ed. São Paulo: Revista dos Tribunais, 2016.
 
 ---
 
-*Artigo submetido para publicação em [VEÍCULO]. Versão de [DATA].*
+*Artigo submetido para publicação em [VEÍCULO]. Versão de 24 de junho de 2026.*

@@ -928,4 +928,4 @@ Salvador: JusPodivm, 2019.
 
 ---
 
-*Artigo submetido para publicação em [VEÍCULO]. Versão de [DATA].*
+*Artigo submetido para publicação em [VEÍCULO]. Versão de 9 de julho de 2026.*

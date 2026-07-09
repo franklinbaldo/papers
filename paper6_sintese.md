@@ -389,4 +389,4 @@ aqui.
 ---
 
 *Artigo de síntese da série "Raciocínio Jurídico Auditável".
-Versão de [DATA]. Implementação: franklinbaldo/skills.*
+Versão de 9 de julho de 2026. Implementação: franklinbaldo/skills.*
