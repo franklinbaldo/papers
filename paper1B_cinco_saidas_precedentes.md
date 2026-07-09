@@ -479,6 +479,28 @@ menos direto, sem alterar o piso comum de fundamentação racional que
 os arts. 93, IX, CF, e 489, §1º, do CPC exigem de qualquer decisão
 que invoque qualquer precedente, constitucional ou infraconstitucional.
 
+Esta seção converge com — e generaliza — três desenvolvimentos já
+presentes, de forma independente e mais restrita, em outros papers da
+série. O Paper 1D desenvolve em profundidade, especificamente para a
+súmula vinculante, o argumento central desta seção: a vinculação
+institui dever de forma (expor razões), não obrigação de resultado; a
+reclamação é canal de diálogo institucional, não mecanismo de
+silenciamento; e "a súmula vinculante não é carta branca para
+dispensar a fundamentação" (paper1D, §§2–4). O Paper 1E já identificara
+que súmula vinculante e temas repetitivos têm velocidades de correção
+distintas — "erros em súmulas vinculantes chegam ao STF via reclamação
+com relativa rapidez[;] erros em temas repetitivos chegam via recursos
+sobrestados que esperam o julgamento de leading case — processo muito
+mais lento" (paper1E, §3.3) —, instância mais estreita do critério
+generalizado aqui. E o Paper 1G já agrupara temas repetitivos, IRDR e
+incidente de assunção de competência como produtos da mesma lógica
+infraconstitucional, com mecanismo de correção "convoluted e de custo
+alto" que não impede, antes pressupõe, a possibilidade de superação
+racional (paper1G, §4.2). Esta seção unifica os três resultados sob um
+único critério — proteção por reclamação, não domínio constitucional/
+infraconstitucional — e o estende ao IAC, não examinado nos demais
+papers da série sob essa lente.
+
 A admissão da superação racional pelo tribunal inferior não enfraquece
 o sistema de precedentes; pelo contrário, o fortalece a longo prazo.
 Um sistema de precedentes sem mecanismo de depuração de erros é um
