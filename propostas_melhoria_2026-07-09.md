@@ -13,14 +13,39 @@
 > Jurídico Auditável" (dogmático + metodológico-formal + empírico),
 > tratando alignment/interpretabilidade como linha de pesquisa
 > correlata mas distinta. Ver `PROTOCOL.md` (novo) para as regras
-> revisadas do aparato de debate. Nível 2 e Nível 4 permanecem como
-> proposta, não executados nesta passada.
+> revisadas do aparato de debate.
 >
 > Observação do próprio Franklin, registrada aqui porque vale mais que
 > qualquer coisa que eu escreveria: *"o achado mais valioso do PR,
 > aliás, é o meta: 'a rotina só encontra o que decide atacar'. Os dois
 > papers com os piores problemas de integridade eram justamente os com
 > cobertura zero."*
+>
+> **Atualização (mesmo dia, continuação da sessão).** Nível 4 executado:
+> `o3-orinality-assessement.md` → `o3-originality-assessment.md` e
+> `semantic_tokenization_transformers (1).md` →
+> `semantic_tokenization_transformers.md` renomeados (todas as
+> referências atualizadas, inclusive nos arquivos de debate); datas de
+> versão preenchidas com a data real de última edição substantiva
+> (verificada via `git log`) onde essa data era conhecida com confiança
+> — paper1G e paper3 mantidos com o placeholder original porque a única
+> data disponível no histórico deste clone raso não é confiável;
+> `[VEÍCULO]` e `[LINK]` (pré-registro do paper5) deixados em aberto por
+> não serem informação que eu tenha como saber. Nível 2 parcialmente
+> executado: leitura completa de `paper1G`, `paper3` e
+> `paper_affordance_restriction.md` (os três papers do conjunto de
+> cobertura zero que nenhuma correção de Nível 0/1 já havia tocado).
+> `paper3` e `paper_affordance_restriction.md` não apresentaram problema
+> exigindo correção. `paper1G` tinha um problema real: cita o mecanismo
+> de recalibração do Paper 1F como pressão "de três lados" sobre o
+> equilíbrio disfuncional, sem a restrição de domínio que o próprio
+> Nível 1 acabou de introduzir em 1F (dockets de alto volume/baixa
+> revisão, canal local, obstáculos de sorteio/rodízio/assessoria) —
+> corrigido em duas passagens (§4.4, §6.3). Os outros 6 papers do Nível
+> 2 original (paper1_dogmatico, paper2, paper5, paper6 já tocados pelo
+> Nível 0/1; `pontifex_position_paper.md` já teve suas citações ao
+> o3-originality corrigidas) não receberam nova leitura completa nesta
+> passada.
 
 **Data:** 2026-07-09
 **Escopo:** os 17 papers de nível superior deste repositório e o aparato de debate automatizado (`otherwise/`, `yesindeed/`, `synthesis/`) que vem rodando desde 2026-05-13 (55 sessões de síntese até a data deste documento).

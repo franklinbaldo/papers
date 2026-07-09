@@ -433,7 +433,12 @@ recalibração reputacional identificada no Paper 1F. O equilíbrio
 disfuncional está sob pressão de três lados: normativo (CPC 2015
 que exige fundamentação específica), tecnológico (redução do custo
 de produzir argumento de qualidade), e reputacional (recalibração
-que desvaloriza proxies de qualidade quando qualidade é verificável).
+que desvaloriza proxies de qualidade quando qualidade é verificável
+— mecanismo que o próprio Paper 1F qualifica como concentrado em
+violações textualmente identificáveis, em dockets de alto volume e
+baixa revisão, e estruturalmente perturbado por sorteio, rodízio de
+vara e processamento mediado por assessoria; não é pressão uniforme
+sobre todo o sistema).
 
 A resistência, contudo, é cultural além de ser de incentivos —
 e é exatamente por isso que a análise histórico-institucional deste
@@ -565,8 +570,10 @@ de formação de magistrados, nos modelos de prática forense
 ensinados — é condição para que as novas disposições sejam
 incorporadas pelos entrantes no campo. Pressão reputacional de
 longo prazo — mecanismo que o Paper 1F identificou como
-recalibração pela verificabilidade — é condição para que as
-disposições antigas percam seu valor no campo.
+recalibração pela verificabilidade, embora concentrado no domínio e
+nas condições institucionais que aquele paper especifica, não como
+força difusa e uniforme — é condição para que as disposições antigas
+percam seu valor no campo, ao menos nesse domínio.
 
 Planck observou que a ciência avança funeral por funeral: os
 oponentes de uma nova verdade não são convencidos — morrem, e
