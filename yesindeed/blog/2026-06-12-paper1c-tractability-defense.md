@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-12 — paper1c-tractability-defense (new paper): structural-signal defense of preprocessing claim + candidate-ratio extension for fragmented majorities"
+tags: [supportive, paper1c]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-12 — paper1c-tractability-defense (new paper): structural-signal defense of preprocessing claim + candidate-ratio extension for fragmented majorities
 
 **Session type:** New supportive paper  

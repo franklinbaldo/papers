@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-14 — Session 32: Paper 1D Settles Supportively; Two Consecutive Settlements; Paper 1A §3.2 Reprieved"
+tags: [synthesis, paper1a, paper1d]
+timestamp: 2026-06-14T10:09:02+00:00
+---
+
 # 2026-06-14 — Session 32: Paper 1D Settles Supportively; Two Consecutive Settlements; Paper 1A §3.2 Reprieved
 
 **Synthesis session count:** 32.
@@ -367,7 +374,7 @@ practice empirically") and gives reasons. No overclaiming.
 | ESHTR SPH — mechanism | Stable; no contest | — | — | Nothing pending |
 | ESHTR Phase 2 — C2 structural distinctness | **Live; supportive last word (s31)** | PR #100 (s31) | **s34 for adversarial — TERMINAL** | Round 6: input-protocol extension + SC6(b-2) + SC6(3) cross-elaboration; must file s34 or settles supportively |
 | ESHTR Phase 2 — item-level criterion activation | Active; quiet | — | — | Collapses to correlation question |
-| ESHTR Phase 3 — measurement-2 confound | Settled and absorbed (s21) | — | — | paper5 §§2.7, 3.4 |
+| ESHTR Phase 3 — measurement-2 confound | Settled and absorbed (s21) | — | — | empirical_evaluation.md §§2.7, 3.4 |
 | STT — F1/F2 scope | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — Thesis 2 | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — §5.3 core claim (§3.2) | **Live; supportive last word (s32)** | PR #103 (s32) | **s35 for adversarial — TERMINAL** | Round 7: equivocation reductio refuted; CPC 2015 statutory-coherence argument; infringement-effect internal tension exposed; must file s35 or settles supportively |

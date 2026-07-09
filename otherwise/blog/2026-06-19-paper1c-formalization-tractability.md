@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-19 — paper1c-formalization-tractability (improvement): round 3 — QA-accuracy asymmetry, dispositif-grounding alternative scheme, institutional-incentives counter"
+tags: [adversarial, paper1c]
+timestamp: 2026-06-19T08:15:53+00:00
+---
+
 # 2026-06-19 — paper1c-formalization-tractability (improvement): round 3 — QA-accuracy asymmetry, dispositif-grounding alternative scheme, institutional-incentives counter
 
 **Session type:** Improvement to existing adversarial paper  

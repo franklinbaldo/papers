@@ -1,3 +1,11 @@
+---
+type: "Technical Paper"
+title: "Auditing Legal Reasoning with Lean 4: A Six-Phase Pipeline for Brazilian Civil Procedure Using Argdown and Formal Verification"
+description: "Pipeline em Lean 4 + Argdown para auditoria de raciocinio juridico; compilacao em vez de aciclicidade como criterio de verificacao."
+tags: [pipeline]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Auditing Legal Reasoning with Lean 4: A Six-Phase Pipeline for Brazilian Civil Procedure Using Argdown and Formal Verification
 
 **Franklin Silveira Baldo**
@@ -649,5 +657,5 @@ left as `[CITE ...]`: Bench-Capon; Carneades; Coq, Isabelle, and Lean
 
 ---
 
-*Paper 2 of the "Auditable Legal Reasoning" series.
-Implementation: franklinbaldo/skills. Version: [DATE].*
+*Lean 4 pipeline paper of the "Auditable Legal Reasoning" series.
+Implementation: franklinbaldo/skills. Version: July 9, 2026.*

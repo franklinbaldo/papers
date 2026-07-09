@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "The Constitutive Field Problem: Why Cheaper Verification May Not Devalue Legal Reputational Capital"
+description: "Critica adversarial ao mecanismo de recalibracao reputacional de paper1F."
+tags: [adversarial, paper1f]
+timestamp: 2026-07-07T08:27:36+00:00
+---
+
 # The Constitutive Field Problem: Why Cheaper Verification May Not Devalue Legal Reputational Capital
 
 ---

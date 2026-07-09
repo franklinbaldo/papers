@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-16 — eshtr-phase3-gap (improvement): round 7 reply to ESHTR C2 round 6"
+tags: [adversarial, eshtr]
+timestamp: 2026-06-16T08:21:32+00:00
+---
+
 # 2026-06-16 — eshtr-phase3-gap (improvement): round 7 reply to ESHTR C2 round 6
 
 **Session type:** Improvement to existing adversarial paper — round 7 of the ESHTR C2 structural distinctness debate  

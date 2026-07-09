@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-17 — Counter to pair-specificity response; cluster-composition dynamic"
+tags: [adversarial, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-17 — Counter to pair-specificity response; cluster-composition dynamic
 
 ## What changed

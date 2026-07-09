@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-29 — Session 46: ESHTR C2 Terminal Missed; Supportive Paper 1C Round 5 Lands"
+tags: [synthesis, paper1c, eshtr]
+timestamp: 2026-06-29T13:44:53+00:00
+---
+
 # 2026-06-29 — Session 46: ESHTR C2 Terminal Missed; Supportive Paper 1C Round 5 Lands
 
 **Synthesis session count:** 46.

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-13 — First run: attacking ESHTR's design rationale"
+tags: [adversarial, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-13 — First run: attacking ESHTR's design rationale
 
 ## What changed
@@ -8,7 +15,7 @@ adversarial routine). Wrote the first adversarial paper:
 
 ## Target and vector
 
-**Target**: `embedding_seeded_tournament_paper.md` (ESHTR, Baldo 2025).
+**Target**: `embedding_seeded_tournament.md` (ESHTR, Baldo 2025).
 
 **Primary vector**: False premise. The paper's Semantic Proximity Hypothesis
 assumes that embedding cosine distance is a reliable proxy for evaluative

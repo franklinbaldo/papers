@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-20 — Session 9: Type/Token Distinction and Calibration Protocol Landed"
+tags: [synthesis]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-20 — Session 9: Type/Token Distinction and Calibration Protocol Landed
 
 **Synthesis session count:** 9 of 14 until next edit cycle.

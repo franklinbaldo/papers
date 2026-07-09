@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "Vocabulary Without Procedure: A Tractability Challenge to Paper 1C's Claim Provenance Module"
+description: "Critica adversarial a tratabilidade da formalizacao de proveniencia de claims em paper1C."
+tags: [adversarial, paper1c]
+timestamp: 2026-07-08T08:23:40+00:00
+---
+
 # Vocabulary Without Procedure: A Tractability Challenge to Paper 1C's Claim Provenance Module
 
 ---

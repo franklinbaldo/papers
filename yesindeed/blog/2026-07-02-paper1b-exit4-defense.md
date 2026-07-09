@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-02 — paper1b-exit4-defense (improvement): round 8 response — independence-not-hierarchy, joint-constitution, subject-matter vs. criterion"
+tags: [supportive, paper1b]
+timestamp: 2026-07-02T09:18:16+00:00
+---
+
 # 2026-07-02 — paper1b-exit4-defense (improvement): round 8 response — independence-not-hierarchy, joint-constitution, subject-matter vs. criterion
 
 **Session type:** Improvement to existing supportive paper  

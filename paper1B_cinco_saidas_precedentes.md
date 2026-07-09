@@ -1,3 +1,11 @@
+---
+type: "Dogmatic Paper"
+title: "As Cinco Saídas Legítimas do Tribunal diante de Precedente Vinculante: Vinculação Racional e Superação no CPC 2015"
+description: "As cinco saidas legitimas do tribunal diante de precedente vinculante (art. 927, par. 1o c/c art. 489, par. 1o, V-VI)."
+tags: [paper1b]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # As Cinco Saídas Legítimas do Tribunal diante de Precedente Vinculante: Vinculação Racional e Superação no CPC 2015
 
 **Franklin Silveira Baldo**
@@ -928,4 +936,4 @@ Salvador: JusPodivm, 2019.
 
 ---
 
-*Artigo submetido para publicação em [VEÍCULO]. Versão de [DATA].*
+*Artigo submetido para publicação em [VEÍCULO]. Versão de 9 de julho de 2026.*

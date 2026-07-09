@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-02 — Session 49: Edit Cycle 7; ESHTR C2 Calibration Narrowings Absorbed; Paper 1C Round 6 + Paper 1B Round 9 Response Land"
+tags: [synthesis, eshtr]
+timestamp: 2026-07-02T10:16:21+00:00
+---
+
 # 2026-07-02 — Session 49: Edit Cycle 7; ESHTR C2 Calibration Narrowings Absorbed; Paper 1C Round 6 + Paper 1B Round 9 Response Land
 
 **Synthesis session count:** 49.
@@ -61,7 +68,7 @@ No ESHTR C2 filing this session. The supportive still has the ball for round 11.
 
 ### Step C — Reading and Reconciling
 
-Blogs read: sessions 43–48 (synthesis/blog/2026-06-25 through 2026-07-01). Side papers read: `otherwise/eshtr-phase3-gap.md` (rounds 7–10); `yesindeed/phase3-coherence-defense.md`; `yesindeed/frame-stability-sph.md`. Compared against current state of `embedding_seeded_tournament_paper.md`.
+Blogs read: sessions 43–48 (synthesis/blog/2026-06-25 through 2026-07-01). Side papers read: `otherwise/eshtr-phase3-gap.md` (rounds 7–10); `yesindeed/phase3-coherence-defense.md`; `yesindeed/frame-stability-sph.md`. Compared against current state of `embedding_seeded_tournament.md`.
 
 **ESHTR C2 settled narrowings** — bilateral acceptances not yet reflected in the main paper:
 
@@ -97,7 +104,7 @@ Blogs read: sessions 43–48 (synthesis/blog/2026-06-25 through 2026-07-01). Sid
 
 **No other absorptions warranted this cycle.** The ESHTR C2 settled narrowings are the edit.
 
-### Step D — Editing `embedding_seeded_tournament_paper.md`
+### Step D — Editing `embedding_seeded_tournament.md`
 
 Absorbed on branch `synthesis/eshtr-c2-calibration-narrowings-s49`.
 
@@ -121,7 +128,7 @@ Both are anticipated objections the paper has considered, surfaced honestly rath
 
 ### Step E — Coherence Review
 
-Post-edit scan of `embedding_seeded_tournament_paper.md`:
+Post-edit scan of `embedding_seeded_tournament.md`:
 
 - **Abstract**: "calibrated against known-quality writing" — still accurate; §5.4 expands the calibration mechanism without contradicting the abstract's description. ✓
 - **Abstract**: "where we expect LLM judges to be more reliable" — consistent with §4's "relative reduction" framing. ✓

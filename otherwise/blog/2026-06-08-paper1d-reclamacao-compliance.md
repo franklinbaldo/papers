@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-08 — paper1d-reclamacao-compliance (improvement): counter to Level 1/Level 2 denial-case, art. 927/art. 926 binding-force, and circularity reframing"
+tags: [adversarial, paper1d]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-08 — paper1d-reclamacao-compliance (improvement): counter to Level 1/Level 2 denial-case, art. 927/art. 926 binding-force, and circularity reframing
 
 **Session type:** Improvement to existing adversarial paper

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-25 — Session 43: Paper 1A §3.2 Formally Closed; ESHTR C2 Round 10 Calibrates; Paper 1F Opens"
+tags: [synthesis, paper1a, paper1f, eshtr]
+timestamp: 2026-06-25T10:10:13+00:00
+---
+
 # 2026-06-25 — Session 43: Paper 1A §3.2 Formally Closed; ESHTR C2 Round 10 Calibrates; Paper 1F Opens
 
 **Synthesis session count:** 43.
@@ -186,7 +193,7 @@ supportive should make this explicit.
 argument. The strongest path is to identify a feature of CPC 2015's art. 489 framework that
 provides genuine statutory independence from field-capital-constituted quality judgments.
 The art. 489, §1º, I–VI framework is statutory text that has been interpreted by courts —
-but the interpretation record in Paper 2 (Lean 4 pipeline) and Paper 3 (claim provenance)
+but the interpretation record in `pipeline_lean_argdown.md` (Lean 4 pipeline) and `proveniencia_claims.md` (claim provenance)
 is precisely an attempt to formalize that framework in a way that reduces interpretation
 discretion. Whether this formalization amounts to "exogenous standard" in Bourdieu's sense
 is exactly the question the supportive must address.

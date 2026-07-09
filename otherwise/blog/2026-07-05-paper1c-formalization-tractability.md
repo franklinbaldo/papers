@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-05 — paper1c-formalization-tractability (improvement): round 8 response — judo move accepted; epistemic-accuracy advantage addressed by detection-trigger analysis, cost-asymmetry analysis, and triply-modified scheme"
+tags: [adversarial, paper1c]
+timestamp: 2026-07-05T08:22:25+00:00
+---
+
 # 2026-07-05 — paper1c-formalization-tractability (improvement): round 8 response — judo move accepted; epistemic-accuracy advantage addressed by detection-trigger analysis, cost-asymmetry analysis, and triply-modified scheme
 
 **Session type:** Improvement to existing adversarial paper  

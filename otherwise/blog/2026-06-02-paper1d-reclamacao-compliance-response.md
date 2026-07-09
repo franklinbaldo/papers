@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-02 — paper1d-reclamacao-compliance (improved): counter to the distinction-mechanism and adequacy defenses"
+tags: [adversarial, paper1d]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-02 — paper1d-reclamacao-compliance (improved): counter to the distinction-mechanism and adequacy defenses
 
 **Session type:** Improvement to existing adversarial paper  

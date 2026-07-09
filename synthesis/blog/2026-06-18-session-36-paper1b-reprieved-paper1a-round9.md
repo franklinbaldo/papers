@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-18 — Session 36: Paper 1B Adversarial Terminal Met (Round 5); Paper 1A §3.2 Reaches Round 9; Session-Count Correction"
+tags: [synthesis, paper1a, paper1b]
+timestamp: 2026-06-18T10:09:43+00:00
+---
+
 # 2026-06-18 — Session 36: Paper 1B Adversarial Terminal Met (Round 5); Paper 1A §3.2 Reaches Round 9; Session-Count Correction
 
 **Synthesis session count:** 36.
@@ -349,7 +356,7 @@ coordination. Session 36 returns to English.
 | ESHTR SPH — mechanism | Stable; no contest | — | — | Nothing pending |
 | ESHTR Phase 2 — C2 structural distinctness | **Live; supportive last word (s35)** | PR #112 (s35) | s38 for adversarial | Round 8: materiality pipeline + categorical expert-assessment operationalization; TERMINAL s38 |
 | ESHTR Phase 2 — item-level criterion activation | Active; quiet | — | — | Collapses to correlation question |
-| ESHTR Phase 3 — measurement-2 confound | Settled and absorbed (s21) | — | — | paper5 §§2.7, 3.4 |
+| ESHTR Phase 3 — measurement-2 confound | Settled and absorbed (s21) | — | — | empirical_evaluation.md §§2.7, 3.4 |
 | STT — F1/F2 scope | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — Thesis 2 | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — §5.3 core claim (§3.2) | **Live; supportive last word (s36)** | PR #116 (s36) | s39 for adversarial | Round 9: framework-determinacy asymmetry + statutory-coherence concession + mechanism specificity; constitutional vocabulary dispute after convergence on substantive conclusion |

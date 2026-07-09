@@ -1,3 +1,11 @@
+---
+type: "Index"
+title: "papers"
+description: "Catalogo e guia de leitura dos papers deste repositorio e do aparato de debate que os acompanha."
+timestamp: 2026-07-09T12:12:59+00:00
+okf_version: "0.1"
+---
+
 # papers
 
 Position papers and working drafts.
@@ -15,27 +23,27 @@ Position papers and working drafts.
 
 ## Eixo metodológico-formal
 
-- `paper2_pipeline_lean_argdown.md` — pipeline em Lean 4 + Argdown para auditoria de raciocínio jurídico
-- `paper3_proveniencia_claims.md` — proveniência de claims
-- `embedding_seeded_tournament_paper.md` — ESHTR: avaliação por painel de LLMs
-- `semantic_tokenization_transformers (1).md` — STT (position paper)
+- `pipeline_lean_argdown.md` — pipeline em Lean 4 + Argdown para auditoria de raciocínio jurídico
+- `proveniencia_claims.md` — proveniência de claims
+- `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
+- `semantic_tokenization_transformers.md` — STT (position paper)
 
 ## Eixo alignment / agent-bounding
 
-- `paper_affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
+- `affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
 
 ## Eixo interpretabilidade
 
-- `pontifex_position_paper.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
-- `o3-orinality-assessement.md` — esboço exploratório (saída de sessão de IA) de checagem de prior art para o Pontifex; não é avaliação independente — ver nota editorial no início do arquivo
+- `pontifex.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
+- `o3-originality-assessment.md` — esboço exploratório (saída de sessão de IA) de checagem de prior art para o Pontifex; não é avaliação independente — ver nota editorial no início do arquivo
 
 ## Eixo empírico
 
-- `paper5_empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
+- `empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
 
 ## Síntese
 
-- `paper6_sintese.md` — síntese do programa "Raciocínio Jurídico Auditável" (eixos dogmático + metodológico-formal + empírico, onze papers; não cobre os eixos de alignment e interpretabilidade abaixo, tratados como linha de pesquisa correlata mas distinta)
+- `sintese_programa.md` — síntese do programa "Raciocínio Jurídico Auditável" (eixos dogmático + metodológico-formal + empírico, onze papers; não cobre os eixos de alignment e interpretabilidade abaixo, tratados como linha de pesquisa correlata mas distinta)
 
 ## Companion pieces
 
@@ -49,3 +57,15 @@ Position papers and working drafts.
 - `synthesis/blog/` — registro corrente de sessões, um arquivo datado por sessão (ativo desde 2026-05-13)
 - `session_log.md` — registro de duas sessões de verificação de referências em 2026-05-12, anterior ao mecanismo acima; mantido como histórico, não recebe novas entradas
 - `propostas_melhoria_2026-07-09.md` — auditoria externa do programa e propostas de melhoria (2026-07-09)
+
+## Formato dos documentos (OKF)
+
+Todo arquivo `.md` deste repositório (exceto `okf/index.md`, reservado
+por convenção) carrega front matter YAML com pelo menos um campo
+`type`, conforme o [Open Knowledge Format](okf/SPEC.md) v0.1. Os
+`type` usados aqui são um vocabulário fechado e documentado em
+`okf/types/` (um arquivo por tipo — `Dogmatic Paper`, `Adversarial
+Critique`, `Session Log Entry`, etc.); `okf/validate.py` roda em CI
+a cada PR e falha se um documento não tiver front matter válido ou
+usar um `type` não registrado. Comece por `okf/index.md` para a
+lista completa de tipos e o que cada um exige.

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-22 — paper1b-rational-supersession (improvement): round 6 — two-dimensional decomposition critique and doctrinal-gap acknowledgment"
+tags: [adversarial, paper1b]
+timestamp: 2026-06-22T08:12:33+00:00
+---
+
 # 2026-06-22 — paper1b-rational-supersession (improvement): round 6 — two-dimensional decomposition critique and doctrinal-gap acknowledgment
 
 **Session type:** Improvement to existing adversarial paper  

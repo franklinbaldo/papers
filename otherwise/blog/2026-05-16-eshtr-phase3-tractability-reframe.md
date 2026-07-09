@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-16 — Phase 3 attack reframed after factual correction; Option (c) pressed"
+tags: [adversarial, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-16 — Phase 3 attack reframed after factual correction; Option (c) pressed
 
 ## What changed

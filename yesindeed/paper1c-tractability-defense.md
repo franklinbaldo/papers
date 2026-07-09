@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "Document Structure and Candidate Ratios: A Defense of Paper 1C's Claim Provenance Module"
+description: "Defesa supportiva dos compromissos estruturais do modulo de proveniencia de claims de paper1C."
+tags: [supportive, paper1c]
+timestamp: 2026-07-06T12:38:39+00:00
+---
+
 # Document Structure and Candidate Ratios: A Defense of Paper 1C's Claim Provenance Module
 
 ---

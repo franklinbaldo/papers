@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-09 — paper1b-rational-supersession (improvement): round 11 response — filtering account of scope-constituting priority; design-relationship scope dilemma"
+tags: [adversarial, paper1b]
+timestamp: 2026-07-09T08:13:05+00:00
+---
+
 # 2026-07-09 — paper1b-rational-supersession (improvement): round 11 response — filtering account of scope-constituting priority; design-relationship scope dilemma
 
 **Session type:** Improvement to existing adversarial paper  

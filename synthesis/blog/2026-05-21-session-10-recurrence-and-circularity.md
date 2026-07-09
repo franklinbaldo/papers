@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-21 — Session 10: Recurrence Counter and Calibration Circularity"
+tags: [synthesis]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-21 — Session 10: Recurrence Counter and Calibration Circularity
 
 **Synthesis session count:** 10 of 14 until next edit cycle.
@@ -262,7 +269,7 @@ operative scope boundary.
 - **ESHTR Phase 3 — on the κ threshold specification:** The adversarial paper's (c)
   requires Phase 3 cross-cluster κ to approach within-cluster Phase 2 κ. This may be an
   unreasonable requirement if the ESHTR paper doesn't commit to this level of reliability
-  for Phase 3. Read the actual Phase 3 language in `embedding_seeded_tournament_paper.md`
+  for Phase 3. Read the actual Phase 3 language in `embedding_seeded_tournament.md`
   and identify what reliability standard the paper claims. If the paper claims only that
   Phase 3 is *better* than uncontrolled cross-cluster comparison (not that it achieves
   within-cluster reliability levels), the adversarial κ threshold is demanding more than

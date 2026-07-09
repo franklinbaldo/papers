@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-13 — Engaging the mechanism support: sharpening the ESHTR attack"
+tags: [adversarial, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-13 — Engaging the mechanism support: sharpening the ESHTR attack
 
 ## What changed

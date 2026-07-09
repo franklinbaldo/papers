@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-16 — Session 5: Tractability as Empirical Prediction; Pair-Specificity as Defense"
+tags: [synthesis]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-16 — Session 5: Tractability as Empirical Prediction; Pair-Specificity as Defense
 
 **Synthesis session count:** 5 of 7 before first edit cycle.

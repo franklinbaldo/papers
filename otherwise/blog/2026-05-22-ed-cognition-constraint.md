@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-22 — ed-cognition-constraint (new paper)"
+tags: [adversarial, paper1a]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-22 — ed-cognition-constraint (new paper)
 
 **Session type:** New adversarial paper  

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-15 — paper1b-exit4-defense (improvement): authorization asymmetry counter + subsection V parallel response + Exit 5 extended-scope reply"
+tags: [supportive, paper1b]
+timestamp: 2026-06-15T09:16:23+00:00
+---
+
 # 2026-06-15 — paper1b-exit4-defense (improvement): authorization asymmetry counter + subsection V parallel response + Exit 5 extended-scope reply
 
 **Session type:** Improvement to existing supportive paper  

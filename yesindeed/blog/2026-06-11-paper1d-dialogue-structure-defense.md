@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-11 — paper1d-dialogue-structure-defense (improvement): pure-state-law case gap + art. 103-A, §3º, CF anchor + participation-inference reframing"
+tags: [supportive, paper1d]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-11 — paper1d-dialogue-structure-defense (improvement): pure-state-law case gap + art. 103-A, §3º, CF anchor + participation-inference reframing
 
 **Session type:** Improvement to existing supportive paper  

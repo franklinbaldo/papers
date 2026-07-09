@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-26 — paper1f-recalibration-defense (new paper): direct defense of Paper 1F against adversarial reputation-constitutive-field"
+tags: [supportive, paper1f]
+timestamp: 2026-06-26T09:09:59+00:00
+---
+
 # 2026-06-26 — paper1f-recalibration-defense (new paper): direct defense of Paper 1F against adversarial reputation-constitutive-field
 
 **Session type:** New supportive paper  
@@ -28,7 +35,7 @@ The adversarial paper is careful and internally consistent. Its three vectors ar
 
 The adversarial's strongest move is within its own anticipated reply (§4): it acknowledges "constitutive capital proves too much" (legal fields do change — CPC 2015 itself is an example) and narrows the critique. The narrowed claim is: the mechanism requires an exogenous quality standard. And then it identifies exactly where such standards come from: "external normative shock — legislation, constitutional amendment, international treaty."
 
-That sentence is the hinge. CPC 2015 is exactly the normative shock described. The paper series is built on analyzing its rationality requirements. The surrender condition the adversarial writes (§6a) — "identifies a quality standard not constituted by existing field capital — for example, formal derivability under CPC 2015 interpreted textually" — is met by Paper 2.
+That sentence is the hinge. CPC 2015 is exactly the normative shock described. The paper series is built on analyzing its rationality requirements. The surrender condition the adversarial writes (§6a) — "identifies a quality standard not constituted by existing field capital — for example, formal derivability under CPC 2015 interpreted textually" — is met by `pipeline_lean_argdown.md`.
 
 ---
 
@@ -36,7 +43,7 @@ That sentence is the hinge. CPC 2015 is exactly the normative shock described. T
 
 Three responses, one per vector.
 
-**On constitutive capital**: The exogenous standard exists and is named in the paper series. CPC 2015 arts. 489 and 927 are the external normative shock the adversarial uses as its own exception criterion. Paper 2's formal verification pipeline operationalizes compliance with these provisions. The constitutive capital critique applies to peer-assessment quality systems; it is attenuated for formal statutory compliance. The paper's core cases (precedent omission, statutory provision omission, internal inconsistency) are structural textual comparisons, not interpretive quality judgments. Constitutive capital operates in the margins, not the paradigm center.
+**On constitutive capital**: The exogenous standard exists and is named in the paper series. CPC 2015 arts. 489 and 927 are the external normative shock the adversarial uses as its own exception criterion. `pipeline_lean_argdown.md`'s formal verification pipeline operationalizes compliance with these provisions. The constitutive capital critique applies to peer-assessment quality systems; it is attenuated for formal statutory compliance. The paper's core cases (precedent omission, statutory provision omission, internal inconsistency) are structural textual comparisons, not interpretive quality judgments. Constitutive capital operates in the margins, not the paradigm center.
 
 **On signaling persistence**: Kreps doesn't fix commitment signals to institutional investment — it requires observable commitment history. Verified quality records accumulated across interactions constitute such history. More importantly, the commitment displacement argument is asymmetric: incumbents retain their institutional investment record even as their informational component is partially substituted; new entrants gain an alternative commitment path they previously lacked. The democratization claim is about the new-entrant side of this asymmetry, which the adversarial doesn't address.
 

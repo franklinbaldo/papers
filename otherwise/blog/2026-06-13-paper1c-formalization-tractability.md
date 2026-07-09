@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-13 — paper1c-formalization-tractability (improvement): counter to structural-signal defense + vocabulary contributions + candidate-ratio extension"
+tags: [adversarial, paper1c]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-13 — paper1c-formalization-tractability (improvement): counter to structural-signal defense + vocabulary contributions + candidate-ratio extension
 
 **Session type:** Improvement to existing adversarial paper  

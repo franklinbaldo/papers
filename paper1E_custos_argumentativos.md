@@ -1,3 +1,11 @@
+---
+type: "Dogmatic Paper"
+title: "Custos Argumentativos e Equilíbrio Institucional: Como a Redução do Custo de Produção de Argumentos Jurídicos Racionaliza o Sistema de Precedentes"
+description: "Custos argumentativos como estrutura de incentivos que mantem o equilibrio de baixa qualidade no sistema de precedentes."
+tags: [paper1e]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Custos Argumentativos e Equilíbrio Institucional: Como a Redução do Custo de Produção de Argumentos Jurídicos Racionaliza o Sistema de Precedentes
 
 **Franklin Silveira Baldo**
@@ -668,4 +676,4 @@ Salvador: JusPodivm, 2019.
 ---
 
 *Este artigo integra a série "Raciocínio Jurídico Auditável"
-(Papers 1A, 1B, 1C, 1D e 1E). Versão de [DATA].*
+(Papers 1A, 1B, 1C, 1D e 1E). Versão de 9 de julho de 2026.*

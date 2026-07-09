@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-15 — paper1d-reclamacao-compliance (improvement): pure-state-law case gap + art. 103-A, §3º \"conforme o caso\" + content-vs-participation reframing"
+tags: [adversarial, paper1d]
+timestamp: 2026-06-15T08:18:20+00:00
+---
+
 # 2026-06-15 — paper1d-reclamacao-compliance (improvement): pure-state-law case gap + art. 103-A, §3º "conforme o caso" + content-vs-participation reframing
 
 **Session type:** Improvement to existing adversarial paper — terminal-deadline filing  

@@ -1,10 +1,19 @@
+---
+type: "Protocol"
+title: "Protocolo do aparato de debate adversarial/supportivo/síntese"
+description: "Regras do aparato de debate adversarial/supportivo/sintese: papeis, gatilho de absorcao, corte de debates em loop."
+timestamp: 2026-07-09T11:04:50+00:00
+---
+
 # Protocolo do aparato de debate adversarial/supportivo/síntese
 
-**Versão 1** (2026-07-09). Consolida em um único documento regras que,
-até esta data, só existiam reconstituídas a partir da prosa de 55
+**Versão 2** (2026-07-09). Consolida em um único documento regras que,
+até 2026-07-09, só existiam reconstituídas a partir da prosa de 55
 sessões de `synthesis/blog/`. Não substitui julgamento de síntese —
 formaliza o que a prática já vinha fazendo, mais as duas correções
-adotadas nesta revisão.
+adotadas na revisão original desta versão. Versão 2 adiciona a seção
+"Formato dos documentos (OKF)" abaixo; nenhuma regra anterior foi
+alterada.
 
 **Nota de escopo:** este arquivo descreve o protocolo pretendido para
 o programa. Se as sessões automatizadas que executam os papéis
@@ -84,6 +93,29 @@ si (lista mantida em `propostas_melhoria_2026-07-09.md`, Nível 2). Não
 há obrigação de cobrir todos — mas a ausência de cobertura não deve
 ser presumida como sinal de qualidade: os dois achados de integridade
 mais sérios encontrados na revisão de 2026-07-09 estavam exatamente
-nos dois papers (`paper5_empirical_evaluation.md`,
-`paper6_sintese.md`) que nunca haviam sido examinados por nenhuma
+nos dois papers (`empirical_evaluation.md`,
+`sintese_programa.md`) que nunca haviam sido examinados por nenhuma
 frente.
+
+## Formato dos documentos (OKF)
+
+Todo arquivo `.md` deste repositório — papers, `otherwise/`,
+`yesindeed/`, `synthesis/blog/`, este próprio arquivo — segue o
+[Open Knowledge Format](okf/SPEC.md) v0.1: front matter YAML com um
+campo `type` obrigatório, escolhido de um vocabulário fechado
+documentado em `okf/types/` (ver `okf/index.md`). `okf/validate.py`
+roda como GitHub Action (`.github/workflows/okf-lint.yml`) em todo
+push e pull request para `main` e falha o CI se algum documento não
+tiver front matter válido ou usar um `type` não registrado — este é
+o primeiro CI que este repositório já teve.
+
+**Implicação para os papéis acima.** Um novo arquivo criado por
+qualquer um dos três papéis — nova frente adversarial, nova defesa
+supportiva, nova entrada de blog, novo edit-cycle absorvido em paper
+principal — precisa de front matter com `type` correto desde o
+commit que o cria, não como retrofit posterior. Os tipos já cobrem
+todo padrão de arquivo que o aparato produz hoje
+(`Adversarial Critique`, `Supportive Defense`, `Session Log Entry`);
+se um papel precisar de um tipo de documento genuinamente novo,
+adicionar o `okf/types/<slug>.md` correspondente no mesmo commit —
+ver `okf/types/okf-type-spec.md`.

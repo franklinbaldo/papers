@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale"
+description: "Critica adversarial a tratabilidade do campeonato inter-cluster da Fase 3 do ESHTR."
+tags: [adversarial, eshtr]
+timestamp: 2026-07-07T08:40:27+00:00
+---
+
 # Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale
 
 ---
@@ -5,7 +13,7 @@
 ## 1. Thesis Attacked
 
 The paper "Embedding-Seeded Hierarchical Tournament Ranking" (Baldo, 2025;
-`embedding_seeded_tournament_paper.md`) proposes that dense-embedding
+`embedding_seeded_tournament.md`) proposes that dense-embedding
 clustering of judicial decisions before LLM-panel ranking reduces
 non-transitivity by ensuring early-stage comparisons occur between
 semantically similar decisions — "where we expect LLM judges to be more
@@ -2331,7 +2339,7 @@ conditions.
 
 Baldo, F. S. (2025). Embedding-Seeded Hierarchical Tournament Ranking:
 A Scalable Method for Evaluating Judicial Decision Quality with LLM Panels.
-`embedding_seeded_tournament_paper.md` (this repository).
+`embedding_seeded_tournament.md` (this repository).
 
 Phase 3 Is Not a Criterion Substitution: On the Coherence of ESHTR's Global
 Ranking. `yesindeed/phase3-coherence-defense.md` (this repository).

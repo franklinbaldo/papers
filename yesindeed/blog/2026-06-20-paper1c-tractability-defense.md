@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-20 — paper1c-tractability-defense (improvement): round 3 response — QA-accuracy asymmetry, dispositif-grounding G-but-contingent failure, institutional-incentives scope narrowing"
+tags: [supportive, paper1c]
+timestamp: 2026-06-20T09:14:36+00:00
+---
+
 # 2026-06-20 — paper1c-tractability-defense (improvement): round 3 response — QA-accuracy asymmetry, dispositif-grounding G-but-contingent failure, institutional-incentives scope narrowing
 
 **Session type:** Improvement to existing supportive paper  

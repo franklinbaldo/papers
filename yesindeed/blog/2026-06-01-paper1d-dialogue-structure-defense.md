@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-01 — paper1d-dialogue-structure-defense (new paper): defending Paper 1D's structural dialogue thesis"
+tags: [supportive, paper1d]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-01 — paper1d-dialogue-structure-defense (new paper): defending Paper 1D's structural dialogue thesis
 
 **Session type:** New supportive paper  

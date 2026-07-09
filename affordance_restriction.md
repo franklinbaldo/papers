@@ -1,3 +1,11 @@
+---
+type: "Alignment Paper"
+title: "Alignment by Affordance Restriction: A Pattern for Auditable Bounded Agents"
+description: "Alignment by affordance restriction: padrao para agentes auditaveis em dominios delimitados (PINK como exemplo trabalhado)."
+tags: [affordance-restriction]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # Alignment by Affordance Restriction: A Pattern for Auditable Bounded Agents
 
 **Franklin Silveira Baldo**

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-30 — ed-cognition-constraint (improvement): counter-reply to approach-freedom operationalization"
+tags: [adversarial, paper1a]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-30 — ed-cognition-constraint (improvement): counter-reply to approach-freedom operationalization
 
 **Session type:** Improvement to existing adversarial paper  

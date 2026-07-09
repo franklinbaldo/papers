@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-25 — reputation-constitutive-field (new paper): attack on Paper 1F's proxy-devaluation mechanism"
+tags: [adversarial, paper1f]
+timestamp: 2026-06-25T08:14:58+00:00
+---
+
 # 2026-06-25 — reputation-constitutive-field (new paper): attack on Paper 1F's proxy-devaluation mechanism
 
 **Session type:** New adversarial paper  
@@ -58,7 +65,7 @@ Section 3.3 of the paper claims high-capital agents have structural interest in 
 
 ## What remains open
 
-1. The paper's connection to Paper 2 (Lean 4 pipeline) is the most interesting open question. If the verification technology being proposed is formal verification of procedural validity under CPC 2015 literal text, this has more independence from field capital than peer assessment. The constitutive capital critique would be weaker against formal-verification-as-quality-measure than against peer-assessment-as-quality-measure. Paper 1F doesn't specify which technology; Paper 2 does. The attack should eventually engage this specifically.
+1. The paper's connection to the Lean 4 pipeline paper (`pipeline_lean_argdown.md`) is the most interesting open question. If the verification technology being proposed is formal verification of procedural validity under CPC 2015 literal text, this has more independence from field capital than peer assessment. The constitutive capital critique would be weaker against formal-verification-as-quality-measure than against peer-assessment-as-quality-measure. Paper 1F doesn't specify which technology; `pipeline_lean_argdown.md` does. The attack should eventually engage this specifically.
 
 2. Paper 1G (livre convencimento / patrimonialismo) remains unattacked. It makes historical claims about the genealogy of the current equilibrium. The patrimonialism thesis could be attacked on historical grounds — was the 1973 CPC really a doctrinal encoding of patrimonial discretion, or is this a post-hoc construction? But this requires historical expertise in Brazilian legal history that this session doesn't marshal. Mark for future.
 

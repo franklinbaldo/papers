@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-05 — paper1f-recalibration-defense (improvement): round 3 — deterrence pathway; substantive engagement violations; local Kreps actor distinction; mimicry-configuration variance"
+tags: [supportive, paper1f]
+timestamp: 2026-07-05T09:20:50+00:00
+---
+
 # 2026-07-05 — paper1f-recalibration-defense (improvement): round 3 — deterrence pathway; substantive engagement violations; local Kreps actor distinction; mimicry-configuration variance
 
 **Session type:** Improvement to existing supportive paper  

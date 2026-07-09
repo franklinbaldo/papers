@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "Corpus-Groundedness Is Not Semantic Accuracy: The Fidelity Gap in STT's Decoding Guarantee"
+description: "Critica adversarial a alegacao de alucinacao limitada por decodificacao do STT."
+tags: [adversarial, stt]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Corpus-Groundedness Is Not Semantic Accuracy: The Fidelity Gap in STT's Decoding Guarantee
 
 ---
@@ -5,7 +13,7 @@
 ## 1. Thesis Attacked
 
 The paper "Semantic Tokenization Transformers" (Baldo, 2025; STT;
-`semantic_tokenization_transformers (1).md`) proposes a decoding mechanism
+`semantic_tokenization_transformers.md`) proposes a decoding mechanism
 it describes as "semantically grounded" on the basis that all decoded text
 is drawn from real corpus chunks (medoids) rather than generated from model
 weights. The paper claims this mechanism achieves "bounded hallucination":
@@ -594,7 +602,7 @@ following conditions.
 
 Baldo, F. S. (2025). Semantic Tokenization Transformers: Pre-training
 on High-Level Vector Codes with Semantically Grounded Decoding.
-`semantic_tokenization_transformers (1).md` (this repository).
+`semantic_tokenization_transformers.md` (this repository).
 
 Défossez, A., et al. (2022). High fidelity neural audio compression.
 arXiv:2210.13438.

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-29 — paper1b-rational-supersession (new paper): Exit 4 inference gap"
+tags: [adversarial, paper1b]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-29 — paper1b-rational-supersession (new paper): Exit 4 inference gap
 
 **Session type:** New adversarial paper  

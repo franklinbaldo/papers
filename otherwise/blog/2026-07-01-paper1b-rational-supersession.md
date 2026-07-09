@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-01 — paper1b-rational-supersession (improvement): round 8 adversarial counter-reply — convergence-case/level-distinction compound defense does not block Exit 1 inference"
+tags: [adversarial, paper1b]
+timestamp: 2026-07-01T08:18:00+00:00
+---
+
 # 2026-07-01 — paper1b-rational-supersession (improvement): round 8 adversarial counter-reply — convergence-case/level-distinction compound defense does not block Exit 1 inference
 
 **Session type:** Improvement to existing adversarial paper  

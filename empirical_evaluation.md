@@ -1,3 +1,11 @@
+---
+type: "Empirical Paper"
+title: "Empirical Evaluation of Auditable Legal Reasoning: LLM Panel Assessment of Brazilian Judicial Decisions Under the Lean 4 Pipeline"
+description: "Desenho pre-registrado de avaliacao empirica em corpus do TJRO (resultados ainda nao coletados)."
+tags: [empirical-evaluation]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Empirical Evaluation of Auditable Legal Reasoning: LLM Panel Assessment of Brazilian Judicial Decisions Under the Lean 4 Pipeline
 
 **Franklin Silveira Baldo**
@@ -15,7 +23,7 @@ Porto Velho, Brazil
 ## Abstract
 
 This paper provides empirical evaluation of the Lean 4 pipeline
-for auditing legal arguments (Paper 2 of this series) using the
+for auditing legal arguments (the Lean 4 pipeline paper, `pipeline_lean_argdown.md`) using the
 Embedding-Seeded Hierarchical Tournament Ranking method (ESHTR).
 We apply the pipeline to a corpus of Brazilian state court decisions
 from the Tribunal de Justiça do Estado de Rondônia (TJRO), assess
@@ -351,7 +359,7 @@ broader corpus but still within TJRO.
 ## 6. Conclusion
 
 This paper presents the empirical evaluation design for the pipeline
-developed in Paper 2, using the ESHTR method and the
+developed in `pipeline_lean_argdown.md`, using the ESHTR method and the
 dual-axis rubric that addresses the COURTREASONER pathology. The
 design is pre-registered; results will be added upon data collection.
 
@@ -374,5 +382,5 @@ claims — pending the data collection and results reporting noted above.
 
 ---
 
-*Paper 5 of the "Auditable Legal Reasoning" series.
-Pre-registration: [LINK]. Version: [DATE].*
+*Empirical-evaluation paper of the "Auditable Legal Reasoning" series.
+Pre-registration: [LINK]. Version: July 9, 2026.*

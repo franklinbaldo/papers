@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-02 — Session 20: C2 Reopened; Paper 1A §3.2 Settled; Paper 1D Round Three"
+tags: [synthesis]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-02 — Session 20: C2 Reopened; Paper 1A §3.2 Settled; Paper 1D Round Three
 
 **Synthesis session count:** 20.

@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "Phase 3 Is Not a Criterion Substitution: On the Coherence of ESHTR's Global Ranking"
+description: "Defesa supportiva da coerencia do campeonato inter-cluster da Fase 3 do ESHTR."
+tags: [supportive, eshtr]
+timestamp: 2026-07-04T09:23:20+00:00
+---
+
 # Phase 3 Is Not a Criterion Substitution: On the Coherence of ESHTR's Global Ranking
 
 ---
@@ -380,7 +388,7 @@ This paper does **not** address:
 
 ## References
 
-- Baldo, F. S. (2025). Embedding-Seeded Hierarchical Tournament Ranking. `embedding_seeded_tournament_paper.md` (this repository).
+- Baldo, F. S. (2025). Embedding-Seeded Hierarchical Tournament Ranking. `embedding_seeded_tournament.md` (this repository).
 - `otherwise/eshtr-phase3-gap.md` — "Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale" (adversarial paper, this repository).
 - `yesindeed/frame-stability-sph.md` — "Frame Stability and the Semantic Proximity Hypothesis: A Cognitive Mechanism for Non-Transitivity in LLM Judges" (this repository).
 - Tversky, A. (1969). Intransitivity of preferences. *Psychological Review*, 76(1), 31–48.

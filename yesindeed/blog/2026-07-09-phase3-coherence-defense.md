@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-09 — phase3-coherence-defense (improvement): round 12 response — posture-type stripping accepted; type (a)/(b) demarcation via Jurisprudência Temática/em Teses; secretariat-convention contestation of flagging rate; shared expert-review infrastructure for type (b) gap-filling"
+tags: [supportive, eshtr]
+timestamp: 2026-07-09T09:21:40+00:00
+---
+
 # 2026-07-09 — phase3-coherence-defense (improvement): round 12 response — posture-type stripping accepted; type (a)/(b) demarcation via Jurisprudência Temática/em Teses; secretariat-convention contestation of flagging rate; shared expert-review infrastructure for type (b) gap-filling
 
 **Session type:** Improvement to existing supportive paper  

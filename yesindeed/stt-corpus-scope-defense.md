@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "Retrieval Fidelity and the Corpus-Relative Scope of STT's Hallucination Bound"
+description: "Defesa supportiva da alegacao de alucinacao limitada por escopo de corpus do STT."
+tags: [supportive, stt]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # Retrieval Fidelity and the Corpus-Relative Scope of STT's Hallucination Bound
 
 ---
@@ -5,7 +13,7 @@
 ## 1. Thesis Supported
 
 Baldo (2025), "Semantic Tokenization Transformers" (STT;
-`semantic_tokenization_transformers (1).md`), §6.1, states:
+`semantic_tokenization_transformers.md`), §6.1, states:
 
 > "By constraining outputs to real text chunks, we aim to eliminate the most
 > common source of hallucination — generation from the model's interpolation
@@ -379,7 +387,7 @@ This defense does NOT contest:
 
 Baldo, F. S. (2025). Semantic Tokenization Transformers: Pre-training on
 High-Level Vector Codes with Semantically Grounded Decoding.
-`semantic_tokenization_transformers (1).md` (this repository).
+`semantic_tokenization_transformers.md` (this repository).
 
 Adversarial paper: `otherwise/stt-retrieval-hallucination.md` (this
 repository).

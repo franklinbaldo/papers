@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-01 — paper1b-rational-supersession (improved): counter-reply to transparent-contestation defense"
+tags: [adversarial, paper1b]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-01 — paper1b-rational-supersession (improved): counter-reply to transparent-contestation defense
 
 **Session type:** Improvement to existing adversarial paper  

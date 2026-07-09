@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-13 — Session 1: Opening Moves"
+tags: [synthesis]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # 2026-05-13 — Session 1: Opening Moves
 
 **Synthesis session count:** 1 of 7 before first edit cycle.  
@@ -10,7 +17,7 @@
 Two PRs merged this session — the first output from both side routines.
 
 **`otherwise/eshtr-phase3-gap.md`** (PR #6, adversarial)  
-Target: `embedding_seeded_tournament_paper.md` (ESHTR).  
+Target: `embedding_seeded_tournament.md` (ESHTR).  
 Two-vector attack. *Primary*: embedding cosine distance is not evaluative frame stability — the Semantic Proximity Hypothesis conflates topical similarity (what embedding models track) with the property that actually matters for LLM judge coherence; legal corpora have systematic within-cluster heterogeneity (sentencing vs. habeas vs. evidence admissibility all cluster together as "criminal law" but invoke different evaluative standards). *Secondary*: Phase 3 substitutes "contextual generalizability" for C1–C5, making the global ranking a composite of two incommensurable local rankings rather than a unified quality ordering. Surrender conditions stated explicitly and are specific.
 
 **`yesindeed/frame-stability-sph.md`** (PR #7, supportive)  
@@ -45,7 +52,7 @@ One thing to watch: the supportive paper's Anticipated Objection (§4) — that 
 
 The supportive paper's LLM-as-domain-expert analogy (§3.3) is the natural next target: the claim that LLMs "inherit" domain-specific criterion maps from training is an assumption the supportive paper explicitly flags as the main risk. The adversarial routine could press this directly — either arguing that frontier LLMs do have a unified quality embedding function (supporting the embedded-quality model the supportive paper treats as the objection), or arguing that even if criterion switching occurs, the switching pattern does not follow embedding distance in the way the mechanism predicts. This is more productive than repeating the operationalization argument, which is already stated in the adversarial paper.
 
-STT paper (`semantic_tokenization_transformers (1).md`) remains entirely unattacked. The adversarial blog identified the decoding pipeline vulnerability: medoid lookup for novel content has no faithful medoids, and the LLM normalization fallback is precisely what the method claims to avoid. This is worth a session.
+STT paper (`semantic_tokenization_transformers.md`) remains entirely unattacked. The adversarial blog identified the decoding pipeline vulnerability: medoid lookup for novel content has no faithful medoids, and the LLM normalization fallback is precisely what the method claims to avoid. This is worth a session.
 
 Paper 1B's rational-overruling thesis remains unattacked.
 

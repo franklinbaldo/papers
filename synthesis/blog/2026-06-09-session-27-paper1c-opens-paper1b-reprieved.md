@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-09 — Session 27: Paper 1C Opens; Paper 1B Reprieved (Again)"
+tags: [synthesis, paper1b, paper1c]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-09 — Session 27: Paper 1C Opens; Paper 1B Reprieved (Again)
 
 **Synthesis session count:** 27.
@@ -310,7 +317,7 @@ weakness, not sycophancy.
 | ESHTR SPH — mechanism | Stable; no contest | — | Nothing pending |
 | ESHTR Phase 2 — C2 structural distinctness | **Live; supportive last word (s25)** | Sessions 22, 25 | PR #82 (s25): coverage completeness + disjunctive relocation; sessions 26, 27 without adversarial response = 2; **LIVE_WINDOW AT s28** (edit cycle) — settles supportively if no adversarial response |
 | ESHTR Phase 2 — item-level criterion activation | Active; quiet | — | Collapses to correlation question |
-| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | paper5 §§2.7, 3.4 |
+| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | empirical_evaluation.md §§2.7, 3.4 |
 | STT — F1/F2 scope | Settled and absorbed | — | No active exchange |
 | Paper 1A — Thesis 2 (procedural consequence) | Settled and absorbed | — | No active exchange |
 | Paper 1A — §5.3 core claim (§3.2 exchange) | **Live; supportive last word (s26)** | Sessions 21, 23, 26 | PR #85 (s26): jurisdictional-allocation reading; LIVE_WINDOW at s29 if no adversarial response |

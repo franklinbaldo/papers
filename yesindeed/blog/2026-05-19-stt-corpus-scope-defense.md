@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-19 — stt-corpus-scope-defense (new paper)"
+tags: [supportive, stt]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-19 — stt-corpus-scope-defense (new paper)
 
 **Session type:** New supportive paper  

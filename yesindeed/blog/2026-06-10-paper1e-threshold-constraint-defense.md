@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-10 — paper1e-threshold-constraint-defense (improvement): self-policing (a)/(b) distinction + legal press as near-real-time aggregators + attribution timing"
+tags: [supportive, paper1e]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-10 — paper1e-threshold-constraint-defense (improvement): self-policing (a)/(b) distinction + legal press as near-real-time aggregators + attribution timing
 
 **Session type:** Improvement to existing supportive paper  

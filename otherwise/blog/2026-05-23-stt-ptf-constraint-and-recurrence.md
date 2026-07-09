@@ -1,8 +1,15 @@
+---
+type: "Session Log Entry"
+title: "2026-05-23 — stt-retrieval-hallucination (improvement)"
+tags: [adversarial, stt]
+timestamp: 2026-07-09T12:12:59+00:00
+---
+
 # 2026-05-23 — stt-retrieval-hallucination (improvement)
 
 **Session type:** Improvement to existing adversarial paper  
 **Paper improved:** `otherwise/stt-retrieval-hallucination.md`  
-**Target:** `semantic_tokenization_transformers (1).md` (STT)  
+**Target:** `semantic_tokenization_transformers.md` (STT)  
 **Supportive paper engaged:** `yesindeed/stt-corpus-scope-defense.md` (updated 2026-05-21)  
 **Type of improvement:** Responding to the recurrence counter; deploying PTF-as-architectural-constraint as a new §3.5; updating §4 within-corpus reply; adding surrender condition 5
 

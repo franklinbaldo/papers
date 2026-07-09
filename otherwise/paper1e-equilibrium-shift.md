@@ -1,3 +1,11 @@
+---
+type: "Adversarial Critique"
+title: "The Endogenous Threshold Problem: Why Technological Cost Reduction May Not Shift the Argumentative Equilibrium"
+description: "Critica adversarial a predicao de mudanca de equilibrio de teoria dos jogos de paper1E."
+tags: [adversarial, paper1e]
+timestamp: 2026-06-14T08:14:00+00:00
+---
+
 # The Endogenous Threshold Problem: Why Technological Cost Reduction May Not Shift the Argumentative Equilibrium
 
 ---

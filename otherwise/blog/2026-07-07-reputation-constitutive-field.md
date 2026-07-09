@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-07 — reputation-constitutive-field (improvement): full rewrite absorbing all rounds; round 4 finalizes deterrence and local Kreps attacks"
+tags: [adversarial, paper1f]
+timestamp: 2026-07-07T08:27:36+00:00
+---
+
 # 2026-07-07 — reputation-constitutive-field (improvement): full rewrite absorbing all rounds; round 4 finalizes deterrence and local Kreps attacks
 
 **Session type:** Improvement to existing adversarial paper  

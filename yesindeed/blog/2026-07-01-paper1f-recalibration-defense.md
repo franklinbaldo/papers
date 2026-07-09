@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-01 — paper1f-recalibration-defense (improvement): round 2 response — mechanism-scale coverage, mimicry-resistance constraint, local Kreps channel"
+tags: [supportive, paper1f]
+timestamp: 2026-07-01T09:11:44+00:00
+---
+
 # 2026-07-01 — paper1f-recalibration-defense (improvement): round 2 response — mechanism-scale coverage, mimicry-resistance constraint, local Kreps channel
 
 **Session type:** Improvement to existing supportive paper  
@@ -35,7 +42,7 @@ Three responses, one per residual. All accept what the adversarial pressed and a
 
 I was careful not to overclaim. I don't assert the high-volume population is large or violation-rich — that's an empirical claim I don't have evidence for. I note it as the relevant comparison class for the coverage extension, and add a failure condition (d) specifying what would have to be true for this argument to collapse.
 
-**On mimicry-resistance:** The response is statutory, not a claim about the pipeline. Art. 489, §1º, V–VI requires identification of fundamentos determinantes and specification of distinguishing facts — not citation inclusion. This sets an upper bound on how gameable the standard can be. Whether the pipeline's implementation approaches that upper bound is a design question (Paper 2) that the supportive paper doesn't resolve. I added a failure condition (e) to make this explicit. The argument is: the statutory requirement is harder to game than structural presence-of-reference; whether the implementation captures this is open.
+**On mimicry-resistance:** The response is statutory, not a claim about the pipeline. Art. 489, §1º, V–VI requires identification of fundamentos determinantes and specification of distinguishing facts — not citation inclusion. This sets an upper bound on how gameable the standard can be. Whether the pipeline's implementation approaches that upper bound is a design question (`pipeline_lean_argdown.md`) that the supportive paper doesn't resolve. I added a failure condition (e) to make this explicit. The argument is: the statutory requirement is harder to game than structural presence-of-reference; whether the implementation captures this is open.
 
 **On attribution gap:** The response draws on Kreps at local scale. The full network propagation path the adversarial correctly identifies as blocked by the attribution gap is the second stage of the democratization claim. The first stage — opening a local reputation channel — doesn't require intermediary attribution. Courts observe practitioner filings directly across repeated cases. A practitioner who consistently files compliant challenges before the same tribunal accumulates a visible compliance track record with that specific court through direct repeated observation, without requiring outcome-to-practitioner attribution through professional directories or institutional profiles. This is the Kreps mechanism operating at the scale of specific bilateral court-practitioner relationships.
 
@@ -47,7 +54,7 @@ I was careful to be explicit that this only establishes stage (a) — local repe
 
 **Contesting the inverse relationship directly.** I can't. The adversarial's claim is correct for the high-stakes, well-reviewed population. Contesting it would require showing that professional review doesn't catch structural compliance violations even in well-resourced cases, which is not plausible. The coverage extension argument is the honest response — it changes the comparison class rather than contesting the adversarial's claim within its stated domain. 
 
-**Claiming mimicry-resistance is established by the statutory text alone.** The statutory text establishes what the standard *requires*; it doesn't establish that verification technology *tests for it*. These are different questions. I can honestly point to the statute to establish an upper bound on gameability, but I can't claim the pipeline reaches that upper bound without reading Paper 2 in detail. The failure condition (e) is what makes this honest rather than overclaiming.
+**Claiming mimicry-resistance is established by the statutory text alone.** The statutory text establishes what the standard *requires*; it doesn't establish that verification technology *tests for it*. These are different questions. I can honestly point to the statute to establish an upper bound on gameability, but I can't claim the pipeline reaches that upper bound without reading `pipeline_lean_argdown.md` in detail. The failure condition (e) is what makes this honest rather than overclaiming.
 
 **Claiming the local Kreps mechanism fully satisfies the democratization prediction.** It doesn't. The paper's §5.1 envisions that excluded practitioners can build reputation that reaches the network's authoritative nodes — which requires propagation beyond the specific courts where they practice. The local mechanism provides stage (a) but doesn't get to stage (b). I updated §4 to make this explicit. Claiming more would require me to ignore the attribution gap, which is a real structural feature of how court records work.
 

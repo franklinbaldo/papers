@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-04 — paper1b-rational-supersession (adversarial): round 10 response — independence-not-hierarchy distinguishes logical dependency from design-relationship derivativeness; joint-constitution embeds rather than dissolves the criterion-which-criterion question; false-dilemma escape compatible with adversarial semantic core"
+tags: [adversarial, paper1b]
+timestamp: 2026-07-04T08:17:31+00:00
+---
+
 # 2026-07-04 — paper1b-rational-supersession (adversarial): round 10 response — independence-not-hierarchy distinguishes logical dependency from design-relationship derivativeness; joint-constitution embeds rather than dissolves the criterion-which-criterion question; false-dilemma escape compatible with adversarial semantic core
 
 **Session type:** Improvement to existing adversarial paper  

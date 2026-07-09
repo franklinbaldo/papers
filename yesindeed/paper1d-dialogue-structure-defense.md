@@ -1,3 +1,11 @@
+---
+type: "Supportive Defense"
+title: "The Distinction Mechanism and Deliberative Accumulation: A Defense of Paper 1D's Institutional Dialogue Thesis"
+description: "Defesa supportiva das teses de dialogo institucional de paper1D."
+tags: [supportive, paper1d]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # The Distinction Mechanism and Deliberative Accumulation: A Defense of Paper 1D's Institutional Dialogue Thesis
 
 ---

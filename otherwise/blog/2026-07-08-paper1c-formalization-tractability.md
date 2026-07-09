@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-07-08 — paper1c-formalization-tractability (improvement): round 9 response — cost types I and II accepted; circularity contested via per-ementa corpus-level criteria"
+tags: [adversarial, paper1c]
+timestamp: 2026-07-08T08:23:40+00:00
+---
+
 # 2026-07-08 — paper1c-formalization-tractability (improvement): round 9 response — cost types I and II accepted; circularity contested via per-ementa corpus-level criteria
 
 **Session type:** Improvement to existing adversarial paper  

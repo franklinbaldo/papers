@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-03 — Session 21: Phase 3 Absorbed; §3.2 Reopened Again; Paper 1E Opens"
+tags: [synthesis, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-03 — Session 21: Phase 3 Absorbed; §3.2 Reopened Again; Paper 1E Opens
 
 **Synthesis session count:** 21.
@@ -288,7 +295,7 @@ condition §6(d)); session 17 blog (Phase 3 settlement record).
    patterns** (settled session 17 by mutual acceptance of the variance-source confound):
    The adversarial paper identified that within-pair criterion-profile variance under Phase 2
    cross-cluster conditions has two separable sources. The supportive paper accepted this as
-   surrender condition §6(d) and extended the protocol. The outcome: `paper5_empirical_evaluation.md`
+   surrender condition §6(d) and extended the protocol. The outcome: `empirical_evaluation.md`
    should acquire (a) a Phase 3 calibration protocol section specifying profile-matched pairs,
    evaluation conditions, and three measurements (M1/M2/M3); and (b) pre-specified hypothesis
    patterns distinguishing structural-reading mode, circularity, and partial structural-reading
@@ -316,7 +323,7 @@ Outcome: one absorption. No pending deferred items from prior cycles.
 
 **On branch `claude/intelligent-dirac-poRbd`:**
 
-**`paper5_empirical_evaluation.md` — Phase 3 calibration protocol absorbed:**
+**`empirical_evaluation.md` — Phase 3 calibration protocol absorbed:**
 
 - *Abstract*: Updated (3) to note Phase 3 calibration alongside Phase 2 SPH test; added
   "pre-specified hypothesis patterns distinguishing structural-reading mode from circularity."
@@ -341,7 +348,7 @@ Outcome: one absorption. No pending deferred items from prior cycles.
 
 ### Step E — Coherence Review
 
-**`paper5_empirical_evaluation.md`:**
+**`empirical_evaluation.md`:**
 
 - Abstract and §1 Introduction Q3 updated consistently with §2.7 and §3.4 additions. No
   mismatch between stated research questions and experimental design.
@@ -370,7 +377,7 @@ Outcome: one absorption. No pending deferred items from prior cycles.
 | ESHTR SPH — mechanism | Stable; no contest | — | Nothing pending |
 | ESHTR Phase 2 — C2 structural distinctness | **Live; third + fourth supportive responses (s20)** | Sessions 20, 21 | Adversarial response to third + fourth responses pending s22 (overdue); cannot absorb |
 | ESHTR Phase 2 — item-level criterion activation | Active; quiet | — | Collapses to correlation question |
-| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | Profile-matched protocol + pre-specified patterns in paper5 §§2.7, 3.4 |
+| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | Profile-matched protocol + pre-specified patterns in empirical_evaluation.md §§2.7, 3.4 |
 | STT — F1/F2 scope | Settled and absorbed | — | No active exchange |
 | Paper 1A — Thesis 2 (procedural consequence) | Settled and absorbed | — | No active exchange |
 | Paper 1A — §5.3 core claim (§3.2 exchange) | **Live; Type A defense pending adversarial response** | Sessions 17, 21 | PR #70 arrived s21; Type A/Type B distinction under construction; settled adversarially at s20 under LIVE_WINDOW but reopened by PR #70; adversarial response due s22 |
@@ -380,7 +387,7 @@ Outcome: one absorption. No pending deferred items from prior cycles.
 | Paper 1E — equilibrium-shift prediction | **Live; opened s21** | Session 21 | Four-vector adversarial attack; supportive round 1 pending s22 |
 | Papers 1C, 1F–1G | No debate | — | Not yet opened |
 
-**One absorption this session:** ESHTR Phase 3 (paper5 §§2.7, 3.4).
+**One absorption this session:** ESHTR Phase 3 (empirical_evaluation.md §§2.7, 3.4).
 
 **Deferred items from this edit cycle:**
 - Paper 1A §3.2 Type A/Type B scope limitation: deferred to edit cycle 4 (session 28),

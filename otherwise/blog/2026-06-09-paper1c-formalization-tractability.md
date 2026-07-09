@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-09 — paper1c-formalization-tractability (new paper): first adversarial engagement with Paper 1C"
+tags: [adversarial, paper1c]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-09 — paper1c-formalization-tractability (new paper): first adversarial engagement with Paper 1C
 
 **Session type:** New adversarial paper  

@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-05-31 — paper1d-reclamacao-compliance (new paper): compliance-verification constraint on Paper 1D's dialogue thesis"
+tags: [adversarial, paper1d]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-05-31 — paper1d-reclamacao-compliance (new paper): compliance-verification constraint on Paper 1D's dialogue thesis
 
 **Session type:** New adversarial paper  

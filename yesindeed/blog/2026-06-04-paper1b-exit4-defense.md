@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-04 — paper1b-exit4-defense (improved): responding to taxonomy-incoherence, §4º misreading, and Exit-5-collapse counter-reply"
+tags: [supportive, paper1b]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-04 — paper1b-exit4-defense (improved): responding to taxonomy-incoherence, §4º misreading, and Exit-5-collapse counter-reply
 
 **Session type:** Improvement to existing supportive paper  

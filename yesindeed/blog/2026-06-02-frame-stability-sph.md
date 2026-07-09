@@ -1,3 +1,10 @@
+---
+type: "Session Log Entry"
+title: "2026-06-02 — frame-stability-sph (improved): C2 operationalization gap and within-cluster compression addressed"
+tags: [supportive, eshtr]
+timestamp: 2026-06-13T06:05:18-04:00
+---
+
 # 2026-06-02 — frame-stability-sph (improved): C2 operationalization gap and within-cluster compression addressed
 
 **Session type:** Improvement to existing supportive paper  
