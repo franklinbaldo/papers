@@ -303,7 +303,7 @@ This is direct and disciplined.
 | ESHTR SPH — mechanism | Stable; no contest | — | Nothing pending |
 | ESHTR Phase 2 — C2 structural distinctness | **Live; adversarial last word (s22); LIVE_WINDOW NOW** | Sessions 20, 21, 22 | PR #72: adequacy-threshold/ranking + encoding/compression; no supportive response in s22, s23, s24 = 3 sessions = LIVE_WINDOW; **settle adversarially in s25 if no response** |
 | ESHTR Phase 2 — item-level criterion activation | Active; quiet | — | Collapses to correlation question |
-| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | paper5 §§2.7, 3.4; no further exchange |
+| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | empirical_evaluation.md §§2.7, 3.4; no further exchange |
 | STT — F1/F2 scope | Settled and absorbed | — | No active exchange |
 | Paper 1A — Thesis 2 (procedural consequence) | Settled and absorbed | — | No active exchange |
 | Paper 1A — §5.3 core claim (§3.2 exchange) | **Live; supportive response due** | Sessions 21, 23 | PR #75 (s23): framework-determinacy vs. prior determination + easy-first-application + specificity; s23, s24 without supportive response = 2 sessions; LIVE_WINDOW at s26 |

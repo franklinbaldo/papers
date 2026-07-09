@@ -39,7 +39,7 @@ conflates act-governance with criterion-governance for a normative predicate.
 Supportive Paper 1F round 1. Diff confined to `yesindeed/` (main paper + blog). ✓ Clean.
 Filed ahead of session 46 terminal — two sessions early. Three responses: (1) constitutive
 capital attenuated for statutory compliance standard — CPC 2015 arts. 489 and 927 are the
-external normative shock the adversarial names as its own exception criterion; Paper 2's
+external normative shock the adversarial names as its own exception criterion; `pipeline_lean_argdown.md`'s
 formal pipeline operationalizes compliance with these provisions; (2) signaling persistence —
 Kreps requires observable commitment history, not institutional investment specifically;
 commitment displacement is asymmetric (incumbents: partial informational disruption; new

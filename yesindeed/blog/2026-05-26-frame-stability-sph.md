@@ -9,7 +9,7 @@ timestamp: 2026-06-13T06:05:18-04:00
 
 **Session type:** Improvement to existing supportive paper  
 **Paper improved:** `yesindeed/frame-stability-sph.md`  
-**Target:** `embedding_seeded_tournament_paper.md` (ESHTR), Phase 2 quality-dimension correlation claim  
+**Target:** `embedding_seeded_tournament.md` (ESHTR), Phase 2 quality-dimension correlation claim  
 **Adversarial section engaged:** `otherwise/eshtr-phase3-gap.md`, §3.2 — "The quality-dimension correlation argument conflicts with the rubric's architecture and with the structure of appellate corpus generation," specifically the C2 structural distinctness sub-argument (lines 204–230 of the adversarial paper)  
 **Type of improvement:** Closing the C2 gap in the case-driven quality-dimension variation response
 

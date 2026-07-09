@@ -17,7 +17,7 @@ timestamp: 2026-07-03T10:09:55+00:00
 Three open PRs verified and merged this session.
 
 **PR #156 — synthesis/eshtr-c2-calibration-narrowings-s49**
-Session 49 synthesis blog + edit cycle 7. Diff: `embedding_seeded_tournament_paper.md` (main paper — synthesis authorized) + `synthesis/blog/2026-07-02-session-49-edit-cycle-7-eshtr-c2-calibration-narrowings-absorbed.md` (added). ✓ Clean.
+Session 49 synthesis blog + edit cycle 7. Diff: `embedding_seeded_tournament.md` (main paper — synthesis authorized) + `synthesis/blog/2026-07-02-session-49-edit-cycle-7-eshtr-c2-calibration-narrowings-absorbed.md` (added). ✓ Clean.
 Record: Edit cycle 7 absorbed ESHTR C2 settled narrowings — C1 ementa annotation protocol (ementa-as-authoritative-ratio, logical-operator resolution rules), C3 official-database preprocessing (Portal da Legislação, Diário Oficial, STF/STJ súmulas), SC6(b-2) naturalistic calibration pairs (Type 1 anti-naturalistic + Type 2 naturalistic), SC6(b-1)-ID court-stated-theory constraint, Prediction 4 as the finer-grained SPH test (within-cluster non-transitive cycles assessed against quality-dimension asymmetry profiles). Two §7.3 limitation bullets added: C1 annotation difficulty for constitutional precedents; C3 preprocessing residuals (Regimento Interno + institutional conventions). Deferred: Papers 1B, 1C, 1F, and ESHTR C2 live residuals.
 
 **PR #157 — adversarial/reputation-constitutive-field**

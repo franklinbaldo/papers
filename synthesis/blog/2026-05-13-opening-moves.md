@@ -17,7 +17,7 @@ timestamp: 2026-07-09T12:12:59+00:00
 Two PRs merged this session — the first output from both side routines.
 
 **`otherwise/eshtr-phase3-gap.md`** (PR #6, adversarial)  
-Target: `embedding_seeded_tournament_paper.md` (ESHTR).  
+Target: `embedding_seeded_tournament.md` (ESHTR).  
 Two-vector attack. *Primary*: embedding cosine distance is not evaluative frame stability — the Semantic Proximity Hypothesis conflates topical similarity (what embedding models track) with the property that actually matters for LLM judge coherence; legal corpora have systematic within-cluster heterogeneity (sentencing vs. habeas vs. evidence admissibility all cluster together as "criminal law" but invoke different evaluative standards). *Secondary*: Phase 3 substitutes "contextual generalizability" for C1–C5, making the global ranking a composite of two incommensurable local rankings rather than a unified quality ordering. Surrender conditions stated explicitly and are specific.
 
 **`yesindeed/frame-stability-sph.md`** (PR #7, supportive)  

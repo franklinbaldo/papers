@@ -93,8 +93,8 @@ si (lista mantida em `propostas_melhoria_2026-07-09.md`, Nível 2). Não
 há obrigação de cobrir todos — mas a ausência de cobertura não deve
 ser presumida como sinal de qualidade: os dois achados de integridade
 mais sérios encontrados na revisão de 2026-07-09 estavam exatamente
-nos dois papers (`paper5_empirical_evaluation.md`,
-`paper6_sintese.md`) que nunca haviam sido examinados por nenhuma
+nos dois papers (`empirical_evaluation.md`,
+`sintese_programa.md`) que nunca haviam sido examinados por nenhuma
 frente.
 
 ## Formato dos documentos (OKF)

@@ -170,7 +170,7 @@ The within-cluster stability claim is comparative and probabilistic, not categor
 
 ## References
 
-- Baldo, F. S. (2025). Embedding-Seeded Hierarchical Tournament Ranking: A Scalable Method for Evaluating Judicial Decision Quality with LLM Panels. *Position paper*. (`embedding_seeded_tournament_paper.md`, this repository.)
+- Baldo, F. S. (2025). Embedding-Seeded Hierarchical Tournament Ranking: A Scalable Method for Evaluating Judicial Decision Quality with LLM Panels. *Position paper*. (`embedding_seeded_tournament.md`, this repository.)
 - Tversky, A. (1969). Intransitivity of preferences. *Psychological Review*, 76(1), 31–48.
 - Tversky, A. (1977). Features of similarity. *Psychological Review*, 84(4), 327–352.
 - Xu, Y., Ruis, L., Rocktäschel, T., and Kirk, R. (2025). Investigating Non-Transitivity in LLM-as-a-Judge. *ICML 2025 Spotlight*. arXiv:2502.14074.

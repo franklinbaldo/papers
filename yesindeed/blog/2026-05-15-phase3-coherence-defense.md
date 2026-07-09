@@ -65,4 +65,4 @@ The adversarial paper's §4 says "if every high-C1-C5 decision is necessarily ge
 
 3. STT paper and Paper 1B — still without supportive material from this side. Two sessions without action on those fronts.
 
-4. The `paper_affordance_restriction.md` appeared in main recently (no prior adversarial attack). Its central thesis — affordance enumeration as an alignment pattern distinct from training-based and filtering-based approaches — has theses that could be supported by independent evidence. Worth noting for a future session, particularly the domain-applicability claim (§5) which makes specific falsifiable predictions about which domains satisfy the three semantic conditions.
+4. The `affordance_restriction.md` appeared in main recently (no prior adversarial attack). Its central thesis — affordance enumeration as an alignment pattern distinct from training-based and filtering-based approaches — has theses that could be supported by independent evidence. Worth noting for a future session, particularly the domain-applicability claim (§5) which makes specific falsifiable predictions about which domains satisfy the three semantic conditions.

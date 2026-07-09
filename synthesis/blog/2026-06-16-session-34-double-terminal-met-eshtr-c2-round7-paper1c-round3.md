@@ -380,7 +380,7 @@ terminal to become a fourth consecutive late-or-missed obligation after its sess
 | ESHTR SPH — mechanism | Stable; no contest | — | — | Nothing pending |
 | ESHTR Phase 2 — C2 structural distinctness | **Live; adversarial last word (s34)** | PR #108 (s34) | s37 for supportive | Round 7: materiality-identification gap + SC6(b-2) accepted + SC6(3) question-begging; reprieved; session-count error in adversarial blog (recorded as s33) — synthesis records as s34 |
 | ESHTR Phase 2 — item-level criterion activation | Active; quiet | — | — | Collapses to correlation question |
-| ESHTR Phase 3 — measurement-2 confound | Settled and absorbed (s21) | — | — | paper5 §§2.7, 3.4 |
+| ESHTR Phase 3 — measurement-2 confound | Settled and absorbed (s21) | — | — | empirical_evaluation.md §§2.7, 3.4 |
 | STT — F1/F2 scope | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — Thesis 2 | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — §5.3 core claim (§3.2) | **Live; supportive last word (s32)** | PR #103 (s32) | **s35 for adversarial — TERMINAL (coincides with edit cycle)** | Round 7: equivocation reductio + CPC 2015 statutory-coherence + infringement-effect internal tension; three sessions elapsed since adversarial response; must file s35 or settles supportively |

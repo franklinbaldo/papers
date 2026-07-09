@@ -283,7 +283,7 @@ in the current debate portfolio.
   being wrong about the structural failure.
 
 - **ESHTR scope hedge — now a three-session outstanding priority:** Check the actual language
-  of `embedding_seeded_tournament_paper.md` on Phase 3 tractability. If the paper presents
+  of `embedding_seeded_tournament.md` on Phase 3 tractability. If the paper presents
   Phase 3 as a research prediction (falsifiable prediction to be tested by the experiment),
   the adversarial "prior ≠ confirmed result" argument restates the paper's own claim rather
   than challenging it. If the paper presents Phase 3 tractability as an architectural

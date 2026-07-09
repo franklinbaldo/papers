@@ -23,27 +23,27 @@ Position papers and working drafts.
 
 ## Eixo metodológico-formal
 
-- `paper2_pipeline_lean_argdown.md` — pipeline em Lean 4 + Argdown para auditoria de raciocínio jurídico
-- `paper3_proveniencia_claims.md` — proveniência de claims
-- `embedding_seeded_tournament_paper.md` — ESHTR: avaliação por painel de LLMs
+- `pipeline_lean_argdown.md` — pipeline em Lean 4 + Argdown para auditoria de raciocínio jurídico
+- `proveniencia_claims.md` — proveniência de claims
+- `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
 
 ## Eixo alignment / agent-bounding
 
-- `paper_affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
+- `affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
 
 ## Eixo interpretabilidade
 
-- `pontifex_position_paper.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
+- `pontifex.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
 - `o3-originality-assessment.md` — esboço exploratório (saída de sessão de IA) de checagem de prior art para o Pontifex; não é avaliação independente — ver nota editorial no início do arquivo
 
 ## Eixo empírico
 
-- `paper5_empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
+- `empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
 
 ## Síntese
 
-- `paper6_sintese.md` — síntese do programa "Raciocínio Jurídico Auditável" (eixos dogmático + metodológico-formal + empírico, onze papers; não cobre os eixos de alignment e interpretabilidade abaixo, tratados como linha de pesquisa correlata mas distinta)
+- `sintese_programa.md` — síntese do programa "Raciocínio Jurídico Auditável" (eixos dogmático + metodológico-formal + empírico, onze papers; não cobre os eixos de alignment e interpretabilidade abaixo, tratados como linha de pesquisa correlata mas distinta)
 
 ## Companion pieces
 

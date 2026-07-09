@@ -20,7 +20,7 @@ argumentation grounded in statute, doctrine, and (where available) real
 case law. These papers are in Portuguese, target legal practitioners
 and academics, and together form the "eixo dogmatico" of the
 Raciocinio Juridico Auditavel research programme (see
-`paper6_sintese.md`).
+`sintese_programa.md`).
 
 ## Required fields (beyond OKF baseline)
 

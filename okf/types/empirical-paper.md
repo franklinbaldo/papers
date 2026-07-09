@@ -9,14 +9,14 @@ timestamp: 2026-07-09T00:00:00Z
 # Empirical Paper
 
 **`type` value:** `"Empirical Paper"`
-**Applies to:** `paper5_empirical_evaluation.md`. Currently the only file
+**Applies to:** `empirical_evaluation.md`. Currently the only file
 of this type; a second would be created if the RPPS corpus evaluation
-in `paper5` is extended or a new empirical study is designed.
+in `empirical_evaluation.md` is extended or a new empirical study is designed.
 
 ## Purpose
 
 An Empirical Paper specifies (and, once run, reports) a quantitative
-evaluation against a real corpus. As of 2026-07-09, `paper5` is a
+evaluation against a real corpus. As of 2026-07-09, `empirical_evaluation.md` is a
 **pre-registered design with no data collected yet** — this is the
 single most important fact about this type, enforced structurally
 below because a 2026-07-09 audit (`propostas_melhoria_2026-07-09.md`,
@@ -49,13 +49,13 @@ None beyond OKF's own required `type`.
   finding was specifically an *inconsistency* between sections, not a
   single wrong sentence).
 - `## Pre-registration` note with a link, once one exists (currently
-  `[LINK]`, deliberately left unresolved — see `paper5`'s footer and
+  `[LINK]`, deliberately left unresolved — see `empirical_evaluation.md`'s footer and
   `propostas_melhoria_2026-07-09.md`'s Nivel 4 notes on why this
   wasn't guessed at).
 
 ## Notes
 
-When `paper5` (or a future Empirical Paper) actually collects data,
+When `empirical_evaluation.md` (or a future Empirical Paper) actually collects data,
 the update needs to touch every section consistently in the same
 commit: abstract, introduction, results, conclusion, and this file's
 banner. A partial update that leaves even one section in the old

@@ -56,5 +56,5 @@ Every type spec in `okf/types/` follows this shape:
 Adding a new `type` to this repository means adding a new file here
 in the same change — `okf/validate.py` treats an undocumented `type`
 value as a lint failure, by design, so the type taxonomy can't
-silently drift the way `paper6_sintese.md`'s paper count did before
+silently drift the way `sintese_programa.md`'s paper count did before
 the 2026-07-09 audit.

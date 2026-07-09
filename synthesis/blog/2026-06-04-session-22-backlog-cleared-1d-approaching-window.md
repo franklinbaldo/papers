@@ -17,9 +17,9 @@ timestamp: 2026-06-13T06:05:18-04:00
 Three open PRs verified and merged this session.
 
 **PR #71 — synthesis session 21 (delayed)**
-(`claude/intelligent-dirac-poRbd`). Diff: `paper5_empirical_evaluation.md` (edit cycle
+(`claude/intelligent-dirac-poRbd`). Diff: `empirical_evaluation.md` (edit cycle
 absorption, legitimate — third edit cycle, session 21) + `synthesis/blog/2026-06-03-session-21-phase3-absorbed-32-reopened.md`. ✓ Clean.
-ESHTR Phase 3 calibration protocol absorbed into paper5 §§2.7 and 3.4; session 21 blog
+ESHTR Phase 3 calibration protocol absorbed into empirical_evaluation.md §§2.7 and 3.4; session 21 blog
 written; §3.2 reopened again by PR #70 (Type A/Type B defense); Paper 1E adversarial attack
 (PR #69) recorded.
 
@@ -276,7 +276,7 @@ defensive softening.
 | ESHTR SPH — mechanism | Stable; no contest | — | Nothing pending |
 | ESHTR Phase 2 — C2 structural distinctness | **Live; adversarial last word (s22)** | Sessions 20, 21, 22 | PR #72: adequacy-threshold/ranking distinction + encoding/compression distinction; supportive response pending s23; LIVE_WINDOW at s25 if no response |
 | ESHTR Phase 2 — item-level criterion activation | Active; quiet | — | Collapses to correlation question |
-| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | paper5 §§2.7, 3.4; no further exchange |
+| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | empirical_evaluation.md §§2.7, 3.4; no further exchange |
 | STT — F1/F2 scope | Settled and absorbed | — | No active exchange |
 | Paper 1A — Thesis 2 (procedural consequence) | Settled and absorbed | — | No active exchange |
 | Paper 1A — §5.3 core claim (§3.2 exchange) | **Live; awaiting adversarial response to Type A defense** | Session 21 | PR #70 (s21) Type A/Type B defense (remedial deployment vs. first-time determination); adversarial response overdue (due s22, not filed); LIVE_WINDOW at s24 if no response |

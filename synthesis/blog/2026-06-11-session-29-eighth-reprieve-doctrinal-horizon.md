@@ -314,7 +314,7 @@ sources) is visible in the side papers themselves, not only from this desk.
 | ESHTR SPH — mechanism | Stable; no contest | — | — | Nothing pending |
 | ESHTR Phase 2 — C2 structural distinctness | **Live; adversarial last word (s28)** | PR #90 (s28) | s31 for supportive | Case-record input req + anti-naturalistic calibration gap + SC6(3) cross-elaboration ext |
 | ESHTR Phase 2 — item-level criterion activation | Active; quiet | — | — | Collapses to correlation question |
-| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | — | paper5 §§2.7, 3.4 |
+| ESHTR Phase 3 — measurement-2 confound | **Settled and absorbed (s21)** | — | — | empirical_evaluation.md §§2.7, 3.4 |
 | STT — F1/F2 scope | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — Thesis 2 | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — §5.3 core claim (§3.2) | **Live; adversarial last word (s29)** | PR #93 (s29) | s32 for supportive | Competence/exercise equivocation + infringement-effect + functional-test purpose; doctrinal step ungrounded |

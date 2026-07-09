@@ -424,7 +424,7 @@ become natural:
    profile is a compact, model-agnostic artefact that can be logged
    alongside a model decision and re-checked offline, which fits the
    audit-by-design programme pursued elsewhere in this repository
-   (see the CPC 2015 series and `paper_affordance_restriction.md`).
+   (see the CPC 2015 series and `affordance_restriction.md`).
 
 2. **Disagreement as a training signal.** Spans on which the encoder
    bank disagrees most strongly are candidates for active learning

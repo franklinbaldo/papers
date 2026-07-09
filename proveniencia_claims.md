@@ -2,7 +2,7 @@
 type: "Technical Paper"
 title: "Claim Provenance in Legal Documents: Tracking Necessary versus Contingent Assertions Across Procedural Stages"
 description: "Distincao necessaria/contingente/pendente para claims em qualquer documento processual, formalizada em Lean 4."
-tags: [paper3]
+tags: [proveniencia]
 timestamp: 2026-06-13T06:05:18-04:00
 ---
 
@@ -433,5 +433,5 @@ precedent doctrine to the full document chain of a proceeding.
 
 ---
 
-*Paper 3 of the "Auditable Legal Reasoning" series.*
+*Claim-provenance paper of the "Auditable Legal Reasoning" series.*
 *Implementation: franklinbaldo/skills. Version: [DATE].*

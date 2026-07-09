@@ -15,7 +15,7 @@ adversarial routine). Wrote the first adversarial paper:
 
 ## Target and vector
 
-**Target**: `embedding_seeded_tournament_paper.md` (ESHTR, Baldo 2025).
+**Target**: `embedding_seeded_tournament.md` (ESHTR, Baldo 2025).
 
 **Primary vector**: False premise. The paper's Semantic Proximity Hypothesis
 assumes that embedding cosine distance is a reliable proxy for evaluative

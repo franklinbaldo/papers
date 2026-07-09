@@ -368,7 +368,7 @@ operationalizability of the cross-elaboration test's expert-assessment requireme
 | ESHTR SPH — mechanism | Stable; no contest | — | — | Nothing pending |
 | ESHTR Phase 2 — C2 structural distinctness | **Live; supportive last word (s31)** | PR #100 (s31) | s34 for adversarial | Round 6: input-protocol extension accepted; SC6(b-2) + SC6(3) cross-elaboration specified |
 | ESHTR Phase 2 — item-level criterion activation | Active; quiet | — | — | Collapses to correlation question |
-| ESHTR Phase 3 — measurement-2 confound | Settled and absorbed (s21) | — | — | paper5 §§2.7, 3.4 |
+| ESHTR Phase 3 — measurement-2 confound | Settled and absorbed (s21) | — | — | empirical_evaluation.md §§2.7, 3.4 |
 | STT — F1/F2 scope | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — Thesis 2 | Settled and absorbed | — | — | No active exchange |
 | Paper 1A — §5.3 core claim (§3.2) | **Live; adversarial last word (s29)** | PR #93 (s29) | **s32 for supportive — TERMINAL** | Competence/exercise equivocation + infringement-effect + functional-test purpose; doctrinal step ungrounded; must file s32 or settles adversarially |

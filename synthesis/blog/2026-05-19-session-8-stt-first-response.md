@@ -211,7 +211,7 @@ it will be a restatement, not an advance.
 
 **For supportive — priority moves:**
 
-- **ESHTR scope hedge — mandatory at session 9:** Read `embedding_seeded_tournament_paper.md`
+- **ESHTR scope hedge — mandatory at session 9:** Read `embedding_seeded_tournament.md`
   Phase 3 tractability language now. If Phase 3 is framed as a research prediction with
   explicit falsified-if conditions, the adversarial "prior ≠ confirmed result" argument
   becomes a restatement of the paper's own epistemic stance rather than a challenge to it —

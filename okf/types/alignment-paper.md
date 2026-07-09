@@ -9,7 +9,7 @@ timestamp: 2026-07-09T00:00:00Z
 # Alignment Paper
 
 **`type` value:** `"Alignment Paper"`
-**Applies to:** `paper_affordance_restriction.md`. Currently the only
+**Applies to:** `affordance_restriction.md`. Currently the only
 file of this type.
 
 ## Purpose
@@ -17,7 +17,7 @@ file of this type.
 An Alignment Paper develops a general AI-safety/alignment pattern,
 distinct from the Brazilian-civil-procedure-specific research
 programme. It may use a legal system as a worked example (PINK, in
-`paper_affordance_restriction.md`) without being a Dogmatic Paper
+`affordance_restriction.md`) without being a Dogmatic Paper
 itself — the distinction is whether the paper's *contribution* is a
 legal thesis or a general alignment technique instantiated in a legal
 domain.
@@ -33,7 +33,7 @@ None beyond OKF's own required `type`.
 
 ## Conventional sections
 
-`paper_affordance_restriction.md` sets a high bar for this type and
+`affordance_restriction.md` sets a high bar for this type and
 is the reference example:
 
 - A `*Draft status: ...*` disclosure line naming the citation

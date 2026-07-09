@@ -9,13 +9,13 @@ timestamp: 2026-07-09T00:00:00Z
 # Synthesis Paper
 
 **`type` value:** `"Synthesis Paper"`
-**Applies to:** `paper6_sintese.md`. Currently the only file of this type.
+**Applies to:** `sintese_programa.md`. Currently the only file of this type.
 
 ## Purpose
 
 A Synthesis Paper explains how a set of other papers in this repository
 fit together as one research programme, and states explicitly which
-papers it does and does not cover. A 2026-07-09 audit found `paper6`
+papers it does and does not cover. A 2026-07-09 audit found `sintese_programa.md`
 making an internal arithmetic error (claiming "sete papers" while its
 own breakdown summed to ten) and omitting one full paper (`paper1G`)
 from a section that claimed to cover the complete dogmatic axis —
@@ -32,7 +32,7 @@ None beyond OKF's own required `type`.
   than just "synthesizes the research programme," precisely because
   "the research programme" is ambiguous when more than one programme
   shares a repository (see the alignment/interpretability vs.
-  dogmatic/technical/empirical split documented in `paper6`'s own
+  dogmatic/technical/empirical split documented in `sintese_programa.md`'s own
   Resumo).
 
 ## Conventional sections
@@ -42,12 +42,12 @@ None beyond OKF's own required `type`.
   with each other and with the `## Referencias` list's actual item count.
 - An explicit scope-exclusion sentence when the synthesis does not cover
   every paper in the repository, naming what's excluded and why (see
-  `paper6_sintese.md`'s Resumo for the current wording).
+  `sintese_programa.md`'s Resumo for the current wording).
 
 ## Notes
 
 Any time a new paper is added to a programme a Synthesis Paper claims
 to cover, update the Synthesis Paper in the same change — or, if that's
 not practical immediately, open a tracked follow-up rather than letting
-the count silently go stale (this is exactly how `paper6` drifted from
+the count silently go stale (this is exactly how `sintese_programa.md` drifted from
 paper1G before 2026-07-09).

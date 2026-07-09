@@ -2,7 +2,7 @@
 type: "Synthesis Paper"
 title: "Raciocínio Jurídico Auditável: síntese de um programa de pesquisa"
 description: "Sintese do programa \"Raciocinio Juridico Auditavel\" (eixos dogmatico + metodologico-formal + empirico, onze papers)."
-tags: [paper6]
+tags: [sintese]
 timestamp: 2026-07-09T12:12:59+00:00
 ---
 
@@ -181,7 +181,7 @@ papers do eixo quanto à velocidade da recalibração.
 Os papers técnicos implementam as especificações do eixo dogmático
 e desenvolvem a infraestrutura de avaliação.
 
-**Paper 2** apresenta o pipeline de seis fases: Argdown
+**`pipeline_lean_argdown.md`** apresenta o pipeline de seis fases: Argdown
 (decomposição argumentativa), Lean 4 (formalização), análise
 jurídica subjetiva (ciclo iterativo), síntese resolutiva, e
 tradução forense. O argumento central contra a literatura dominante:
@@ -192,7 +192,7 @@ não acomodam. O `#print axioms` do Lean é o mecanismo de auditoria:
 cada teorema expõe o conjunto completo de pressupostos, tornando
 a estrutura de dependências transparente e reproduzível.
 
-**Paper 3** introduz a distinção necessária/contingente para
+**`proveniencia_claims.md`** introduz a distinção necessária/contingente para
 afirmações em qualquer documento processual e formaliza em Lean
 4 através dos tipos `Proveniencia` e `StatusClaim`, ambos com
 construtor `pendente`. O construtor `pendente` não é estado de
@@ -208,7 +208,7 @@ transitividade em juízes-LLM correlaciona com a distância semântica
 entre itens comparados — é a motivação teórica para o seeding por
 embedding.
 
-**Paper 5** fornece a avaliação empírica em corpus real do TJRO,
+**`empirical_evaluation.md`** fornece a avaliação empírica em corpus real do TJRO,
 com três condições (pipeline, LLM-simples, LLM-elaborado), rubrica
 de dois eixos (validade procedimental × persuasividade), e protocolo
 de calibração. A divergência entre os dois eixos é o diagnóstico
@@ -293,16 +293,16 @@ da hipótese central.
 
 **Contribuições metodológicas:**
 
-- O pipeline de seis fases com Lean 4 e Argdown (Paper 2): primeira
+- O pipeline de seis fases com Lean 4 e Argdown (`pipeline_lean_argdown.md`): primeira
   aplicação ao processo civil brasileiro; argumento de compilação
   vs. aciclicidade; cinco saídas como teorema derivado
 - A distinção necessária/contingente para qualquer documento
-  processual (Paper 3): extensão da ratio/obiter além dos
+  processual (`proveniencia_claims.md`): extensão da ratio/obiter além dos
   precedentes
 - O método ESHTR: embedding-seeded hierarchical tournament
   ranking para avaliação de qualidade de decisões judiciais em
   corpus heterogêneo; hipótese da proximidade semântica
-- A métrica de dois eixos (Paper 5): diagnóstico da patologia
+- A métrica de dois eixos (`empirical_evaluation.md`): diagnóstico da patologia
   COURTREASONER como desvio entre validade procedimental e
   persuasividade
 
@@ -388,10 +388,10 @@ aqui.
 - Paper 1F: Reputação como mecanismo de coordenação
 - Paper 1G: O livre convencimento como doutrinização do
   patrimonialismo judicial
-- Paper 2: Pipeline Lean 4 com Argdown (inglês)
-- Paper 3: Proveniência de claims (inglês)
+- `pipeline_lean_argdown.md`: Pipeline Lean 4 com Argdown (inglês)
+- `proveniencia_claims.md`: Proveniência de claims (inglês)
 - ESHTR: Embedding-Seeded Hierarchical Tournament Ranking (inglês)
-- Paper 5: Avaliação empírica em corpus TJRO (inglês; desenho
+- `empirical_evaluation.md`: Avaliação empírica em corpus TJRO (inglês; desenho
   pré-registrado, resultados ainda não coletados)
 
 ---
