@@ -272,25 +272,16 @@ que o precedente não considerou adequadamente.
 
 A superação racional é desenvolvida em detalhe na seção 4.
 
-A quarta saída opera com configuração distinta diante de precedente
-vinculante constitucional do STF — decisões de controle concentrado de
+A quarta saída também é exercitável diante de precedente vinculante
+constitucional do STF — decisões de controle concentrado de
 constitucionalidade e súmulas vinculantes. A vinculação constitucional
 não suprime o dever de fundamentação (art. 93, IX, CF) nem impede que
-o tribunal inferior articule divergência fundamentada quanto à ratio
-do precedente ou à sua aplicação ao caso concreto; o que ela restringe
-é o efeito dessa divergência sobre o dispositivo. O tribunal pode
-fundamentar por que discorda do precedente ou por que entende que ele
-não deveria se aplicar, mas não pode, com base isoladamente nessa
-divergência, deixar de aplicar o precedente ao caso — a via para
-contestá-lo ou revê-lo é outra (reclamação ao STF, procedimento de
-revisão ou cancelamento de súmula vinculante, nova ação de controle
-concentrado), distinta da superação com efeito imediato sobre o caso
-que a quarta saída descreve para o domínio infraconstitucional. A
-quarta saída, tal como aqui desenvolvida, pressupõe precedente
-vinculante infraconstitucional; no domínio constitucional, o dever de
-fundamentar e a possibilidade de divergência fundamentada permanecem
-— o que muda é o remédio processual para fazê-la prevalecer sobre o
-caso concreto.
+o tribunal inferior articule divergência fundamentada e, com base
+nela, deixe de aplicar o precedente ao caso concreto — o tribunal
+pode fazê-lo. O que distingue esse domínio do infraconstitucional — e
+ainda carece de desenvolvimento mais preciso nesta série — é o remédio
+processual disponível contra a divergência e o grau de certeza da
+reversão, dado o papel do STF como intérprete final da Constituição.
 
 ### 3.5 Quinta saída: abstenção da invocação
 
