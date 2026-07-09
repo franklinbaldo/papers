@@ -452,6 +452,33 @@ primeiro grupo inclui precedentes infraconstitucionais (IRDR, IAC,
 repetitivos) que a esta altura da série ainda não foram examinados
 sob essa lente.
 
+O argumento vale, na verdade, a fortiori para esses precedentes
+infraconstitucionais. Súmula vinculante e controle concentrado têm
+fundamento constitucional expresso para sua força vinculante (art.
+103-A e art. 102, §2º, da CF) — e, mesmo assim, a Constituição não
+autoriza aplicação acrítica, sem fundamentação racional: o dever do
+art. 93, IX, permanece incondicionado, e a própria reclamação existe
+porque a divergência fundamentada pode ocorrer e precisa de remédio,
+não porque a aplicação devesse ser automática. IRDR (art. 976, I e
+II, do CPC) e IAC (art. 947 do CPC) não têm fundamento constitucional
+expresso comparável: sua força vinculante deriva de opção legislativa
+ordinária, apoiada em poderes implícitos — a competência do tribunal
+para uniformizar é inferida dos princípios de isonomia e segurança
+jurídica que o próprio art. 976, II, invoca como requisito de
+instauração, não outorgada por dispositivo constitucional específico
+como o art. 103-A confere à súmula vinculante. Recursos repetitivos
+(arts. 1.036 e seguintes do CPC) repousam na mesma base implícita.
+Se nem o instrumento com fundamento constitucional expresso dispensa
+fundamentação racional e a possibilidade de divergência fundamentada,
+não há como sustentar que institutos de fundamento apenas implícito
+imponham padrão de aplicação mais acrítico. A ausência de reclamação
+como remédio direto para a generalidade desses precedentes (ressalvadas
+as hipóteses do art. 988, IV e §5º, II, do CPC) não os torna mais
+vinculantes que súmula vinculante — torna apenas o remédio disponível
+menos direto, sem alterar o piso comum de fundamentação racional que
+os arts. 93, IX, CF, e 489, §1º, do CPC exigem de qualquer decisão
+que invoque qualquer precedente, constitucional ou infraconstitucional.
+
 A admissão da superação racional pelo tribunal inferior não enfraquece
 o sistema de precedentes; pelo contrário, o fortalece a longo prazo.
 Um sistema de precedentes sem mecanismo de depuração de erros é um
