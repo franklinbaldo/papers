@@ -371,10 +371,17 @@ embedding proximity as adequate control) or structured (indicating
 residual within-cluster criterion instability that aggregate κ does
 not detect). The design standard for Phase 1 is **relative
 reduction** in non-transitivity incidence, not elimination;
-Bradley-Terry aggregation provides robustness for non-directional
-residual cycling that does not correlate systematically with item
-identities (`otherwise/eshtr-phase3-gap.md` §3.3–3.4;
-`yesindeed/frame-stability-sph.md` §3.4).
+Bradley-Terry aggregation is hypothesized to provide robustness for
+non-directional residual cycling that does not correlate systematically
+with item identities. Whether within-cluster criterion-switching is
+in fact non-directional — rather than systematically correlated with
+an item's quality profile in cross-strength pairings — is contested
+and currently unresolved: `otherwise/eshtr-phase3-gap.md` §3.3–3.4
+argues the aggregation defense's non-directionality assumption may
+fail under a documented cross-strength-pairing mechanism and concludes
+the question cannot be settled without the additional measurement
+Prediction 4 specifies; `yesindeed/frame-stability-sph.md` §3.4 responds.
+See §7.3 for the current state of this open question.
 
 ---
 

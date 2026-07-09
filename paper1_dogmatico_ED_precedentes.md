@@ -228,7 +228,15 @@ Isso é, de um lado, logicamente necessário. O pedido de embargos
 de eliminação da contradição, de suprimento da omissão. Uma vez
 sanado o vício, a decisão corrigida pode ser diferente da decisão
 original. Essa diferença não precisa ser "atribuída" pelo tribunal;
-ela decorre automaticamente da integração do julgado. O tribunal
+ela decorre automaticamente da integração do julgado — precisamente
+nos casos em que o marco de comprometimentos do tribunal determina
+univocamente o desfecho corrigido. Quando a integração deixa mais de
+um desfecho igualmente compatível com os comprometimentos já
+assumidos, a determinação do resultado exige novo juízo, não mera
+integração automática; ver `paper1A_embargos_declaracao.md` §5.3–§5.6
+para o tratamento completo dessa distinção, incluindo a lacuna
+doutrinária bilateralmente reconhecida quanto à prevalência empírica
+de cada caso. O tribunal
 que acolhe embargos para suprir omissão sobre questão que levaria
 à procedência do pedido não está "dando efeitos infringentes" ao
 recurso: está cumprindo sua função integrativa e chegando, por
@@ -406,7 +414,11 @@ genuinamente difícil: exige identificação precisa do fundamento
 determinante, demonstração de que esse fundamento é internamente
 defectivo como argumento ou está em descompasso com norma
 superveniente, e ainda observância dos princípios da segurança
-jurídica e da proteção da confiança (art. 927, §4º, do CPC). A
+jurídica e da proteção da confiança — considerações que devem
+informar a superação racional pelos valores que encarnam, ainda que
+sem apoio direto no art. 927, §4º, do CPC, dispositivo cujo objeto é
+a autorrevisão de jurisprudência pelo próprio tribunal que a firmou,
+não o afastamento por tribunal inferior. A
 maioria dos tribunais, a maioria das vezes, não conseguirá superar
 racionalmente precedente do STF — não porque a possibilidade seja
 vedada, mas porque o ônus argumentativo é alto.

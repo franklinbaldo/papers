@@ -45,17 +45,17 @@ AI&Law; CPC 2015.
 ## 1. Introduction
 
 Formal verification of legal reasoning has been a goal of AI&Law
-research since the field's inception [CITE Bench-Capon, Prakken].
+research since the field's inception (Prakken, 2010; [CITE Bench-Capon]).
 Two broad approaches have developed: argumentation frameworks, which
 model legal reasoning as defeasible inference over structured attack
-and support relations [CITE Dung 1995, Prakken ASPIC+, Carneades];
+and support relations (Dung, 1995; Prakken, 2010; [CITE Carneades]);
 and formal proof assistants, which verify deductive inferences in
 type-checked logical systems [CITE Coq, Isabelle, Lean].
 
 The dominant view in recent AI&Law literature is that legal reasoning
 is inherently defeasible and therefore belongs to argumentation
 frameworks, with proof assistants reserved for mathematical
-subproblems [CITE TAIR 2025]. This article challenges that view
+subproblems (Bowers and Ludäscher, 2025). This article challenges that view
 with a concrete argument: deductive verification via compilation
 is *more* appropriate than structural acyclicity-based verification
 for legal argumentation, because legal systems have inherent
@@ -105,15 +105,15 @@ mutual attack. Extensions under preferred, grounded, complete, and
 stable semantics capture different intuitions about which arguments
 win contested debates.
 
-Bipolar Argumentation Frameworks (BAFs) [CITE Cayrol and
-Lagasquie-Schiex 2005] extend Dung with support relations, allowing
+Bipolar Argumentation Frameworks (BAFs) (Cayrol and
+Lagasquie-Schiex, 2005) extend Dung with support relations, allowing
 arguments to reinforce as well as attack each other. ASPIC+
-[CITE Prakken] provides a structured instantiation of argumentation
+(Prakken, 2010) provides a structured instantiation of argumentation
 frameworks with explicit rules (strict and defeasible), preferences,
 and argument construction. These frameworks have been extensively
 applied to legal reasoning [CITE Bench-Capon, Sartor, Atkinson].
 
-TAIR [CITE Bowers and Ludäscher, AI4EVIR@JURIX 2025] is the most
+TAIR (Bowers and Ludäscher, 2025) is the most
 recent work combining formal verification with legal argumentation.
 TAIR bifurcates: Lean 4 for mathematical subproblems requiring
 absolute proof; BAFs with acyclicity verification for legal
@@ -140,7 +140,7 @@ This article challenges the objection at its root.
 
 ### 2.3 Argdown
 
-Argdown [CITE Voigt et al. 2018+] is a Markdown-inspired markup
+Argdown (Voigt et al., 2018+) is a Markdown-inspired markup
 language for structured argumentation. Claims are marked `[Claim]`,
 arguments are marked `<Argument>`, and support (`+`) and attack
 (`-`) relations are expressed through indentation. The official
@@ -549,7 +549,7 @@ omission). No axioms required reformulation.
 
 ### 7.1 Positioning Relative to TAIR
 
-TAIR [CITE Bowers and Ludäscher 2025] is a vision paper proposing
+TAIR (Bowers and Ludäscher, 2025) is a vision paper proposing
 a framework that bifurcates: Lean for mathematical subproblems,
 BAFs for legal defeasible reasoning. Our methodology is a
 methodological counter-proposal on the legal side: we argue that
@@ -569,7 +569,7 @@ dependency graph is acyclic.
 
 ### 7.2 Positioning Relative to COURTREASONER
 
-COURTREASONER [CITE Han et al. EMNLP 2025] found that LLM judges
+COURTREASONER (Han et al., 2025) found that LLM judges
 of legal reasoning are "fragile and inconsistent" and misled by
 rhetorically persuasive but logically invalid arguments. Our
 pipeline addresses this finding structurally: the Phase 3 subjective
@@ -616,14 +616,18 @@ hierarchical, character of Brazilian precedent binding).
 The pipeline is open-source at `franklinbaldo/skills`. Future work
 includes: extension to Recurso Especial and Recurso Extraordinário;
 empirical evaluation using the Embedding-Seeded Hierarchical
-Tournament Ranking method (Paper 4 of this series); and integration
+Tournament Ranking method (ESHTR); and integration
 with Brazilian court transparency portals for corpus-scale analysis.
 
 ---
 
 ## References
 
-*[Full references to be completed with DOIs. Key citations:]*
+*DOIs still to be added. Citations below cover every [CITE] marker that
+had a resolvable entry as of 2026-07-09; the following markers remain
+unresolved in the body text pending verification and are intentionally
+left as `[CITE ...]`: Bench-Capon; Carneades; Coq, Isabelle, and Lean
+(tooling citations); Sartor; Atkinson; Bourcier; Lehmann.*
 
 - Bowers, J. and Ludäscher, B. (2025). Towards Trustworthy AI
   Results. AI4EVIR@JURIX 2025. CEUR Vol-4157.

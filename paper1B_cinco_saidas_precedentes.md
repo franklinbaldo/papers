@@ -272,6 +272,16 @@ que o precedente não considerou adequadamente.
 
 A superação racional é desenvolvida em detalhe na seção 4.
 
+A quarta saída também é exercitável diante de precedente vinculante
+constitucional do STF — decisões de controle concentrado de
+constitucionalidade e súmulas vinculantes. A vinculação constitucional
+não suprime o dever de fundamentação (art. 93, IX, CF) nem impede que
+o tribunal inferior articule divergência fundamentada e, com base
+nela, deixe de aplicar o precedente ao caso concreto — o tribunal
+pode fazê-lo. O que distingue esse domínio do infraconstitucional é o
+remédio processual disponível contra a divergência, desenvolvido na
+seção 4.4.
+
 ### 3.5 Quinta saída: abstenção da invocação
 
 A quinta saída é logicamente distinta das demais porque opera antes
@@ -383,13 +393,113 @@ o tribunal apresenta argumento que mostra, passo a passo, que a
 ratio do precedente não pode ser mantida.
 
 **Observância dos princípios de segurança jurídica e proteção da
-confiança.** O art. 927, §4º, do CPC, que exige fundamentação
-adequada e específica para modificação de jurisprudência, aplica-se
-por analogia à superação racional pelo tribunal inferior. O tribunal
-deve considerar o impacto da superação na confiança depositada no
-precedente pelas partes e pela comunidade jurídica.
+confiança.** Esses princípios devem informar a superação racional
+pelo tribunal inferior, ainda que sem apoio direto no art. 927, §4º,
+do CPC — dispositivo cujo objeto é a autorrevisão de jurisprudência
+pelo próprio tribunal que a firmou, não o afastamento por tribunal
+inferior. O fundamento direto está nos princípios constitucionais de
+segurança jurídica e proteção da confiança: o tribunal deve considerar
+o impacto da superação na confiança depositada no precedente pelas
+partes e pela comunidade jurídica.
 
 ### 4.4 A superação racional e o sistema
+
+É preciso qualificar o que a quarta saída efetivamente produz no caso
+concreto antes de discutir seu efeito sistêmico. A decisão do tribunal
+inferior que supera racionalmente o precedente não é, em si, juridicamente
+efetiva no sentido de encerrar a controvérsia: permanece sujeita a
+reforma pelo tribunal competente e, salvo se o próprio tribunal-fonte
+vier a acolher a superação proposta, tende a ser revertida caso
+submetida a recurso ou reclamação. O valor da quarta saída não está em
+produzir decisão que se sustente isoladamente; está em articular, com
+o ônus argumentativo qualificado da seção 4.3, o argumento apto a levar
+o tribunal-fonte a rever sua própria ratio.
+
+O remédio processual contra a superação racional não é uniforme —
+depende do instrumento de que o precedente se origina, não de a
+matéria ser constitucional ou infraconstitucional. Para súmula
+vinculante e para decisão do STF em controle concentrado de
+constitucionalidade, o art. 988, III, do CPC — em conjugação com o
+art. 103-A, §3º, da CF para a súmula vinculante especificamente —
+autoriza reclamação diretamente ao STF, cabível tanto pela aplicação
+indevida da tese quanto por sua não aplicação ao caso que a ela
+corresponda (art. 988, §4º, do CPC): hipótese que inclui precisamente
+o afastamento por superação racional que a quarta saída descreve. A
+reclamação é processada e julgada pelo próprio órgão cuja autoridade
+se busca preservar (art. 988, §1º, do CPC) — diretamente pelo STF,
+sem percorrer a escada recursal — e tem cognição estruturalmente mais
+estreita, restrita ao confronto entre a tese fixada e a decisão
+reclamada, do que a devolvida em recurso ordinário.
+
+Essa proteção, contudo, não segue a linha constitucional/
+infraconstitucional: o mesmo art. 988 estende reclamação a acórdãos
+de incidente de resolução de demandas repetitivas e de incidente de
+assunção de competência (inciso IV) — de origem tipicamente
+infraconstitucional, firmados por tribunais de justiça e regionais
+federais — e, por força do §5º, II, também a recursos extraordinário
+e especial repetitivos, desde que esgotadas as instâncias ordinárias.
+A linha real separa precedentes originados de mecanismos processuais
+que o CPC equipou com reclamação (súmula vinculante, controle
+concentrado, IRDR, IAC, repetitivos) de precedentes "ordinários" —
+inclusive jurisprudência consolidada do STJ que não tenha percorrido
+nenhum desses procedimentos —, para os quais a única via de correção
+é o recurso ordinário. Súmula vinculante e controle concentrado, por
+serem sempre do STF, caem sempre do lado protegido por reclamação;
+daí a impressão de que a diferença relevante para a quarta saída é
+"constitucional versus infraconstitucional", quando na verdade é
+"precedente com reclamação versus precedente sem reclamação" — e o
+primeiro grupo inclui precedentes infraconstitucionais (IRDR, IAC,
+repetitivos) que a esta altura da série ainda não foram examinados
+sob essa lente.
+
+O argumento vale, na verdade, a fortiori para esses precedentes
+infraconstitucionais. Súmula vinculante e controle concentrado têm
+fundamento constitucional expresso para sua força vinculante (art.
+103-A e art. 102, §2º, da CF) — e, mesmo assim, a Constituição não
+autoriza aplicação acrítica, sem fundamentação racional: o dever do
+art. 93, IX, permanece incondicionado, e a própria reclamação existe
+porque a divergência fundamentada pode ocorrer e precisa de remédio,
+não porque a aplicação devesse ser automática. IRDR (art. 976, I e
+II, do CPC) e IAC (art. 947 do CPC) não têm fundamento constitucional
+expresso comparável: sua força vinculante deriva de opção legislativa
+ordinária, apoiada em poderes implícitos — a competência do tribunal
+para uniformizar é inferida dos princípios de isonomia e segurança
+jurídica que o próprio art. 976, II, invoca como requisito de
+instauração, não outorgada por dispositivo constitucional específico
+como o art. 103-A confere à súmula vinculante. Recursos repetitivos
+(arts. 1.036 e seguintes do CPC) repousam na mesma base implícita.
+Se nem o instrumento com fundamento constitucional expresso dispensa
+fundamentação racional e a possibilidade de divergência fundamentada,
+não há como sustentar que institutos de fundamento apenas implícito
+imponham padrão de aplicação mais acrítico. A ausência de reclamação
+como remédio direto para a generalidade desses precedentes (ressalvadas
+as hipóteses do art. 988, IV e §5º, II, do CPC) não os torna mais
+vinculantes que súmula vinculante — torna apenas o remédio disponível
+menos direto, sem alterar o piso comum de fundamentação racional que
+os arts. 93, IX, CF, e 489, §1º, do CPC exigem de qualquer decisão
+que invoque qualquer precedente, constitucional ou infraconstitucional.
+
+Esta seção converge com — e generaliza — três desenvolvimentos já
+presentes, de forma independente e mais restrita, em outros papers da
+série. O Paper 1D desenvolve em profundidade, especificamente para a
+súmula vinculante, o argumento central desta seção: a vinculação
+institui dever de forma (expor razões), não obrigação de resultado; a
+reclamação é canal de diálogo institucional, não mecanismo de
+silenciamento; e "a súmula vinculante não é carta branca para
+dispensar a fundamentação" (paper1D, §§2–4). O Paper 1E já identificara
+que súmula vinculante e temas repetitivos têm velocidades de correção
+distintas — "erros em súmulas vinculantes chegam ao STF via reclamação
+com relativa rapidez[;] erros em temas repetitivos chegam via recursos
+sobrestados que esperam o julgamento de leading case — processo muito
+mais lento" (paper1E, §3.3) —, instância mais estreita do critério
+generalizado aqui. E o Paper 1G já agrupara temas repetitivos, IRDR e
+incidente de assunção de competência como produtos da mesma lógica
+infraconstitucional, com mecanismo de correção "convoluted e de custo
+alto" que não impede, antes pressupõe, a possibilidade de superação
+racional (paper1G, §4.2). Esta seção unifica os três resultados sob um
+único critério — proteção por reclamação, não domínio constitucional/
+infraconstitucional — e o estende ao IAC, não examinado nos demais
+papers da série sob essa lente.
 
 A admissão da superação racional pelo tribunal inferior não enfraquece
 o sistema de precedentes; pelo contrário, o fortalece a longo prazo.

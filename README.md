@@ -27,21 +27,25 @@ Position papers and working drafts.
 ## Eixo interpretabilidade
 
 - `pontifex_position_paper.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
-- `o3-orinality-assessement.md` — avaliação de originalidade do Pontifex (companion)
+- `o3-orinality-assessement.md` — esboço exploratório (saída de sessão de IA) de checagem de prior art para o Pontifex; não é avaliação independente — ver nota editorial no início do arquivo
 
 ## Eixo empírico
 
-- `paper5_empirical_evaluation.md` — avaliação empírica em corpus do TJRO
+- `paper5_empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
 
 ## Síntese
 
-- `paper6_sintese.md` — síntese do programa de pesquisa
+- `paper6_sintese.md` — síntese do programa "Raciocínio Jurídico Auditável" (eixos dogmático + metodológico-formal + empírico, onze papers; não cobre os eixos de alignment e interpretabilidade abaixo, tratados como linha de pesquisa correlata mas distinta)
 
 ## Companion pieces
 
 - `otherwise/` — argumentos adversariais
 - `yesindeed/` — argumentos de suporte
+- `synthesis/` — árbitro: funde `otherwise/`/`yesindeed/` e roda os ciclos de edição que absorvem conclusões assentadas de volta aos papers principais
+- `PROTOCOL.md` — regras do aparato de debate acima (papéis, gatilho de absorção, corte de debates em loop)
 
 ## Log
 
-- `session_log.md` — registro de sessões de melhoria incremental
+- `synthesis/blog/` — registro corrente de sessões, um arquivo datado por sessão (ativo desde 2026-05-13)
+- `session_log.md` — registro de duas sessões de verificação de referências em 2026-05-12, anterior ao mecanismo acima; mantido como histórico, não recebe novas entradas
+- `propostas_melhoria_2026-07-09.md` — auditoria externa do programa e propostas de melhoria (2026-07-09)

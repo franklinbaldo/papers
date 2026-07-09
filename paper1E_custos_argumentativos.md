@@ -564,6 +564,21 @@ de casos em que o argumento ignorado é suficientemente saliente para
 atrair análise doutrinária independente — classe mais estreita do que o
 argumento, em sua formulação mais ampla, poderia sugerir.
 
+**Limite da estrutura do relator**: o modelo de jogo 2×2 trata "o STF"
+como ator unitário que decide se engaja ou não com o argumento. Na
+prática, a decisão de engajamento em cada caso é tomada pelo
+ministro-relator individual, com custo reputacional que se dilui entre
+onze ministros em vez de recair sobre um único decisor, e com defasagem
+temporal entre a velocidade de decisão do plenário virtual e o ritmo da
+atenção da imprensa e da doutrina especializada que sustenta o efeito
+de visibilidade descrito acima. A modelagem unitária é simplificação
+reconhecida como tal: ela captura a direção do incentivo — reputação
+custa caro para quem ignora argumento de qualidade —, mas não estabelece
+a magnitude do efeito, que depende de como o custo reputacional
+individual do relator se relaciona com o custo institucional agregado
+que a modelagem unitária pressupõe. Essa é uma lacuna de modelagem
+genuína, não resolvida por este artigo.
+
 ---
 
 ## 6. Conclusão
