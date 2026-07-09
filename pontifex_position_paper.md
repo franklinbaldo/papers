@@ -165,9 +165,12 @@ encoder).
 To our knowledge, no published architecture combines (a) byte-level
 occlusion, (b) parallel probing of more than two unaligned embedding
 spaces, and (c) a learned post-hoc convergence head over similarity
-patterns. The originality assessment that motivated this paper
-(`o3-orinality-assessement.md` in this repository) provides a more
-detailed gap analysis.
+patterns. This claim rests on the authors' own literature search, not
+on independent verification: `o3-orinality-assessement.md` in this
+repository records an AI-assisted preliminary prior-art scan that
+motivated this paper, but it is not an independent assessment (see the
+editorial note at the top of that file) and its gap analysis should be
+read as a starting point, not confirmation.
 
 ---
 
@@ -434,13 +437,16 @@ We have argued that post-hoc interpretability can be pushed below the
 tokenizer and across embedding spaces without paying the cost of
 alignment, and we have sketched the architecture, evaluation, and
 implementation plan under which that claim can be tested or refuted.
-The originality assessment in `o3-orinality-assessement.md` situates
-the proposal in the prior art; this paper turns the proposal into a
-falsifiable programme.
+`o3-orinality-assessement.md` records a preliminary, AI-assisted
+prior-art scan, not an independent assessment (see the note at the
+top of that file); independent verification of the novelty claim is
+still pending. This paper turns the proposal into a falsifiable
+programme regardless of how that verification resolves.
 
 ---
 
 ## Companion documents
 
-- `o3-orinality-assessement.md` — originality assessment and prior-art
-  gap analysis for the same idea.
+- `o3-orinality-assessement.md` — preliminary, AI-assisted prior-art
+  scan for the same idea. Not an independent assessment; see the
+  editorial note at the top of that file.

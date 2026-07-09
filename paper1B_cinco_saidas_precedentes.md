@@ -272,6 +272,15 @@ que o precedente não considerou adequadamente.
 
 A superação racional é desenvolvida em detalhe na seção 4.
 
+A quarta saída opera no domínio infraconstitucional, perante
+precedentes do STJ e demais tribunais. Diante de precedente vinculante
+constitucional do STF — decisões de controle concentrado de
+constitucionalidade e súmulas vinculantes —, a quarta saída não está
+disponível: o monopólio de interpretação constitucional que a
+Constituição atribui ao STF nesse domínio não admite superação por
+tribunal inferior, fundamentada ou não. A quarta saída, tal como aqui
+desenvolvida, pressupõe precedente vinculante infraconstitucional.
+
 ### 3.5 Quinta saída: abstenção da invocação
 
 A quinta saída é logicamente distinta das demais porque opera antes
@@ -383,13 +392,27 @@ o tribunal apresenta argumento que mostra, passo a passo, que a
 ratio do precedente não pode ser mantida.
 
 **Observância dos princípios de segurança jurídica e proteção da
-confiança.** O art. 927, §4º, do CPC, que exige fundamentação
-adequada e específica para modificação de jurisprudência, aplica-se
-por analogia à superação racional pelo tribunal inferior. O tribunal
-deve considerar o impacto da superação na confiança depositada no
-precedente pelas partes e pela comunidade jurídica.
+confiança.** Esses princípios devem informar a superação racional
+pelo tribunal inferior, ainda que sem apoio direto no art. 927, §4º,
+do CPC — dispositivo cujo objeto é a autorrevisão de jurisprudência
+pelo próprio tribunal que a firmou, não o afastamento por tribunal
+inferior. O fundamento direto está nos princípios constitucionais de
+segurança jurídica e proteção da confiança: o tribunal deve considerar
+o impacto da superação na confiança depositada no precedente pelas
+partes e pela comunidade jurídica.
 
 ### 4.4 A superação racional e o sistema
+
+É preciso qualificar o que a quarta saída efetivamente produz no caso
+concreto antes de discutir seu efeito sistêmico. A decisão do tribunal
+inferior que supera racionalmente o precedente não é, em si, juridicamente
+efetiva no sentido de encerrar a controvérsia: permanece sujeita a
+reforma pelo tribunal competente e, salvo se o próprio tribunal-fonte
+vier a acolher a superação proposta, tende a ser revertida caso
+submetida a recurso ou reclamação. O valor da quarta saída não está em
+produzir decisão que se sustente isoladamente; está em articular, com
+o ônus argumentativo qualificado da seção 4.3, o argumento apto a levar
+o tribunal-fonte a rever sua própria ratio.
 
 A admissão da superação racional pelo tribunal inferior não enfraquece
 o sistema de precedentes; pelo contrário, o fortalece a longo prazo.

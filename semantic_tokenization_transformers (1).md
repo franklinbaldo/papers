@@ -1141,9 +1141,17 @@ TEXT:
 
 ---
 
-## Appendix B: Hyperparameter Tuning Results
+## Appendix B: Hyperparameter Tuning Targets (Illustrative, Not Measured)
 
-Table B.1: Ablation study on chunk size and stride (Wikipedia corpus)
+> As stated in the position-paper banner at the top of this article, no
+> empirical results are reported anywhere in this document. The figures
+> below are illustrative design targets — the kind of tuning sweep the
+> evaluation protocol in §5 would run — not measurements from an
+> executed experiment. Treat every number in Tables B.1–B.2 as a
+> falsifiable prediction of what such a sweep would show, not as a
+> reported finding.
+
+Table B.1: Ablation study on chunk size and stride (Wikipedia corpus) — illustrative targets
 
 | Chunk Size | Stride | Compression | Perplexity | BLEU-4 | OER |
 |------------|--------|-------------|------------|--------|-----|
@@ -1154,7 +1162,7 @@ Table B.1: Ablation study on chunk size and stride (Wikipedia corpus)
 | 256 | 128 | 9.1x | 25.6 | 67.4 | 4.8% |
 | 384 | 192 | 10.3x | 27.2 | 65.9 | 5.9% |
 
-Table B.2: Impact of codebook size (K per RVQ level, L=3)
+Table B.2: Impact of codebook size (K per RVQ level, L=3) — illustrative targets
 
 | K | Effective Vocab | Perplexity | Entropy | Training Time |
 |---|-----------------|------------|---------|---------------|
@@ -1164,7 +1172,9 @@ Table B.2: Impact of codebook size (K per RVQ level, L=3)
 | **4096** | ~69B | **24.3** | **10.2** | **1.9x** |
 | 8192 | ~550B | 24.7 | 9.8 | 2.7x |
 
-Note: K=4096 provides the best balance of quality and efficiency.
+Note: under this illustrative sweep, K=4096 is predicted to give the
+best balance of quality and efficiency — a target to confirm
+experimentally, not a measured result.
 
 ---
 

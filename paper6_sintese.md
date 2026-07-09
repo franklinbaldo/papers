@@ -9,8 +9,8 @@ Porto Velho, RO
 ## Resumo
 
 Este artigo sintetiza o programa de pesquisa "Raciocínio Jurídico
-Auditável", composto por sete papers publicados em série. O programa
-tem três eixos: (i) eixo dogmático — seis papers sobre direito
+Auditável", composto por onze papers publicados em série. O programa
+tem três eixos: (i) eixo dogmático — sete papers sobre direito
 processual civil brasileiro que estabelecem as categorias, distinções
 e regras que o sistema de fundamentação e o regime de precedentes
 do CPC 2015 exigem; (ii) eixo metodológico-formal — três papers
@@ -26,7 +26,11 @@ jurídicos auditáveis — tecnológica em sua forma, mas processual
 em suas consequências — altera os incentivos do sistema de precedentes
 em direção ao equilíbrio de diálogo racional que o CPC 2015 prescreve
 e que a teoria reputacional do campo jurídico permitia identificar
-como o equilíbrio bloqueado.
+como o equilíbrio bloqueado. Esta síntese não cobre a produção do
+autor sobre tokenização semântica, interpretabilidade e alinhamento
+de agentes: essa linha constitui um programa de pesquisa correlato,
+mas distinto, sobre arquiteturas gerais de IA, e está fora do escopo
+deste artigo.
 
 **Palavras-chave**: raciocínio jurídico; auditabilidade; precedentes;
 Lean 4; teoria dos jogos; reputação; CPC 2015; inteligência
@@ -42,7 +46,9 @@ o voto, o parecer — auditável de modo que suas premissas sejam
 rastreáveis, suas inferências verificáveis, e suas lacunas
 identificáveis?
 
-A pergunta tem dois aspectos que os sete papers tratam em paralelo.
+A pergunta tem dois aspectos que os onze papers deste programa tratam
+em paralelo (fora os quatro papers da linha correlata de IA geral,
+não sintetizados aqui — ver Resumo).
 O aspecto dogmático: o que o sistema jurídico brasileiro exige,
 com precisão especificável, que os operadores façam ao fundamentar
 decisões e ao usar precedentes? O aspecto técnico: que ferramentas
@@ -61,7 +67,7 @@ dogmáticos estabelecem.
 
 ## 2. O eixo dogmático
 
-Os seis papers dogmáticos cobrem três camadas de crescente abstração.
+Os sete papers dogmáticos cobrem três camadas de crescente abstração.
 
 ### 2.1 A camada processual direta
 
@@ -121,11 +127,32 @@ reputacional têm interesse estrutural em manter a opacidade
 argumentativa que torna a reputação necessária e valiosa. A
 recalibração reputacional pela verificabilidade direta desvaloriza
 proxies e abre novo canal de construção de reputação para agentes
-antes excluídos do sistema.
+antes excluídos do sistema. O alcance desse mecanismo é mais restrito
+do que a formulação acima sugere — ver a ressalva ao final desta
+seção.
+
+**Paper 1G** situa o equilíbrio bloqueado — descrito em termos de
+incentivos em 1E e em termos reputacionais em 1F — em genealogia
+histórico-institucional. A tese central: o livre convencimento
+motivado (art. 131 do CPC/1973) não foi anomalia doutrinária, mas a
+doutrinização de uma disposição patrimonialista herdada do
+patrimonialismo ibérico (Faoro, Holanda) e nunca sujeita a mecanismo
+de enforcement suficientemente forte para constrangê-la. Engajando
+North sobre path dependence institucional, DiMaggio e Powell sobre
+isomorfismo institucional, e Bourdieu sobre habitus e campo jurídico,
+1G traça quatro fases (pré-súmula vinculante; súmula vinculante;
+CPC 2015 com temas repetitivos; recalibração tecnológica atual) e
+mostra que reformas processuais formais — inclusive o próprio CPC
+2015 — tendem a produzir adaptação de superfície sem mudança
+substantiva no habitus decisório enquanto o enforcement permanecer
+fraco. A implicação para o programa é de cautela: os mecanismos de
+custo (1E) e reputação (1F) enfrentam o mesmo obstáculo estrutural
+que 1G documenta em reformas anteriores, e nenhum dos dois demonstra,
+por si só, que a redução tecnológica de custos o supera.
 
 ### 2.4 A coerência do eixo dogmático
 
-Os seis papers formam progressão coerente. 1A e 1B são contribuições
+Os sete papers formam progressão coerente. 1A e 1B são contribuições
 processuais com aplicação forense imediata — qualquer procurador
 pode usar as formulações e a taxonomia das cinco saídas hoje. 1C
 é especificação para formalização computacional — é o paper que
@@ -134,7 +161,10 @@ sistema — descrevem o que o sistema deveria ser e por que não é,
 com prescritiva sobre como pode mudar. 1F é a dimensão sociológica
 — como o campo jurídico como sistema reputacional amplifica os
 problemas que 1D e 1E identificam e como a recalibração tecnológica
-os perturbaria.
+os perturbaria. 1G é a dimensão histórico-institucional — explica
+por que a mudança é lenta mesmo quando os mecanismos de custo e
+reputação apontam na direção certa, e qualifica o otimismo dos demais
+papers do eixo quanto à velocidade da recalibração.
 
 ---
 
@@ -162,7 +192,7 @@ erro; é registro honesto do limite epistêmico do formalizador.
 Teoremas que dependem de axiomas pendentes carregam essa incerteza
 através do `#print axioms`.
 
-**Paper 4** (ESHTR) introduz o método de avaliação: clustering
+**ESHTR** introduz o método de avaliação: clustering
 de decisões por similaridade semântica (embedding), ranking intra-
 cluster por painel de LLMs, e torneio inter-cluster entre vencedores.
 A hipótese da proximidade semântica — que a incidência de não-
@@ -248,6 +278,10 @@ da hipótese central.
 - A dimensão reputacional do campo jurídico (Paper 1F): capital
   simbólico, opacidade argumentativa como interesse estrutural,
   recalibração pela verificabilidade
+- A genealogia histórico-institucional do equilíbrio bloqueado
+  (Paper 1G): patrimonialismo, isomorfismo institucional e habitus
+  como explicação de por que reformas formais produzem adaptação
+  de superfície
 
 **Contribuições metodológicas:**
 
@@ -257,7 +291,7 @@ da hipótese central.
 - A distinção necessária/contingente para qualquer documento
   processual (Paper 3): extensão da ratio/obiter além dos
   precedentes
-- O método ESHTR (Paper 4): embedding-seeded hierarchical tournament
+- O método ESHTR: embedding-seeded hierarchical tournament
   ranking para avaliação de qualidade de decisões judiciais em
   corpus heterogêneo; hipótese da proximidade semântica
 - A métrica de dois eixos (Paper 5): diagnóstico da patologia
@@ -344,11 +378,13 @@ aqui.
 - Paper 1D: Vinculação racional e diálogo institucional
 - Paper 1E: Custos argumentativos e equilíbrio institucional
 - Paper 1F: Reputação como mecanismo de coordenação
+- Paper 1G: O livre convencimento como doutrinização do
+  patrimonialismo judicial
 - Paper 2: Pipeline Lean 4 com Argdown (inglês)
 - Paper 3: Proveniência de claims (inglês)
-- Paper 4: ESHTR — Embedding-Seeded Hierarchical Tournament Ranking
-  (inglês)
-- Paper 5: Avaliação empírica em corpus TJRO (inglês)
+- ESHTR: Embedding-Seeded Hierarchical Tournament Ranking (inglês)
+- Paper 5: Avaliação empírica em corpus TJRO (inglês; desenho
+  pré-registrado, resultados ainda não coletados)
 
 ---
 

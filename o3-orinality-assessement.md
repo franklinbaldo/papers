@@ -1,3 +1,21 @@
+> **Nota editorial (2026-07-09).** Este arquivo é a saída bruta de uma
+> sessão de navegação de um modelo de linguagem (o nome do arquivo
+> identifica o modelo), colada sem edição — **não é uma avaliação
+> independente de originalidade**. Evidência: as três URLs de rodapé
+> carregam o parâmetro de rastreamento `?utm_source=chatgpt.com`; o
+> texto referencia "the uploaded draft and implementation guide" e
+> "(example in the PDF)", artefatos de uma sessão de chat que não
+> existem neste repositório; e o "novelty scoring framework" citado
+> como "TRL §12.2" não é definido em lugar nenhum e não corresponde a
+> nenhum framework de originalidade conhecido. A busca de prior art
+> descrita ("a survey across arXiv, ACL Anthology, CVPR, and GitHub")
+> não é documentada além da própria afirmação. Trate o conteúdo abaixo
+> como um rascunho exploratório de apoio — não como evidência de
+> ineditismo do Pontifex. Uma verificação independente de prior art
+> permanece pendente.
+
+---
+
 **Bottom line:** _Pontifex is genuinely new._
 Each of its two pillars has antecedents in the literature, but the specific pairing—and especially the way they’re wired together—has not been reported before.
 

@@ -6,11 +6,17 @@ Porto Velho, Brazil
 
 ---
 
+> **Pre-registered design; no results yet.** This article specifies an empirical
+> evaluation design and pre-registers its hypotheses. No data has been collected
+> and no quantitative results are reported. Corpus sizes, thresholds, model
+> names, and pair counts in §2 are design parameters for a study that has not
+> yet been run, not measurements.
+
 ## Abstract
 
 This paper provides empirical evaluation of the Lean 4 pipeline
 for auditing legal arguments (Paper 2 of this series) using the
-Embedding-Seeded Hierarchical Tournament Ranking method (Paper 4).
+Embedding-Seeded Hierarchical Tournament Ranking method (ESHTR).
 We apply the pipeline to a corpus of Brazilian state court decisions
 from the Tribunal de Justiça do Estado de Rondônia (TJRO), assess
 the quality of resulting Embargos de Declaração using a heterogeneous
@@ -37,11 +43,14 @@ quality; TJRO.
 
 ## 1. Introduction
 
-Papers 1A through 1F of this series establish the dogmatic
-foundations; Papers 2 and 3 develop the pipeline methodology; Paper
-4 introduces the ESHTR evaluation method. This paper closes the
-empirical loop: it applies the methods to real Brazilian judicial
-decisions and reports quantitative results.
+Papers 1A through 1G of this series establish the dogmatic
+foundations; Papers 2 and 3 develop the pipeline methodology; ESHTR
+introduces the evaluation method. This paper specifies the
+empirical evaluation design that will close the empirical loop: it
+will apply the methods to real Brazilian judicial decisions and, upon
+data collection, report quantitative results. As stated above and in
+§6, no data has been collected yet — this document is the
+pre-registered design, not the results.
 
 The evaluation addresses three questions:
 
@@ -342,15 +351,16 @@ broader corpus but still within TJRO.
 ## 6. Conclusion
 
 This paper presents the empirical evaluation design for the pipeline
-developed in Paper 2, using the ESHTR method from Paper 4 and the
+developed in Paper 2, using the ESHTR method and the
 dual-axis rubric that addresses the COURTREASONER pathology. The
 design is pre-registered; results will be added upon data collection.
 
-The evaluation completes the "Auditable Legal Reasoning" research
-programme: Papers 1A–1F establish dogmatic foundations, Papers 2–3
-develop the pipeline and provenance methodology, Paper 4 introduces
-the ESHTR evaluation method, and this paper provides the quantitative
-evaluation that grounds the programme's empirical claims.
+Once run, the evaluation will complete the "Auditable Legal Reasoning"
+research programme: Papers 1A–1G establish dogmatic foundations, Papers
+2–3 develop the pipeline and provenance methodology, ESHTR introduces
+the evaluation method, and this paper's design specifies the
+quantitative evaluation intended to ground the programme's empirical
+claims — pending the data collection and results reporting noted above.
 
 ---
 

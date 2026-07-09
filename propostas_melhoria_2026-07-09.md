@@ -1,5 +1,27 @@
 # Propostas de melhoria — auditoria do programa de pesquisa
 
+> **Status de execução (2026-07-09, mesmo dia).** Franklin revisou esta
+> proposta e decidiu: Nível 0 executado integralmente (não é
+> "enfraquecimento", é "desarmamento de bomba"); Nível 1 executado
+> integralmente (concessões já saídas do próprio aparato adversarial —
+> recusar a absorção "transforma a rotina de 55 sessões em teatro"); no
+> Nível 3, duas correções ao texto original abaixo — (a) **não pausar**
+> a abertura de novas rodadas em 1B/1C/1F, manter só o gatilho de
+> absorção por concessão bilateral; (b) no paper6, **não expandir**
+> para cobrir STT/Pontifex/affordance — em vez disso, redefinir
+> explicitamente o escopo da síntese como o programa "Raciocínio
+> Jurídico Auditável" (dogmático + metodológico-formal + empírico),
+> tratando alignment/interpretabilidade como linha de pesquisa
+> correlata mas distinta. Ver `PROTOCOL.md` (novo) para as regras
+> revisadas do aparato de debate. Nível 2 e Nível 4 permanecem como
+> proposta, não executados nesta passada.
+>
+> Observação do próprio Franklin, registrada aqui porque vale mais que
+> qualquer coisa que eu escreveria: *"o achado mais valioso do PR,
+> aliás, é o meta: 'a rotina só encontra o que decide atacar'. Os dois
+> papers com os piores problemas de integridade eram justamente os com
+> cobertura zero."*
+
 **Data:** 2026-07-09
 **Escopo:** os 17 papers de nível superior deste repositório e o aparato de debate automatizado (`otherwise/`, `yesindeed/`, `synthesis/`) que vem rodando desde 2026-05-13 (55 sessões de síntese até a data deste documento).
 **Método:** três auditorias independentes (processo/cobertura da rotina; série dogmática 1A–1G; papers técnicos e corpus sem cobertura), com verificação manual direta dos achados mais graves antes de entrarem aqui. Não é uma sessão de síntese da rotina — é uma revisão externa complementar a ela.

@@ -62,10 +62,16 @@ verification costly. Agents with accumulated reputational capital
 have a structural interest in maintaining this opacity — because
 it is what makes their capital valuable. The technological reduction
 in the cost of verifying argumentative quality disrupts this
-equilibrium in two ways: it recalibrates existing reputational
-capital (proxies become less valuable when quality is directly
-verifiable) and opens a new channel for reputation-building for
-agents previously excluded from the system. The article engages
+equilibrium in two ways, most clearly for textually-identifiable
+compliance violations (precedent omission, missing statutory grounds,
+internal inconsistency) in high-volume, low-review dockets: it
+recalibrates existing reputational capital in that domain (proxies
+become less valuable when quality is directly verifiable there) and
+opens a local channel — between a practitioner and the specific courts
+that observe their filings — for reputation-building for agents
+previously excluded from the system. The article does not establish
+network-wide reputational democratization beyond this local channel,
+nor a uniform effect across all dockets and violation types. The article engages
 Akerlof on markets with asymmetric information, Kreps on reputation
 in repeated games, Bourdieu on the legal field, and Luhmann on
 trust in complex systems.
@@ -360,6 +366,18 @@ Esse é o mecanismo de democratização reputacional: a redução de
 custos de verificação abre canal de construção de reputação que
 antes estava fechado para agentes sem capital institucional prévio.
 
+Esse canal, tal como o mecanismo o sustenta, é local: opera entre um
+procurador ou advogado específico e os juízes e tribunais que
+efetivamente observam suas peças ao longo do tempo — não uma reputação
+que se propaga em rede por todo o sistema. A extensão do canal local
+para democratização reputacional em rede, em que a reputação construída
+perante um juízo se transferisse para o reconhecimento do agente perante
+o sistema como um todo, não é estabelecida por este mecanismo
+isoladamente; exigiria infraestrutura adicional de propagação (imprensa
+especializada, bases de jurisprudência anotadas por autoria) que este
+artigo não desenvolve. A seção 4.3 discute, além disso, obstáculos
+estruturais à própria acumulação do canal local no contexto brasileiro.
+
 ### 4.2 A resistência à recalibração
 
 A recalibração encontra resistência estrutural dos agentes que
@@ -412,6 +430,41 @@ reputação: de proxies institucionais para qualidade argumentativa
 verificável. Isso é transição dolorosa para agentes com alto capital
 em proxies e baixo capital em qualidade verificável — e é
 precisamente por isso que esses agentes resistem.
+
+**Obstáculos estruturais à acumulação do canal local no Brasil.** O
+mecanismo de Kreps pressupõe que o mesmo par de agentes — aqui, um
+procurador ou advogado específico e um juízo específico — interaja
+repetidamente, permitindo que a reputação se acumule como capital que
+orienta expectativas futuras. Três características da organização
+judiciária brasileira perturbam essa acumulação de modo independente
+entre si:
+
+**Distribuição aleatória por sorteio.** A distribuição por sorteio,
+prática de organização judiciária generalizada nos tribunais
+brasileiros voltada a assegurar impessoalidade, dispersa as petições
+de um mesmo procurador entre múltiplos juízes, diluindo a repetição
+de interação entre o mesmo par de agentes que a acumulação de
+reputação local pressupõe.
+
+**Rodízio de vara e movimentação de magistrados.** O rodízio periódico
+de vara e a movimentação de magistrados entre comarcas e tribunais têm
+efeito análogo: interrompem séries de interação antes que a reputação
+se consolide, mesmo quando a distribuição inicial concentrasse casos
+de um mesmo procurador perante o mesmo juízo.
+
+**Processamento mediado por assessoria.** O exame cotidiano das peças
+é mediado por assessores e servidores, não pelo magistrado diretamente;
+a impressão de qualidade que a reputação pressupõe frequentemente se
+forma primeiro no assessor que analisa a peça, e chega ao magistrado
+que assina a decisão apenas indiretamente e com perda de informação.
+
+Os três mecanismos operam de modo independente: mesmo quando um deles
+não se aplica a determinado contexto processual, os outros dois
+permanecem como obstáculos à acumulação de reputação local nos moldes
+que a seção 4.1 descreve. Nenhum dos três impede o canal descrito nesta
+seção — mas todos os três restringem sua força esperada, e nenhum
+deles é neutralizado pela redução de custos de verificação que é o
+objeto deste artigo.
 
 ---
 

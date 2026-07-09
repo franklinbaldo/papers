@@ -61,9 +61,12 @@ claims in any procedural document, the mechanism of propagation of
 contingent claims across successive documents, and the procedural
 consequences of failing to identify this phenomenon. The article
 does not aim at innovative dogmatic contribution; it aims at
-sufficient descriptive precision for formalizers — human or
-automated — to correctly implement the categories in formal languages
-without distorting the underlying legal system.
+sufficient descriptive precision for human formalizers to correctly
+implement the categories in formal languages without distorting the
+underlying legal system. §5.4 documents a tractability gap for fully
+automated formalizers on hard cases: the categories are designed to
+be tractable using structural signals as heuristics for a human
+interpreter, not as a guarantee of automatable classification.
 
 **Keywords**: legal formalization; claim; claim cumulation;
 disposition; dispositif; devolutive effect; appellate claim; ratio
@@ -586,6 +589,17 @@ fundamentos que cada ministro adicionou individualmente mas que
 não foram compartilhados pelos demais são, em relação ao acórdão
 como precedente, obiter.
 
+Essa regra pressupõe que exista denominador comum identificável. Em
+maiorias fragmentadas — em que ministros concorrem no resultado por
+fundamentos genuinamente distintos e não sobrepostos, sem núcleo
+argumentativo compartilhado —, a regra não produz ratio determinada:
+o menor denominador comum é vazio. Mitidiero e Macêdo documentam a
+ocorrência desse padrão em julgamentos de maior repercussão do STF.
+Para esses casos, a identificação da ratio exige critério adicional
+que este artigo não desenvolve; até que esse critério exista, a
+proveniência da afirmação correspondente deve ser registrada como
+`pendente` (§5.4) em vez de forçada à categoria de ratio ou obiter.
+
 ### 5.4 Proveniência e status como atributos formais
 
 Para a formalização computacional, cada afirmação usada como
@@ -613,6 +627,28 @@ confirmada e status necessário. Essa hierarquia de confiança
 não impede a formalização — não é necessário que todos os axiomas
 sejam de alta confiança para que o trabalho avance —, mas precisa
 ser registrada e comunicada ao usuário do sistema.
+
+Essa determinação de proveniência e status enfrenta dificuldade
+específica para formalizadores automatizados. Em casos em que a
+proveniência ou o status de uma afirmação dependem da leitura de qual
+argumento foi necessário e suficiente para a conclusão (§5.3) — e não
+apenas de sinais estruturais de superfície, como citação explícita ou
+posição no documento —, o próprio julgamento sobre necessidade
+pressupõe a mesma análise interpretativa que a categorização deveria
+preceder. Para um formalizador humano, essa circularidade é
+administrável: o intérprete alterna entre a leitura do argumento e a
+classificação provisória até convergir. Para um sistema automatizado
+que depende de sinais estruturais como proxy da necessidade, a
+circularidade é mais séria — o sistema não tem acesso independente ao
+julgamento interpretativo que resolveria os casos difíceis, e tende a
+registrar como `pendente` precisamente os casos mais contestados
+(inclusive o das maiorias fragmentadas de §5.3). A tratabilidade que
+este artigo reivindica no Resumo vale para formalizadores humanos
+usando os sinais estruturais como heurística; para sistemas
+automatizados, vale apenas nos casos majoritários em que os sinais
+estruturais coincidem com a necessidade real do fundamento — não nos
+casos de fundamentação plural ou implícita em que essa coincidência
+falha.
 
 ### 5.5 Mecanismo de propagação e suas consequências processuais
 
