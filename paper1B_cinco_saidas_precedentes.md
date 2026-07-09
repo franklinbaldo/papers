@@ -278,10 +278,9 @@ constitucionalidade e súmulas vinculantes. A vinculação constitucional
 não suprime o dever de fundamentação (art. 93, IX, CF) nem impede que
 o tribunal inferior articule divergência fundamentada e, com base
 nela, deixe de aplicar o precedente ao caso concreto — o tribunal
-pode fazê-lo. O que distingue esse domínio do infraconstitucional — e
-ainda carece de desenvolvimento mais preciso nesta série — é o remédio
-processual disponível contra a divergência e o grau de certeza da
-reversão, dado o papel do STF como intérprete final da Constituição.
+pode fazê-lo. O que distingue esse domínio do infraconstitucional é o
+remédio processual disponível contra a divergência, desenvolvido na
+seção 4.4.
 
 ### 3.5 Quinta saída: abstenção da invocação
 
@@ -415,6 +414,43 @@ submetida a recurso ou reclamação. O valor da quarta saída não está em
 produzir decisão que se sustente isoladamente; está em articular, com
 o ônus argumentativo qualificado da seção 4.3, o argumento apto a levar
 o tribunal-fonte a rever sua própria ratio.
+
+O remédio processual contra a superação racional não é uniforme —
+depende do instrumento de que o precedente se origina, não de a
+matéria ser constitucional ou infraconstitucional. Para súmula
+vinculante e para decisão do STF em controle concentrado de
+constitucionalidade, o art. 988, III, do CPC — em conjugação com o
+art. 103-A, §3º, da CF para a súmula vinculante especificamente —
+autoriza reclamação diretamente ao STF, cabível tanto pela aplicação
+indevida da tese quanto por sua não aplicação ao caso que a ela
+corresponda (art. 988, §4º, do CPC): hipótese que inclui precisamente
+o afastamento por superação racional que a quarta saída descreve. A
+reclamação é processada e julgada pelo próprio órgão cuja autoridade
+se busca preservar (art. 988, §1º, do CPC) — diretamente pelo STF,
+sem percorrer a escada recursal — e tem cognição estruturalmente mais
+estreita, restrita ao confronto entre a tese fixada e a decisão
+reclamada, do que a devolvida em recurso ordinário.
+
+Essa proteção, contudo, não segue a linha constitucional/
+infraconstitucional: o mesmo art. 988 estende reclamação a acórdãos
+de incidente de resolução de demandas repetitivas e de incidente de
+assunção de competência (inciso IV) — de origem tipicamente
+infraconstitucional, firmados por tribunais de justiça e regionais
+federais — e, por força do §5º, II, também a recursos extraordinário
+e especial repetitivos, desde que esgotadas as instâncias ordinárias.
+A linha real separa precedentes originados de mecanismos processuais
+que o CPC equipou com reclamação (súmula vinculante, controle
+concentrado, IRDR, IAC, repetitivos) de precedentes "ordinários" —
+inclusive jurisprudência consolidada do STJ que não tenha percorrido
+nenhum desses procedimentos —, para os quais a única via de correção
+é o recurso ordinário. Súmula vinculante e controle concentrado, por
+serem sempre do STF, caem sempre do lado protegido por reclamação;
+daí a impressão de que a diferença relevante para a quarta saída é
+"constitucional versus infraconstitucional", quando na verdade é
+"precedente com reclamação versus precedente sem reclamação" — e o
+primeiro grupo inclui precedentes infraconstitucionais (IRDR, IAC,
+repetitivos) que a esta altura da série ainda não foram examinados
+sob essa lente.
 
 A admissão da superação racional pelo tribunal inferior não enfraquece
 o sistema de precedentes; pelo contrário, o fortalece a longo prazo.
