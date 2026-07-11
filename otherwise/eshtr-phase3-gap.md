@@ -3,7 +3,7 @@ type: "Adversarial Critique"
 title: "Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale"
 description: "Critica adversarial a tratabilidade do campeonato inter-cluster da Fase 3 do ESHTR."
 tags: [adversarial, eshtr]
-timestamp: 2026-07-07T08:40:27+00:00
+timestamp: 2026-07-11T00:00:00+00:00
 ---
 
 # Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale
@@ -1190,6 +1190,28 @@ stripping step — identifying phrases appearing across instances of the same pr
 type regardless of doctrinal subject matter — analogous to the cross-cluster step but
 applied within procedural-posture groupings, is required to close the residual.
 
+**Twelfth adversarial response — round 12: posture-type stripping accepted; type (b) shared-infrastructure accepted; Jurisprudência Temática/Teses granularity does not reach doctrinal-specific fundamento determinante identification; currency limitation in the contested-boundary subclass of the high-adversarial-record arm; secretariat authorship convention claim lacks documentary basis.**
+
+The supportive round 12 makes four advances: (1) posture-type stripping — a third C3 preprocessing layer stripping phrases appearing in more than 90% of decisions of each procedural type across all doctrinal clusters before within-cluster frequency computation, with within-posture-type cross-cluster C3 variance as the validation check; (2) type (a)/(b) demarcation operationalized via the STF's Jurisprudência Temática and the STJ's Jurisprudência em Teses as a database-lookup task parallel in structure to C3's official-database preprocessing; (3) implicit-structure flagging rate contested as a structural inference that overlooks STF secretariat conventions favoring explicit logical structure for high-profile constitutional ementas, with the rate to be determined empirically by pre-calibration pilot; (4) type (b) gap-filling via the same expert-review infrastructure already required for implicit-structure ementa C1 annotation, with combined class-size determined by the same pilot. Four adversarial responses follow.
+
+*Posture-type stripping: accepted.* The three-layer combined preprocessing sequence — official-database, cross-cluster-convention, posture-type — addresses all three C3 residual categories the adversarial identified across rounds 9–11: universally-mandated text, court-universally-conventional institutional formulas, and procedural-type-specific institutional formulas. The validation criterion (within-posture-type cross-cluster C3 variance approaching zero after all three preprocessing layers) is correctly specified and makes the adequacy claim falsifiable. Accept unconditionally. Surrender condition (g) is updated to reflect that the posture-type stripping layer closes the procedural-type residual; full satisfaction requires implementation of all three preprocessing layers with convergent within-posture-type cross-cluster C3 variance confirmed at the validation step.
+
+*Type (b) shared-infrastructure gap-filling: accepted.* The shared expert-review infrastructure for type (b) SC6(b-1)-ID annotation and implicit-structure ementa C1 annotation is accepted as a valid cost-reduction argument. Both annotation classes use the same expert substrate; the pre-calibration pilot measures the combined class size from both. If the combined class size is manageable, the shared infrastructure is a genuine cost-reduction; if large, both classes compound a single bottleneck. Accept the shared-infrastructure framing. The empirical constraint — the arm-specific combined class size from the pilot — is the only remaining question on the calibration design's operational feasibility.
+
+*Jurisprudência Temática/Teses granularity: the structural parallel to C3 preprocessing does not extend to doctrinal-specific fundamento determinante identification.* The structural parallel to C3 official-database preprocessing is accepted in principle: both tasks involve querying an authoritative document set to classify a citing court's action against an established reference without requiring independent legal-content analysis at the annotation step. The analogy identifies a genuine structural similarity. What the analogy does not show is that the query is granular enough for the C1 annotation task.
+
+C3 official-database preprocessing matches text verbatim: the reasoning section contains "Art. 5°, caput, da Constituição Federal" and the official database contains that provision's verbatim text. The match is mechanical and unambiguous. The Jurisprudência Temática/Teses database-lookup classifies a citing court's doctrinal characterization against the compilation's named-entry thematic categories. The STF's Jurisprudência Temática and the STJ's Jurisprudência em Teses enumerate established applications of constitutional and statutory principles at the thematic level: "proporcionalidade nas sanções administrativas," "contraditório e ampla defesa em procedimentos administrativos," "tutela cautelar em matéria tributária." These entries confirm that the abstract constitutional principle has established applications in the thematic domain. They do not enumerate which specific doctrinal constructions of the principle — which particular formulations of the principle's requirements at the operative level where citing courts apply it — have been established as fundamentos determinantes.
+
+A citing court that characterizes the cited precedent as establishing "proportionality requires individualized enumeration of each aggravating factor in the sanctioning decision as a fundamento determinante" matches the thematic entry for administrative-sanctions proportionality. The database returns type (a). The C1 annotation task requires determining whether individualized factor enumeration specifically — as distinguished from proportionality's application to the sanction outcome generally — is a fundamento determinante of the cited precedent or a doctrinal construction the citing court incorrectly elevates from the abstract principle. The thematic-level entry does not resolve this: it establishes that proportionality applies to administrative sanctions; it does not specify which doctrinal constructions of proportionality's requirements in that domain are fundamentos determinantes at the level where the citing court's analysis operates.
+
+This granularity gap is structurally parallel to the gap that survived the ementa-as-authoritative-ratio source-reduction move in round 10. Round 10's concession accepted that reading the cited precedent's ementa is simpler than synthesizing across votos. The annotation-task challenge preserved was the principle-to-application-level mismatch: the ementa characterizes the ratio at the abstract-principle level while the citing court characterizes the fundamento determinante at the doctrinal-specific level. The Jurisprudência Temática operationalization addresses the same granularity level as the ementa: it enumerates established thematic applications of the abstract principle. Neither the ementa nor the compilation specifies which particular doctrinal constructions within the thematic domain are fundamentos determinantes. The database-lookup provides the same structural confirmation the ementa provides — that the abstract principle has established application to the thematic domain — and inherits the same annotation-task challenge the ementa leaves unresolved at the doctrinal-specific level.
+
+*Currency limitation in the contested-boundary subclass.* A second structural constraint limits the database-lookup operationalization in the high-adversarial-record arm. The high-adversarial-record arm consists disproportionately of cases where parties contest the scope of an established constitutional doctrine — specifically, whether the doctrinal construction the citing court characterizes as the fundamento determinante is within the established application or a novel extension. These are precisely the cases where the Jurisprudência Temática/Teses compilations have not yet produced an authoritative classification of the contested construction: the compilations document settled doctrine; contested-boundary interpretive developments appear in the compilation only after they are resolved through the adjudicative process that generates the high-adversarial-record cases in the calibration corpus. The calibration corpus's high-adversarial-record cases are drawn from contested interpretive contexts by construction: adversarial record richness indexes contested interpretive boundaries. For the database-lookup to classify a case as type (a), the compilation must contain an entry identifying the specific doctrinal construction as an established application at the time of corpus assembly. In the contested-boundary subclass of the high-adversarial-record arm, the compilation is silent on precisely the question the annotation must determine — because the litigation is the mechanism by which that classification is eventually established. The database-lookup defaults the unclassified case to type (b): not-type-(a). This is also what the adversarial predicts: the type (b) hard core is concentrated in contested-boundary cases where both the granularity and currency limitations operate simultaneously. The currency limitation does not defeat the database-lookup operationalization for paradigm type (a) cases; it confirms that the type (b) hard core remains in the contested-constitutional class.
+
+*Secretariat authorship convention: asserted mechanism, not documented practice.* The supportive round 12 contests the adversarial's implicit-structure flagging rate prediction on the grounds that STF secretariat authorship conventions for high-profile constitutional ementas favor explicit logical structure for precedential clarity. This counter-inference is presented without documentary basis. The round 12 filing does not identify a STF secretariat authorship guideline, ementa drafting convention document, administrative directive, or empirical comparison of ementa logical-structure rates against multi-issue holding characteristics establishing that high-profile constitutional ementas systematically favor explicit logical connectives over listing formats.
+
+The adversarial's flagging-rate prediction rests on two independently stated structural drivers: (i) contested constitutional cases resolve multiple issues simultaneously, generating multi-item ground listings by structural necessity; (ii) ementas serving as cross-court citation resources favor listing formats that allow each downstream court to identify the relevant ground for its specific case without parsing logical dependencies among all grounds. Both drivers follow from the institutional function of ementas and the structural characteristics of contested constitutional adjudication. The supportive's counter-inference requires a convention that overrides both drivers simultaneously — a drafting practice mandating explicit logical connectives in ementa multi-item ground listings for high-profile constitutional decisions in spite of the cross-court applicability function that favors listing formats. Whether such a convention exists and dominates the two structural drivers is a factual question about STF secretariat drafting behavior that the round 12 filing neither documents nor cites. The pre-calibration pilot measurement is the correct resolution; the adversarial does not contest this. What the adversarial presses: an asserted convention that overrides two independently grounded structural pressures requires documentary support before it can constitute a structural rebuttal to the adversarial's rate prediction. Until the pilot data is available, both sides' rate projections are structurally inferred; the adversarial's projection has two stated structural drivers, and the supportive's has one mechanism claim that presupposes an undocumented convention.
+
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
 case types. High-volume processing creates institutional pressures to routinize
@@ -1722,7 +1744,7 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (eleven supportive responses, eleven adversarial counter-replies).**
+**On the full C2 exchange (twelve supportive responses, twelve adversarial counter-replies).**
 The C2 debate has passed through nine exchanges. The supportive camp argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
@@ -1916,23 +1938,50 @@ universally-conventional institutional formulas while a procedural-type-specific
 residual survives — phrases that are conventional within procedural-posture clusters
 (habeas corpus admission formulas, recurso especial admissibility templates) but not
 cross-doctrinal-subject in distribution are not captured by the three-cluster frequency
-criterion, requiring a posture-type stripping step to close. The practical implication
-across all eleven exchanges: within-cluster C2-specific criterion activation cannot be
-ruled out under the current protocol design; the round 10 advances substantially address
-C3 conflation for officially-mandated text categories, collegial-fragmentation at the
-annotation-source level, and SC6(b-1)-ID tractability for quality-filter calibration
-decisions; round 11's C1 relocation advances annotation-source tractability unconditionally
-while the annotation-task challenge relocates from principle-level voto-synthesis to
-principle-to-application-level gap-filling at the type (b) hard core; the surviving
+criterion, requiring a posture-type stripping step to close. On (12): posture-type stripping is
+accepted unconditionally — the three-layer preprocessing sequence closes all three C3
+residual categories and surrender condition (g) is updated accordingly; type (b) shared-
+infrastructure gap-filling is accepted, with arm-specific combined type (b) plus implicit-
+structure class size from the pre-calibration pilot as the single remaining operational
+constraint; the Jurisprudência Temática/Teses database-lookup operationalization is
+accepted as structurally parallel to C3 preprocessing and as correctly handling paradigm
+type (a) cases, but the granularity gap survives — thematic-level compilation entries
+confirm the abstract principle's established application to the thematic domain without
+specifying which particular doctrinal constructions within the domain are fundamentos
+determinantes, and this is the same resolution level as the ementa-as-authoritative-ratio
+source-reduction, which itself left the principle-to-doctrinal-application annotation-task
+challenge unresolved; the currency limitation compounds the granularity gap in the
+contested-boundary subclass — compilation coverage of settled doctrine does not extend to
+contested interpretive developments that constitute the high-adversarial-record arm's hard
+core, defaulting those cases to type (b) by the negative-identification test; and the
+secretariat authorship convention claim for the implicit-structure flagging rate is
+insufficiently attested — the claim requires documentary support for a convention that
+overrides two independently stated structural drivers (multi-issue simultaneous resolution;
+cross-court citation listing function), and until the pilot data is available both sides'
+rate projections are structurally inferred, with the adversarial's projection having two
+stated structural drivers and the supportive's having one undocumented mechanism claim.
+The practical implication across all twelve exchanges: within-cluster C2-specific criterion
+activation cannot be ruled out under the current protocol design; the round 10 advances
+substantially address C3 conflation for officially-mandated text categories,
+collegial-fragmentation at the annotation-source level, and SC6(b-1)-ID tractability for
+quality-filter calibration decisions; round 11's C1 relocation advances annotation-source
+tractability unconditionally while the annotation-task challenge relocates from
+principle-level voto-synthesis to principle-to-application-level gap-filling at the type
+(b) hard core; round 12 closes the procedural-type C3 residual via posture-type stripping
+and closes the type (b) gap-filling cost question via shared infrastructure, while the
+Jurisprudência Temática/Teses operationalization inherits the granularity gap that the
+ementa-as-authoritative-ratio move left unresolved — thematic-level classification does
+not identify doctrinal-specific fundamentos determinantes — and the currency limitation
+compounds the granularity gap in the contested-boundary subclass; the surviving
 arm-specific differential IRR concerns are: (a) for C1, ementa-interpretation difficulty
 at the principle-to-doctrinal-application gap (relocated from voto-synthesis but not
-eliminated); (b) for SC6(b-1)-ID, ementa-theory generality and type (a)/(b) demarcation
-tractability in the contested-constitutional class; (c) for C3, the procedural-type-
-specific institutional formula residual that cross-cluster-convention stripping does not
-capture; coverage completeness as a within-adequacy ranking signal continues to require
-the case-record input extension and materiality-identification calibration; SC6(c)
-determines which prong of the C2 disjunction applies; under prong 2, SC6(3) requires the
-cross-elaboration test with cross-cluster-convention and cross-elaboration extensions.
+eliminated); (b) for SC6(b-1)-ID, the type (b) hard core concentrated where granularity
+and currency limitations simultaneously operate in the contested-boundary subclass of the
+high-adversarial-record arm; coverage completeness as a within-adequacy ranking signal
+continues to require the case-record input extension and materiality-identification
+calibration; SC6(c) determines which prong of the C2 disjunction applies; under prong 2,
+SC6(3) requires the cross-elaboration test with cross-cluster-convention and
+cross-elaboration extensions.
 
 **On the Phase 3 attack (§§3.6–3.8):**
 
@@ -2221,7 +2270,18 @@ conditions.
    in the routine arm, the mandatory-flagging solution converts annotation tractability
    into an operational-capacity dependency at champion scale, and the arm-specific
    flagging rate is the empirical quantity that determines whether the solution is
-   tractable in the evaluation target's distribution.
+   tractable in the evaluation target's distribution. Fourth, arm-specific combined
+   type (b) case rate and implicit-structure flagging rate must be reported jointly
+   from a pre-calibration pilot. Round 12 accepts the type (b) shared-infrastructure
+   framing and the posture-type stripping step, but whether the contested-constitutional
+   arm concentrates cases with both type (b) complexity and implicit-structure flags at
+   operationally significant rates is an open empirical question. Cases simultaneously
+   requiring expert-calibrated type (b) annotation and implicit-structure unpacking
+   represent the maximum annotation-cost class; if this joint class is concentrated in
+   the arm where annotation tractability is most disputed, the cumulative burden may
+   exceed what reference-answer construction can address without substantially expanded
+   expert infrastructure. The pre-calibration pilot data should report this joint class
+   size directly.
 
    **(g) C3 operationalization distinguishes legally mandated verbatim text from
    formulaic reasoning avoidance.** Round 10's mandatory-text preprocessing proposal
@@ -2247,20 +2307,20 @@ conditions.
    court-universally-conventional and Regimento Interno formulas (cross-cluster-
    convention stripping).
 
-   A third residual category remains. Procedural-type-specific institutional formulas
-   — standard admissibility characterizations for habeas corpus, recurso especial
-   admissibility templates, mandado de segurança procedural formulas, and analogous
-   posture-specific language — are universal within their procedural-posture cluster
-   but not distributed across doctrinal-subject clusters. The three-cluster frequency
-   criterion does not capture them because their cross-cluster distribution is
-   procedural-posture-specific rather than doctrinal-subject-cross-cutting. After
-   official-database and cross-cluster-convention stripping, these formulas remain in
-   within-cluster phrase frequency as indistinguishable from optional formulaic
-   reasoning avoidance. Full satisfaction of this surrender condition requires a
-   posture-type stripping step — identifying phrases appearing universally across
-   instances of the same procedural posture regardless of doctrinal subject matter
-   — analogous to the cross-cluster step but applied within procedural-posture
-   groupings.
+   Round 12's posture-type stripping step — identifying phrases appearing in greater
+   than ninety percent of decisions of each procedural type across doctrinal clusters
+   — addresses this residual category directly. The step's scope criterion
+   (procedural-type-specific universality across doctrinal subjects) matches the
+   structural description of the residual: phrases that are universal within a
+   procedural posture but not cross-cluster. This surrender condition is now met for
+   four categories: universally-mandated text (official-database preprocessing),
+   court-universally-conventional and Regimento Interno formulas (cross-cluster-
+   convention stripping), and procedural-type-specific institutional formulas
+   (posture-type stripping). Full satisfaction is subject to implementation validation
+   confirming that the ninety-percent threshold correctly separates institutional-
+   procedural formulas from doctrinal reasoning in practice — whether the threshold
+   calibration is robust across different procedural types and doctrinal domains in
+   the STF corpus remains an empirical question for the ESHTR experimental protocol.
 
 4. **Restricted scope claim**: If ESHTR is reinterpreted as producing only
    within-cluster quality rankings (not a global ranking), the Phase 3 attack is
