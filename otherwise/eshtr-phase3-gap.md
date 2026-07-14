@@ -3,7 +3,7 @@ type: "Adversarial Critique"
 title: "Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale"
 description: "Critica adversarial a tratabilidade do campeonato inter-cluster da Fase 3 do ESHTR."
 tags: [adversarial, eshtr]
-timestamp: 2026-07-11T00:00:00+00:00
+timestamp: 2026-07-14T00:00:00+00:00
 ---
 
 # Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale
@@ -1212,6 +1212,22 @@ This granularity gap is structurally parallel to the gap that survived the ement
 
 The adversarial's flagging-rate prediction rests on two independently stated structural drivers: (i) contested constitutional cases resolve multiple issues simultaneously, generating multi-item ground listings by structural necessity; (ii) ementas serving as cross-court citation resources favor listing formats that allow each downstream court to identify the relevant ground for its specific case without parsing logical dependencies among all grounds. Both drivers follow from the institutional function of ementas and the structural characteristics of contested constitutional adjudication. The supportive's counter-inference requires a convention that overrides both drivers simultaneously — a drafting practice mandating explicit logical connectives in ementa multi-item ground listings for high-profile constitutional decisions in spite of the cross-court applicability function that favors listing formats. Whether such a convention exists and dominates the two structural drivers is a factual question about STF secretariat drafting behavior that the round 12 filing neither documents nor cites. The pre-calibration pilot measurement is the correct resolution; the adversarial does not contest this. What the adversarial presses: an asserted convention that overrides two independently grounded structural pressures requires documentary support before it can constitute a structural rebuttal to the adversarial's rate prediction. Until the pilot data is available, both sides' rate projections are structurally inferred; the adversarial's projection has two stated structural drivers, and the supportive's has one mechanism claim that presupposes an undocumented convention.
 
+**Thirteenth adversarial response — round 13: step-1/step-2 distinction correctly identifies the compilation's step-1 role and the ementa's step-2 role; it does not address the annotation task at step 2, where the citing court's doctrinal-specific characterization must be compared against the ementa's abstract-principle characterization; currency limitation accepted; secretariat convention withdrawal accepted.**
+
+The supportive round 13 makes four moves: (1) reconfirms posture-type stripping and type (b) shared-infrastructure acceptances from round 12; (2) responds to the granularity challenge with a step-1/step-2 structural distinction — the compilation (Jurisprudência Temática/Teses) performs step 1 (domain classification for type (a)/(b) demarcation), the ementa performs step 2 (fundamento determinante characterization for C1 annotation), and C1 requires step 2 which the ementa supplies at principle level; (3) accepts the currency limitation as correctly describing the type (b) default rule's operation; (4) withdraws the secretariat authorship convention claim and names the pre-calibration pilot as the sole resolution for the implicit-structure flagging rate. Three adversarial responses follow.
+
+*Step-1/step-2 distinction: analytically correct as a description of document functions; does not address the annotation task at step 2.* The structural distinction is accepted as accurate. The compilation performs step 1: it classifies the cited precedent's established application to a thematic domain, enabling the type (a)/(b) demarcation that routes annotation to text-mapping or expert review. The ementa performs step 2: it supplies the authoritative characterization of the cited precedent's fundamentos determinantes at the abstract-principle level. C1 annotation uses the ementa as its step-2 source document — this was the round 10 ementa-as-authoritative-ratio concession, not re-contested here. The step-1/step-2 framing accurately describes which document serves which protocol function.
+
+What the distinction does not address is the annotation task's internal structure at step 2. The step-2 document-level function is: the ementa supplies the principle-level characterization. The step-2 annotation task is: the annotator compares the citing court's characterization of the cited ratio against the ementa's characterization. These are not the same operation. The citing court characterizes the cited ratio at the doctrinal-specific level — "the cited precedent establishes that rule R in situation S is the fundamento determinante." The ementa characterizes the cited ratio at the abstract-principle level — "principle P applies." Whether the citing court's doctrinal-specific characterization (rule R in situation S) correctly maps to the ementa's abstract-principle characterization (principle P) requires determining what the ementa's abstract statement implies at the specific doctrinal level where the citing court operates. This is not ementa-reading at the ementa's characterization level; it is principle-to-application-level assessment — the same gap the round 11 argument established as the surviving annotation-task challenge after the source-reduction move. The step-1/step-2 distinction resolves a source-selection question that round 10 already resolved; it does not alter the structure of the task the annotator performs once the ementa is selected as the step-2 source.
+
+The supportive's formulation — "C1 annotation requires step 2, which the ementa supplies at principle level" — is correct about the document the annotation reads but incomplete about the task the annotation performs. The ementa supplies one side of the comparison (the abstract-principle characterization of the cited ratio); the citing court's text supplies the other side (the doctrinal-specific characterization of what the citing court claims the cited ratio establishes at the operative level). The two sides are at different levels of specificity. The comparison across levels is the annotation task, and this comparison requires principle-to-application assessment. The step-1/step-2 distinction correctly identifies which document performs which protocol function; it establishes the ementa as the step-2 source, which round 10 already established; it does not establish that the comparison the annotator performs at step 2 is tractable within the ementa's characterization level.
+
+The round 12 granularity challenge was not about which document is the step-2 source. It was about whether the C1 annotation task can be performed tractably at the granularity the ementa supplies (principle level) when the citing court's characterization operates at the doctrinal-specific level. The step-1/step-2 distinction responds to a question the adversarial did not ask — which document is the step-2 source — rather than the question the adversarial did ask — whether the step-2 task is tractable across the specificity gap. Naming the compilation as step 1 and the ementa as step 2 correctly describes the demarcation-to-annotation protocol structure; it does not address whether the annotation at step 2 can be performed without crossing the specificity gap from principle level to doctrinal-specific level.
+
+*Currency limitation: accepted.* The supportive's acceptance of the currency limitation as the correct operational description is accepted without further contest. Conservative routing of compilation-absent arguments to type (b) expert review is the operationally appropriate response to the lag-window effect. The lag-window class size in the contested-boundary subclass of the high-adversarial-record arm is the empirical question determined by the pre-calibration pilot. The currency limitation compounds with the granularity gap in the contested-boundary subclass: both limitations operate simultaneously on the cases where the annotation task is hardest, concentrating type (b) routing where the step-2 annotation task is structurally most complex. The pilot's operational significance is therefore not only the class size but the class composition: cases simultaneously requiring type (b) routing and step-2 gap-crossing are the maximum annotation-cost class.
+
+*Secretariat convention withdrawal: accepted.* The withdrawal is accepted as the epistemically honest response. The pre-calibration pilot is the correct arbiter. The adversarial's two structural drivers for its implicit-structure flagging rate prediction are stated structural inferences, not documented rates; the supportive's convention claim was a structural inference in the same epistemic category. Neither side has documented the flagging rate; both have stated structural arguments for their projections. The pilot resolves which projection is empirically borne out.
+
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
 case types. High-volume processing creates institutional pressures to routinize
@@ -1744,7 +1760,7 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (twelve supportive responses, twelve adversarial counter-replies).**
+**On the full C2 exchange (thirteen supportive responses, thirteen adversarial counter-replies).**
 The C2 debate has passed through nine exchanges. The supportive camp argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
@@ -1960,7 +1976,8 @@ overrides two independently stated structural drivers (multi-issue simultaneous 
 cross-court citation listing function), and until the pilot data is available both sides'
 rate projections are structurally inferred, with the adversarial's projection having two
 stated structural drivers and the supportive's having one undocumented mechanism claim.
-The practical implication across all twelve exchanges: within-cluster C2-specific criterion
+On (13): the step-1/step-2 distinction is accepted as accurately describing the compilation's step-1 function (domain classification for type (a)/(b) demarcation) and the ementa's step-2 function (C1 source document supplying the fundamento determinante characterization at principle level); the distinction correctly identifies the ementa as the step-2 source, which round 10 established, and does not re-contest this; the granularity challenge survives under the new framing — the step-1/step-2 distinction resolves the step-2 SOURCE question but not the step-2 TASK question: the annotation task at step 2 requires comparing the citing court's doctrinal-specific characterization against the ementa's abstract-principle characterization, a comparison that crosses the specificity gap and requires principle-to-application assessment; the distinction responds to a source question (which document?) that round 10 already resolved rather than the task question (is the comparison tractable across the specificity gap?) that the round 11 and 12 adversarial arguments raised; the currency limitation acceptance is accepted as correctly describing the default rule's conservative routing — lag-window class size and class composition determined by the pilot; the secretariat convention withdrawal is accepted as epistemically appropriate — the pilot resolves both sides' structural inferences about the flagging rate.
+The practical implication across all thirteen exchanges: within-cluster C2-specific criterion
 activation cannot be ruled out under the current protocol design; the round 10 advances
 substantially address C3 conflation for officially-mandated text categories,
 collegial-fragmentation at the annotation-source level, and SC6(b-1)-ID tractability for
@@ -1972,16 +1989,24 @@ and closes the type (b) gap-filling cost question via shared infrastructure, whi
 Jurisprudência Temática/Teses operationalization inherits the granularity gap that the
 ementa-as-authoritative-ratio move left unresolved — thematic-level classification does
 not identify doctrinal-specific fundamentos determinantes — and the currency limitation
-compounds the granularity gap in the contested-boundary subclass; the surviving
-arm-specific differential IRR concerns are: (a) for C1, ementa-interpretation difficulty
-at the principle-to-doctrinal-application gap (relocated from voto-synthesis but not
-eliminated); (b) for SC6(b-1)-ID, the type (b) hard core concentrated where granularity
-and currency limitations simultaneously operate in the contested-boundary subclass of the
-high-adversarial-record arm; coverage completeness as a within-adequacy ranking signal
-continues to require the case-record input extension and materiality-identification
-calibration; SC6(c) determines which prong of the C2 disjunction applies; under prong 2,
-SC6(3) requires the cross-elaboration test with cross-cluster-convention and
-cross-elaboration extensions.
+compounds the granularity gap in the contested-boundary subclass; round 13 accepts the
+step-1/step-2 distinction as correctly identifying the ementa as the step-2 source
+document while establishing that the step-2 annotation task — comparing the citing court's
+doctrinal-specific characterization against the ementa's abstract-principle characterization
+— requires principle-to-application assessment that the source-identification distinction
+does not address; the surviving arm-specific differential IRR concerns are: (a) for C1,
+ementa-interpretation difficulty at the principle-to-doctrinal-application gap, now
+reformulated as the step-2 task tractability challenge — whether the comparison between
+the citing court's doctrinal-specific characterization and the ementa's abstract
+characterization is tractable without crossing the specificity gap (relocated from
+voto-synthesis but not eliminated); (b) for SC6(b-1)-ID, the type (b) hard core
+concentrated where granularity and currency limitations simultaneously operate in the
+contested-boundary subclass of the high-adversarial-record arm, with pilot data
+determining both class size and class composition; coverage completeness as a
+within-adequacy ranking signal continues to require the case-record input extension and
+materiality-identification calibration; SC6(c) determines which prong of the C2
+disjunction applies; under prong 2, SC6(3) requires the cross-elaboration test with
+cross-cluster-convention and cross-elaboration extensions.
 
 **On the Phase 3 attack (§§3.6–3.8):**
 
@@ -2097,7 +2122,16 @@ correction to §3.3 — that persistent activation across all pairings was too s
 a claim — while pressing the narrowed claim: systematic criterion activation in
 cross-strength pairings and the cluster-composition dynamic both produce structured
 Bradley-Terry scoring artifacts, and the pair-specificity response's success depends
-on the quality-dimension correlation claim that §3.2 contests.
+on the quality-dimension correlation claim that §3.2 contests. On the C2 annotation-task
+front: round 13 accepts the step-1/step-2 distinction as accurately describing the
+ementa's document-level function as the step-2 source while pressing that the annotation
+task at step 2 requires comparing the citing court's doctrinal-specific characterization
+against the ementa's abstract-principle characterization — a cross-specificity comparison
+the source-identification distinction does not address; accepting the currency limitation
+as the correct operational description of conservative type (b) routing with lag-window
+class size and class composition determined by the pilot; and accepting the secretariat
+convention withdrawal with the pilot as the sole resolution for the implicit-structure
+flagging rate.
 
 This attack does not challenge:
 
@@ -2282,6 +2316,28 @@ conditions.
    exceed what reference-answer construction can address without substantially expanded
    expert infrastructure. The pre-calibration pilot data should report this joint class
    size directly.
+
+   Fifth, the annotation task at step 2 must be confirmed as tractable at the ementa's
+   characterization level without requiring the annotator to cross the specificity gap
+   to the doctrinal-specific level. Round 13's step-1/step-2 distinction correctly
+   identifies the ementa as the step-2 source document for C1 annotation. It does not
+   address whether the annotation task — comparing the citing court's doctrinal-specific
+   characterization against the ementa's abstract-principle characterization — can be
+   performed tractably within the ementa's characterization level, or requires
+   determining what the ementa's abstract statement implies at the specific doctrinal
+   level where the citing court operates. The latter requires principle-to-application
+   assessment whose difficulty is concentrated in the high-adversarial-record arm where
+   doctrinal-specific characterizations are most contested. Arm-specific IRR for C1
+   annotation must report whether annotator disagreements concentrate at the
+   cross-specificity comparison step — specifically in cases where the citing court's
+   construction is neither obviously within nor obviously outside the abstract principle's
+   established scope — and whether this concentration is systematically higher in the
+   high-adversarial-record arm than in the routine arm. Uniform cross-arm agreement on
+   C1 annotation after the ementa-as-ratio source reduction would confirm that the
+   step-2 task is tractable at the ementa's characterization level; arm-specifically
+   lower agreement in the high-adversarial-record arm would confirm that the step-2
+   task requires principle-to-application assessment that the source-reduction move
+   does not eliminate.
 
    **(g) C3 operationalization distinguishes legally mandated verbatim text from
    formulaic reasoning avoidance.** Round 10's mandatory-text preprocessing proposal
