@@ -589,24 +589,76 @@ inferior a axioma postulado com base na ratio.
 A identificação da ratio em precedentes brasileiros tem
 complicação específica: o sistema de julgamento colegiado, com
 votos individuais por ministro, pode produzir acórdãos em que
-a maioria concorda no resultado mas não nos fundamentos. Nesses
-casos, a ratio é o menor denominador comum dos fundamentos dos
-votos que formam a maioria — o que todos os votos majoritários
-têm em comum como fundamento necessário para o resultado. Os
-fundamentos que cada ministro adicionou individualmente mas que
-não foram compartilhados pelos demais são, em relação ao acórdão
-como precedente, obiter.
+a maioria concorda no resultado mas não nos fundamentos. Para os
+fins desta seção, a distinção de Mitidiero entre decisões por
+**raciocínio convergente** — em que os votos majoritários compartilham
+um núcleo argumentativo comum, chegando ao mesmo resultado pelos
+mesmos fundamentos essenciais — e decisões por **raciocínio paralelo**
+— em que os votos majoritários chegam ao mesmo resultado por
+fundamentos genuinamente distintos, sem núcleo compartilhado —
+é o quadro de referência adequado.
 
-Essa regra pressupõe que exista denominador comum identificável. Em
-maiorias fragmentadas — em que ministros concorrem no resultado por
-fundamentos genuinamente distintos e não sobrepostos, sem núcleo
-argumentativo compartilhado —, a regra não produz ratio determinada:
-o menor denominador comum é vazio. Mitidiero e Macêdo documentam a
-ocorrência desse padrão em julgamentos de maior repercussão do STF.
-Para esses casos, a identificação da ratio exige critério adicional
-que este artigo não desenvolve; até que esse critério exista, a
-proveniência da afirmação correspondente deve ser registrada como
-`pendente` (§5.4) em vez de forçada à categoria de ratio ou obiter.
+Em **decisões por raciocínio convergente**, a ratio é o menor
+denominador comum dos fundamentos dos votos que formam a maioria —
+o que todos os votos majoritários têm em comum como fundamento
+necessário para o resultado. Os fundamentos que cada ministro
+adicionou individualmente mas que não foram compartilhados pelos
+demais são, em relação ao acórdão como precedente, obiter.
+
+Em **decisões por raciocínio paralelo** — maiorias fragmentadas em
+que o menor denominador comum é vazio ou trivialmente delgado —,
+a regra do menor denominador comum não produz ratio determinada.
+Mitidiero e Macêdo documentam a ocorrência desse padrão em
+julgamentos de maior repercussão do STF. Para esses casos, a
+regra exige extensão em vez de abandono. A extensão adotada aqui
+é a do **quadro de rationes candidatas**: o formalizador identifica,
+nos votos individuais de cada ministro, os fundamentos tratados
+por aquele voto como necessários para a conclusão; agrupa os votos
+por afinidade de fundamentos (clusters de votos que compartilham
+os mesmos fundamentos necessários); e atribui a cada cluster uma
+**ratio candidata**, registrada com três atributos obrigatórios:
+
+1. **Sustentação**: quais votos majoritários integram o cluster.
+2. **Status epistêmico**: "ratio candidata — decisão por raciocínio
+   paralelo — aplicável nas constelações fáticas em que [descrição
+   dos fundamentos] é o quadro argumentativo operativo."
+3. **Âmbito de aplicação**: os elementos fáticos e jurídicos que os
+   votos do cluster tratam como relevantes para a conclusão.
+
+O quadro de rationes candidatas produz saída determinada — um
+conjunto de rationes candidatas marcadas — em vez da saída nula
+que a regra do menor denominador comum gera para decisões por
+raciocínio paralelo. Preserva a regra do menor denominador para
+decisões convergentes, onde produz ratio única e não ambígua. Para
+tribunais inferiores que aplicam precedente de maioria fragmentada,
+o quadro fornece orientação operacional: aplica-se a ratio candidata
+cujo quadro argumentativo mais se aproxima do caso em julgamento.
+
+A determinação de necessidade no nível dos votos individuais —
+etapa prévia à formação dos clusters — enfrenta versão estruturalmente
+análoga ao problema dos threads não marcados do §5.3 para o nível
+documental, mas com incidência menor: votos individuais são
+monoautorais, e o padrão de trilhas paralelas sem sinalização de
+subordinação tem ocorrência inferior no raciocínio de um único
+ministro do que no acórdão coletivo. Onde a determinação de
+necessidade no nível do voto for genuinamente indisponível — quando o
+voto contém threads concorrentes não marcados que o formalizador não
+consegue resolver pela leitura estrutural do voto —, aplica-se o
+marcador `pendente` no nível do voto; o agrupamento prossegue com
+os fundamentos determináveis; a ratio candidata resultante é
+correspondentemente incerta, registrada como tal.
+
+*Nota editorial*: A versão anterior desta seção reconhecia a
+existência de maiorias fragmentadas mas deixava sem desenvolvimento o
+critério de extração da ratio para esses casos, instruindo o
+formalizador a registrar as afirmações correspondentes como
+`pendente`. Essa omissão foi identificada como lacuna editorial pela
+crítica adversarial (SC3) e concedida como correta pela defesa do
+artigo; ambos concordaram que a extensão por rationes candidatas
+é a expansão adequada da regra do menor denominador comum. A presente
+versão incorpora essa extensão. Formalistas usando apenas esta seção
+dispõem agora de procedimento completo para decisões convergentes e
+para decisões por raciocínio paralelo.
 
 ### 5.4 Proveniência e status como atributos formais
 
