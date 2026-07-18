@@ -3,7 +3,7 @@ type: "Adversarial Critique"
 title: "Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale"
 description: "Critica adversarial a tratabilidade do campeonato inter-cluster da Fase 3 do ESHTR."
 tags: [adversarial, eshtr]
-timestamp: 2026-07-14T00:00:00+00:00
+timestamp: 2026-07-18T00:00:00+00:00
 ---
 
 # Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale
@@ -1228,6 +1228,26 @@ The round 12 granularity challenge was not about which document is the step-2 so
 
 *Secretariat convention withdrawal: accepted.* The withdrawal is accepted as the epistemically honest response. The pre-calibration pilot is the correct arbiter. The adversarial's two structural drivers for its implicit-structure flagging rate prediction are stated structural inferences, not documented rates; the supportive's convention claim was a structural inference in the same epistemic category. Neither side has documented the flagging rate; both have stated structural arguments for their projections. The pilot resolves which projection is empirically borne out.
 
+**Fourteenth adversarial response — round 15: C1/C4 structural distinction accepted as formally valid; purely designative reading of *identificar* contested — *identificar fundamentos determinantes* is a conceptual-coverage judgment that requires the annotator to determine whether what the citing court identifies as a fundamento determinante IS one, not only whether any principle from the ementa was named.**
+
+The supportive round 14 advances an acknowledgment-checking account grounded in the C1/C4 structural distinction. Four positions follow.
+
+*C1/C4 structural distinction: accepted as formally valid.* Art. 489, §1º, V (*identificar*) and Art. 927, §1º (correct application, distinction, justified deviation) are structurally distinct functions that are not redundant: if C1 required correctness-assessment, C4's independent function for binding precedent invocations would be eliminated. The adversarial accepts this structural observation. C1 and C4 operate at different analytical points in the rubric, and the two-provision structure establishes their distinctness from the enacted text.
+
+*Purely designative reading of *identificar*: contested.* The acknowledgment-checking account derives annotation-task tractability from characterizing *identificar* as purely designative — the citing court need only name the abstract principle the ementa states; no determination of whether the specific construction is within the principle's scope is required. This reading is textually contestable on two grounds from the statute's own language.
+
+First, the possessive *seus* in Art. 489, §1º, V — "sem identificar *seus* fundamentos determinantes" — refers to the cited precedent's actual fundamentos determinantes. The provision's failure condition is "without identifying ITS fundamentos determinantes," not "without naming any principle that appeared in the ementa." This formulation implies that the fundamentos determinantes are an objective feature of the cited precedent that the citing court must correctly recognize. A purely designative reading that accepts any named principle from the ementa as satisfying the identification requirement does not test whether what was named is in fact one of the cited precedent's fundamentos determinantes.
+
+Second, Art. 489, §1º, VI's parallel formulation is non-designative: "sem identificar os fundamentos determinantes do precedente *que justifiquem a aplicação ao caso sob julgamento*." The *que justifiquem* clause specifies that the identified grounds must be grounds that actually justify the case-specific application — the identified grounds must have the property of being justifying, not merely of having been named. VI's *identificar* carries substantive identification content. Provisions V and VI are independent failure conditions within the same legal sentence, not sequential steps; V's *identificar* must carry its own content independent of VI's *que justifiquem* clause. If V's *identificar* were purely designative (name any principle), then V's failure condition would be exhausted by the mere absence of any principle name — a thin requirement that would not distinguish a decision that nominates the wrong grounds from one that names no grounds at all. VI's structure confirms that *identificar* in the binding-precedent context refers to identifying grounds that have a substantive relationship to the cited precedent, not merely naming them.
+
+*Third case the purely designative reading misses.* The supportive's two-case analysis covers: (a) no principle named → C1 fails; (b) abstract principle P named → C1 satisfied, correctness handled by C4. A third case falls outside this analysis: a citing court names principle P from the ementa but identifies a specific proposition as the fundamento determinante that was in fact obiter in the cited precedent — P was genuinely present in the cited decision, but the specific construction the citing court nominates as P's fundamento determinante was not determinative for the holding; it was an incidental observation the deciding court did not rely upon. Under the purely designative reading, case (c) satisfies C1 (P was named). Under the statute's failure condition — invoking a precedent without identifying its fundamentos determinantes — case (c) is precisely the failure the provision targets. A citing court that elevates an obiter dictum to fundamento determinante status has not identified the cited precedent's fundamentos determinantes; it has nominated the wrong ground. The purely designative reading does not catch this. The conceptual coverage reading does: the annotator must determine whether what the citing court identifies as a fundamento determinante IS one — whether the specific proposition the citing court nominates was actually load-bearing for the cited precedent's holding.
+
+*C1/C4 non-redundancy preserved on the conceptual coverage reading.* The acknowledgment-checking account's central structural move — C4's independent function shows C1 cannot require correctness-assessment — is accepted. The conceptual coverage reading does not make C1 and C4 redundant. C1 (conceptual coverage) checks whether the identification was of something that IS a fundamento determinante of the cited precedent — a question about the cited precedent's structure. C4 checks whether the correctly-identified fundamento determinante was correctly applied to the present case — a question about the citing court's analysis of its case in light of the ratio. These remain distinct: a court can fail C1 (nominate obiter as determinante) while performing correct C4 analysis on the misidentified ground; a court can pass C1 (correctly identify the ratio) while misapplying it to the present case (fail C4). The C1/C4 distinction holds on both the designative and the conceptual-coverage reading.
+
+*Annotation-task implication.* On the conceptual coverage reading, the step-2 annotation task requires more than designative ementa-reading. The annotator must determine whether the specific ground the citing court nominates was actually a fundamento determinante of the cited precedent — which grounds were load-bearing for the holding, as opposed to obiter. The ementa's abstract-principle characterization does not enumerate which specific doctrinal constructions of the abstract principle were determinative versus obiter in the cited precedent's particular procedural context. This determination requires engaging the cited precedent at the doctrinal-specific level — the same level the round 11 annotation-task challenge identified as the step-2 gap-crossing requirement. The conceptual coverage reading therefore preserves the annotation-task challenge: the step-2 task cannot be performed tractably at the ementa's characterization level when the question is whether a specific construction was determinative, not merely whether an abstract principle was named.
+
+*Relationship to the falsification condition.* The supportive's falsification condition — arm-specific C1 IRR lower for acknowledgment-present-but-application-contested cases — is accepted as the correct discriminating test between the two readings of *identificar*. The conceptual coverage reading predicts exactly this IRR pattern: in cases where the citing court names principle P but nominates a specific construction as the fundamento determinante, and where the cited precedent's ementa does not specify which constructions of P were determinative versus obiter, annotators applying the conceptual coverage task will disagree on C1 precisely in those acknowledgment-present-but-application-contested cases — because the acknowledgment of P alone does not settle whether the specifically-nominated construction was determinative. The purely designative reading predicts agreement in those cases (P was named → C1 satisfied regardless of which construction was determinative). The IRR pattern the supportive named as its falsification condition is the pattern the conceptual coverage reading structurally predicts. The pre-calibration pilot data should report arm-specific C1 IRR separately for acknowledgment-present-but-application-contested calibration pairs to discriminate between the two readings empirically.
+
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
 case types. High-volume processing creates institutional pressures to routinize
@@ -1760,7 +1780,7 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (thirteen supportive responses, thirteen adversarial counter-replies).**
+**On the full C2 exchange (fourteen supportive responses, fourteen adversarial counter-replies).**
 The C2 debate has passed through nine exchanges. The supportive camp argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
@@ -1977,7 +1997,8 @@ cross-court citation listing function), and until the pilot data is available bo
 rate projections are structurally inferred, with the adversarial's projection having two
 stated structural drivers and the supportive's having one undocumented mechanism claim.
 On (13): the step-1/step-2 distinction is accepted as accurately describing the compilation's step-1 function (domain classification for type (a)/(b) demarcation) and the ementa's step-2 function (C1 source document supplying the fundamento determinante characterization at principle level); the distinction correctly identifies the ementa as the step-2 source, which round 10 established, and does not re-contest this; the granularity challenge survives under the new framing — the step-1/step-2 distinction resolves the step-2 SOURCE question but not the step-2 TASK question: the annotation task at step 2 requires comparing the citing court's doctrinal-specific characterization against the ementa's abstract-principle characterization, a comparison that crosses the specificity gap and requires principle-to-application assessment; the distinction responds to a source question (which document?) that round 10 already resolved rather than the task question (is the comparison tractable across the specificity gap?) that the round 11 and 12 adversarial arguments raised; the currency limitation acceptance is accepted as correctly describing the default rule's conservative routing — lag-window class size and class composition determined by the pilot; the secretariat convention withdrawal is accepted as epistemically appropriate — the pilot resolves both sides' structural inferences about the flagging rate.
-The practical implication across all thirteen exchanges: within-cluster C2-specific criterion
+On (14): the C1/C4 structural distinction is accepted as formally valid — C1 identifies fundamentos determinantes (Art. 489, §1º, V) while C4 checks correct application, distinction, and justified deviation (Art. 927, §1º); the two criteria are non-redundant on both the designative and the conceptual-coverage reading of *identificar*; the purely designative reading of *identificar* is contested through two statutory grounds — the possessive *seus* in Art. 489, §1º, V (implying the cited precedent has actual fundamentos determinantes that must be correctly recognized, not merely any named principle) and Art. 489, §1º, VI's parallel *que justifiquem* formulation (which embeds a substantive justification requirement in VI's own *identificar*, establishing that the parallel V-provision's *identificar* is non-designative by structural analogy); the third case (citing court names the abstract principle P but nominates an obiter proposition as the fundamento determinante) satisfies C1 on the purely designative reading while failing to identify the cited precedent's actual fundamentos determinantes — which is the paradigm C1 failure Art. 489, §1º, V targets; on the conceptual coverage reading, the step-2 annotation task requires determining whether the nominated specific construction was actually determinative in the cited precedent, a question the ementa's abstract-principle characterization does not resolve; and the falsification condition the supportive specified — arm-specific C1 IRR lower for acknowledgment-present-but-application-contested cases — is accepted as the correct discriminating test, with the conceptual coverage reading predicting exactly that IRR pattern while the purely designative reading predicts cross-arm agreement.
+The practical implication across all fourteen exchanges: within-cluster C2-specific criterion
 activation cannot be ruled out under the current protocol design; the round 10 advances
 substantially address C3 conflation for officially-mandated text categories,
 collegial-fragmentation at the annotation-source level, and SC6(b-1)-ID tractability for
@@ -1994,7 +2015,24 @@ step-1/step-2 distinction as correctly identifying the ementa as the step-2 sour
 document while establishing that the step-2 annotation task — comparing the citing court's
 doctrinal-specific characterization against the ementa's abstract-principle characterization
 — requires principle-to-application assessment that the source-identification distinction
-does not address; the surviving arm-specific differential IRR concerns are: (a) for C1,
+does not address; round 14 accepts the C1/C4 structural distinction as formally valid —
+C1 (*identificar fundamentos determinantes*) and C4 (correct application, distinction,
+justified deviation) are non-redundant on both readings of *identificar* — while contesting
+the purely designative reading of *identificar*: the possessive *seus* in Art. 489, §1º, V
+implies a correct set of fundamentos determinantes to recognize (not merely any named
+principle), and Art. 489, §1º, VI's parallel *identificar* carries a *que justifiquem*
+requirement that is non-designative — establishing that *identificar* in V carries
+conceptual-coverage content requiring the annotator to determine whether the nominated
+construction was actually a fundamento determinante of the cited precedent; the third
+case (citing court names the abstract principle but nominates an obiter proposition as
+the fundamento determinante) is the paradigm C1 failure Art. 489, §1º, V targets and
+is missed by the purely designative reading; on the conceptual coverage reading, the
+step-2 annotation task requires determining whether the nominated specific construction
+was actually determinative in the cited precedent — a question the ementa's abstract-
+principle characterization does not resolve; and the IRR falsification condition is
+accepted as the correct discriminating test, with the conceptual coverage reading
+predicting exactly the acknowledgment-present-but-application-contested IRR divergence
+the supportive named; the surviving arm-specific differential IRR concerns are: (a) for C1,
 ementa-interpretation difficulty at the principle-to-doctrinal-application gap, now
 reformulated as the step-2 task tractability challenge — whether the comparison between
 the citing court's doctrinal-specific characterization and the ementa's abstract
@@ -2127,11 +2165,20 @@ front: round 13 accepts the step-1/step-2 distinction as accurately describing t
 ementa's document-level function as the step-2 source while pressing that the annotation
 task at step 2 requires comparing the citing court's doctrinal-specific characterization
 against the ementa's abstract-principle characterization — a cross-specificity comparison
-the source-identification distinction does not address; accepting the currency limitation
-as the correct operational description of conservative type (b) routing with lag-window
-class size and class composition determined by the pilot; and accepting the secretariat
-convention withdrawal with the pilot as the sole resolution for the implicit-structure
-flagging rate.
+the source-identification distinction does not address; round 14 accepts the C1/C4
+structural distinction as formally valid while contesting the purely designative reading
+of *identificar* — the conceptual-coverage reading is textually grounded in the possessive
+*seus* (Art. 489, §1º, V) and the parallel *que justifiquem* formulation (Art. 489, §1º,
+VI), establishing that *identificar* requires the annotator to determine whether the
+nominated construction IS a fundamento determinante, not merely whether an abstract
+principle was named; the step-2 annotation-task challenge survives on the conceptual
+coverage reading; the IRR falsification condition the supportive named is accepted as the
+correct discriminating test, with the conceptual coverage reading predicting the
+acknowledgment-present-but-application-contested IRR divergence pattern; accepting the
+currency limitation as the correct operational description of conservative type (b)
+routing with lag-window class size and class composition determined by the pilot; and
+accepting the secretariat convention withdrawal with the pilot as the sole resolution for
+the implicit-structure flagging rate.
 
 This attack does not challenge:
 
@@ -2448,6 +2495,25 @@ conditions.
    data collected alongside Bradley-Terry rankings; the difference is that SC5 tests
    for non-systematic within-cluster cycling overall, while SC6 tests for C2-specific
    profile dynamics that generate systematic within-cluster criterion activation.
+
+7. **C1 annotation task confirmed as purely designative.** The round 14 adversarial
+   response contests the purely designative reading of *identificar* in Art. 489, §1º,
+   V. The attack falls in whole at the C1 annotation front if primary Brazilian
+   procedural authority — a superior court decision or authoritative doctrinal treatment
+   — establishes that *identificar seus fundamentos determinantes* in Art. 489, §1º, V
+   requires only that the citing court name the abstract principle stated in the
+   invoked precedent's ementa, without any determination of whether what was identified
+   IS a fundamento determinante of that precedent (i.e., the purely designative reading
+   prevails). Under the purely designative reading, the step-2 annotation task is
+   text-to-text comparison at the ementa's characterization level: is the abstract
+   principle named? — a task tractable without crossing the specificity gap. The
+   adversarial's two statutory arguments (possessive *seus* and the *que justifiquem*
+   parallel) are textual inferences; if they are resolved authoritatively against the
+   conceptual-coverage reading, the surviving arm-specific IRR concern at the C1
+   annotation front collapses to ementa-interpretation ambiguity alone — a narrower
+   and more tractable residual. Absent primary authority, the designative/conceptual-
+   coverage question remains open; both readings are textually available and the
+   annotation task's difficulty profile turns on which is operative.
 
 ---
 
