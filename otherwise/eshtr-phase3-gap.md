@@ -3,7 +3,7 @@ type: "Adversarial Critique"
 title: "Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale"
 description: "Critica adversarial a tratabilidade do campeonato inter-cluster da Fase 3 do ESHTR."
 tags: [adversarial, eshtr]
-timestamp: 2026-07-18T00:00:00+00:00
+timestamp: 2026-07-20T00:00:00+00:00
 ---
 
 # Embedding Proximity Is Not Evaluative Frame Stability: A Challenge to ESHTR's Core Design Rationale
@@ -1248,6 +1248,38 @@ Second, Art. 489, §1º, VI's parallel formulation is non-designative: "sem iden
 
 *Relationship to the falsification condition.* The supportive's falsification condition — arm-specific C1 IRR lower for acknowledgment-present-but-application-contested cases — is accepted as the correct discriminating test between the two readings of *identificar*. The conceptual coverage reading predicts exactly this IRR pattern: in cases where the citing court names principle P but nominates a specific construction as the fundamento determinante, and where the cited precedent's ementa does not specify which constructions of P were determinative versus obiter, annotators applying the conceptual coverage task will disagree on C1 precisely in those acknowledgment-present-but-application-contested cases — because the acknowledgment of P alone does not settle whether the specifically-nominated construction was determinative. The purely designative reading predicts agreement in those cases (P was named → C1 satisfied regardless of which construction was determinative). The IRR pattern the supportive named as its falsification condition is the pattern the conceptual coverage reading structurally predicts. The pre-calibration pilot data should report arm-specific C1 IRR separately for acknowledgment-present-but-application-contested calibration pairs to discriminate between the two readings empirically.
 
+**Fifteenth adversarial response — round 16: V/VI textual economy inference accepted unconditionally; ementa-anchored account contested at the constitutive-authority level — the ementa is evidential, not constitutive, of the cited precedent's fundamentos determinantes; a fourth case demonstrates that the ementa-anchored designative reading licenses the paradigm Art. 489, §1º, V failure when the ementa contains an elevation error.**
+
+The supportive round 15 responds to all three adversarial positions from round 15 with three moves: (1) the objective reference set that *seus* denotes is constituted by the cited precedent's ementa — the authoritative published statement of what the court found to be its fundamentos determinantes for precedential purposes; the designative check is accordingly text-to-text comparison at the ementa's characterization level: does the citing court's text invoke the grounds the ementa identifies? the possessive *seus* correctly identifies that an objective set exists; the ementa is that set; (2) the V/VI textual difference inverts the adversarial's structural analogy — *que justifiquem* in VI and its absence in V marks an intentional legislative distinction; if bare *identificar* in V already carried application-justification content, *que justifiquem* in VI would add nothing; non-redundancy requires V's *identificar* to be purely designative, and VI's *que justifiquem* to be the additional application-justification layer; (3) the obiter-nomination third case is caught by the ementa-anchored reading: a citing court that nominates as the fundamento a proposition the ementa does not characterize as the ratio has not invoked what the ementa identifies, and C1 fails. Three adversarial responses follow.
+
+*V/VI textual economy inference: accepted unconditionally.* The non-redundancy premise is jointly accepted. The supportive's inversion of the adversarial's structural analogy is correct: if V's bare *identificar* already carried the application-justification content that VI's *que justifiquem* clause adds, VI's clause would be vacuous — a genuine redundancy. Non-redundancy requires that V and VI impose different requirements: V's *identificar* is purely designative (was a fundamento determinante named at all?), and VI's *que justifiquem* adds the application-justification layer (do the identified grounds actually justify this case's application?). This inference is accepted without qualification and resolves the designative/conceptual-coverage question for *identificar* in V's favor. The adversarial's round 15 *que justifiquem* argument, offered as evidence that V's *identificar* carries non-designative content by structural analogy, is withdrawn: the supportive's reading of the textual difference is the correct one. V's *identificar* is purely designative.
+
+*Ementa constitutive authority: the ementa is evidential, not constitutive, of the cited precedent's fundamentos determinantes.* Accepting V's purely designative reading shifts the surviving question to what *seus* refers to. The ementa-anchored account requires more than the annotation-source benefit established in round 10. Round 10 accepted that reading the cited precedent's ementa is simpler than synthesizing across votos — a source-reduction move. The ementa-anchored account now requires that the ementa not only simplifies the annotation source but constitutively determines what the cited precedent's fundamentos determinantes are for art. 489, §1º, V compliance purposes: *seus fundamentos determinantes* refers to the ementa-characterized fundamentos determinantes, such that what the ementa calls the ratio IS the ratio for C1 assessment, regardless of what the underlying deliberation's actual load-bearing grounds were.
+
+This constitutive claim exceeds what the statute's text or the ementa's institutional function establishes. Art. 489, §1º, V's "sem identificar *seus* fundamentos determinantes" refers grammatically to the cited precedent's fundamentos determinantes — the grounds that were actually load-bearing for its holding. The possessive *seus* refers back to the cited precedent as an act of deliberation, not to the ementa as its published summary. The ementa is produced by the court's secretariat, not authored by the justices in their capacity as deliberating court; it is a summary for citation reference, not a definitive characterization binding for compliance-assessment purposes. Art. 927 — which establishes the binding precedential effect that art. 489, §1º, V enforces — binds courts to the decisions listed in its items, which are the underlying acts of deliberation, not to their ementas.
+
+The distinction between evidential and constitutive is practically significant. An evidential ementa is a presumptively accurate characterization of the cited precedent's ratio, rebuttable in principle by careful reading of the underlying deliberation. Under this reading, the ementa-anchored designative check functions as a practical approximation — generally reliable, covering most cases correctly, but not immune to ementa inaccuracy. A constitutive ementa IS the cited precedent's fundamentos determinantes for compliance purposes, such that no gap can exist between ementa-characterized and actually-load-bearing grounds: the ementa determines the latter for §1º, V compliance by institutional design.
+
+The adversarial does not contest the practical utility of anchoring the designative check to the ementa. What is contested is whether the ementa's characterization is immune to the objection that it may mischaracterize what the cited precedent's deliberation actually found to be determinative — an objection that the constitutive account forecloses by design rather than by establishing its accuracy.
+
+*Fourth case: ementa elevation error defeats the ementa-anchored account's claim to handle all paradigm Art. 489, §1º, V failures.* The supportive's round 15 filing establishes that the ementa-anchored designative check catches the third case: a citing court that nominates a proposition the ementa does not characterize as a fundamento determinante has not invoked what the ementa identifies, and C1 fails. This is accepted: the third case is caught, on the ementa-anchored account, precisely because the ementa serves as the reference for what counts as a fundamento determinante.
+
+The fourth case is the complement of the third, and it is not caught by the ementa-anchored account. The ementa mischaracterizes an obiter proposition P' as a fundamento determinante — an elevation error. The citing court invokes P', following the ementa's characterization. Under the ementa-anchored designative check: P' is what the ementa characterizes as a fundamento determinante; the citing court has invoked what the ementa identifies; C1 is satisfied. But P' was actually obiter in the underlying deliberation — the cited precedent's actual load-bearing grounds were different, and the secretariat's ementa erroneously attributed determinative status to an incidental observation. The citing court has not identified the cited precedent's actual fundamentos determinantes; it has invoked the wrong ground because the ementa got it wrong. Art. 489, §1º, V targets exactly this failure: a court that invokes a precedent without identifying the grounds that actually determined its holding. The ementa-anchored designative reading licenses C1 satisfaction in this case.
+
+The fourth case is not exotic or pathological in the corpus ESHTR targets. Elevation errors — the ementa mischaracterizing an obiter observation as a fundamento determinante — are structurally concentrated in the contested-constitutional high-adversarial-record class that ESHTR's Phase 3 is designed to rank. Two structural drivers produce this concentration.
+
+First, secretariat synthesis under fragmented collegial deliberation. In STF plenary decisions on contested constitutional questions, the deliberation produces multiple justices' individual votes (*votos*), each characterizing the ratio differently, emphasizing different grounds, and sometimes reaching the same dispositif through independent rationes. The secretariat synthesizes these fragmented characterizations into a single ementa statement of fundamentos determinantes. Synthesis across competing characterizations under institutional time pressure generates elevation errors: a ground mentioned prominently in a concurring justice's voto but not relied upon as the load-bearing foundation in the majority's analytical path can be listed in the ementa alongside genuinely determinative grounds. The more contested and fragmented the plenary deliberation, the more synthesis choices the secretariat must make — and the more elevation errors become structurally predictable.
+
+Second, breadth incentive in the ementa's cross-court citation function. The ementa serves as a citation reference that citing courts across the judicial hierarchy consult to identify which grounds of the cited precedent are fundamentos determinantes for their specific cases. An ementa that comprehensively lists multiple candidate grounds (including borderline and obiter ones) provides more applicability surface for a broader range of future citing cases; an ementa that precisely identifies only the minimally load-bearing grounds limits the precedent's downstream usability. This creates an institutional incentive toward over-inclusion — characterizing borderline and near-ratio grounds as fundamentos determinantes — that is absent from the deliberation itself and independent of annotation quality. Breadth incentives structurally favor elevation of obiter or borderline grounds in the ementa regardless of whether the deliberating justices' votes support that characterization.
+
+Both structural drivers are concentrated in the contested-constitutional plenary decisions Phase 3 is designed to rank. For ESHTR's annotation task, this means the ementa-anchored designative check encounters its fourth case most frequently precisely where annotation reliability matters most: in the high-adversarial-record arm whose champion decisions constitute Phase 3's comparator population.
+
+*Relationship to the IRR falsification condition.* The IRR falsification condition — arm-specific C1 IRR lower for acknowledgment-present-but-application-contested cases — is accepted as the correct discriminating test for which reading of *identificar* annotators operationalize. If annotators anchor uniformly to the ementa's characterization, the ementa-anchored designative reading predicts high IRR in acknowledgment-present cases: invoking the ementa-named principle satisfies C1 regardless of construction contestation, producing cross-annotator agreement. The conceptual-coverage reading predicts lower IRR in the same cases: annotators must determine whether the invoked construction was actually determinative, generating disagreement where that determination is contested. The IRR pilot data discriminates which reading annotators operationalize.
+
+What the IRR test does not discriminate is whether the ementa-anchored reference set is accurate about which grounds were actually load-bearing. If annotators achieve high IRR by uniformly anchoring to the ementa, this confirms that the annotation task is tractable and produces cross-annotator agreement under the ementa-anchored designative reading — not that the ementa-anchored reading catches all paradigm §1º, V failures. When the ementa contains an elevation error (fourth case), annotators achieving uniform agreement on the ementa's characterization produce high IRR while generating a systematic annotation error: they uniformly assign C1 satisfaction to a citing court that has not identified the cited precedent's actual fundamentos determinantes. High IRR and systematic annotation error are compatible outcomes; the IRR falsification condition tests the former, not the latter. The pilot arm-specific C1 IRR data is the correct empirical discriminant between the two readings of *identificar*; it is a separate and open empirical question whether the ementa-anchored reference set is accurate about which grounds were actually determinative in the cases where annotators anchor to it.
+
+The adversarial's round 16 position is therefore: accept the V/VI textual economy inference unconditionally and without reservation — V's *identificar* is purely designative, the designative/conceptual-coverage question is resolved; accept the ementa as the practical annotation-source and reference document for the designative check; contest that the ementa constitutively defines *seus fundamentos determinantes* for art. 489, §1º, V compliance purposes in the sense of being immune to the objection that it may mischaracterize what the cited precedent's deliberation actually found to be load-bearing. The fourth case (ementa elevation error) demonstrates that the ementa-anchored designative reading — on its constitutive interpretation — licenses the paradigm §1º, V failure in a class structurally concentrated in the high-adversarial-record arm. Whether the ementa is to be treated as constitutive or evidential for art. 489 compliance assessment is a question about the statute's intent that the ementa-anchored account presupposes but has not established from the enacted text or from authoritative institutional characterization of the ementa's compliance-assessment function.
+
 **Courts operating at high volume compound this pattern.** Brazilian appellate
 courts at the tribunal level process large volumes of decisions in recurring
 case types. High-volume processing creates institutional pressures to routinize
@@ -1780,7 +1812,7 @@ specificity response and the aggregation defense share a single load-bearing pre
 with §3.2's attack: the quality-dimension correlation claim. Whether the defense wins
 the §3.2 correlation debate determines whether it wins §3.3 as well.
 
-**On the full C2 exchange (fourteen supportive responses, fourteen adversarial counter-replies).**
+**On the full C2 exchange (fifteen supportive responses, fifteen adversarial counter-replies).**
 The C2 debate has passed through nine exchanges. The supportive camp argues (1) that
 C2 evaluates analytical conduct quality rather than engagement volume; (2) that
 adversarial record quality affects C1, C2, and C4 as a correlated set; (3) that three
@@ -1998,7 +2030,8 @@ rate projections are structurally inferred, with the adversarial's projection ha
 stated structural drivers and the supportive's having one undocumented mechanism claim.
 On (13): the step-1/step-2 distinction is accepted as accurately describing the compilation's step-1 function (domain classification for type (a)/(b) demarcation) and the ementa's step-2 function (C1 source document supplying the fundamento determinante characterization at principle level); the distinction correctly identifies the ementa as the step-2 source, which round 10 established, and does not re-contest this; the granularity challenge survives under the new framing — the step-1/step-2 distinction resolves the step-2 SOURCE question but not the step-2 TASK question: the annotation task at step 2 requires comparing the citing court's doctrinal-specific characterization against the ementa's abstract-principle characterization, a comparison that crosses the specificity gap and requires principle-to-application assessment; the distinction responds to a source question (which document?) that round 10 already resolved rather than the task question (is the comparison tractable across the specificity gap?) that the round 11 and 12 adversarial arguments raised; the currency limitation acceptance is accepted as correctly describing the default rule's conservative routing — lag-window class size and class composition determined by the pilot; the secretariat convention withdrawal is accepted as epistemically appropriate — the pilot resolves both sides' structural inferences about the flagging rate.
 On (14): the C1/C4 structural distinction is accepted as formally valid — C1 identifies fundamentos determinantes (Art. 489, §1º, V) while C4 checks correct application, distinction, and justified deviation (Art. 927, §1º); the two criteria are non-redundant on both the designative and the conceptual-coverage reading of *identificar*; the purely designative reading of *identificar* is contested through two statutory grounds — the possessive *seus* in Art. 489, §1º, V (implying the cited precedent has actual fundamentos determinantes that must be correctly recognized, not merely any named principle) and Art. 489, §1º, VI's parallel *que justifiquem* formulation (which embeds a substantive justification requirement in VI's own *identificar*, establishing that the parallel V-provision's *identificar* is non-designative by structural analogy); the third case (citing court names the abstract principle P but nominates an obiter proposition as the fundamento determinante) satisfies C1 on the purely designative reading while failing to identify the cited precedent's actual fundamentos determinantes — which is the paradigm C1 failure Art. 489, §1º, V targets; on the conceptual coverage reading, the step-2 annotation task requires determining whether the nominated specific construction was actually determinative in the cited precedent, a question the ementa's abstract-principle characterization does not resolve; and the falsification condition the supportive specified — arm-specific C1 IRR lower for acknowledgment-present-but-application-contested cases — is accepted as the correct discriminating test, with the conceptual coverage reading predicting exactly that IRR pattern while the purely designative reading predicts cross-arm agreement.
-The practical implication across all fourteen exchanges: within-cluster C2-specific criterion
+On (15): the V/VI textual economy inference is accepted unconditionally — V's *identificar* is purely designative and the designative/conceptual-coverage question is closed in the designative reading's favor; the ementa-anchored designative account's response to *seus* and the third case (obiter-nomination) is accepted as internally coherent; the surviving contest is at the constitutive-authority level — whether the ementa IS (constitutively) the cited precedent's fundamentos determinantes for art. 489, §1º, V compliance purposes, or is evidential (presumptively accurate but rebuttable); a fourth case (elevation error: ementa mischaracterizes an obiter proposition P' as a fundamento determinante; citing court invokes P'; ementa-anchored designative check licenses C1 satisfaction; but the citing court has not identified the cited precedent's actual fundamentos determinantes — the paradigm §1º, V failure) defeats the ementa-anchored account's completeness claim; two structural drivers concentrate elevation errors in the high-adversarial-record class ESHTR targets — secretariat synthesis under fragmented collegial deliberation and breadth incentive in the ementa's cross-court citation function; the IRR pilot discriminates which reading of *identificar* annotators operationalize but does not test whether the ementa-anchored reference set is accurate about which grounds were actually load-bearing; high IRR under the ementa-anchored designative reading and systematic annotation error (uniform C1 satisfaction for elevation-error cases) are compatible outcomes, leaving the constitutive-versus-evidential question open at the structural level.
+The practical implication across all fifteen exchanges: within-cluster C2-specific criterion
 activation cannot be ruled out under the current protocol design; the round 10 advances
 substantially address C3 conflation for officially-mandated text categories,
 collegial-fragmentation at the annotation-source level, and SC6(b-1)-ID tractability for
@@ -2044,7 +2077,24 @@ determining both class size and class composition; coverage completeness as a
 within-adequacy ranking signal continues to require the case-record input extension and
 materiality-identification calibration; SC6(c) determines which prong of the C2
 disjunction applies; under prong 2, SC6(3) requires the cross-elaboration test with
-cross-cluster-convention and cross-elaboration extensions.
+cross-cluster-convention and cross-elaboration extensions; round 15 closes the
+designative/conceptual-coverage question — the V/VI textual economy inference (non-redundancy
+requires V's *identificar* to be purely designative, with VI's *que justifiquem* adding the
+application-justification layer V lacks) is accepted unconditionally, resolving the reading
+of *identificar* in the designative reading's favor, while the ementa-anchored account's
+response to *seus* (the ementa constitutes the objective reference set) and to the third
+case (obiter-nomination caught by ementa non-match) is accepted as internally coherent; round 16
+presses the surviving contest at the constitutive-authority level — the ementa is evidential
+rather than constitutive of the cited precedent's fundamentos determinantes: the fourth case
+(ementa elevation error: secretariat mischaracterizes an obiter proposition as a fundamento
+determinante, citing court invokes it, ementa-anchored check licenses C1 satisfaction, but
+the paradigm §1º, V failure is present) demonstrates that the ementa-anchored designative
+reading does not catch all paradigm failures; two structural drivers concentrate elevation
+errors in the high-adversarial-record class — secretariat synthesis under fragmented
+collegial deliberation and breadth incentive in the ementa's cross-court citation function;
+the IRR pilot discriminates which reading of *identificar* annotators operationalize but does
+not test ementa accuracy, leaving the constitutive-versus-evidential question as the surviving
+open issue requiring authoritative resolution.
 
 **On the Phase 3 attack (§§3.6–3.8):**
 
@@ -2178,7 +2228,20 @@ acknowledgment-present-but-application-contested IRR divergence pattern; accepti
 currency limitation as the correct operational description of conservative type (b)
 routing with lag-window class size and class composition determined by the pilot; and
 accepting the secretariat convention withdrawal with the pilot as the sole resolution for
-the implicit-structure flagging rate.
+the implicit-structure flagging rate; round 15 closes the designative/conceptual-coverage
+question by accepting the V/VI textual economy inference unconditionally — V's *identificar*
+is purely designative — while accepting the ementa-anchored designative account as
+internally coherent in its handling of *seus* and the third case (obiter-nomination); round
+16 shifts the surviving contest to the ementa's constitutive-versus-evidential status —
+contesting that the ementa constitutively defines the cited precedent's fundamentos
+determinantes for art. 489, §1º, V compliance purposes by introducing the fourth case
+(ementa elevation error), identifying two structural drivers for elevation errors concentrated
+in the high-adversarial-record class (secretariat synthesis under fragmented plenary
+deliberation; breadth incentive in the ementa's cross-court citation function), and
+distinguishing the IRR pilot's discriminatory scope (which reading of *identificar*
+annotators operationalize) from the open question (whether the ementa-anchored reference
+set is accurate about which grounds were actually load-bearing in the cases where
+annotators anchor to it).
 
 This attack does not challenge:
 
@@ -2496,24 +2559,31 @@ conditions.
    for non-systematic within-cluster cycling overall, while SC6 tests for C2-specific
    profile dynamics that generate systematic within-cluster criterion activation.
 
-7. **C1 annotation task confirmed as purely designative.** The round 14 adversarial
-   response contests the purely designative reading of *identificar* in Art. 489, §1º,
-   V. The attack falls in whole at the C1 annotation front if primary Brazilian
-   procedural authority — a superior court decision or authoritative doctrinal treatment
-   — establishes that *identificar seus fundamentos determinantes* in Art. 489, §1º, V
-   requires only that the citing court name the abstract principle stated in the
-   invoked precedent's ementa, without any determination of whether what was identified
-   IS a fundamento determinante of that precedent (i.e., the purely designative reading
-   prevails). Under the purely designative reading, the step-2 annotation task is
-   text-to-text comparison at the ementa's characterization level: is the abstract
-   principle named? — a task tractable without crossing the specificity gap. The
-   adversarial's two statutory arguments (possessive *seus* and the *que justifiquem*
-   parallel) are textual inferences; if they are resolved authoritatively against the
-   conceptual-coverage reading, the surviving arm-specific IRR concern at the C1
-   annotation front collapses to ementa-interpretation ambiguity alone — a narrower
-   and more tractable residual. Absent primary authority, the designative/conceptual-
-   coverage question remains open; both readings are textually available and the
-   annotation task's difficulty profile turns on which is operative.
+7. **Ementa confirmed as constitutive authority for art. 489, §1º, V compliance assessment.**
+   The V/VI textual economy inference (round 15) settles the designative/conceptual-coverage
+   question: V's *identificar* is purely designative, and the annotation task is text-to-text
+   comparison at the ementa's characterization level — does the citing court's statement
+   invoke what the ementa identifies as the cited precedent's fundamentos determinantes?
+   The surviving issue is whether the ementa's characterization is constitutive or evidential
+   for this comparison. The attack at the C1 annotation front falls in whole if primary
+   Brazilian procedural authority — a superior court decision or authoritative doctrinal
+   treatment — establishes that *seus fundamentos determinantes* in Art. 489, §1º, V refers
+   to the ementa-characterized fundamentos determinantes as the operative reference for
+   compliance purposes, such that a citing court that invokes what the ementa identifies as
+   ratio has satisfied C1 regardless of whether the ementa's characterization accurately
+   reflects the underlying deliberation's actual load-bearing grounds. Under this constitutive
+   authority, the fourth case (ementa elevation error) does not generate a C1 annotation
+   failure — the ementa-anchored check is accurate by institutional design, not merely
+   presumptively accurate. The adversarial's contest of the ementa's constitutive authority
+   is structural; if authoritatively resolved in the ementa's favor — whether by primary
+   procedural authority or by the supportive's establishment that art. 489, §1º, V's purpose
+   is precisely to bind compliance assessment to the ementa's characterization — the surviving
+   arm-specific IRR concern collapses to ementa-interpretation ambiguity alone (implicit-
+   structure flagging; principle-level abstraction in contested constitutional decisions), a
+   narrower and more tractable residual. Absent such authority, the constitutive-versus-
+   evidential question remains open; the fourth case (elevation error) licenses the paradigm
+   §1º, V failure under the ementa-anchored designative reading, and the annotation task's
+   accuracy profile in the high-adversarial-record arm turns on which account is operative.
 
 ---
 
