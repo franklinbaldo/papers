@@ -496,6 +496,35 @@ o custo de produzir argumentação verificável, podem começar a
 construir reputação baseada na qualidade diretamente verificável
 de seus argumentos.
 
+O canal opera com força diferenciada segundo a estrutura de
+responsabilização do agente. Para advogados em mercado competitivo
+— com clientes capazes de atribuir variação nos resultados à qualidade
+argumentativa e com exposição direta a consequências em cada caso —,
+o mecanismo de dissuasão ao nível da produção da documentação opera
+com maior clareza: a qualidade argumentativa verificável é diretamente
+penalizada ou premiada nos resultados do processo, criando incentivo
+substancial ao esforço argumentativo genuíno. Para o defensor público
+em regime de serviço civil, o advogado dativo com honorários
+padronizados e a clientela incapaz de avaliar a qualidade argumentativa
+como bem de credência — exatamente os agentes que este mecanismo de
+democratização pretende alcançar —, o caminho de dissuasão exige
+condição empírica adicional: que o sistema de triagem automatizado
+produza aumento observável na taxa de impugnações nos dockets
+institucionais específicos onde esses agentes formam suas crenças sobre
+probabilidade de aplicação das normas. O debate bilateral que acompanha
+este artigo identificou essa condição de resultado da triagem como a
+questão empírica central para o segmento institucional e não a
+resolveu: os desafios à sua satisfação — lacuna de motivação
+institucional nos escritórios de defensoria e de assistência jurídica,
+observabilidade limiar em dockets de alto volume, e efeito de
+roteamento pela separação de casos (arts. 1036–1041 do CPC) — foram
+contestados estruturalmente mas não eliminados empiricamente. O
+argumento de democratização do acesso à justiça vale com maior
+segurança para o segmento competitivo; para o segmento institucional,
+é previsão condicional dependente de desenvolvimento de políticas de
+escalada seletiva e de taxas de impugnação observáveis nos dockets
+específicos que esses agentes habitualmente frequentam.
+
 ### 5.2 Para a qualidade do sistema de precedentes
 
 O sistema de precedentes funciona melhor quando os argumentos que
