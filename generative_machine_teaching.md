@@ -1,12 +1,12 @@
 ---
 type: "Technical Paper"
-title: "Programs That Teach Programs: Generative Machine Teaching from Deterministic Binary Curricula"
-description: "Position paper proposing deterministic lesson generators and curriculum search for teaching algorithms from unsegmented binary streams."
-tags: [generative-machine-teaching, curriculum-learning, machine-teaching, program-induction]
-timestamp: 2026-07-30T19:26:00Z
+title: "Programs That Teach Programs: Self-Tokenizing Generative Machine Teaching from Deterministic Binary Curricula"
+description: "Position paper proposing procedural machine teaching through a self-tokenizing concatenative language with proof-indexed symbols."
+tags: [generative-machine-teaching, self-tokenization, curriculum-learning, machine-teaching, program-induction]
+timestamp: 2026-07-30T20:38:00Z
 ---
 
-# Programs That Teach Programs: Generative Machine Teaching from Deterministic Binary Curricula
+# Programs That Teach Programs: Self-Tokenizing Generative Machine Teaching from Deterministic Binary Curricula
 
 **Franklin Baldo**  
 Independent Researcher  
@@ -16,56 +16,67 @@ franklinbaldo@gmail.com
 
 > **Position paper.** This article proposes a formal framework and an experimental
 > benchmark. It reports no training results. Claims about learnability, curriculum
-> efficiency, transfer, or threshold sequence lengths are hypotheses to be tested,
-> not empirical findings.
+> efficiency, endogenous tokenization, transfer, or threshold sequence lengths are
+> hypotheses to be tested, not empirical findings.
 
 ## Abstract
 
-This paper proposes **generative machine teaching**, a paradigm in which a lesson is not a stored set of labeled examples but a deterministic program that generates a finite training string according to a rule. A student model does not observe the lesson program, its parameters, labels, semantic descriptions, or necessarily even the boundaries between lessons. It receives only the generated symbols. A curriculum is an ordered sequence of such lesson generators. The teaching problem is to find the curriculum that causes a specified learning algorithm to acquire a target algorithm at minimum pedagogical cost, measured by transmitted bits, number of lessons, generator description length, computation, and generalization error.
+This paper proposes **generative machine teaching**, a paradigm in which lessons are deterministic programs whose outputs are the only pedagogical evidence available to a student. It then introduces a stronger foundational substrate: a **self-tokenizing concatenative language**. The physical channel contains only two primitive marks, and concatenation is the only primitive operation. A derived object becomes a token when a procedural demonstration constructs it from previously available objects, verifies its expansion, assigns it a stable registry identifier, and makes that identifier available for reuse in later turns.
 
-As an initial benchmark, we introduce a minimal binary construction system rooted in an empty token. Two primitive marks act as opening and closing boundaries. The empty token contains no internal marks. Every later token must be defined by an explicit finite sequence of construction steps starting from that empty token; its representation therefore records its own genealogy. The basic encoding is intentionally not self-delimiting. When tokens and lessons are concatenated, the student receives a continuous binary stream whose segmentation is underdetermined. The student must infer useful boundaries, recover the construction operations, generalize to unseen depths, execute learned transformations, and, for language-capable models, explain the inferred system.
+Each registered token is accompanied by one or more executable construction proofs. A Gödel-style numbering assigns a natural-number code to every finite proof, while a concatenative assembly index measures the smallest known or demonstrable number of distinct join operations required to construct the token when intermediate results may be reused. Tokens can therefore be grouped by assembly index, distinguished by a canonical variation index within each group, and referenced by stable identifiers even when a shorter proof is discovered later. The registry is simultaneously a vocabulary, a proof database, and a learned tokenizer.
 
-The proposal unifies questions from curriculum learning, machine teaching, teaching dimension, program synthesis, in-context learning, and algorithmic information theory while making a distinct experimental commitment: the teacher chooses deterministic **generators of experience**, and the learner observes only their outputs. We define pedagogical complexity relative to a learner, propose benchmark tracks for segmented and unsegmented streams, specify behavioral metrics and controls against teacher-student collusion, and state falsifiable hypotheses. The central empirical question is: **what is the shortest deterministic experience from which a given learner can acquire a given algorithm?**
+A curriculum is an ordered sequence of procedural demonstrations. After each turn, the student updates its state and the available symbolic vocabulary grows. A Bayesian posterior update supplies a normative model of this process: each demonstration changes the learner's beliefs over candidate segmentations, registries, operations, other-agent policies, and target algorithms. Neural learners need not implement literal Bayesian inference; gradient updates, recurrent state updates, in-context inference, and symbolic version-space reduction are treated as alternative realizations of sequential belief revision.
 
-**Keywords:** generative machine teaching, curriculum learning, program induction, teaching dimension, in-context learning, deterministic data generation, binary language, algorithmic pedagogy
+The strongest benchmark presents only a continuous binary stream. The student must infer turn boundaries, discover concatenation, recover the registry protocol, identify reusable substrings as symbols, predict newly constructed token identifiers, reconstruct or improve assembly proofs, recognize the teacher as a structured action-generating agent, and acquire executable algorithms expressed through the emerging vocabulary. The central empirical question becomes: **what is the shortest sequence of procedural demonstrations from which a given learner can construct a useful tokenizer and acquire a given algorithm?**
+
+The term *generative machine teaching* does not claim the invention of generating data to teach. The distinctive proposal is the conjunction of hidden deterministic lesson programs, a proof-indexed self-tokenizing language, optional absence of segmentation, learner-relative pedagogical cost, and executable algorithm acquisition.
+
+**Keywords:** generative machine teaching, self-tokenizing language, endogenous tokenization, concatenative assembly, Gödel numbering, curriculum learning, program induction, Bayesian teaching, predictive social cognition, algorithmic pedagogy
 
 ---
 
 ## 1. Introduction
 
-Machine learning systems usually receive data whose ontology has already been chosen for them. A dataset specifies where one example ends and another begins. Inputs and outputs occupy known fields. Labels identify relevant distinctions. Tokenizers impose symbol boundaries. Loss functions announce what should count as success. Even self-supervised learning ordinarily assumes documents, sequences, patches, frames, or other externally supplied units.
+Machine-learning systems usually receive an ontology chosen in advance. A tokenizer decides what the symbols are. A dataset determines where examples begin and end. Input and output fields identify roles. Labels announce relevant distinctions. Even self-supervised prediction ordinarily operates over externally supplied characters, bytes, patches, frames, or subword units.
 
-This paper studies a more austere teaching problem. A learner receives a sequence composed only of two physical symbols. It may receive no spaces, labels, comments, natural-language instructions, token boundaries, lesson boundaries, or declaration of the generating task. All learnable organization must be recoverable from regularities in the sequence and from the learner's inductive biases.
+This paper studies a more austere problem. A learner receives a channel containing only two physical marks. It may receive no natural-language instructions, no permanent token boundaries, no lesson boundaries, and no fixed semantic vocabulary. Instead of assuming tokens, the curriculum must teach the learner how reusable symbolic units come into existence.
 
-The motivating intuition is that a language might teach its own construction. Begin with a bounded region containing nothing: an empty token. Then define every new token by the operations required to construct it from that token. No token may be introduced merely by assigning a name to an arbitrary bit pattern. A token exists in the language only if it has a finite genealogy from the empty root.
+The motivating construction begins with two primitive marks, written `0` and `1`, and a single operation: concatenation. Their first join constructs the empty token:
 
-This idea immediately raises an empirical question. Suppose a large language model, a transformer trained from scratch, a recurrent model, or a symbolic synthesizer receives only a continuous binary string generated from those rules. How long must the string be before the learner can correctly infer and explain what is being constructed? More importantly, what sequence of demonstrations minimizes that length?
+$$
+E := 0 \Vert 1 = 01.
+$$
 
-That question generalizes beyond the initial language. A lesson can be treated as a deterministic program that produces training data. The student sees only the output of the program. Different lessons can expose base cases, recurrences, contrasts, compositions, or boundary conventions. A curriculum is an ordering of those lesson programs. Searching for a curriculum then means searching for a sequence of generated experiences that efficiently induces a target algorithm in a particular learner.
+The token named *begin* can then be demonstrated as:
 
-The proposal is related to several established lines of work. Curriculum learning studies how the ordering and pacing of training data affect learning [1]. Automated curriculum learning chooses tasks or samples according to learning progress [2], and recent benchmarks compare curriculum methods across domains [3]. Machine teaching studies the inverse problem of selecting training data for a known learner and target [4]. Teaching dimension formalizes the number of examples required to identify a concept within a hypothesis class [5]. Sequential machine teaching optimizes a sequence that drives a learner toward a target state [6]. Program synthesis from examples studies how observations constrain candidate programs and how representative examples improve synthesis [7]. Work on in-context learning shows that transformers can be trained to infer members of function classes from examples presented at inference time [8]. Minimum Description Length and algorithmic induction connect learning with concise explanations of data [9, 10].
+$$
+B := 0 \Vert E = 001,
+$$
 
-The proposal differs in the conjunction of the following commitments:
+and *end* as:
 
-1. A lesson is a **deterministic generator**, not merely a selected example or minibatch.
-2. The learner observes only the generator's output, not its code or semantic description.
-3. The output alphabet may be only binary.
-4. Token and lesson boundaries may be withheld.
-5. The target is acquisition of an executable algorithm, not only prediction on the training distribution.
-6. Curriculum search optimizes the choice, parameters, output lengths, and order of lesson generators.
-7. Teaching cost is measured relative to the learner that receives the curriculum.
+$$
+D := E \Vert 1 = 011.
+$$
 
-The initial binary language is not presented as the only possible substrate. It is proposed as a deliberately minimal test environment in which the provenance of every token is explicit and the costs of segmentation, induction, execution, extrapolation, and explanation can be measured separately.
+The names are researcher-facing mnemonics, not information supplied to the binary-only student. What matters is the procedure. Each new object is produced by references to previously available objects, one join, and a verified result. Once registered, the result can itself be referenced as one symbol in future procedures.
 
-The paper makes five contributions:
+This changes the role of tokenization. A substring is not a token merely because an external preprocessing algorithm selected it. It becomes a token when the language demonstrates its construction, records a stable identity and proof, and begins using that identity compositionally. The language therefore incorporates its own tokenizer. Its vocabulary grows through the same procedural turns by which it teaches operations and algorithms.
 
-1. It defines **generative machine teaching** as teaching through outputs of hidden deterministic lesson programs.
-2. It formalizes learner-relative **pedagogical complexity** for algorithm acquisition.
-3. It specifies a minimal genealogical binary language rooted in an empty token.
-4. It proposes a benchmark spanning segmented lessons, unsegmented binary streams, program recovery, behavioral generalization, and explanation.
-5. It identifies failure modes, including underdetermination, tokenizer artifacts, memorization, and teacher-student collusion, and proposes controls for each.
+A standard large language model still has a fixed *physical* tokenizer and output head. The proposal does not erase that engineering fact. It introduces an additional **endogenous symbolic layer**: a registered token identifier can be represented by a sequence of physical model tokens while functioning as one learned symbol in the protocol. A stronger architectural track may dynamically allocate embeddings and output slots for newly registered symbols. The benchmark must distinguish these two meanings of “new token.”
 
-No claim is made that current models will solve the strongest version of the benchmark, or that the proposed encoding is optimal. The aim is to make those questions experimentally precise.
+The pedagogical process is intrinsically sequential. At turn $t$, the teacher demonstrates a construction using the registry available at $t-1$. The student updates its state, the new construction enters the registry, and the next lesson may use it as an atomic symbol. Consequently, a curriculum is not an exchangeable dataset. It is a state-transforming program in which order changes both the learner and the language available to later turns.
+
+The paper makes six contributions:
+
+1. It defines **generative machine teaching** through outputs of hidden deterministic lesson programs.
+2. It introduces a **self-tokenizing concatenative language** whose only primitive operation is concatenation.
+3. It represents every derived token by stable identity, executable construction proofs, a Gödel-style proof code, and a concatenative assembly index.
+4. It formalizes procedural teaching as sequential belief revision, with Bayesian updating as a normative model and neural or symbolic updates as implementations.
+5. It defines learner-relative pedagogical complexity jointly over curricula and endogenous token registries.
+6. It proposes benchmark tracks ranging from externally separated demonstrations to fully continuous binary streams and native dynamic vocabularies.
+
+No claim is made that current models will solve the strongest track or that the proposed registry is the unique or optimal self-tokenization mechanism. The aim is to make these questions experimentally precise.
 
 ---
 
@@ -73,338 +84,452 @@ No claim is made that current models will solve the strongest version of the ben
 
 ### 2.1 Curriculum learning
 
-Bengio et al. introduced curriculum learning as training under a meaningful ordering of examples, often moving from simpler to more difficult cases [1]. The central observation is that data order can affect optimization speed and, for nonconvex systems, the solution reached. Later work automated syllabus selection using learning-progress signals [2], analyzed curriculum effects on optimization and generalization, and developed broader benchmark infrastructure [3].
-
-Most curriculum-learning systems choose or reweight items from a previously defined dataset or task family. Their samples already possess an externally supplied representation and supervision protocol. The present proposal instead places a program generator inside each lesson. The teacher chooses not only which existing observation to show, but which deterministic process should produce the learner's experience.
+Curriculum learning studies the effect of selecting, ordering, and pacing training experience [1]. Automated curriculum methods choose tasks or samples according to learning progress [2], and benchmark work compares curriculum strategies across domains [3]. These approaches generally assume that examples and their representations already exist. The present proposal lets the curriculum alter the vocabulary through which subsequent examples are represented.
 
 ### 2.2 Machine teaching and teaching dimension
 
-Machine teaching reverses the usual learning problem. Given a learner and a target, the teacher seeks training data that causes the learner to acquire that target [4]. Teaching dimension asks how many examples are sufficient to uniquely identify concepts within a specified hypothesis class [5]. Sequential machine teaching extends the problem to ordered sequences and can be formulated as optimal control over learner dynamics [6].
+Machine teaching reverses the ordinary learning problem: given a learner and target, the teacher seeks an efficient teaching set or sequence [4]. Teaching dimension asks how many examples identify a concept within a hypothesis class [5]. Sequential machine teaching formulates the shortest teaching sequence as time-optimal control over learner dynamics [6]. Heuristic curriculum search jointly considers example choice, concept order, and total teaching-session size [7].
 
-Generative machine teaching belongs to this family, but changes the teacher's action space. A teacher action is a lesson generator plus its parameters and output budget. The learner may not observe labels, examples as separate entities, or even the fact that multiple lessons exist. The teacher must therefore teach representational conventions and algorithmic structure, not merely select informative labeled instances.
+These are direct precedents for optimizing pedagogy. The difference is the teacher's action space. Here, a teacher action may register a new symbol and thereby change the representational units available in future actions. Representation and teaching are optimized together.
 
-### 2.3 Program synthesis and representative examples
+### 2.3 Generative Teaching Networks
 
-Programming by example and inductive program synthesis recover programs consistent with observed input-output behavior. Representative examples can sharply reduce the synthesis search space and improve stability [7]. This supports the intuition that a carefully chosen observation can teach more than a much larger undifferentiated sample.
+Generative Teaching Networks meta-learn neural generators that emit synthetic data or environments for freshly initialized students, differentiating through the student's learning process [8]. GTNs are the closest precedent for the broad idea of learning to generate teaching data. The present strict track instead uses deterministic, auditable lesson programs; charges generator description length; may expose only an unsegmented binary channel; and evaluates explicit tokenizer induction, proof recovery, and executable algorithm acquisition. A GTN-inspired teacher remains a baseline rather than an excluded competitor.
 
-The strongest benchmark proposed here begins one level earlier. Before a learner can infer a transformation from input-output pairs, it may need to discover what counts as an input, an output, a pair, a token, a sequence, and an application. Those concepts can themselves be introduced by earlier deterministic lessons.
+### 2.4 Program synthesis and in-context learning
 
-### 2.4 In-context learning
+Programming by example and inductive program synthesis recover programs consistent with observed behavior; representative examples can sharply reduce the search space [9]. Transformers can also infer members of function classes from examples presented in context [10]. The strongest benchmark begins one level earlier: the learner may first need to discover what counts as a reusable symbol, a reference, a procedure, an input-output pair, and an application.
 
-Transformers can be trained to infer functions from examples placed in their context, without parameter updates at inference time. Garg et al. demonstrated this for several function classes under controlled conditions [8]. This provides one candidate student regime for the proposed benchmark: a frozen model receives a binary curriculum as context and is evaluated on new queries.
+### 2.5 Description length and algorithmic induction
 
-The present proposal does not assume that a general-purpose pretrained LLM is the only or best learner. It explicitly compares frozen in-context learners, models trained from scratch, recurrent architectures, meta-learned students, symbolic synthesizers, and neuro-symbolic systems.
+Minimum Description Length treats learning as finding a compact account of observations [11]. Solomonoff induction assigns greater prior weight to shorter generating programs [12]. These traditions motivate proof-length, registry, and generator-complexity penalties. Teachability is nevertheless distinct from compressibility: a compact program may be difficult for a specific learner to infer, while a longer program may have highly diagnostic demonstrations.
 
-### 2.5 Description length and induction
+### 2.6 Gödel numbering and proof arithmetization
 
-Minimum Description Length treats learning as the search for a compact account of observations [9]. Solomonoff induction assigns greater prior weight to shorter programs capable of generating a sequence [10]. These traditions motivate two parts of the proposal: penalizing the hidden complexity of lesson generators, and treating the learner's recovery of a compact generative rule as stronger evidence than local continuation accuracy.
+Gödel's 1931 construction showed how finite syntactic objects and derivations can be assigned natural-number codes [13]. This paper uses **Gödel-style numbering** in that broad technical sense: a fixed effective encoding maps every finite concatenation proof to a unique integer and can be decoded back into the proof. No claim depends on Gödel's original prime-power encoding specifically, and the numeric magnitude of a code is not treated as an intrinsic complexity measure.
 
-However, compressibility and teachability are not identical. A short target program may be difficult for a particular learner to infer from outputs. A longer target may admit a curriculum containing highly diagnostic demonstrations. Pedagogical complexity must therefore be indexed to the learner.
+### 2.7 Assembly index
 
-### 2.6 Scope of the novelty claim
+Assembly theory characterizes objects through possible formation histories and defines an assembly index from shortest paths of joining operations under a specified substrate [14]. The present paper borrows this structural intuition but specializes it to strings and concatenation. The resulting **concatenative assembly index** counts distinct join instructions in a reusable straight-line construction. It is an algorithmic benchmark quantity, not a claim about molecular or physical assembly.
 
-The individual ingredients of this proposal have precedents: ordered training, optimized teaching sequences, generated tasks, program induction, binary coding, and description-length objectives. The claimed research contribution is narrower and compositional: an explicit framework in which **deterministic hidden lesson programs generate symbol streams; curriculum search operates over those programs; and success is algorithm acquisition from their outputs, optionally without segmentation or semantic scaffolding**.
+### 2.8 Learned and subword tokenization
 
-The novelty of that exact framing and benchmark must be tested against further literature review and implementation. This position paper does not claim priority over every possible formulation of program-generated curricula.
+Byte-pair encoding creates subword units by repeatedly merging frequent adjacent units [15]. SentencePiece learns subword models directly from raw sentences without requiring prior word tokenization [16]. These approaches establish that useful representational units can be learned rather than linguistically predefined.
+
+The proposed registry differs in four respects. First, token creation is an explicit procedural event rather than only a statistical merge. Second, every symbol carries a reproducible construction proof. Third, tokens persist as addressable objects available to later lessons. Fourth, token selection can be optimized for teaching an algorithm, not only corpus compression or end-task loss.
+
+### 2.9 Predictive models of other agents
+
+Theory-of-mind research treats successful social interaction as depending in part on predicting others' actions from latent goals, beliefs, and traits [17, 18]. Interactive POMDPs formalize agents that maintain and update beliefs about the physical world and models of other agents [19]. These precedents support, but do not establish, the stronger relational account of intelligence proposed in Section 5.
+
+### 2.10 Scope of the novelty claim
+
+The proposal does not claim to invent generated teaching data, curriculum optimization, learned tokenization, proof encoding, shortest assembly paths, or predictive models of other agents individually. Its contribution is compositional:
+
+> a deterministic machine-teaching benchmark in which procedural demonstrations construct a proof-indexed symbolic registry from a binary channel, causing tokenization, agent recognition, and algorithm acquisition to co-evolve.
+
+The primary novelty claim is therefore the conjunction of **self-tokenization, procedural proof, concatenation-only construction, assembly-aware reuse, optional absence of boundaries, and learner-relative curriculum search**.
+
+| Dimension | GTNs | Sequential / heuristic machine teaching | Learned subword tokenization | This proposal |
+|---|---|---|---|---|
+| Teacher action | Learned neural generator | Examples, labels, or concept order | Statistical segmentation | Procedural join and registry update |
+| Primitive channel | Task-dependent | Structured examples | Characters or bytes | Two marks |
+| Vocabulary | Supplied by model/task | Supplied | Learned, usually offline | Grows through demonstrations |
+| Construction proof | No | No | No | Required for every registered symbol |
+| Reuse cost | Not central | Example/session cost | Frequency or compression | Concatenative assembly and transmission cost |
+| Segmentation | Supplied | Supplied | Learned from input | Experimental variable; may be absent |
+| Main target | Accelerated training | Target concept/model | Better representation | Tokenizer construction plus executable algorithm acquisition |
 
 ---
 
-## 3. A Minimal Genealogical Binary Language
+## 3. A Self-Tokenizing Concatenative Language
 
-### 3.1 Nothing, emptiness, and representation
-
-Metaphysical nothingness cannot be named, delimited, or measured without ceasing to be nothing in the relevant sense. A computational system can instead begin with the first representable absence: a bounded token with no internal content.
-
-The initial object is therefore called the **empty token**, not because an already existing container happens to be unfilled, but because delimitation is the first representational act. The system does not encode absolute nothingness; it encodes the transition from no object to an object whose content length is zero.
-
-### 3.2 Primitive marks
+### 3.1 Physical marks and the empty token
 
 Let the physical alphabet be:
 
 $$
-\Sigma = \{0,1\}.
+\Sigma=\{0,1\}.
 $$
 
-The marks may be read mnemonically as:
+The symbols `0` and `1` are elementary marks in the construction substrate. They occupy registry slots $m_0$ and $m_1$ at assembly level zero, but they are distinguished from the first semantically registered token.
+
+Concatenation is the only primitive operation:
 
 $$
-0 \equiv |\mathrm{begin}|,
+\operatorname{join}(x,y)=x\Vert y.
+$$
+
+The first derived token is:
+
+$$
+E=\operatorname{join}(0,1)=01.
+$$
+
+The first three mnemonic definitions are:
+
+$$
+E=0\Vert1=01,
 \qquad
-1 \equiv |\mathrm{end}|.
-$$
-
-At the foundational level, these are not yet semantic tokens available as ordinary data. They are primitive marks used by the construction mechanism.
-
-The first token is:
-
-$$
-E := 01.
-$$
-
-In mnemonic form:
-
-```text
-|begin||end|
-```
-
-The outer marks bound an interior of length zero.
-
-### 3.3 Construction operations
-
-For any finite path $p \in \Sigma^*$, define:
-
-$$
-\tau(p) := 0p1.
-$$
-
-The empty token corresponds to the empty path $\varepsilon$:
-
-$$
-\tau(\varepsilon)=01=E.
-$$
-
-Define two elementary append-inside operations:
-
-$$
-A_b(0p1) := 0pb1,
-\qquad b\in\{0,1\}.
-$$
-
-Each operation inserts one primitive mark immediately before the external closing mark.
-
-Applying $A_0$ to the empty token produces the token **begin**:
-
-$$
-B := A_0(E)=001.
-$$
-
-Mnemonic form:
-
-```text
-|begin||begin||end|
-```
-
-Applying $A_1$ to the empty token produces the token **end**:
-
-$$
-D := A_1(E)=011.
-$$
-
-Mnemonic form:
-
-```text
-|begin||end||end|
-```
-
-The first three definitions are therefore:
-
-$$
-E=01,
+B=0\Vert E=001,
 \qquad
-B=001,
-\qquad
-D=011.
+D=E\Vert1=011.
 $$
 
-The primitive marks and the constructed tokens must not be conflated. The mark `0` is available to the construction mechanism before the token $B$ is defined. The token $B$ is the constructed representation whose sole interior mark is `0`. The same distinction applies to `1` and $D$.
+No append-inside, wrapping, substitution, or semantic-label operation is primitive. Such operations may later be represented as programs composed from joins and registered symbols.
 
-### 3.4 Mandatory genealogy
+### 3.2 Registry entries
 
-The language adopts the following constitutive restriction:
-
-> Every new token must be defined by the finite sequence of construction steps required to obtain it from the empty token.
-
-For a path:
+At turn $t$, the language maintains a registry:
 
 $$
-p=b_1b_2\ldots b_n,
+R_t=\{r_0,r_1,\ldots,r_{n_t}\}.
 $$
 
-its token is constructed by:
+Each entry contains:
 
 $$
-\tau(p)
+r_i=(\operatorname{id}_i,\operatorname{value}_i,\widehat a_i,\nu_i,\pi_i^*,\Pi_i),
+$$
+
+where:
+
+- $\operatorname{id}_i$ is a permanent identifier;
+- $\operatorname{value}_i\in\Sigma^*$ is the raw expansion;
+- $\widehat a_i$ is the best currently demonstrated concatenative assembly index;
+- $\nu_i$ is the token's canonical variation rank within its current assembly group;
+- $\pi_i^*$ is the canonical proof;
+- $\Pi_i$ is the set of known alternative proofs.
+
+The stable identifier is essential. Assembly estimates and within-group ranks may change when a shorter construction is discovered. Earlier references must remain valid.
+
+### 3.3 Procedural registration
+
+A registration turn chooses two available entries $r_i,r_j\in R_{t-1}$ and demonstrates:
+
+$$
+w=\operatorname{value}_i\Vert\operatorname{value}_j.
+$$
+
+If $w$ is new, a stable registry identifier is allocated. If $w$ already exists, the demonstrated construction is added as an alternative proof. The transition is:
+
+$$
+R_t=\operatorname{register}(R_{t-1},i,j,w,\pi).
+$$
+
+The compact instruction proposed for the benchmark is:
+
+$$
+(a,v,j),
+$$
+
+where $(a,v)$ identifies one operand by its assembly group and variation index at the current registry epoch, while $j$ identifies the other operand by stable token ID. Its execution is:
+
+$$
+T_{\mathrm{new}}
 =
-A_{b_n}\left(
-A_{b_{n-1}}\left(
-\cdots A_{b_1}(E)\cdots
-\right)
-\right).
+\operatorname{resolve}_t(a,v)\Vert\operatorname{resolve}_t(j).
 $$
 
-The path $p$ is simultaneously:
+For archival stability, the proof stores the resolved permanent IDs in addition to the epoch-relative tuple. A symmetric two-address form may be used in experiments, but the three-index instruction is sufficient to demonstrate the core mechanism.
 
-- the recipe for constructing the token;
-- its address in the derivation tree;
-- a finite witness that the token is reachable from the empty root;
-- the interior of its physical representation.
-
-A semantic name may later abbreviate a token, but the name cannot replace its derivation. A token that lacks a construction path from $E$ is not admitted into the language.
-
-### 3.5 Derivation tree
-
-At depth $n$, the system contains $2^n$ possible paths and therefore $2^n$ tokens. The first levels are:
+A human-readable rendering is:
 
 ```text
-Depth 0
-  01
-
-Depth 1
-  001
-  011
-
-Depth 2
-  0001
-  0011
-  0101
-  0111
+ASSEMBLY_GROUP a
+VARIATION v
+RIGHT_TOKEN j
+CONCATENATE
+RESULT w
+REGISTER k
 ```
 
-The construction system therefore defines an infinite rooted binary tree. This derivation tree should be distinguished from later data structures represented inside the language. At this stage, each token contains a linear path of marks. Lists, trees, application, equality, and recursion must be introduced by later constructions and lessons rather than silently assumed.
+The literal field names are absent in the binary-only condition. They describe operational roles that must themselves eventually be communicated through registered symbols.
 
-### 3.6 Intentional non-self-delimitation
+### 3.4 Construction proofs as reusable DAGs
 
-The encoding $\tau(p)=0p1$ is not prefix-free and is not uniquely decodable under concatenation.
+A construction proof is a finite directed acyclic graph. Leaves are elementary marks. Each internal node concatenates the values of two earlier nodes. The root expands to the target string.
 
-For paths $p$ and $q$:
-
-$$
-\tau(p)\tau(q)=0p10q1.
-$$
-
-But the same complete string can be read as one token:
-
-$$
-0rq1
-$$
-
-with:
-
-$$
-r=p10q.
-$$
-
-For example:
+Reusing an intermediate node does not require rebuilding it. For example:
 
 ```text
-001011
+r2 := join(0,1)       # 01
+r3 := join(r2,r2)     # 0101
 ```
 
-can be segmented as:
+constructs `0101` with two distinct joins because the first result is reused.
 
-```text
-001 011
-```
+Let $c(\pi)$ be the number of distinct join nodes in proof $\pi$. The concatenative assembly index is:
 
-representing $B$ followed by $D$. It can also be read as the single token:
+$$
+a_{\Vert}(w)
+=
+\min_{\pi:\operatorname{value}(\pi)=w}c(\pi).
+$$
 
-```text
-0 0101 1
-```
+During open-ended search, the registry ordinarily stores an upper bound:
 
-whose path is `0101`.
+$$
+\widehat a_t(w)\geq a_{\Vert}(w).
+$$
 
-This is not treated as a defect to be concealed. It creates an experimental distinction between:
+A claim of exact optimality requires exhaustive proof or a certified lower bound, not merely failure to find a shorter construction.
 
-1. detecting non-random structure;
-2. inferring useful segmentation;
-3. recovering construction rules;
-4. assigning operational roles to recovered structures.
+### 3.5 Assembly groups and variation indices
 
-A later curriculum may teach a self-delimiting protocol, but that protocol must itself be constructed from the empty token. The benchmark can therefore measure the cost of being given boundaries, discovering boundaries, and learning a boundary convention.
+For a fixed registry state, define the demonstrated assembly group:
 
-### 3.7 An illustrative stream
+$$
+G_{t,a}=\{w:\widehat a_t(w)=a\}.
+$$
 
-Enumerating the empty token, both depth-one tokens, and all depth-two tokens yields:
+A public canonical ordering, for example by length and then lexicographic raw expansion, assigns a variation index:
 
-```text
-01 001 011 0001 0011 0101 0111
-```
+$$
+\nu_t(w)\in\{0,1,\ldots,|G_{t,a}|-1\}.
+$$
 
-Without spaces, the student receives only:
+An assembly address is:
 
-```text
-010010110001001101010111
-```
+$$
+\operatorname{addr}_t(w)=(\widehat a_t(w),\nu_t(w)).
+$$
 
-This 24-bit stream is not proposed as a sufficient curriculum. It merely demonstrates the observational condition: the intended sequence of genealogical objects is not recoverable from syntax alone. The curriculum must provide enough regularity for a learner to prefer a productive interpretation over many alternatives.
+Addresses are compact and pedagogically meaningful but epoch-relative. Implementations therefore use permanent IDs for references and expose assembly addresses as derived metadata. A closed formal registry may use addresses directly once optimality and membership are fixed.
+
+### 3.6 Gödel-style numbering of proofs
+
+Fix an effective prefix-free encoding of atoms, references, joins, and finite instruction sequences. Let $\operatorname{enc}(\pi)$ be the resulting bit string. Its corresponding natural number is:
+
+$$
+g(\pi)=1+\operatorname{bin}^{-1}(1\operatorname{enc}(\pi)).
+$$
+
+Any fixed computable bijection between finite proofs and natural numbers would suffice. The purpose of $g$ is identity and reproducibility, not an encoding-independent measure of simplicity.
+
+The canonical proof is selected by:
+
+$$
+\pi^*(w)
+=
+\arg\min_{\pi:\operatorname{value}(\pi)=w}
+\bigl(c(\pi),|\operatorname{enc}(\pi)|,\operatorname{enc}(\pi)\bigr).
+$$
+
+Thus the system first minimizes joins, then encoded proof length, then uses a deterministic tie-break.
+
+### 3.7 Endogenous tokenization
+
+Define the effective vocabulary at turn $t$ as:
+
+$$
+V_t=\{\operatorname{id}_i:r_i\in R_t\}.
+$$
+
+A registry entry behaves as a symbol because future procedures can refer to its identifier without retransmitting or reconstructing its raw expansion. The expansion map is:
+
+$$
+\operatorname{expand}_t:V_t^*\rightarrow\Sigma^*.
+$$
+
+The vocabulary grows endogenously:
+
+$$
+V_{t-1}\subseteq V_t.
+$$
+
+This is the central self-tokenizing mechanism. Tokenization is not a preprocessing step performed before the language exists. It is an internal state transition of the language.
+
+### 3.8 When should a construction become a token?
+
+Registering every possible concatenation causes combinatorial explosion. A teacher or tokenizer policy must choose which demonstrated objects deserve persistent symbolic identity. A candidate utility is:
+
+$$
+U_t(w)
+=
+\alpha S_{\mathrm{reuse}}(w)
++\beta I_{\mathrm{ped}}(w)
++\eta G_{\mathrm{generalization}}(w)
+-\gamma C_{\mathrm{register}}(w),
+$$
+
+where reuse savings measure avoided retransmission, pedagogical information estimates reduction of learner uncertainty, and registration cost includes identifier, proof, and memory overhead.
+
+The optimal tokenization is therefore potentially learner-relative and target-relative. A useful token is not merely frequent; it is a reusable assembly that improves future teaching or execution.
+
+### 3.9 Physical tokens versus endogenous symbols
+
+A fixed-vocabulary LLM cannot literally append a new row to its embedding matrix during ordinary inference. It can nevertheless participate in the protocol by emitting a physical-token sequence that encodes a registry ID. That ID functions as one endogenous symbol at the language level.
+
+The benchmark distinguishes:
+
+1. **virtual self-tokenization:** a fixed physical tokenizer encodes dynamically registered symbolic IDs;
+2. **latent self-tokenization:** the model learns internal chunk representations without explicit vocabulary growth;
+3. **native self-tokenization:** the architecture dynamically allocates embeddings and prediction slots for new registry entries.
+
+Claims about “predicting a new token” must identify which level is meant.
 
 ---
 
-## 4. Lessons as Hidden Deterministic Programs
+## 4. Procedural Lessons and Sequential Belief Revision
 
-### 4.1 Target algorithms
+### 4.1 Lessons are state transitions
 
-Let $\mathcal P$ be a class of target algorithms. A target may be a sequence generator:
-
-$$
-P:\mathbb N\rightarrow\Sigma^*,
-$$
-
-or a general transformation:
+A lesson is not merely a finite string. It is a deterministic procedure that emits evidence and, when accepted, changes the available language:
 
 $$
-P:X\rightarrow Y.
+\ell_t:(R_{t-1},P,z_t)\mapsto(d_t,R_t),
 $$
 
-For the latter case, a previously learned representation must encode elements of $X$, elements of $Y$, and the relationship between them.
+where $P$ is an optional target algorithm, $z_t$ contains finite lesson parameters, and $d_t\in\Sigma^*$ is the transmitted demonstration.
 
-### 4.2 Lesson generators
+The student observes $d_t$, not the lesson source code or its natural-language interpretation. In weaker tracks, external metadata supplies turn or field boundaries. In the strongest track, the student must infer them.
 
-A lesson is a pair:
+### 4.2 The procedural turn
+
+A foundational turn has five logical stages:
+
+1. resolve references to previously available symbols;
+2. expand the referenced operands;
+3. apply concatenation;
+4. verify the demonstrated result;
+5. add or update the result's registry entry.
+
+The output of one turn changes the alphabet of the next. The teacher can therefore build increasingly compressed and abstract demonstrations.
+
+### 4.3 Normative Bayesian update
+
+Let $h$ range over candidate hypotheses about segmentation, registry state, reference encoding, construction rules, teacher policy, and target algorithm. After observing demonstration $d_t$, an ideal Bayesian learner updates:
 
 $$
-\ell_i=(G_i,z_i),
+p_t(h)
+=
+\frac{p(d_t\mid h,R_{t-1})p_{t-1}(h)}
+{\sum_{h'}p(d_t\mid h',R_{t-1})p_{t-1}(h')}.
 $$
 
-where $G_i$ is a deterministic generator and $z_i$ contains its finite parameters. Given target $P$:
+The next registry state predicted by hypothesis $h$ is:
 
 $$
-y_i=G_i(P,z_i),
-\qquad y_i\in\Sigma^*.
+R_t^{(h)}=T_h(R_{t-1},d_t).
 $$
 
-The determinism requirement is:
+A good lesson both advances the registry and separates high-probability rival hypotheses.
+
+### 4.4 Bayesian language is normative, not architectural
+
+The benchmark does not require literal posterior computation. A neural student's update may be:
 
 $$
-G_i(P,z_i)=G_i(P,z_i)
+\theta_t=\operatorname{Train}(\theta_{t-1},d_t),
 $$
 
-for every execution under the same formal specification.
+or, for an in-context learner:
 
-The student receives $y_i$. It does not receive $G_i$, $z_i$, a source-code representation of $P$, or a natural-language explanation of the lesson.
+$$
+h_t=\operatorname{ContextUpdate}(h_{t-1},d_t).
+$$
 
-Deterministic generation should not be confused with deterministic training. Student initialization, optimization, hardware, sampling, dropout, or decoding may remain stochastic. Determinism is a property of the pedagogical evidence.
+A symbolic synthesizer may eliminate inconsistent programs. These mechanisms can all be evaluated against normative Bayesian questions: which hypotheses were ruled out, how calibrated is uncertainty, and how much information did each turn contribute?
 
-### 4.3 What a lesson can do
+### 4.5 Procedural demonstration versus flat exposure
 
-A generator may produce sequences that expose:
+A flat binary corpus may contain exactly the same bits as a sequence of turns while conveying less usable structure. The procedural condition makes temporal dependence part of the task: later references are valid only because earlier demonstrations created their referents.
 
-- a base case;
-- increasing construction depth;
-- repeated applications of one operation;
-- sibling relations in the derivation tree;
-- alternation between operations;
-- composition of previously acquired operations;
-- minimal pairs that differ in one bit;
-- cases chosen to distinguish rival hypotheses;
-- a construction trace containing intermediate states;
-- a self-delimiting convention;
-- encoded input-output behavior of a target program.
+A matched-content ablation compares:
 
-At the earliest stage, the stream has no native truth-value or error token. Consequently, a generator cannot simply label an item “negative” unless such a label has already been taught. Early contrastive teaching must be expressed through recurrence, position, symmetry, continuation, or another relation visible in the output. Once the language has constructed truth, falsity, equality, or validity tokens, later lessons can encode explicit counterexamples internally.
+- ordered procedural turns;
+- the same demonstrations shuffled;
+- the same bits concatenated without turn boundaries;
+- the same multiset of substrings with registry updates disabled.
 
-### 4.4 Lessons are not datasets
+### 4.6 The teacher as an inferred agent
 
-A stored dataset can be treated extensionally as a finite collection of observations. A lesson generator has an intensional description: it specifies how observations are produced. Two generators can emit the same finite string while embodying different rules. Since the student observes only the string, those generators are observationally equivalent for that lesson. They may become distinguishable only through further outputs or tests.
+A learner initially need not know that the stream was produced by a teacher. It may entertain random, stationary, mechanical, adversarial, and pedagogical hypotheses. Teacher recognition occurs when a model of a persistent action-generating agent yields sustained out-of-sample predictive improvement over non-agent baselines.
 
-This underdetermination is intentional. Learning is evaluated not by access to the hidden generator but by the ability to infer a program that generalizes under a defined test oracle.
+Let $b_t$ be the teacher's next procedural action and $H_t$ the shared interaction history. Define directional agent-model gain:
+
+$$
+\mathcal I_{A\rightarrow B}(T)
+=
+\sum_{t=1}^{T}
+\left[
+\log p_A(b_t\mid H_t,\widehat B)
+-
+\log p_0(b_t\mid H_t)
+\right],
+$$
+
+where $p_0$ is a specified non-agent baseline and $\widehat B$ is $A$'s inferred model of $B$. Positive training fit is insufficient; the gain must hold on later turns and counterfactual probes.
+
+### 4.7 Local informational negentropy
+
+Both teacher and student generate local order in the shared interaction space. The teacher emits procedures whose parts become increasingly reusable; the student constructs a model and registry that make later actions more predictable. This paper uses **local informational negentropy** operationally, not as a claim that either agent violates thermodynamic entropy increase.
+
+Let $D_{1:t}$ be the shared transcript and $M_t$ the learner's current model. Define model-relative order gain as:
+
+$$
+\mathcal N_t
+=
+L_0(D_{1:t})-L(D_{1:t}\mid M_t),
+$$
+
+where $L_0$ is a fixed baseline code length and $L(\cdot\mid M_t)$ is the code length under the learned model and registry. Increasing $\mathcal N_t$ means that interaction has created locally usable predictive or compressive structure.
 
 ---
 
-## 5. Curricula as Programs for Teaching Programs
+## 5. A Relational Hypothesis of Intelligence
 
-### 5.1 Open-loop curricula
+### 5.1 Intelligence as interaction
+
+This paper proposes, rather than assumes, a relational hypothesis:
+
+> Within a shared local interaction space, intelligence is expressed when one order-generating agent recognizes another agent as the source of structured actions and improves its prediction of those actions through continued interaction.
+
+The definition is intentionally directional. $A$ may model $B$ well while $B$ models $A$ poorly. Mutual intelligence in an interaction can be represented by the pair:
+
+$$
+\left(\mathcal I_{A\rightarrow B},\mathcal I_{B\rightarrow A}\right).
+$$
+
+### 5.2 What counts as an agent?
+
+For this hypothesis, an agent is a persistent process that:
+
+1. produces actions conditioned on an internal or learned state;
+2. maintains some local organization across time;
+3. can alter future actions in response to observations;
+4. is better predicted by a model of its policy or latent state than by a fixed non-agent baseline.
+
+This definition is broad enough to include biological organisms, artificial teachers, and adaptive environments, but narrow enough to exclude an arbitrary static string merely because it is compressible.
+
+### 5.3 Agent-world interaction
+
+The familiar interaction between a learner and its world is an instance of the same category when the world-facing process is modeled as an adaptive or persistent action generator. The learner recognizes regularities, predicts consequences, acts, and updates its model from the returned observations. In the special teacher-student setting, the second process is explicitly optimizing its actions to change the learner.
+
+The framework does not require anthropomorphizing every environment. Whether an agent model is warranted is itself an empirical comparison against simpler physical or stochastic models.
+
+### 5.4 Why tokenization belongs here
+
+A token is evidence of successful local coordination. The teacher repeatedly uses a construction as one unit; the learner recognizes that unit, predicts its reuse, and gives it stable symbolic identity. Endogenous tokenization is therefore not merely compression. It is the creation of shared predictive objects between agents.
+
+In this sense, the registry records accumulated interactional intelligence: each token marks a structure that one agent successfully induced the other to recognize and reuse.
+
+### 5.5 Falsifiability
+
+The relational hypothesis fails or requires restriction if:
+
+- agent modeling gives no reliable predictive gain over non-agent models;
+- prediction improves without any recoverable representation of the other process;
+- token registries improve compression but not prediction, teaching, or transfer;
+- non-interactive exposure produces identical gains under matched information;
+- supposed local negentropy disappears after registry and model costs are included.
+
+---
+
+## 6. Curricula as Programs That Construct Languages
+
+### 6.1 Open-loop curricula
 
 An open-loop curriculum is an ordered sequence:
 
@@ -412,851 +537,590 @@ $$
 C=(\ell_1,\ell_2,\ldots,\ell_k).
 $$
 
-Its segmented observational form is:
+Its execution yields:
 
 $$
-Y_C=(y_1,y_2,\ldots,y_k).
+(R_0,h_0)
+\xrightarrow{d_1}
+(R_1,h_1)
+\xrightarrow{d_2}
+\cdots
+\xrightarrow{d_k}
+(R_k,h_k).
 $$
 
-Its unsegmented form is the concatenation:
+The curriculum constructs two coupled objects: a student state and a symbolic registry.
+
+### 6.2 Closed-loop curricula
+
+An adaptive teacher chooses the next demonstration from observable student behavior:
 
 $$
-S_C=y_1y_2\cdots y_k.
+\ell_{t+1}=\pi_T(P,R_t,o_t),
 $$
 
-In the strongest condition, the student receives only $S_C$. It is not told the value of $k$ or any boundary positions.
+where $o_t$ is a restricted diagnostic observation. The teacher may target a misconception, introduce a high-reuse token, or demonstrate a shorter proof for an existing token.
 
-### 5.2 Student dynamics
+### 6.3 Joint search over curriculum and tokenization
 
-Let $A$ be a learning algorithm with initial state $h_0$. Under segmented presentation:
-
-$$
-h_i=A(h_{i-1},y_i).
-$$
-
-After the curriculum:
+For learner $A$ and target $P$, the optimization problem is:
 
 $$
-h_C=A(C).
-$$
-
-The final state induces a hypothesis or executable behavior:
-
-$$
-\widehat P_{A,C}.
-$$
-
-For a frozen in-context learner, $h_C$ is a functional state induced by the prompt rather than a persistent parameter update. For a gradient-trained learner, it includes learned parameters. For a symbolic synthesizer, it may be a surviving version space or a recovered program.
-
-### 5.3 Closed-loop curricula
-
-An adaptive teacher observes probes of the student's current competence and chooses the next lesson:
-
-$$
-\ell_{i+1}=\pi_T(P,h_i),
-$$
-
-where $\pi_T$ is a teaching policy.
-
-The teacher need not have direct access to hidden activations. It may condition on observable answers to diagnostic queries. This produces personalized curricula: different students can receive different experiences while targeting the same algorithm.
-
-### 5.4 The curriculum-search problem
-
-For a fixed learner $A$ and target $P$, curriculum search seeks:
-
-$$
-C^*_{A,P}
+(C^*,R^*)_{A,P}
 =
-\arg\min_C J(C;A,P),
-$$
-
-subject to a competence threshold:
-
-$$
-\operatorname{Score}(\widehat P_{A,C},P)\geq q.
-$$
-
-The criterion $J$ may include transmitted bits, number of lessons, generator complexity, teacher computation, student computation, and generalization error.
-
-This definition captures the central proposal:
-
-> Searching for the best curriculum means searching for the sequence of deterministic lessons that most efficiently teaches a target algorithm to a specified learning algorithm.
-
-### 5.5 No universally best curriculum
-
-The optimum is indexed to the learner. In general:
-
-$$
-C^*_{A_1,P}\neq C^*_{A_2,P}.
-$$
-
-A transformer may exploit long-range repetition. A recurrent model may benefit from local incremental traces. A symbolic synthesizer may learn from a few highly discriminative cases. A pretrained LLM may import strong priors that help or mislead it.
-
-A curriculum optimized for a population $\mathcal A$ is:
-
-$$
-C^*_{\mathcal A,P}
-=
-\arg\min_C
-\mathbb E_{A\sim\mathcal A}
-[J(C;A,P)].
-$$
-
-Population optimization provides one route to curricula that transfer across architectures instead of exploiting one student's idiosyncrasies.
-
----
-
-## 6. Pedagogical Complexity
-
-### 6.1 Bit cost
-
-The most direct cost is the number of transmitted bits:
-
-$$
-B(C)=\sum_{i=1}^{k}|y_i|.
-$$
-
-Under an unsegmented curriculum this is simply:
-
-$$
-B(C)=|S_C|.
-$$
-
-A bit-minimal curriculum answers:
-
-> What is the shortest deterministic experience from which learner $A$ can acquire target $P$ at the required level?
-
-### 6.2 Lesson count
-
-The number of distinct presentations may matter independently of total bits:
-
-$$
-N(C)=k.
-$$
-
-A curriculum containing one long stream and a curriculum containing many short lessons may have equal bit cost but different effects on optimization or in-context inference.
-
-### 6.3 Generator description length
-
-Bit cost alone permits pathological teachers. A generator with enormous hidden complexity could emit a short adversarial code that exploits a specific learner. Define:
-
-$$
-D(C)=\sum_{i=1}^{k}L(G_i,z_i),
-$$
-
-where $L$ is description length in a fixed lesson-generator language.
-
-The generator language and its encoding must be fixed before curriculum optimization. Otherwise description length can be manipulated by changing the metalanguage.
-
-### 6.4 Computational cost
-
-Let:
-
-- $T_T(C)$ be teacher-side search and generation cost;
-- $T_A(C)$ be learner-side training or inference cost.
-
-Both may be included when practical efficiency matters.
-
-### 6.5 Error and generalization
-
-Let $E(\widehat P_{A,C},P)$ measure disagreement on held-out tests, including extrapolation beyond the observed sizes and depths.
-
-A composite objective is:
-
-$$
-J(C;A,P)
-=
-\lambda_B B(C)
-+
-\lambda_N N(C)
-+
-\lambda_D D(C)
-+
-\lambda_T T_T(C)
-+
-\lambda_A T_A(C)
-+
-\lambda_E E(\widehat P_{A,C},P).
-$$
-
-Alternatively, one may minimize transmission and description costs subject to strict behavioral constraints.
-
-### 6.6 Learner-relative pedagogical complexity
-
-Define:
-
-$$
-K_A^{\mathrm{teach}}(P;q)
-=
-\min_C
-\left[
-\lambda_B B(C)
-+
-\lambda_N N(C)
-+
-\lambda_D D(C)
-\right]
+\arg\min_{C,R_k}J(C,R_k;A,P)
 $$
 
 subject to:
 
 $$
-\Pr\left[
-\operatorname{Score}(\widehat P_{A,C},P)\geq q
-\right]
-\geq r,
+\operatorname{Score}(A(C),P,R_k)\geq q.
 $$
 
-where the probability is taken over relevant student stochasticity and $r$ is a reliability threshold.
+This is stronger than ordering a fixed dataset. The search decides which experiences to generate, which constructions to register as symbols, when to introduce them, and how to reuse them later.
 
-This quantity is not Kolmogorov complexity and not ordinary sample complexity. It is a learner-relative cost of constructing an experience that causes algorithm acquisition.
+### 6.4 No universally best tokenizer or curriculum
 
-### 6.7 Teachability versus compressibility
+In general:
 
-A target with a short description may still be hard to infer for a given learner because many competing hypotheses fit the observed prefix. Conversely, a larger program may possess a small set of highly diagnostic behaviors.
+$$
+(C^*,R^*)_{A_1,P}\neq(C^*,R^*)_{A_2,P}.
+$$
 
-The benchmark should therefore compare:
-
-- target program description length;
-- shortest curriculum length;
-- generator description length;
-- learner success.
-
-Their relationship is an empirical question rather than an assumed identity.
+A transformer may benefit from long reusable chunks; a recurrent learner may prefer incremental local assemblies; a symbolic learner may prefer proof-minimal entries. Population optimization can search for registries that transfer across learners rather than exploit one architecture.
 
 ---
 
-## 7. Benchmark Design
+## 7. Pedagogical and Representational Cost
 
-### 7.1 Central measurement
+### 7.1 Transmitted bits and turns
 
-For model $M$, target $P$, and curriculum family $\mathcal C$, define the acquisition curve:
+For demonstrations $d_1,\ldots,d_k$:
+
+$$
+B(C)=\sum_{t=1}^{k}|d_t|,
+\qquad
+N(C)=k.
+$$
+
+Turn count matters independently because every turn permits a learner update and a registry transition.
+
+### 7.2 Generator description length
+
+For deterministic lesson generator $G_t$ and parameters $z_t$:
+
+$$
+D(C)=\sum_t L(G_t,z_t).
+$$
+
+The generator language and encoding must be fixed before optimization.
+
+### 7.3 Registry cost
+
+A registry has memory and transmission overhead:
+
+$$
+M(R_k)
+=
+\sum_{r_i\in R_k}
+\left(
+L(\operatorname{id}_i)
++L(\pi_i^*)
++L(\operatorname{metadata}_i)
+\right).
+$$
+
+### 7.4 Assembly cost and reuse benefit
+
+Let:
+
+$$
+A(R_k)=\sum_{r_i\in R_k}\widehat a_i
+$$
+
+be an aggregate demonstrated assembly cost. Let $S(R_k,C)$ measure raw bits avoided by later symbolic reuse relative to retransmitting expansions. Both must be reported; a large registry may compress later lessons while costing more to construct.
+
+### 7.5 Learner-relative pedagogical complexity
+
+A composite objective is:
+
+$$
+J(C,R_k;A,P)
+=
+\lambda_B B(C)
++\lambda_N N(C)
++\lambda_D D(C)
++\lambda_M M(R_k)
++\lambda_A A(R_k)
+-\lambda_S S(R_k,C)
++\lambda_E E(A(C),P).
+$$
+
+Define:
+
+$$
+K_A^{\mathrm{teach+tok}}(P;q)
+=
+\min_{C,R_k}J(C,R_k;A,P)
+$$
+
+subject to a reliability-constrained competence threshold. This quantity is neither Kolmogorov complexity, ordinary sample complexity, nor conventional tokenizer compression. It is the learner-relative cost of constructing both a useful vocabulary and an executable competence.
+
+---
+
+## 8. Benchmark Design
+
+### 8.1 Central thresholds
+
+For model $M$, target $P$, and curriculum family $\mathcal C$, define an acquisition curve:
 
 $$
 S_{M,P,\mathcal C}(n),
 $$
 
-where $n$ is the number of curriculum bits presented and the score aggregates behavioral tests.
-
-Define the acquisition threshold:
+where $n$ is transmitted bits. Define the competence threshold:
 
 $$
 N_{q,r}(M,P,\mathcal C)
 =
-\min\left\{
- n:
- \Pr[S_{M,P,\mathcal C}(n)\geq q]\geq r
-\right\}.
+\min\{n:\Pr[S(n)\geq q]\geq r\}.
 $$
 
-The initial motivating question—how long a binary string must be before a model can infer the system—becomes an estimate of $N_{q,r}$ under a specified model, curriculum family, evaluation rubric, and presentation condition.
+A separate tokenizer-emergence threshold is:
 
-There is no reason to assume in advance that the relevant scale is hundreds, thousands, or millions of bits.
+$$
+T_{q,r}(M,\mathcal C)
+=
+\min\{n:\Pr[\operatorname{TokScore}(n)\geq q]\geq r\}.
+$$
 
-### 7.2 Presentation tracks
+### 8.2 Presentation tracks
 
-#### Track A: Explicit token and lesson boundaries
+1. **Externally tokenized:** registry entries and turn fields are supplied.
+2. **External turns, endogenous tokens:** turn boundaries are supplied; token identities must be learned.
+3. **Encoded references:** references use an internally taught binary ID protocol.
+4. **Continuous stream:** no token, field, or turn boundaries are supplied.
+5. **Virtual dynamic vocabulary:** fixed physical tokenizer, dynamic symbolic registry.
+6. **Native dynamic vocabulary:** embeddings and output slots may be allocated during learning.
 
-The student receives the same binary content with all token and lesson boundaries supplied externally. This isolates rule induction from segmentation.
+### 8.3 Student regimes
 
-#### Track B: Lesson boundaries only
+- frozen in-context language models;
+- byte- or bit-level transformers trained from scratch;
+- recurrent models;
+- meta-learned students;
+- symbolic version-space learners and grammar compressors;
+- neuro-symbolic learners;
+- architectures with dynamic embedding and output vocabularies.
 
-The student knows where each lesson begins and ends but must infer tokenization and internal structure.
+### 8.4 Foundational tasks
 
-#### Track C: Token boundaries only
+The learner must:
 
-Tokens are separated, but lesson boundaries and pedagogical grouping are hidden.
+- identify the two elementary marks;
+- infer that concatenation is the only primitive operation;
+- recover the empty, begin, and end constructions;
+- detect registry creation and stable identity;
+- resolve references to earlier entries;
+- expand token IDs back to raw bits;
+- reconstruct proof DAGs;
+- distinguish assembly group from stable identity;
+- discover shorter proofs;
+- predict which construction should be registered next;
+- distinguish a pedagogical agent from non-agent generators.
 
-#### Track D: Fully continuous binary stream
+### 8.5 Algorithm tasks
 
-All outputs are concatenated. The student receives only a sequence in $\{0,1\}^*$.
+After foundational acquisition:
 
-#### Track E: Self-delimitation taught internally
-
-The curriculum begins in the ambiguous system and later teaches an internally constructed framing or length protocol. No external delimiter is added.
-
-Comparing the tracks estimates the separate costs of token segmentation, lesson segmentation, and protocol acquisition.
-
-### 7.3 Student regimes
-
-The benchmark should distinguish at least four regimes.
-
-#### Frozen in-context learners
-
-A pretrained model receives the curriculum in its context and answers diagnostic queries without parameter updates.
-
-#### Students trained from scratch
-
-Byte-level or bit-level transformers and recurrent models are optimized directly on lesson outputs.
-
-#### Meta-learned students
-
-A student is trained across many target programs and curricula, then evaluated on acquisition of unseen programs from new deterministic lessons.
-
-#### Symbolic and neuro-symbolic learners
-
-Program synthesizers, version-space learners, and hybrid systems provide interpretable baselines and help separate architecture limitations from information insufficiency.
-
-### 7.4 Target families
-
-#### Foundation tasks
-
-- recover the empty token;
-- identify the two construction operations;
-- recover the begin and end tokens;
-- infer parent-child relations;
-- reconstruct paths to unseen tokens;
-- enumerate valid tokens at unseen depths.
-
-#### Linear sequence rules
-
-- repetition;
-- alternation;
-- block growth;
-- unary counting;
-- binary counting;
-- parity;
-- deterministic substitutions;
-- finite recurrences.
-
-#### Composition tasks
-
-- concatenate constructed objects;
-- apply one learned transformation after another;
-- represent and evaluate pairs;
-- construct lists and trees after their conventions have been taught.
-
-#### Functional algorithms
-
-- complement;
-- reversal;
-- increment;
-- addition on bounded integers;
-- filtering;
-- sorting short lists;
-- tree traversal.
-
-#### Stateful algorithms
-
+- repetition and alternation;
+- unary and binary counting;
+- parity and finite recurrences;
+- complement and reversal;
+- bounded addition;
 - finite-state machines;
-- counters;
 - stack operations;
-- cellular automata;
-- small interpreters.
+- list and tree transformations;
+- small interpreters expressed in the learned registry.
 
-#### Transfer tasks
+### 8.6 Strict lesson DSL
 
-- unseen targets from a known program family;
-- new compositions of known primitives;
-- greater construction depth;
-- longer inputs;
-- permuted physical alphabets;
-- curricula generated by unseen teachers.
+The strict teacher DSL is finite, deterministic, and non-Turing-complete:
 
-### 7.5 Curriculum families
+```bnf
+<lesson> ::= demonstrate_join(<ref>, <ref>)
+           | demonstrate_addressed_join(<assembly>, <variation>, <ref>)
+           | demonstrate_alternative(<ref>, <ref>, <target-ref>)
+           | demonstrate_shorter_proof(<target-ref>, <proof>)
+           | enumerate_group(<assembly-level>)
+           | contrast_proofs(<target-ref>, <proof>, <proof>)
+           | query_target(P, <input-slice>)
+           | concat_lesson(<lesson>, <lesson>)
+           | repeat_lesson(<lesson>, <nat>)
+           | permute_marks(<lesson>, <permutation>)
+```
 
-A benchmark implementation should include human-designed and automatically searched curricula built from a restricted DSL. Candidate lesson generators may include:
+All references resolve to atoms or earlier registry entries. Arbitrary bit literals, target identifiers, lookup tables, clocks, randomness, network state, student weights, hidden tests, and unrestricted recursion are prohibited. The sole target-aware primitive may evaluate $P(x)$ on a public canonical input slice; it cannot inspect source code or metadata.
 
-- `emit_empty`;
-- `enumerate_depth(d)`;
-- `emit_parent_children(p)`;
-- `emit_construction_trace(p)`;
-- `repeat_operation(b, n)`;
-- `alternate_operations(n)`;
-- `emit_sibling_pairs(d)`;
-- `emit_minimal_variants(p)`;
-- `enumerate_function_examples(P, domain_slice)`;
-- `compose_lessons(g_1, g_2)`;
-- `repeat_lesson(g, n)`;
-- `permute_alphabet(g, permutation)`.
+Every DSL program has a public prefix-free serialization, and its hidden complexity is charged by encoded length.
 
-The exact DSL is a major design decision. It must be expressive enough to discover nontrivial curricula while constrained enough to prevent arbitrary hidden communication.
+### 8.7 Curriculum families
 
-### 7.6 Bit budgets
+Compare:
 
-The first benchmark can evaluate curricula at geometrically increasing budgets:
+- human procedural curricula;
+- simple-to-complex assembly order;
+- reuse-first tokenization;
+- information-gain teaching;
+- compression-first tokenization;
+- target-performance-first tokenization;
+- exhaustive search for tiny registries;
+- heuristic, evolutionary, Bayesian, and reinforcement-learning teachers.
+
+### 8.8 Bit budgets
+
+Initial studies can use geometric budgets:
 
 $$
 32,64,128,256,512,1024,2048,4096,8192,16384,\ldots
 $$
 
-Adaptive refinement around observed transition regions can estimate acquisition thresholds more efficiently.
+and refine around observed phase transitions.
 
 ---
 
-## 8. Evaluation: What Counts as Learning?
+## 9. Evaluation: What Counts as Learning?
 
-### 8.1 Why explanation is insufficient
+### 9.1 Raw prediction is insufficient
 
-A language model can produce a persuasive but false account of a binary pattern. Natural-language explanation is therefore evidence only when paired with executable success.
+High next-bit accuracy can arise without recovering symbols, procedures, agents, or algorithms. Evaluation must separate physical prediction from endogenous symbolic competence.
 
-### 8.2 Structural recovery
+### 9.2 Registry recovery
 
-The student must identify or operationally use:
+Measure exact or functional recovery of:
 
-- the empty root;
-- construction operations;
-- derivation depth;
-- parent-child relations;
-- candidate segmentation;
-- dependencies between definitions.
+- token identities;
+- raw expansions;
+- registration order;
+- operand references;
+- assembly groups;
+- canonical and alternative proofs.
 
-### 8.3 Genealogy reconstruction
+### 9.3 Tokenization quality
 
-Given an unseen token, the student must return the sequence of operations that constructs it from $E$. Conversely, given a path, it must produce the correct token.
+Report:
 
-### 8.4 Validity discrimination
+- boundary precision and recall where boundaries exist;
+- registry-ID prediction accuracy;
+- expansion accuracy;
+- compression ratio after registry overhead;
+- reuse frequency;
+- stability under mark permutation;
+- transfer to longer unseen strings;
+- agreement with the teacher registry and performance of alternative useful registries.
 
-The student must distinguish well-formed constructions from malformed or rule-inconsistent strings under the conventions taught by the curriculum.
+The teacher's registry is not necessarily the only valid tokenization. Functional equivalence and downstream utility must accompany exact-match scores.
 
-For the foundational language alone, every string of the form $0p1$ is a token. Later extensions may define stricter objects whose validity depends on previously taught composition rules.
+### 9.4 Proof reconstruction and optimization
 
-### 8.5 Behavioral execution
+Given a token, the learner must emit a valid proof or instruction sequence. Score:
 
-For an unseen input $x$:
+- execution correctness;
+- join count;
+- proof encoding length;
+- distance from certified optimum or best-known bound;
+- recognition that an optimality claim is unproven when only an upper bound is known.
 
-$$
-\widehat P(x)
-$$
+### 9.5 Procedural and agent prediction
 
-is compared with:
+Given $R_{t-1}$ and a partial turn, the learner predicts:
 
-$$
-P(x).
-$$
+- operand resolution;
+- raw result;
+- whether the result is new;
+- registry ID;
+- updated assembly metadata;
+- the teacher's next action;
+- the next pedagogically useful demonstration.
 
-Exact match should be used when outputs are discrete and deterministic.
+Agent-recognition scores compare predictive log loss under teacher models, deterministic non-pedagogical generators, stationary sequence models, and random baselines.
 
-### 8.6 Extrapolation
+### 9.6 Algorithm execution and extrapolation
 
-Tests must include:
+Evaluate unseen inputs, greater lengths, deeper assemblies, new compositions, and permuted marks. Interpolation does not establish algorithm acquisition.
 
-- paths deeper than any observed path;
-- inputs longer than training examples;
-- compositions not shown in the curriculum;
-- new combinations of familiar operations;
-- alphabet permutations.
+### 9.7 Explanation
 
-Interpolation alone does not demonstrate algorithm acquisition.
+Language-capable models may explain the inferred system, but explanation is scored separately. A correct explanation should distinguish:
 
-### 8.7 Program recovery
-
-Where possible, the student should emit a program in a canonical evaluation DSL. The recovered program can be checked by:
-
-- formal equivalence;
-- exhaustive testing on finite domains;
-- property-based testing;
-- randomized differential testing;
-- model checking for small state spaces.
-
-### 8.8 Description and explanation
-
-Language-capable students may be asked to explain the system. A structured rubric should score whether the explanation:
-
-1. identifies deterministic structure;
-2. identifies the empty token;
-3. distinguishes primitive marks from constructed tokens;
-4. recovers both append-inside operations;
-5. states the genealogical restriction;
-6. recognizes segmentation ambiguity;
-7. predicts unseen constructions correctly;
-8. avoids claiming uniqueness where the data are underdetermined.
-
-Explanation should be reported separately from behavioral competence.
-
-### 8.9 Composite score
-
-A possible benchmark score is:
-
-$$
-\operatorname{Score}
-=
-w_s S_{\mathrm{structure}}
-+w_g S_{\mathrm{genealogy}}
-+w_e S_{\mathrm{execution}}
-+w_x S_{\mathrm{extrapolation}}
-+w_p S_{\mathrm{program}}
-+w_l S_{\mathrm{language}}.
-$$
-
-Behavioral terms should dominate the language-explanation term.
+- physical marks from endogenous symbols;
+- stable IDs from assembly addresses;
+- proof identity from proof complexity;
+- best-known assembly from certified optimum;
+- virtual from native dynamic tokenization;
+- Bayesian updating as a normative model from actual neural implementation;
+- informational negentropy from thermodynamic entropy.
 
 ---
 
-## 9. Curriculum Search
+## 10. Curriculum and Tokenizer Search
 
-### 9.1 Exhaustive search in small spaces
+### 10.1 Exhaustive search
 
-For shallow targets and small generator DSLs, curricula can be enumerated. Exhaustive search establishes true optima under restricted assumptions and provides ground truth for evaluating approximate search methods.
+For shallow registries, enumerate valid join demonstrations and determine true optima under a fixed cost function. This supplies ground truth for approximate teachers.
 
-### 9.2 Greedy information gain
+### 10.2 Information gain
 
-Maintain a hypothesis set $\mathcal H_i$ compatible with observations. Choose the next lesson to maximize expected reduction:
+For posterior $p_t(h)$, choose a lesson maximizing expected uncertainty reduction minus registration cost:
 
 $$
-\ell_{i+1}
+\ell_{t+1}
 =
 \arg\max_{\ell}
-\mathbb E\left[
-\Delta(\mathcal H_i,\mathcal H_{i+1})
-\right].
+\mathbb E[H(p_t)-H(p_{t+1})]
+-\lambda C_{\mathrm{register}}(\ell).
 $$
 
-For neural learners, $\mathcal H_i$ may be approximated by ensembles, posterior samples, or observed error profiles.
+### 10.3 Reuse-aware search
 
-### 9.3 Evolutionary and program search
+A token may be worth registering because it shortens many future lessons. Search must value downstream reuse rather than only immediate fit.
 
-Curricula represented as programs can be mutated by:
+### 10.4 Program, evolutionary, and reinforcement search
 
-- inserting or deleting lessons;
-- changing parameters;
-- changing output budgets;
-- swapping lesson order;
-- composing generators;
-- introducing repetition;
-- replacing a generator with a semantically related one.
+Curricula can be mutated by adding, deleting, reordering, or replacing demonstrations; changing proof variants; registering or declining candidate tokens; and changing output budgets. Adaptive teachers receive restricted diagnostic feedback.
 
-Fitness combines acquisition and cost.
+### 10.5 Coevolution
 
-### 9.4 Reinforcement-learning teachers
-
-An adaptive teacher can be modeled as an agent. Its state summarizes student performance, its actions select lessons, and its reward reflects learning progress minus pedagogical cost.
-
-### 9.5 Bayesian optimization
-
-For parameterized but expensive curricula, Bayesian optimization can search over lesson lengths, pacing, repetition schedules, and generator mixtures while minimizing the number of full student-training runs.
-
-### 9.6 Coevolution
-
-Teacher and student populations may be optimized together:
-
-$$
-(A^*,C^*)
-=
-\arg\min_{A,C}
-J(C;A,P).
-$$
-
-This may discover students that are unusually teachable and teachers that exploit their representational capacities. It also creates the strongest risk of private codes and collusion, requiring the controls discussed below.
+Teachers, students, and token registries may coevolve. This creates a serious private-code risk. Cross-student transfer, published DSL restrictions, representation permutations, proof execution, and held-out teachers are mandatory controls.
 
 ---
 
-## 10. Baselines, Ablations, and Controls
+## 11. Baselines, Ablations, and Controls
 
-### 10.1 Baseline curricula
+### 11.1 Teaching baselines
 
-Each target should include:
+- random order of matched demonstrations;
+- reverse order;
+- assembly-level order;
+- human curriculum;
+- fixed registry with optimized lesson order;
+- optimized registry with fixed order;
+- sequential machine teaching over structured examples [6];
+- heuristic optimal-curriculum search [7];
+- GTN-inspired synthetic teacher [8];
+- direct program description as a reference condition.
 
-1. random ordering of the same lessons;
-2. reverse ordering;
-3. increasing derivation depth;
-4. decreasing derivation depth;
-5. random deterministic outputs matched for length;
-6. human-designed curriculum;
-7. greedy discriminative curriculum;
-8. automatically optimized curriculum;
-9. direct program description, when allowed, as a reference bound.
+### 11.2 Tokenization baselines
 
-### 10.2 Matched-content order ablation
+- single bits only;
+- fixed random chunks;
+- byte-pair encoding [15];
+- SentencePiece [16];
+- oracle target-specific registry;
+- compression-only registry;
+- proof-indexed self-tokenizing registry.
 
-To isolate curriculum order, compare curricula containing the same multiset of lesson outputs under different permutations. Total bits and content remain fixed.
+### 11.3 Critical ablations
 
-### 10.3 Boundary ablation
+Remove or alter one component at a time:
 
-Present identical underlying outputs with:
+- procedural turn boundaries;
+- stable token IDs;
+- construction proofs;
+- alternative proofs;
+- assembly optimization;
+- intermediate reuse;
+- registration cost;
+- Bayesian information-gain selection;
+- teacher-agent modeling;
+- interaction, replacing turns with matched passive exposure.
 
-- all boundaries;
-- lesson boundaries only;
-- token boundaries only;
-- no boundaries.
+### 11.4 Anti-collusion controls
 
-### 10.4 Redundancy ablation
-
-Hold target and generator family constant while varying repetition. This tests whether redundancy supplies useful evidence or merely increases memorization.
-
-### 10.5 Contrast ablation
-
-Remove lessons selected specifically to eliminate rival hypotheses. Compare with curricula using only positive regularity and repetition.
-
-### 10.6 Genealogy ablation
-
-Compare the proposed genealogical representation with arbitrary token identifiers of matched length. This tests whether representation of construction history improves extrapolation.
-
-### 10.7 Alphabet permutation
-
-Randomly exchange `0` and `1`, or map them to unrelated byte values. A learner that acquired the abstract rule should transfer after corresponding remapping rather than depend on familiar binary semantics.
-
-### 10.8 Fresh procedural targets
-
-Generate target programs after the evaluated model's training cutoff or from randomized compositional grammars. This reduces contamination from memorized sequences or standard textbook tasks.
-
-### 10.9 Cross-student evaluation
-
-A curriculum optimized for one student is tested on held-out architectures and initializations. Severe performance collapse indicates specialization or exploitative teaching rather than general pedagogical structure.
-
----
-
-## 11. Failure Modes
-
-### 11.1 Fundamental underdetermination
-
-Any finite binary string is compatible with infinitely many generating programs. The benchmark cannot establish that the learner discovered the unique true meaning of a sequence, because no such uniqueness generally exists.
-
-Success means that the learner acquired a hypothesis that:
-
-- accounts for the curriculum compactly or reliably;
-- passes hidden behavioral tests generated from the target;
-- extrapolates under specified transformations;
-- remains stable under representation controls.
-
-The benchmark measures useful induction, not metaphysical certainty.
-
-### 11.2 Teacher-student collusion
-
-An unrestricted teacher can encode a target identifier in a short string that a particular student has learned to decode. This would minimize bit cost without teaching the target's operational structure.
-
-Controls include:
-
-- a restricted and published lesson DSL;
-- generator description-length penalties;
-- hidden target and alphabet permutations;
-- held-out students;
-- held-out teacher generators;
+- restricted and published lesson DSL;
+- generator description penalties;
+- mark and ID permutations;
+- held-out students and teachers;
+- fresh procedural targets;
 - behavioral extrapolation tests;
-- audits of curriculum dependence on irrelevant student features.
-
-### 11.3 Tokenizer artifacts
-
-A binary character stream may not be a binary token stream inside an LLM. Tokenizers can merge runs or patterns of digits. Benchmark reports must include:
-
-- raw bit length;
-- model-token length;
-- exact tokenizer output;
-- byte- or character-level controls.
-
-Claims about bit efficiency must not silently substitute proprietary tokenizer units for bits.
-
-### 11.4 Pretraining contamination
-
-Pretrained models may recognize binary counting, bracket languages, or familiar mathematical narratives. Controls include randomized operations, generated targets, symbol permutations, and students trained from scratch.
-
-### 11.5 Memorization and local prediction
-
-High next-bit accuracy can be achieved without recovering the generating algorithm. Evaluation must emphasize unseen depths, lengths, compositions, and explicit execution.
-
-### 11.6 Explanation without competence
-
-LLMs may verbalize the intended theory after weak pattern matching. Behavioral tests must be primary.
-
-### 11.7 Competence without explanation
-
-The opposite dissociation is also possible. A student may execute a rule but fail to describe it. The benchmark should not classify this as total failure; explanation and execution are separate outcomes.
-
-### 11.8 Determinism without informativeness
-
-A deterministic generator may produce a sequence that leaves many hypotheses indistinguishable. Determinism is necessary for reproducibility, not sufficient for teaching quality.
-
-### 11.9 Search cost
-
-Optimizing curricula by repeatedly training students may be computationally prohibitive. Initial experiments should use small models, shallow targets, caching, surrogate models, and exhaustive ground truth only where feasible.
+- audits for dependence on architecture identifiers or hidden state;
+- comparison with non-pedagogical generators of equal complexity.
 
 ---
 
 ## 12. Falsifiable Hypotheses
 
-### H1: Order matters under matched content
+### H1: Procedural order matters under matched content
 
-For a fixed learner and target, an optimized ordering of the same lesson outputs will reach a competence threshold with fewer training steps or higher reliability than random order.
+Ordered demonstrations will outperform shuffled or flat exposure containing the same bits.
 
 ### H2: Generator selection matters beyond ordering
 
-Curricula optimized over lesson generators will outperform curricula that merely reorder a fixed dataset under matched bit budgets.
+Search over lesson generators will outperform reordering a fixed set under matched bit budgets.
 
-### H3: Diagnostic contrasts reduce teaching cost
+### H3: Token registration lowers later teaching cost
 
-Curricula containing outputs selected to distinguish high-probability rival hypotheses will reach acquisition thresholds using fewer bits than repetition-only curricula.
+After accounting for registry overhead, reusable endogenous symbols will reduce the marginal cost of teaching later algorithms.
 
-### H4: Segmentation has a separable cost
+### H4: Optimal tokenization is learner-relative
 
-Providing token or lesson boundaries will reduce acquisition thresholds. A curriculum that teaches self-delimitation internally will recover part of that gap without external markers.
+Registry rankings will differ across transformers, recurrent models, symbolic learners, and pretrained LLMs.
 
-### H5: Optimal curricula are learner-relative
+### H5: Proof-indexed tokens improve extrapolation
 
-Curriculum rankings will differ across transformers, recurrent models, symbolic synthesizers, and pretrained LLMs.
+Tokens accompanied by executable construction proofs will support greater depth and composition transfer than opaque identifiers of matched length.
 
-### H6: Population optimization improves transfer
+### H6: Assembly optimization improves reuse efficiency
 
-Curricula optimized against heterogeneous student populations will sacrifice some performance on a single training student but outperform specialized curricula on held-out students.
+Curricula that discover shorter reusable proofs will reduce downstream transmission or computation cost.
 
-### H7: Genealogical representations improve depth extrapolation
+### H7: Segmentation has a separable cost
 
-Students trained on tokens whose representations encode construction paths will generalize to unseen depths more reliably than students trained on arbitrary identifiers of matched length.
+Externally supplied boundaries will reduce acquisition thresholds, while internally taught references will recover part of the gap.
 
-### H8: Teachability and description length are related but non-identical
+### H8: Virtual and native self-tokenization differ
 
-Target program length will correlate with pedagogical complexity, but substantial learner-dependent deviations will remain.
+Architectures with native dynamic vocabulary support will outperform fixed-vocabulary models on registry-ID prediction after controlling for physical input length.
 
-### H9: Execution and explanation have distinct thresholds
+### H9: Bayesian information-gain teachers are bit-efficient
 
-Some learners will execute correctly before they can explain the rule; pretrained language models may sometimes explain before achieving reliable extrapolative execution.
+Lessons selected to separate high-probability rival hypotheses will require fewer bits than repetition-only teaching.
 
-### H10: Meta-learned students can acquire unseen algorithms from generator outputs alone
+### H10: Agent modeling predicts pedagogical actions
 
-A student trained across diverse deterministic lesson programs will learn unseen target algorithms from output-only curricula more efficiently than a student trained solely for next-symbol prediction on undifferentiated streams.
+A learner model that represents the teacher as an adaptive agent will predict held-out teacher actions better than matched stationary or non-agent models.
 
-Each hypothesis can fail. For example, order may cease to matter for sufficiently powerful students; unsegmented induction may remain intractable at practical budgets; genealogical encoding may add length without useful bias; or optimized teachers may consistently exploit model artifacts rather than discover transferable pedagogy.
+### H11: Mutual prediction tracks successful interaction
+
+Teacher-student pairs with higher bidirectional out-of-sample agent-model gain will construct more transferable registries and acquire target algorithms more reliably.
+
+### H12: Local order survives full accounting
+
+Positive local informational negentropy will remain after charging for registry, model, proof, and generator description costs. Failure would show that apparent order was merely displaced into hidden machinery.
 
 ---
 
 ## 13. Experimental Roadmap
 
-### 13.1 Experiment 1: Recovering the foundational language
+### Experiment 1: Foundational registration
 
-**Target.** Recover $E$, $A_0$, $A_1$, the depth-one tokens, and the general form $\tau(p)=0p1$.
+Teach `0`, `1`, $E$, $B$, and $D$ through explicit turns. Test reference resolution, joins, result prediction, and registry updates.
 
-**Students.** Small bit-level transformers, LSTMs, symbolic grammar learners, and selected pretrained LLMs.
+### Experiment 2: Continuous-stream recovery
 
-**Curricula.** Human-designed enumerations, construction traces, sibling groupings, and automatically searched sequences.
+Remove all field and turn boundaries. Measure when models recover a productive procedural segmentation.
 
-**Conditions.** All five boundary tracks.
+### Experiment 3: Self-tokenization
 
-**Tests.** Generate unseen tokens, recover paths, infer parent-child relationships, and explain the mark-token distinction.
+Present reusable constructions and compare single-bit, BPE, SentencePiece, compression-only, and proof-indexed registries.
 
-**Primary output.** Acquisition curves and bit thresholds, not a single anecdotal model response.
+### Experiment 4: Assembly-proof optimization
 
-### 13.2 Experiment 2: Constructing a self-delimiting extension
+Demonstrate multiple proofs for the same token. Ask learners to reproduce, compare, and improve them.
 
-**Target.** Teach a protocol that lets the student uniquely segment later token sequences.
+### Experiment 5: Teaching simple algorithms
 
-**Constraint.** The protocol must be introduced through already constructible tokens and operations; no new external delimiter is permitted.
+Teach alternation, counting, parity, reversal, and bounded addition using the endogenous registry. Compare direct raw-bit instruction with registry-mediated teaching.
 
-**Comparison.** External boundaries versus internally taught boundaries versus no boundary protocol.
+### Experiment 6: Teacher recognition
 
-**Primary output.** Segmentation accuracy, overhead in bits, and downstream algorithm acquisition.
+Mix pedagogical teachers with deterministic non-pedagogical generators of matched complexity. Test whether the learner identifies and predicts pedagogical action selection.
 
-### 13.3 Experiment 3: Teaching simple sequence algorithms
+### Experiment 7: Curriculum-tokenizer search
 
-**Targets.** Alternation, counting, parity, substitutions, and recurrences.
+Jointly optimize demonstrations and registration policy for a fixed learner and target.
 
-**Question.** Does prior acquisition of the genealogical language reduce the later cost of teaching algorithms, or does it merely add overhead?
+### Experiment 8: Cross-model pedagogy
 
-**Controls.** Direct binary examples without the language; arbitrary token identifiers; natural-language instructions as an upper reference condition.
+Cross-evaluate every learned curriculum and registry on held-out architectures.
 
-### 13.4 Experiment 4: Learning the curriculum
+### Experiment 9: Native dynamic vocabularies
 
-**Teacher.** Search over a restricted lesson DSL using exhaustive search for tiny targets and evolutionary or reinforcement-learning methods for larger ones.
+Compare virtual symbolic IDs with architectures that allocate embeddings and output slots online.
 
-**Student.** Fixed bit-level transformer.
+### Experiment 10: Coevolving agents
 
-**Objective.** Minimize bits and generator complexity while meeting extrapolation thresholds.
-
-**Analysis.** Compare discovered curricula with simple-to-complex, random, reverse, and human curricula.
-
-### 13.5 Experiment 5: Cross-model pedagogy
-
-Optimize curricula separately for several students, then cross-evaluate every curriculum-student pair. The resulting matrix reveals whether curricula teach general structure or exploit architecture-specific biases.
-
-### 13.6 Experiment 6: Meta-learning to be taught
-
-Train students across many target programs and teacher-generated curricula. Evaluate whether they acquire unseen programs from shorter streams, whether they infer lesson boundaries, and whether their learned inductive biases transfer to unseen teacher policies.
-
-### 13.7 Experiment 7: Coevolving teachers and students
-
-Coevolve teacher and student populations under strong anti-collusion controls. Test whether the resulting protocols remain interpretable and transferable to independently trained students.
+Coevolve teachers and students under strong anti-collusion and transfer controls.
 
 ---
 
-## 14. Open Design Questions
+## 14. Failure Modes and Open Questions
 
-### 14.1 What should the lesson-generator DSL contain?
+### 14.1 Fundamental underdetermination
 
-A weak DSL may make the benchmark trivial or incapable of expressing useful pedagogy. An unrestricted DSL enables hidden communication. Defining this metalanguage is the most important implementation decision.
+Any finite stream is compatible with infinitely many generators, segmentations, and registries. Success means useful, compact, and extrapolatively correct induction, not recovery of a metaphysically unique meaning.
 
-### 14.2 Should the empty token be called “empty,” “void,” or “nothing”?
+### 14.2 Registry explosion
 
-“Nothing” captures the motivating intuition but risks conflating metaphysical absence with a represented object. “Empty token” is operationally precise. The benchmark can preserve the philosophical motivation while using the computational term in formal definitions.
+Unrestricted concatenation creates too many candidates. Registration policy and cost are central, not implementation details.
 
-### 14.3 Is append-inside the only primitive operation?
+### 14.3 Moving assembly addresses
 
-The initial system uses $A_0$ and $A_1$. Later research may ask whether a single universal construction operation can generate both, whether one mark can be derived from the other, or whether richer structural operations reduce total pedagogical cost.
+A shorter proof can move a token between assembly groups. Stable IDs must remain separate from optimized addresses.
 
-### 14.4 When does a physical mark become a token?
+### 14.4 Uncertified optimality
 
-The system deliberately distinguishes primitive construction marks from their later internal representations. A full semantics must state which operations may manipulate marks directly and when constructed tokens become first-class data.
+A best-known proof is not necessarily minimal. Benchmarks must distinguish upper bounds from certified assembly indices.
 
-### 14.5 How should semantics enter?
+### 14.5 Tokenizer artifacts
 
-Names such as “begin,” “end,” “pair,” or “apply” are external descriptions used by researchers. The learner should not receive them in the binary-only condition. Operational meaning must be established through use and successful prediction.
+A binary character stream may be merged unpredictably by an LLM's physical tokenizer. Raw bits, physical model tokens, and endogenous symbols must all be reported.
 
-### 14.6 Can the system teach its own interpreter?
+### 14.6 Intelligence by definition
 
-A long-term target is a curriculum whose binary stream teaches not only tokens and algorithms but an interpreter capable of executing subsequent definitions. This would provide a concrete sense in which the language “constructs itself.”
+The relational intelligence proposal risks circularity if “agent” is defined only as something well predicted by an agent model. Independent criteria—persistence, responsiveness, latent-state dependence, and intervention sensitivity—must be fixed before evaluation.
 
-### 14.7 Can a curriculum teach the learner how to learn later lessons?
+### 14.7 Negentropy overclaim
 
-Early lessons may install representational conventions or inference strategies that reduce the cost of all subsequent algorithms. Measuring this amortization is central to distinguishing a language curriculum from a collection of unrelated demonstrations.
+Compression gain in a transcript is not thermodynamic entropy reduction. The paper's operational measure is informational and local. Physical claims require separate accounting.
+
+### 14.8 Private languages
+
+Teacher and student may invent an efficient code that transfers to nobody else. Held-out-agent evaluation is therefore indispensable.
+
+### 14.9 What should count as a symbol?
+
+Frequency, compression, proof minimality, pedagogical information, and downstream utility may favor different registries. The benchmark should report Pareto frontiers rather than assume one scalar objective is universally correct.
 
 ---
 
 ## 15. Broader Implications
 
-### 15.1 Models can be compared by teachability
+### 15.1 A language that contains its tokenizer
 
-Current benchmarks mainly ask what a model knows or can learn from a fixed training procedure. Generative machine teaching asks how much structured experience a model needs to acquire a capability. Two models with similar final accuracy may differ sharply in pedagogical complexity.
+The central conceptual result is that the tokenizer can be part of the language rather than a preprocessing tool outside it. Token birth, proof, identity, reuse, and retirement can all be expressed within the same procedural system.
 
-### 15.2 Curricula become executable research objects
+### 15.2 Next-token prediction at two levels
 
-A curriculum is no longer an informal list of topics. It is a program whose outputs induce another program in a learner. It can be versioned, tested, minimized, mutated, compared, and audited.
+An LLM predicts physical tokens. In the proposed protocol it may simultaneously learn to predict *endogenous* tokens—registry IDs whose expansions are themselves strings of physical tokens. This layered view converts next-token prediction into a mechanism for constructing a new symbolic alphabet without pretending that the underlying model vocabulary has already changed.
 
-### 15.3 Teacher models can be evaluated independently
+### 15.3 Curricula as executable languages
 
-A teacher is judged not by eloquence or resemblance to human pedagogy, but by the competence its generated experiences induce under explicit costs and controls.
+A curriculum no longer merely orders topics. It constructs the vocabulary in which later lessons become short enough to express. Teaching and language design become one optimization problem.
 
-### 15.4 Emergent communication can be studied under stronger constraints
+### 15.4 Intelligence as reciprocal model building
 
-Many multi-agent communication systems allow agents to coadapt arbitrary symbols. The proposed benchmark begins with a fixed binary channel, explicit derivational restrictions, and held-out students. This may help distinguish transferable compositional protocols from private codes.
+The teacher models how the student will update; the student models why the teacher selected its next demonstration. Their shared registry is a concrete trace of reciprocal model building. The framework therefore offers a controlled environment for studying intelligence as interaction rather than as an isolated property score.
 
-### 15.5 The benchmark resembles communication with an unknown interpreter
+### 15.5 The self-world boundary
 
-An unsegmented binary curriculum resembles a message sent to a receiver whose language is unknown. Unlike a purely communicative puzzle, however, the receiver is evaluated through executable tasks and the sender can be optimized against a specified learner.
-
-### 15.6 A science of machine pedagogy
-
-The broader research program is the study of:
-
-> programs that generate experiences capable of installing other programs in learners.
-
-Such a program would connect curriculum design, machine teaching, meta-learning, representation learning, and program synthesis under a common experimental object: the deterministic lesson generator.
+A learner interacting with an adaptive world performs the same abstract operations: it predicts, acts, receives evidence, constructs reusable representations, and updates beliefs. The teacher-student benchmark is a deliberately clean special case in which the action-generating counterpart and its pedagogical objective can be controlled.
 
 ---
 
 ## 16. Conclusion
 
-This paper proposed generative machine teaching: a framework in which deterministic hidden lesson programs generate the only evidence available to a student. A curriculum is an ordered sequence of those programs, and curriculum search seeks the experience that most efficiently induces a target algorithm in a specified learner.
+This paper proposed a framework in which deterministic lessons teach not only algorithms but the symbolic vocabulary required to express them. The physical substrate contains two marks, and concatenation is the only primitive operation. A procedural demonstration joins previously available objects, verifies the result, registers it under a stable identifier, and makes it available as one symbol in later turns.
 
-The initial benchmark begins with a minimal binary construction system. The first representable object is the empty token:
+The resulting registry is self-tokenizing. It stores expansions, alternative construction proofs, Gödel-style proof codes, assembly metadata, and stable identities. Tokenization therefore emerges from interaction rather than being imposed before learning. A model with a fixed physical vocabulary can participate through virtual symbolic IDs, while stronger architectures can implement native dynamic tokens.
 
-$$
-E=01.
-$$
+Each turn changes both the learner and the language. Bayesian updating provides a normative description of the resulting belief revision, while neural and symbolic learners provide alternative implementations. The teacher itself becomes an object of inference: intelligence is hypothesized to appear relationally when one order-generating agent recognizes another and gains predictive power over its actions in a shared local interaction space.
 
-The begin and end tokens are constructed by inserting the corresponding primitive marks into the empty token:
+The strongest empirical question is:
 
-$$
-B=001,
-\qquad
-D=011.
-$$
+> What is the shortest sequence of procedural demonstrations from which a given learner can recognize its teacher, construct a useful tokenizer, and acquire a given executable algorithm?
 
-Every later token must carry a finite construction path from $E$. The representation therefore contains its own genealogy. Because the encoding is intentionally not self-delimiting, a continuous stream does not reveal token or lesson boundaries. The learner must infer a useful structure and demonstrate that inference through unseen construction, execution, extrapolation, and program recovery.
-
-The proposal converts an informal question—how many binary tokens an LLM needs before it understands what a string means—into a family of measurable quantities indexed by learner, target, curriculum, reliability, and presentation condition.
-
-The strongest version of the research question is:
-
-> What is the shortest deterministic experience from which a given learning algorithm can acquire a given target algorithm?
-
-Answering it requires not only better students, but algorithms that learn how to teach.
+Answering that question requires programs that teach programs, agents that learn how to be taught, and languages capable of constructing their own symbols.
 
 ---
 
@@ -1272,12 +1136,30 @@ Answering it requires not only better students, but algorithms that learn how to
 
 [5] Sally A. Goldman and Michael J. Kearns. “On the Complexity of Teaching.” *Journal of Computer and System Sciences*, vol. 50, no. 1, 1995, pp. 20–31. DOI: [10.1006/jcss.1995.1003](https://doi.org/10.1006/jcss.1995.1003).
 
-[6] Laurent Lessard, Xuezhou Zhang, and Xiaojin Zhu. “An Optimal Control Approach to Sequential Machine Teaching.” 2018. [arXiv:1810.06175](https://arxiv.org/abs/1810.06175).
+[6] Laurent Lessard, Xuezhou Zhang, and Xiaojin Zhu. “An Optimal Control Approach to Sequential Machine Teaching.” *Proceedings of the Twenty-Second International Conference on Artificial Intelligence and Statistics*, PMLR 89, 2019, pp. 2495–2503. [https://proceedings.mlr.press/v89/lessard19a.html](https://proceedings.mlr.press/v89/lessard19a.html).
 
-[7] Yewen Pu, Zachery Miranda, Armando Solar-Lezama, and Leslie Pack Kaelbling. “Selecting Representative Examples for Program Synthesis.” 2017. [arXiv:1711.03243](https://arxiv.org/abs/1711.03243).
+[7] Manuel Garcia-Piqueras and José Hernández-Orallo. “Heuristic Search of Optimal Machine Teaching Curricula.” *Machine Learning*, vol. 112, 2023, pp. 4049–4080. DOI: [10.1007/s10994-023-06347-4](https://doi.org/10.1007/s10994-023-06347-4).
 
-[8] Shivam Garg, Dimitris Tsipras, Percy Liang, and Gregory Valiant. “What Can Transformers Learn In-Context? A Case Study of Simple Function Classes.” *Advances in Neural Information Processing Systems 35*, 2022. [https://proceedings.neurips.cc/paper_files/paper/2022/hash/c529dba08a146ea8d6cf715ae8930cbe-Abstract-Conference.html](https://proceedings.neurips.cc/paper_files/paper/2022/hash/c529dba08a146ea8d6cf715ae8930cbe-Abstract-Conference.html).
+[8] Felipe Petroski Such, Aditya Rawal, Joel Lehman, Kenneth Stanley, and Jeffrey Clune. “Generative Teaching Networks: Accelerating Neural Architecture Search by Learning to Generate Synthetic Training Data.” *Proceedings of the 37th International Conference on Machine Learning*, PMLR 119, 2020, pp. 9206–9216. [https://proceedings.mlr.press/v119/such20a.html](https://proceedings.mlr.press/v119/such20a.html).
 
-[9] Peter Grünwald. “A Tutorial Introduction to the Minimum Description Length Principle.” 2004. [arXiv:math/0406077](https://arxiv.org/abs/math/0406077).
+[9] Yewen Pu, Zachery Miranda, Armando Solar-Lezama, and Leslie Pack Kaelbling. “Selecting Representative Examples for Program Synthesis.” 2017. [arXiv:1711.03243](https://arxiv.org/abs/1711.03243).
 
-[10] Ray J. Solomonoff. “A Formal Theory of Inductive Inference, Part I.” *Information and Control*, vol. 7, no. 1, 1964, pp. 1–22. DOI: [10.1016/S0019-9958(64)90223-2](https://doi.org/10.1016/S0019-9958(64)90223-2).
+[10] Shivam Garg, Dimitris Tsipras, Percy Liang, and Gregory Valiant. “What Can Transformers Learn In-Context? A Case Study of Simple Function Classes.” *Advances in Neural Information Processing Systems 35*, 2022.
+
+[11] Peter Grünwald. “A Tutorial Introduction to the Minimum Description Length Principle.” 2004. [arXiv:math/0406077](https://arxiv.org/abs/math/0406077).
+
+[12] Ray J. Solomonoff. “A Formal Theory of Inductive Inference, Part I.” *Information and Control*, vol. 7, no. 1, 1964, pp. 1–22. DOI: [10.1016/S0019-9958(64)90223-2](https://doi.org/10.1016/S0019-9958(64)90223-2).
+
+[13] Kurt Gödel. “Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I.” *Monatshefte für Mathematik und Physik*, vol. 38, 1931, pp. 173–198. DOI: [10.1007/BF01700692](https://doi.org/10.1007/BF01700692).
+
+[14] Abhishek Sharma et al. “Assembly Theory Explains and Quantifies Selection and Evolution.” *Nature*, vol. 622, 2023, pp. 321–328. DOI: [10.1038/s41586-023-06600-9](https://doi.org/10.1038/s41586-023-06600-9).
+
+[15] Rico Sennrich, Barry Haddow, and Alexandra Birch. “Neural Machine Translation of Rare Words with Subword Units.” *Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics*, 2016, pp. 1715–1725. DOI: [10.18653/v1/P16-1162](https://doi.org/10.18653/v1/P16-1162).
+
+[16] Taku Kudo and John Richardson. “SentencePiece: A Simple and Language Independent Subword Tokenizer and Detokenizer for Neural Text Processing.” *Proceedings of EMNLP 2018: System Demonstrations*, pp. 66–71. DOI: [10.18653/v1/D18-2012](https://doi.org/10.18653/v1/D18-2012).
+
+[17] Jorie Koster-Hale and Rebecca Saxe. “Theory of Mind: A Neural Prediction Problem.” *Neuron*, vol. 79, no. 5, 2013, pp. 836–848. DOI: [10.1016/j.neuron.2013.08.020](https://doi.org/10.1016/j.neuron.2013.08.020).
+
+[18] Diana I. Tamir and Mark A. Thornton. “Modeling the Predictive Social Mind.” *Trends in Cognitive Sciences*, vol. 22, no. 3, 2018, pp. 201–212. DOI: [10.1016/j.tics.2017.12.005](https://doi.org/10.1016/j.tics.2017.12.005).
+
+[19] Piotr J. Gmytrasiewicz and Prashant Doshi. “A Framework for Sequential Planning in Multi-Agent Settings.” 2011. [arXiv:1109.2135](https://arxiv.org/abs/1109.2135).
