@@ -28,6 +28,10 @@ Position papers and working drafts.
 - `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
 
+## Eixo aprendizagem algorítmica / machine teaching
+
+- `generative_machine_teaching.md` — programas que ensinam programas: currículos determinísticos gerativos para aquisição de algoritmos a partir de fluxos binários não segmentados
+
 ## Eixo alignment / agent-bounding
 
 - `affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
