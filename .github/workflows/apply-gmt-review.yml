@@ -1,0 +1,231 @@
+name: Apply GMT review revisions
+
+on:
+  push:
+    branches:
+      - paper/generative-machine-teaching
+
+permissions:
+  contents: write
+
+jobs:
+  patch-paper:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Apply review revisions
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("generative_machine_teaching.md")
+          text = path.read_text(encoding="utf-8")
+
+          def replace_once(old: str, new: str, label: str) -> None:
+              global text
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one match, found {count}")
+              text = text.replace(old, new, 1)
+
+          abstract = r'''The proposal unifies questions from curriculum learning, machine teaching, teaching dimension, program synthesis, in-context learning, and algorithmic information theory while making a distinct experimental commitment: the teacher chooses deterministic **generators of experience**, and the learner observes only their outputs. We define pedagogical complexity relative to a learner, propose benchmark tracks for segmented and unsegmented streams, specify behavioral metrics and controls against teacher-student collusion, and state falsifiable hypotheses. The central empirical question is: **what is the shortest deterministic experience from which a given learner can acquire a given algorithm?**'''
+          abstract_new = abstract + r'''
+
+The term **generative machine teaching** does not claim the invention of the general idea of generating data in order to teach. The distinctive object proposed here is a deterministic, genealogical, and optionally boundary-free benchmark in which hidden lesson programs communicate only through binary output strings and success is measured by executable algorithm acquisition under learner-relative pedagogical cost.'''
+          replace_once(abstract, abstract_new, "abstract novelty boundary")
+
+          intro_related = r'''The proposal is related to several established lines of work. Curriculum learning studies how the ordering and pacing of training data affect learning [1]. Automated curriculum learning chooses tasks or samples according to learning progress [2], and recent benchmarks compare curriculum methods across domains [3]. Machine teaching studies the inverse problem of selecting training data for a known learner and target [4]. Teaching dimension formalizes the number of examples required to identify a concept within a hypothesis class [5]. Sequential machine teaching optimizes a sequence that drives a learner toward a target state [6]. Program synthesis from examples studies how observations constrain candidate programs and how representative examples improve synthesis [7]. Work on in-context learning shows that transformers can be trained to infer members of function classes from examples presented at inference time [8]. Minimum Description Length and algorithmic induction connect learning with concise explanations of data [9, 10].'''
+          intro_related_new = r'''The proposal is related to several established lines of work. Curriculum learning studies how the ordering and pacing of training data affect learning [1]. Automated curriculum learning chooses tasks or samples according to learning progress [2], and recent benchmarks compare curriculum methods across domains [3]. Machine teaching studies the inverse problem of selecting training data for a known learner and target [4]. Teaching dimension formalizes the number of examples required to identify a concept within a hypothesis class [5]. Sequential machine teaching optimizes a sequence that drives a learner toward a target state [6]. Heuristic machine-teaching curricula jointly optimize examples, concept order, and total teaching-session size [12]. Generative Teaching Networks meta-learn neural generators of synthetic training data and curricula by differentiating through student learning [11]. Program synthesis from examples studies how observations constrain candidate programs and how representative examples improve synthesis [7]. Work on in-context learning shows that transformers can be trained to infer members of function classes from examples presented at inference time [8]. Minimum Description Length and algorithmic induction connect learning with concise explanations of data [9, 10].'''
+          replace_once(intro_related, intro_related_new, "intro prior art")
+
+          novelty = r'''### 2.6 Scope of the novelty claim
+
+The individual ingredients of this proposal have precedents: ordered training, optimized teaching sequences, generated tasks, program induction, binary coding, and description-length objectives. The claimed research contribution is narrower and compositional: an explicit framework in which **deterministic hidden lesson programs generate symbol streams; curriculum search operates over those programs; and success is algorithm acquisition from their outputs, optionally without segmentation or semantic scaffolding**.
+
+The novelty of that exact framing and benchmark must be tested against further literature review and implementation. This position paper does not claim priority over every possible formulation of program-generated curricula.'''
+          novelty_new = r'''### 2.6 Scope of the novelty claim
+
+The individual ingredients of this proposal have precedents: ordered training, optimized teaching sequences, generated tasks, program induction, binary coding, and description-length objectives. **Generative machine teaching does not claim the invention of the general idea of generating data in order to teach.** The claimed contribution is narrower and compositional: a deterministic, genealogical, and optionally boundary-free benchmark in which hidden lesson programs communicate only through their binary outputs, curriculum search operates over those programs, and success is executable algorithm acquisition under learner-relative pedagogical cost.
+
+The primary experimental novelty is the conjunction of two restrictions that are usually absent from machine-teaching and synthetic-data work: the learner may receive a fully unsegmented stream, and the initial representation records a mandatory construction genealogy from the empty token. The remaining machinery—generator search, cost accounting, behavioral evaluation, and anti-collusion controls—makes that conjunction measurable rather than merely philosophical.
+
+The novelty of this exact framing and benchmark remains subject to further literature review and implementation. This position paper does not claim priority over every formulation of program-generated curricula.
+
+### 2.7 Comparison with the closest teaching frameworks
+
+**Generative Teaching Networks (GTNs).** Such et al. meta-learn a neural network that generates synthetic training data or environments for a freshly initialized student and update the generator by differentiating through the student's learning process [11]. GTNs are therefore the closest precedent for the broad idea of learning to generate teaching data. The present proposal differs in its strict benchmark track: lessons are hidden deterministic programs drawn from a published discrete DSL; generator description length is a first-class cost; the learner's only channel may be an unsegmented binary string; and the target is recoverable, extrapolative algorithm acquisition rather than primarily accelerated neural-task training. A GTN-inspired teacher remains an important baseline rather than an excluded competitor.
+
+**Sequential machine teaching.** Lessard et al. seek the shortest sequence that drives a specified sequential learner to a target model and formulate the problem as time-optimal control [6]. This directly anticipates the shortest-curriculum objective. Its teacher action space, however, consists of training examples under a supplied representation and learning protocol. The present benchmark asks the teacher to choose generators and may withhold the boundaries and representational conventions that make examples recognizable as examples.
+
+**Heuristic search of machine-teaching curricula.** Garcia-Piqueras and Hernández-Orallo combine example choice, concept ordering, and minimization of the total teaching session [12]. This is a close precedent for curriculum search rather than mere example selection. Their setting retains explicit examples and concepts; it does not optimize hidden deterministic generators or require induction from a continuous binary channel.
+
+| Dimension | Generative Teaching Networks | Sequential MT / teaching size | Heuristic MT curricula | This proposal |
+|---|---|---|---|---|
+| Teacher action | Meta-learned neural generator | Examples or labels | Examples plus concept order | Deterministic lesson program plus parameters and output budget |
+| Student observation | Synthetic training data | Structured training examples | Structured examples | Generator outputs only; boundaries may be absent |
+| Generator description cost | Not a primary objective | Not applicable | Not applicable | Explicit first-class term |
+| Segmentation and representation | Supplied | Supplied | Supplied | Experimental variable; may be deliberately withheld |
+| Main target | Accelerated neural learning | Target learner state or model | Concept acquisition with minimal session | Executable algorithm acquisition and extrapolation |
+| Strict anti-collusion mechanism | Architecture and experiment dependent | Fixed teaching model | Fixed teaching model | Published restricted DSL, description penalty, permutations, and held-out students |'''
+          replace_once(novelty, novelty_new, "novelty and comparison")
+
+          dsl = r'''### 7.5 Curriculum families
+
+A benchmark implementation should include human-designed and automatically searched curricula built from a restricted DSL. Candidate lesson generators may include:
+
+- `emit_empty`;
+- `enumerate_depth(d)`;
+- `emit_parent_children(p)`;
+- `emit_construction_trace(p)`;
+- `repeat_operation(b, n)`;
+- `alternate_operations(n)`;
+- `emit_sibling_pairs(d)`;
+- `emit_minimal_variants(p)`;
+- `enumerate_function_examples(P, domain_slice)`;
+- `compose_lessons(g_1, g_2)`;
+- `repeat_lesson(g, n)`;
+- `permute_alphabet(g, permutation)`.
+
+The exact DSL is a major design decision. It must be expressive enough to discover nontrivial curricula while constrained enough to prevent arbitrary hidden communication.'''
+          dsl_new = r'''### 7.5 A minimal lesson-generator DSL
+
+The strict benchmark track uses a finite, published, non-Turing-complete DSL. A curriculum-search system may choose an abstract syntax tree and its parameters, but it may not inject arbitrary binary literals or execute unrestricted code.
+
+#### 7.5.1 Types
+
+- `Bit ::= 0 | 1`;
+- `Nat ::= 0,1,...,N_max`, encoded canonically;
+- `Path ::= Bit*`, with a benchmark-specific maximum length;
+- `Depth ::= Nat`;
+- `Slice ::= (start: Nat, count: Nat)` over a public canonical enumeration of target inputs;
+- `Permutation ::= identity | swap`;
+- `TargetRef ::= P`, an opaque reference supporting only the authorized query operation described below;
+- `Lesson`, the type of a deterministic generator whose evaluation returns a finite bit string.
+
+#### 7.5.2 Grammar
+
+```bnf
+<lesson> ::= emit_empty
+           | enumerate_depth(<depth>)
+           | emit_parent_children(<path>)
+           | emit_construction_trace(<path>)
+           | repeat_operation(<bit>, <nat>)
+           | alternate_operations(<nat>)
+           | emit_sibling_pairs(<depth>)
+           | emit_minimal_variants(<path>)
+           | enumerate_function_examples(P, <slice>)
+           | concat(<lesson>, <lesson>)
+           | repeat(<lesson>, <nat>)
+           | permute_alphabet(<lesson>, <permutation>)
+```
+
+All integer and path ranges are bounded by the benchmark configuration. Evaluation order is left-to-right and all enumerations use a published lexicographic order. No primitive has hidden mutable state or randomness.
+
+#### 7.5.3 Deterministic semantics
+
+Let `tok(p) = 0 p 1` and let `lex(d)` be the lexicographically ordered paths of length `d`.
+
+| Form | Output |
+|---|---|
+| `emit_empty` | `tok(ε)` |
+| `enumerate_depth(d)` | Concatenation of `tok(p)` for every `p` in `lex(d)` |
+| `emit_parent_children(p)` | `tok(p) tok(p0) tok(p1)` |
+| `emit_construction_trace(p)` | Concatenation of the tokens for every prefix of `p`, beginning with `tok(ε)` |
+| `repeat_operation(b,n)` | Construction trace for the path `b^n` |
+| `alternate_operations(n)` | Construction trace for the length-`n` prefix of `0101...` |
+| `emit_sibling_pairs(d)` | For each path `p` of length `d`, emit `tok(p0) tok(p1)` |
+| `emit_minimal_variants(p)` | `tok(p)` followed by tokens obtained by flipping each bit of `p`, in index order |
+| `concat(g1,g2)` | `eval(g1) eval(g2)` |
+| `repeat(g,n)` | `eval(g)` repeated exactly `n` times |
+| `permute_alphabet(g,swap)` | Bitwise exchange of `0` and `1` in `eval(g)`; `identity` leaves it unchanged |
+
+`enumerate_function_examples(P, slice)` is unavailable until a prior benchmark stage has fixed a canonical encoding for inputs, outputs, and pairs. It queries `P(x)` only for the explicitly enumerated inputs in `slice` and emits those canonically encoded pairs in order. It cannot inspect the source code, identifier, metadata, or internal state of `P`.
+
+#### 7.5.4 Description length
+
+Every DSL abstract syntax tree has a public prefix-free binary serialization `enc`. The hidden teacher cost is:
+
+$$
+L(G,z)=|\operatorname{enc}(G,z)|.
+$$
+
+Opcode, tree structure, integer parameters, paths, slices, and permutations all contribute to this length. The transmitted-data cost remains separately measured as `|eval(G,z)|`; a generator cannot obtain a low total cost merely by hiding an arbitrarily complex program behind a short output.
+
+#### 7.5.5 Target access and prohibited channels
+
+Structural generators have no access to the target program. The sole target-aware primitive is the restricted function-example query above. In the strict DSL track, the following are prohibited:
+
+- arbitrary bit-string literals or lookup tables;
+- hashes, names, indices, or serialized descriptions of the target;
+- branching on target identity rather than authorized evaluations `P(x)`;
+- access to student weights, architecture identifiers, random seeds, tokenizer internals, or held-out tests;
+- hidden randomness, clocks, network access, filesystem state, or nondeterministic iteration;
+- unrestricted recursion, general-purpose interpreters, or other routes to Turing completeness;
+- learned continuous payloads embedded in numerical parameters.
+
+Adaptive teachers constitute a separate benchmark track and may observe only published diagnostic scores, never unrestricted student state. Neural synthetic teachers, including GTN-inspired systems, are evaluated as baselines outside the strict DSL and are charged under their own parameter and compute accounting.'''
+          replace_once(dsl, dsl_new, "formal DSL")
+
+          baselines = r'''### 10.1 Baseline curricula
+
+Each target should include:
+
+1. random ordering of the same lessons;
+2. reverse ordering;
+3. increasing derivation depth;
+4. decreasing derivation depth;
+5. random deterministic outputs matched for length;
+6. human-designed curriculum;
+7. greedy discriminative curriculum;
+8. automatically optimized curriculum;
+9. direct program description, when allowed, as a reference bound.'''
+          baselines_new = r'''### 10.1 Baseline curricula
+
+Each target should include:
+
+1. random ordering of the same lessons;
+2. reverse ordering;
+3. increasing derivation depth;
+4. decreasing derivation depth;
+5. random deterministic outputs matched for length;
+6. human-designed curriculum;
+7. greedy discriminative curriculum;
+8. **fixed generators with optimized order**, isolating the value of sequencing;
+9. **optimized generator selection with fixed canonical order**, isolating the value of generator choice;
+10. **sequential machine teaching / minimum teaching-size baseline**, searching directly over structured examples rather than generators [6];
+11. **heuristic optimal-curriculum search**, jointly choosing examples and concept order under total-session cost [12];
+12. **GTN-inspired synthetic teacher**, meta-learning a neural generator under the same student and, where feasible, a binary-output restriction [11];
+13. automatically optimized strict-DSL curriculum;
+14. direct program description, when allowed, as a reference bound.
+
+The generator-choice and order-only baselines are particularly important: an optimized curriculum should not receive credit for generator search when its gain is explained entirely by ordering, or vice versa. The GTN baseline is intentionally outside the strict DSL so that the proposed restrictions are tested against, rather than protected from, a more expressive learned teacher.'''
+          replace_once(baselines, baselines_new, "baselines")
+
+          ref6 = r'''[6] Laurent Lessard, Xuezhou Zhang, and Xiaojin Zhu. “An Optimal Control Approach to Sequential Machine Teaching.” 2018. [arXiv:1810.06175](https://arxiv.org/abs/1810.06175).'''
+          ref6_new = r'''[6] Laurent Lessard, Xuezhou Zhang, and Xiaojin Zhu. “An Optimal Control Approach to Sequential Machine Teaching.” *Proceedings of the Twenty-Second International Conference on Artificial Intelligence and Statistics*, PMLR 89, 2019, pp. 2495–2503. [https://proceedings.mlr.press/v89/lessard19a.html](https://proceedings.mlr.press/v89/lessard19a.html).'''
+          replace_once(ref6, ref6_new, "sequential MT reference")
+
+          ref10 = r'''[10] Ray J. Solomonoff. “A Formal Theory of Inductive Inference, Part I.” *Information and Control*, vol. 7, no. 1, 1964, pp. 1–22. DOI: [10.1016/S0019-9958(64)90223-2](https://doi.org/10.1016/S0019-9958(64)90223-2).'''
+          ref10_new = ref10 + r'''
+
+[11] Felipe Petroski Such, Aditya Rawal, Joel Lehman, Kenneth Stanley, and Jeffrey Clune. “Generative Teaching Networks: Accelerating Neural Architecture Search by Learning to Generate Synthetic Training Data.” *Proceedings of the 37th International Conference on Machine Learning*, PMLR 119, 2020, pp. 9206–9216. [https://proceedings.mlr.press/v119/such20a.html](https://proceedings.mlr.press/v119/such20a.html).
+
+[12] Manuel Garcia-Piqueras and José Hernández-Orallo. “Heuristic Search of Optimal Machine Teaching Curricula.” *Machine Learning*, vol. 112, 2023, pp. 4049–4080. DOI: [10.1007/s10994-023-06347-4](https://doi.org/10.1007/s10994-023-06347-4).'''
+          replace_once(ref10, ref10_new, "new references")
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Commit revised paper
+        run: |
+          rm .github/workflows/apply-gmt-review.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generative_machine_teaching.md .github/workflows/apply-gmt-review.yml
+          git commit -m "paper: address novelty and operationalization review"
+          git push origin HEAD:"${GITHUB_REF_NAME}"
