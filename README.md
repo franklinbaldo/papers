@@ -31,6 +31,7 @@ Position papers and working drafts.
 ## Eixo aprendizagem algorítmica / machine teaching
 
 - `generative_machine_teaching.md` — programas que ensinam programas: linguagem concatenativa autotokenizável, provas de montagem e currículos procedurais binários
+- `informational_time.md` — tempo como concatenação: simetria, tokenização recursiva e profundidade causal informacional entre agentes
 
 ## Eixo alignment / agent-bounding
 
