@@ -1,13 +1,22 @@
-# Papers
+---
+type: "Index"
+title: "papers"
+description: "Catalogo e guia de leitura dos papers deste repositorio e do aparato de debate que os acompanha."
+timestamp: 2026-07-09T12:12:59+00:00
+okf_version: "0.1"
+---
+
+# papers
 
 Position papers and working drafts.
 
-## Eixo teoria constitucional / decisão judicial
+## Raciocínio Jurídico Auditável (CPC 2015) — série dogmática
 
-- `paper1A_autocontencao_judicial.md` — autocontenção judicial
-- `paper1B_fidelidade_precedentes.md` — fidelidade a precedentes
-- `paper1C_ementas_precedentes.md` — ementas e precedentes
-- `paper1D_argumentacao_juridica.md` — argumentação jurídica
+- `paper1_dogmatico_ED_precedentes.md` — Embargos de Declaração e saídas legítimas diante de precedente vinculante (umbrella)
+- `paper1A_embargos_declaracao.md` — escopo dos vícios e efeitos infringentes
+- `paper1B_cinco_saidas_precedentes.md` — cinco saídas legítimas (art. 927 §1º c/c art. 489 §1º V–VI)
+- `paper1C_categorias_processuais_formalizacao.md` — categorias processuais e formalização
+- `paper1D_vinculacao_racional_dialogo_institucional.md` — vinculação racional e diálogo institucional
 - `paper1E_custos_argumentativos.md` — custos argumentativos
 - `paper1F_reputacao_sistema_juridico.md` — reputação no sistema jurídico
 - `paper1G_livre_convencimento_patrimonialismo.md` — livre convencimento e patrimonialismo
@@ -34,10 +43,33 @@ Position papers and working drafts.
 
 ## Eixo empírico
 
-- `case_studies/` — estudos de caso
+- `empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
 
-## Outros materiais
+## Síntese
 
-- `otherwise/` — notas, blogs e materiais auxiliares
-- `synthesis/` — sínteses e registros de sessões
-- `okf/` — especificação e validação do formato OKF
+- `sintese_programa.md` — síntese do programa "Raciocínio Jurídico Auditável" (eixos dogmático + metodológico-formal + empírico, onze papers; não cobre os eixos de alignment e interpretabilidade abaixo, tratados como linha de pesquisa correlata mas distinta)
+
+## Companion pieces
+
+- `otherwise/` — argumentos adversariais
+- `yesindeed/` — argumentos de suporte
+- `synthesis/` — árbitro: funde `otherwise/`/`yesindeed/` e roda os ciclos de edição que absorvem conclusões assentadas de volta aos papers principais
+- `PROTOCOL.md` — regras do aparato de debate acima (papéis, gatilho de absorção, corte de debates em loop)
+
+## Log
+
+- `synthesis/blog/` — registro corrente de sessões, um arquivo datado por sessão (ativo desde 2026-05-13)
+- `session_log.md` — registro de duas sessões de verificação de referências em 2026-05-12, anterior ao mecanismo acima; mantido como histórico, não recebe novas entradas
+- `propostas_melhoria_2026-07-09.md` — auditoria externa do programa e propostas de melhoria (2026-07-09)
+
+## Formato dos documentos (OKF)
+
+Todo arquivo `.md` deste repositório (exceto `okf/index.md`, reservado
+por convenção) carrega front matter YAML com pelo menos um campo
+`type`, conforme o [Open Knowledge Format](okf/SPEC.md) v0.1. Os
+`type` usados aqui são um vocabulário fechado e documentado em
+`okf/types/` (um arquivo por tipo — `Dogmatic Paper`, `Adversarial
+Critique`, `Session Log Entry`, etc.); `okf/validate.py` roda em CI
+a cada PR e falha se um documento não tiver front matter válido ou
+usar um `type` não registrado. Comece por `okf/index.md` para a
+lista completa de tipos e o que cada um exige.
