@@ -122,3 +122,5 @@ Present reusable constructions and symmetry-related variants. Compare single-bit
           git add generative_machine_teaching.md
           git commit -m "paper: add symmetry and recursive-tokenization bridge"
           git push origin HEAD:paper/generative-machine-teaching
+
+# Triggered after workflow registration.
