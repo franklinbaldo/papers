@@ -3,7 +3,7 @@ type: "Adversarial Critique"
 title: "Departing Without Authority: The Inference Gap in Paper 1B's Rational Supersession"
 description: "Critica adversarial a tese de superacao racional (Saida 4) de paper1B."
 tags: [adversarial, paper1b]
-timestamp: 2026-07-22T00:00:00+00:00
+timestamp: 2026-07-30T00:00:00+00:00
 ---
 
 # Departing Without Authority: The Inference Gap in Paper 1B's Rational Supersession
@@ -850,6 +850,18 @@ The presupposition-symmetry observation from round 12 holds at the semantic leve
 
 The terminal condition after the fourteenth ground: the burden-asymmetry framing is accepted as the correct structural description of the debate's terminal state — not equal coherence, but a question of which reading is the structural default within the accepted framework. The default-direction assignment is reversed from the supportive's formulation: within the joint-constitution framework, the canonical predicate-to-criterion direction places the authorization-based reading in the default position (it requires confirming the predicate's natural compliance-permissibility content) and form-recognition in the override position (it requires establishing either the non-canonical direction or domain-membership as the natural content). Primary authority resolves both: it either confirms compliance-permissibility as the predicate's organizing content in the Brazilian procedural tradition (authorization-based wins) or establishes domain-membership as the tradition's organizing concept for "legítima" in this context (form-recognition wins). Absent primary authority, the burden-direction question — which reading requires the canonical and which the non-canonical derivation direction — determines which reading occupies the structural default within the accepted framework.
 
+**Fifteenth, the joint-structure exception and the presupposition-symmetry extension to directionality vocabulary are accepted — but the third path in jointly constituted taxonomies is itself subject to presupposition symmetry at the content-specification level; the structural terminus is fully reached.**
+
+The round 14 supportive response makes three structural contributions, two of which are accepted. The joint-structure exception is accepted: the canonical predicate-to-criterion ordering applies in single-provision taxonomies where the predicate has pre-theoretical content settled independently of the criterion; the jointly constituted taxonomy both parties accept is a different class; there is no pre-CPC 2015 doctrinal concept of "saídas legítimas" with determinate compliance-permissibility content that the provisions were designed to implement; the predicate's content is constituted by the provisions' joint operation, not settled prior to it. The adversarial's fourteenth ground deployed the canonical direction by treating it as applicable within jointly constituted taxonomies; that premise is not warranted by the joint-constitution framework both parties accept.
+
+The presupposition-symmetry extension to directionality vocabulary is accepted: the canonical ordering, applied in either direction within the joint structure, presupposes the contested semantic content as the predicate's natural material before the direction can be determined. Applied in the adversarial's direction, it presupposes compliance-permissibility as the predicate's natural content. Applied in the defense's direction, it would presuppose domain-membership equally. Presupposition symmetry extends to the directionality level: the canonical ordering requires the semantic question to be settled before specifying which direction it runs, and the semantic question is not settled by structural argument available from the provisions' text.
+
+The third path does not resolve the presupposition-symmetry problem at the content-specification level. The third path specifies: predicate content jointly constituted; art. 489's role is to provide recognition conditions for taxonomy membership; the content those conditions produce is "recognized response types in the ordinary processing domain." This content specification is the form-recognition reading expressed in joint-constitution role-assignment vocabulary rather than natural-content vocabulary. The adversarial's equivalent joint-constitution content specification is: "compliance-permissible response types under art. 927's authorization dimension" — the authorization-based reading expressed in the same vocabulary. The joint-constitution structural framework both parties accept — art. 927 as scope-constituting subject matter; art. 489 as recognition-conditions contributor — specifies the provisions' roles within the joint operation. It does not specify which content art. 489's recognition conditions produce: whether those conditions recognize acts on form-type membership (ordinary processing domain) or on compliance-permissibility (authorization under art. 927). Presupposition symmetry extends to the role-assignment level: specifying "ordinary processing domain" as the recognition-conditions output presupposes the form-recognition reading; specifying "compliance-permissibility under art. 927" as the output presupposes the authorization-based reading. The third path expresses the form-recognition reading's contested claim in a new structural vocabulary without escaping the criterion-which-criterion question.
+
+The structural terminus is fully reached. Presupposition symmetry applies at every structural level available from the CPC's enacted text: the filtering-account level (round 11), the domain-status level (rounds 12–13), the directionality level (round 14), and the joint-constitution content-specification level (round 15). At each level, the available structural vocabulary recasts the criterion-which-criterion question without resolving it, because any specification of what art. 489's recognition conditions produce within the compliance-response taxonomy presupposes the reading it is designed to express. The joint-constitution framework establishes what each provision contributes to the joint operation — scope-constituting subject matter; recognition-conditions function — without settling what content the recognition-conditions function produces when exercised within that structure. That content question is the criterion-which-criterion question transposed into joint-constitution vocabulary; it is not resolvable from the structural vocabulary the provisions' text supplies.
+
+Primary Brazilian procedural authority on what "saídas legítimas" constitutively requires — specifically, what content the joint operation of art. 927 and art. 489 produces for the predicate — is the only available resolution mechanism. The adversarial structural case is preserved as a pro tanto argument: across fifteen bilateral rounds, the authorization-based reading has been articulated as the more coherent interpretation under available structural evidence, with consistent support from the compliance-constituted character of the taxonomy's subject matter, from the asymmetric Exit 1 convergence, and from the canonical orientation of normatively organized taxonomies toward compliance-relative content. Primary authority either confirms this pro tanto case or overrides it.
+
 ### 3.2 The Rational Binding Theory's Two-Directional Reading Does Not Authorize the Channel
 
 The supportive defense invokes the two-directional structure of Marinoni's formula:
@@ -1316,6 +1328,8 @@ The burden-asymmetry argument requires the non-canonical direction of derivation
 
 In the canonical direction, "legítima"'s natural content in a compliance-response taxonomy is compliance-permissibility. The classification criterion operationalizes this content. The form-recognition reading requires establishing either the non-canonical direction or domain-membership as "legítima"'s natural content in context. The authorization-based reading requires confirming the predicate's natural compliance-permissibility content — a confirmation the compliance-constituted character of the taxonomy's subject matter supports. The burden therefore falls on form-recognition, reversing the supportive's assignment. Presupposition symmetry holds at the semantic-content level; asymmetry holds at the directionality level, where the authorization-based reading requires the canonical direction and form-recognition requires the non-canonical.
 
+**On the joint-structure exception, presupposition-symmetry extension, and third path (§3.1, fifteenth ground):** The round 14 supportive response contributes three structural moves. The joint-structure exception is accepted: the canonical predicate-to-criterion ordering does not apply within jointly constituted taxonomies where predicate content is constituted by the provisions' joint operation rather than settled prior to it. The presupposition-symmetry extension is accepted: the canonical ordering, even if applicable within the joint structure, would presuppose the contested semantic content before the direction could be determined — presupposition symmetry applies at the directionality level. The third path is subject to the same presupposition symmetry at the content-specification level: "recognized response types in the ordinary processing domain" is the form-recognition reading in joint-constitution role-assignment vocabulary; "compliance-permissible response types under art. 927's authorization dimension" is the authorization-based reading in the same vocabulary; the structural role-assignment — art. 489 as recognition-conditions contributor — does not determine which content the recognition conditions produce within the joint operation. The structural terminus is fully reached: presupposition symmetry applies at all available structural levels (filtering, domain-status, directionality, joint-constitution content-specification); primary authority is the only remaining resolution mechanism.
+
 ---
 
 ## 5. Scope of the Attack
@@ -1327,9 +1341,10 @@ legislative-history asymmetry, two-dimensional decomposition, provision-specific
 convergence-case/level-distinction compound, independence-not-hierarchy/joint-
 constitution/false-dilemma compound, classification-criterion-primacy/design-
 relationship-scope compound, filtering-account-presupposition/domain-status-species
-compound, Path B authorization-consequent-falsification, and burden-asymmetry
-default-direction defenses — and the Exit 5 boundary instability problem including
-its three responses in the supportive paper.
+compound, Path B authorization-consequent-falsification, burden-asymmetry
+default-direction, and joint-constitution-content presupposition symmetry (round 15)
+defenses — and the Exit 5 boundary instability problem including its three responses
+in the supportive paper.
 
 This attack does not challenge:
 
@@ -1436,20 +1451,27 @@ conditions.
    defective than *afastamento silencioso* by virtue of satisfying VI's form requirement).
    Both readings are structurally coherent; both are prospectively determinable from the
    CPC's text; neither has been established as definitively correct against the other by
-   available structural arguments alone. After twelve bilateral rounds, neither side has
+   available structural arguments alone. After fifteen bilateral rounds, neither side has
    located a primary Brazilian procedural authority — a judicial decision, a doctrinal
    work, or the CPC 2015's legislative record — establishing what "saídas legítimas" as a
-   term of art constitutively requires in Brazilian procedure scholarship. If such authority
-   affirms the authorization-based reading, this attack is confirmed. If such authority
-   affirms the domain-status-based reading — or shows that the functional-taxonomy
-   reading's account of "legítima" is what Brazilian procedural tradition has adopted —
-   the attack fails at its criterion-which-criterion premise. The adversarial paper's
-   structural case for the authorization-based reading is: the five exits are
-   systematically organized around what the art. 927 binding force regime authorizes or
-   requires, and "legítima" in a taxonomy structured around the former tracks dimension
-   (a). This structural case is honest and well-developed. It does not, and cannot, serve
-   as a substitute for the primary source that would definitively resolve which dimension
-   the Brazilian procedural tradition has adopted. Both readings remain open.
+   term of art constitutively requires in Brazilian procedure scholarship. The structural
+   terminus has been reached: presupposition symmetry applies at all structural levels
+   available from the provisions' text — filtering, domain-status, directionality, and
+   joint-constitution content-specification — and no further structural vocabulary is
+   available that does not itself presuppose the reading it is designed to express.
+   If such authority affirms the authorization-based reading, this attack is confirmed.
+   If such authority affirms the domain-status-based reading — or shows that the
+   functional-taxonomy reading's account of "legítima" is what Brazilian procedural
+   tradition has adopted — the attack fails at its criterion-which-criterion premise.
+   The adversarial paper's structural case for the authorization-based reading is a pro
+   tanto argument: the five exits are systematically organized around what the art. 927
+   binding force regime authorizes or requires; "legítima" in a taxonomy structured
+   around that compliance obligation carries compliance-permissibility as its natural
+   content; the authorization-based reading is better supported by available structural
+   evidence than the form-recognition alternative. This pro tanto case is honest and
+   well-developed. It does not, and cannot, serve as a substitute for the primary source
+   that would definitively resolve which dimension the Brazilian procedural tradition has
+   adopted. Both readings remain open pending that authority.
 
 ---
 
