@@ -357,7 +357,71 @@ where reuse savings measure avoided retransmission, pedagogical information esti
 
 The optimal tokenization is therefore potentially learner-relative and target-relative. A useful token is not merely frequent; it is a reusable assembly that improves future teaching or execution.
 
-### 3.9 Physical tokens versus endogenous symbols
+### 3.9 Symmetry and recursive endogenous tokenization
+
+Literal recurrence is not the only reason to register a symbol. A stronger case arises when several strings are related by a transformation that preserves an identifiable structure. Let a finite transformation family or group $G$ act on strings or registry sequences. The orbit of $x$ is:
+
+$$
+[x]_G=\{g(x):g\in G\}.
+$$
+
+A registry may assign one symbol to the invariant construction represented by the orbit and separate symbols to admissible transformations. A particular message can then be represented schematically as:
+
+$$
+x
+\equiv
+T_{[x]}\Vert T_g\Vert\varepsilon,
+$$
+
+where $T_{[x]}$ identifies the shared structure, $T_g$ identifies the transformation, and $\varepsilon$ is the residual not explained by the symmetry. Exact symmetry makes $\varepsilon$ empty. Approximate symmetry leaves a residual whose cost must be charged explicitly.
+
+This representation is useful only when the combined registry and message cost decreases:
+
+$$
+L(R)+L(x\mid R)
+>
+L(R\cup\{T_{[x]},T_g\})
++
+L(T_{[x]},T_g,\varepsilon\mid R').
+$$
+
+The same mechanism applies recursively. Once raw-bit sequences have stable identifiers, sequences of those identifiers can themselves be concatenated, demonstrated, and registered as higher-order symbols:
+
+$$
+S^{(0)}
+\rightarrow
+S^{(1)}
+\rightarrow
+\cdots
+\rightarrow
+S^{(k)}.
+$$
+
+The process reaches a registry-relative fixed point when no admissible new registration reduces the total cost of the registry and indexed transcript:
+
+$$
+\forall w,
+\qquad
+L_R(S)
+\leq
+L_{R\cup\{w\}}(S).
+$$
+
+The remaining sequence is a **registry-relative irreducible residue**, not an absolute or computably certified incompressible core. A richer construction language, a different learner, or a different cost function may expose further structure.
+
+Symmetry-based registration does not increase the physical capacity of the binary channel. It increases the amount of previously established structure that a short message can reactivate. Define the registry-relative expansion factor:
+
+$$
+\Lambda_R(m)
+=
+\frac{L_0(\operatorname{expand}_R(m))}{L_R(m)}.
+$$
+
+A larger $\Lambda_R$ means that more reconstructible structure is available per transmitted symbol because the registry and its proofs carry information accumulated in earlier interaction. The resulting gain should therefore be described as increased **effective semantic capacity relative to a shared registry**, not as creation of physical information.
+
+This section states only the bridge needed for the present teaching framework. A companion paper develops the broader consequences for informational time, causal depth, symmetry, and agent recognition.
+
+### 3.10 Physical tokens versus endogenous symbols
 
 A fixed-vocabulary LLM cannot literally append a new row to its embedding matrix during ordinary inference. It can nevertheless participate in the protocol by emitting a physical-token sequence that encodes a registry ID. That ID functions as one endogenous symbol at the language level.
 
@@ -1012,7 +1076,7 @@ Remove all field and turn boundaries. Measure when models recover a productive p
 
 ### Experiment 3: Self-tokenization
 
-Present reusable constructions and compare single-bit, BPE, SentencePiece, compression-only, and proof-indexed registries.
+Present reusable constructions and symmetry-related variants. Compare single-bit, BPE, SentencePiece, frequency-only, compression-only, symmetry-aware, and proof-indexed registries. Test recursive registration by allowing sequences of learned IDs to become higher-order symbols, and report the total cost of the registry plus indexed transcript rather than compression of the transcript alone.
 
 ### Experiment 4: Assembly-proof optimization
 
