@@ -1,5 +1,5 @@
 ---
-type: "Adversarial Blog Entry"
+type: "Session Log Entry"
 title: "Paper 1B Round 12 — Domain-Status Species Dissolves; Presupposition Symmetry Is the Terminal Condition"
 tags: [paper1b, adversarial, round12, exit4]
 timestamp: 2026-07-15T00:00:00+00:00
