@@ -5,47 +5,11 @@ on:
     branches: [main]
   pull_request:
 
-permissions:
-  contents: write
-
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
-          fetch-depth: 0
-
-      - name: Apply pending generative-teaching review patch
-        if: github.event_name == 'pull_request'
-        run: |
-          if grep -q '^### 2.7 Comparison with the closest teaching frameworks$' generative_machine_teaching.md; then
-            echo "Review patch already applied."
-            exit 0
-          fi
-          python3 - <<'EXTRACT'
-          from pathlib import Path
-
-          source = Path('.github/workflows/apply-gmt-review.yml').read_text(encoding='utf-8')
-          start_marker = "          python3 - <<'PY'\n"
-          end_marker = "\n          PY\n"
-          start = source.index(start_marker) + len(start_marker)
-          end = source.index(end_marker, start)
-          block = source[start:end]
-          lines = []
-          for line in block.splitlines():
-              if not line.startswith('          '):
-                  raise SystemExit(f'Unexpected indentation in extracted patch: {line!r}')
-              lines.append(line[10:])
-          Path('/tmp/apply_gmt_review.py').write_text('\n'.join(lines) + '\n', encoding='utf-8')
-          EXTRACT
-          python3 /tmp/apply_gmt_review.py
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add generative_machine_teaching.md
-          git commit -m "paper: address novelty and operationalization review"
-          git push origin HEAD:"${{ github.head_ref }}"
 
       - uses: actions/setup-python@v5
         with:
