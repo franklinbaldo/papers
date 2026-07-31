@@ -1,0 +1,69 @@
+name: Temporary negentropy terminology fix
+
+on:
+  pull_request_target:
+    types: [edited]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.event.pull_request.number == 240
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: paper/informational-time-negentropy
+          fetch-depth: 0
+      - name: Fix model-family terminology
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('informational_time_negentropy_clarifications.md')
+          text = path.read_text()
+          old = '''### H3: Intervention separates the other from the self
+
+When the external source responds contingently to probes, intervention data will
+favor $\\mathcal M_{\\mathrm{source}}^{A}$ over
+$\\mathcal M_{\\mathrm{self}}^{A}$ more quickly than matched passive observation.
+
+### H4: Recognition scale is empirical
+
+The causal scale at which the best persistent-source account is found may be an
+organism, population, lineage, collective, ecosystem, institution, or other
+distributed process. Fixing that scale by definition will sometimes worsen
+prediction and compression.'''
+          new = '''### H3: Intervention separates agent-level response from self and law
+
+When the external source responds contingently to probes, intervention data will
+favor $\\mathcal M_{\\mathrm{agent}}^{A}$ over both
+$\\mathcal M_{\\mathrm{self}}^{A}$ and $\\mathcal M_{\\mathrm{law}}^{A}$ more
+quickly than matched passive observation, provided the response cannot be
+captured by a complexity-matched non-agent dynamics model.
+
+### H4: Recognition scale is empirical
+
+The causal scale at which the best agent-level account is found may be an
+organism, population, lineage, collective, ecosystem, institution, or other
+distributed process. Fixing that scale by definition will sometimes worsen
+prediction and compression.'''
+          if text.count(old) != 1:
+              raise SystemExit(f'expected one terminology block, found {text.count(old)}')
+          path.write_text(text.replace(old, new, 1))
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add informational_time_negentropy_clarifications.md
+          git commit -m "paper: align hypotheses with law-versus-agent model classes"
+          git push origin HEAD:paper/informational-time-negentropy
+      - name: Remove temporary workflow
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout -B main origin/main
+          rm -f .github/workflows/temporary-fix-negentropy-terminology.yml
+          git add -A
+          git commit -m "chore: remove temporary terminology workflow"
+          git push origin HEAD:main
