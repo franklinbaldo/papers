@@ -30,9 +30,9 @@ Position papers and working drafts.
 
 ## Eixo aprendizagem algorítmica / machine teaching
 
-- `generative_machine_teaching.md` — programas que ensinam programas: linguagem concatenativa autotokenizável, provas de montagem e currículos procedurais binários
-- `informational_time.md` — tempo como concatenação: simetria, tokenização recursiva e profundidade causal informacional entre agentes
-- `informational_time_negentropy_clarifications.md` — esclarecimento complementar: máxima entropia relativa ao observador, flutuações negentrópicas e reconhecimento relacional de fontes persistentes de ordem
+- `generative_machine_teaching.md` — previsão do próximo bit como tarefa primitiva; tokenização endógena, adaptativa ao contexto, com provas de montagem e currículos procedurais binários
+- `informational_time.md` — tempo como concatenação: tokenização recursiva como representação adaptativa sobre o fluxo primitivo, simetria e profundidade causal informacional
+- `informational_time_negentropy_clarifications.md` — máxima entropia relativa ao observador; separação entre flutuação, lei externa estruturada e reconhecimento relacional de agente
 
 ## Eixo alignment / agent-bounding
 
