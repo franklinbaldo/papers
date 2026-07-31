@@ -1,6 +1,9 @@
 name: Temporary negentropy terminology fix
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: '*/5 * * * *'
   pull_request_target:
@@ -11,7 +14,7 @@ permissions:
 
 jobs:
   fix:
-    if: github.event_name == 'schedule' || github.event.pull_request.number == 240
+    if: github.event_name == 'push' || github.event_name == 'schedule' || github.event.pull_request.number == 240
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -60,12 +63,13 @@ prediction and compression.'''
           git add informational_time_negentropy_clarifications.md
           git commit -m "paper: align hypotheses with law-versus-agent model classes"
           git push origin HEAD:paper/informational-time-negentropy
-      - name: Remove temporary workflow
+      - name: Remove temporary workflow and marker
         shell: bash
         run: |
           git fetch origin main
           git checkout -B main origin/main
           rm -f .github/workflows/temporary-fix-negentropy-terminology.yml
+          rm -f .github/temporary-terminology-trigger
           git add -A
           git commit -m "chore: remove temporary terminology workflow"
           git push origin HEAD:main
