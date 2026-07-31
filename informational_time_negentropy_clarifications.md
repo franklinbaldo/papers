@@ -119,9 +119,9 @@ certainty extracted from one observation.
 
 ## 4. The other must also be distinguished from the self
 
-Observed order may be caused by $A$ itself, by the interaction protocol, or by
-an external source. Recognition of another therefore requires comparison among
-at least three model families:
+Observed order may be caused by $A$ itself, by the interaction protocol, by an
+external structured law, or by an agent-like source. Recognition of another
+agent therefore requires comparison among at least four model families:
 
 $$
 \mathcal M_{\max}^{A}
@@ -136,15 +136,25 @@ $$
 $$
 
 $$
-\mathcal M_{\mathrm{source}}^{A}
+\mathcal M_{\mathrm{law}}^{A}
 \quad
-\text{a persistent external source of organized causal distinctions}.
+\text{a persistent external structured process described by non-agent dynamics},
 $$
 
-The other becomes recognizable when a source model predicts and compresses the
-continuing interaction better than both the maximum-entropy null and the best
-self-generated explanation, after the full costs of the source model, registry,
-search, and fitted parameters are charged.
+$$
+\mathcal M_{\mathrm{agent}}^{A}
+\quad
+\text{a persistent organized source whose latent state and contingent behavior}
+\text{ support an agent-level model}.
+$$
+
+An external source becomes recognizable when an external model defeats maximum
+entropy and self-generation. Agency requires the stronger result that an agent
+model predicts and compresses the continuing interaction better than the best
+structured non-agent law as well, after the full costs of the model, registry,
+search, and fitted parameters are charged. High predictability, concentration,
+or deterministic limiting observables can therefore establish structure without
+establishing agency.
 
 Intervention is especially informative. If changing $A$'s actions produces
 structured responses that cannot be derived from $A$ alone, the evidence for an
@@ -161,8 +171,8 @@ Instead, the framework uses **agent** relationally:
 
 > For observer $A$, an agent is a causal source whose persistent production,
 > conservation, and transformation of organized distinctions is better modeled
-> as a continuing structured generator than as a maximum-entropy fluctuation or
-> as a consequence of $A$ alone.
+> at an agent-relevant causal scale than as a maximum-entropy fluctuation, a
+> consequence of $A$ alone, or the best available structured non-agent law.
 
 Nothing in this definition requires the source to be:
 
@@ -185,22 +195,24 @@ inserted into the benchmark beforehand.
 ## 6. Revised recognition criterion
 
 Let $D_{1:T}$ be the interaction available to $A$ at time $T$. Define the best
-fluctuation-or-self account:
+non-agent account:
 
 $$
 L_{0,T}
 =
 \min_{M\in
-\mathcal M_{\max}^{A}\cup\mathcal M_{\mathrm{self}}^{A}}
+\mathcal M_{\max}^{A}
+\cup\mathcal M_{\mathrm{self}}^{A}
+\cup\mathcal M_{\mathrm{law}}^{A}}
 L(D_{1:T},M).
 $$
 
-Define the best persistent-source account:
+Define the best agent-level account:
 
 $$
 L_{1,T}
 =
-\min_{M\in\mathcal M_{\mathrm{source}}^{A}}
+\min_{M\in\mathcal M_{\mathrm{agent}}^{A}}
 \left[
 L(R_T,M)+L(D_{1:T}\mid R_T,M)
 \right].
@@ -212,18 +224,20 @@ $$
 E_T^{\mathrm{other}}=L_{0,T}-L_{1,T}.
 $$
 
-Positive evidence means that the persistent-source account compresses the
-observed history better after complete accounting. Recognition additionally
-requires prospective success: the source model must continue to predict held-out
-observations or intervention responses better than the fluctuation and self
-models.
+Positive evidence means that the agent-level account compresses the observed
+history better after complete accounting. Recognition additionally requires
+prospective success: the agent model must continue to predict held-out primitive
+observations or intervention responses better than the fluctuation, self, and
+structured-law models. The registry is an observer-relative instrument in this
+comparison; exact recovery of one token hierarchy is neither necessary nor
+sufficient for recognizing agency.
 
 The directional critical recognition time should therefore be understood as:
 
-> the accumulated informational time at which a persistent external-source
-> model becomes and remains a better predictive and descriptive account of the
-> interaction than both observer-relative maximum entropy and self-generated
-> order.
+> the accumulated informational time at which an agent-level model becomes and
+> remains a better predictive and descriptive account of the interaction than
+> observer-relative maximum entropy, self-generated order, and the strongest
+> admissible structured non-agent law.
 
 It is not the time of the first low-entropy configuration. It is the time at
 which the continuing causal organization of that configuration makes the
@@ -237,6 +251,7 @@ The experimental program should include the following matched comparisons:
 - isolated low-probability organized samples versus persistent generators;
 - fluctuation models with the same finite prefixes as source models;
 - self-caused structure versus externally responsive structure;
+- structured stochastic or deterministic laws with stable macroscopic observables versus agent-like sources;
 - passive observation versus interventions selected by $A$;
 - centralized, distributed, collective, and evolutionary source models;
 - alternative causal scales for the same observed process;
@@ -244,9 +259,11 @@ The experimental program should include the following matched comparisons:
   indistinguishable, followed by continuations that separate them.
 
 A useful benchmark should not ask only whether an agent model defeats random,
-stationary, or deterministic baselines. It should ask when a continuing-source
-model earns its additional commitments over the strongest fluctuation and
-self-generation explanations available to the observer.
+stationary, or simplistic deterministic baselines. It should ask when an
+agent-level model earns its additional commitments over the strongest
+fluctuation, self-generation, and structured external-law explanations available
+to the observer. All models should be compared at the same primitive observation
+interface even when they use different internal tokenizations.
 
 ## 8. Clarified hypotheses
 
@@ -280,6 +297,14 @@ For any fixed finite organized pattern with nonzero per-opportunity probability,
 the probability of at least one occurrence increases toward one as the number
 of approximately independent opportunities grows.
 
+### H6: Structured predictability does not by itself establish agency
+
+High-dimensional stochastic ensembles, deterministic dynamics, or other
+non-agent processes may yield persistent, sharply predictable macroscopic
+observables. When a structured-law model explains those observables at lower
+total cost, an agent model should not be selected merely because the process is
+ordered or predictable.
+
 ## 9. Consequence for the broader framework
 
 The informational-time proposal begins with an observer that cannot initially
@@ -287,12 +312,14 @@ distinguish an external other from an entropy-maximizing background. Scale makes
 rare islands of order inevitable under broad conditions, so negentropy by itself
 cannot perform the recognition step.
 
-What reveals the other is the accumulation of a causal history in which order
-persists, produces further order, and answers intervention in ways that cannot
-be economically attributed either to fluctuation or to the observer alone.
-Recursive tokenization records that history; symmetry identifies the invariants
-it preserves; prediction tests whether the inferred source continues to exist as
-an explanatory object.
+What reveals an external source is the accumulation of a causal history in
+which order persists beyond fluctuation and self-generation. What can justify an
+agent-level interpretation is the further result that the source's continuing
+organization and intervention-sensitive behavior cannot be economically
+captured by the best structured non-agent law. Recursive tokenization may record
+that history, but it remains an observer-relative representational instrument;
+symmetry identifies candidate invariants, and primitive prediction tests whether
+the inferred causal scale continues to earn its explanatory role.
 
 The resulting progression is:
 
@@ -301,11 +328,14 @@ $$
 \rightarrow
 \text{local fluctuation}
 \rightarrow
-\text{persistent causal organization}
+\text{persistent structured law}
 \rightarrow
-\text{recognition of another source}.
+\text{agent-level causal organization}
+\rightarrow
+\text{recognition of another agent}.
 $$
 
-Agency is the relational interpretation earned at the final step. The framework
-leaves open which physical, biological, computational, collective, or
-evolutionary processes will earn it.
+Agency is the relational interpretation earned at the final step, not a synonym
+for order, predictability, or compressibility. The framework leaves open which
+physical, biological, computational, collective, or evolutionary processes will
+earn it and at which causal scale.
