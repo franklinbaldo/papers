@@ -22,7 +22,7 @@ A teacher may know a deterministic function while communicating through a channe
 
 This paper distinguishes two regimes. In the **ideal pedagogical regime**, an optimal teacher communicates with an optimal learner and the research problem is to identify the shortest or most efficient message that induces a target competence. In the **ecological regime**, teachers and learners are imperfect, the channel is noisy, conventions may initially be unknown, and earlier observations may become interpretable only after later structure has been acquired.
 
-The central hypothesis is that optimal teaching does not reduce to maximal compression or maximal raw entropy. An optimal pedagogical message may use highly diverse, locally irregular demonstrations while preserving a stable higher-order grammar that makes those demonstrations progressively decodable. The complementary learner hypothesis is that a good learner is not the system that finds the greatest number of patterns in a finite transcript, but the system that extracts compact invariants that survive new data, perturbation, and intervention while improving prediction of the teacher and execution of the target function.
+The central hypothesis is that optimal teaching does not reduce to maximal compression or maximal raw entropy. An optimal pedagogical message may use highly diverse, locally irregular demonstrations while preserving a stable higher-order grammar that makes those demonstrations progressively decodable. The complementary learner hypothesis is that a good learner is not the system that finds the greatest number of patterns in a finite transcript, but the system that extracts compact invariants that survive new data, perturbation, and intervention while improving prediction of primitive future observations and execution of the target function. In the binary benchmark, the externally scored predictive task is next-bit prediction. Tokens, segments, and higher-order symbols are endogenous, context-dependent instruments that the learner may construct because they make prediction, transfer, or action more efficient; they are not privileged targets supplied by the benchmark.
 
 The paper proposes operational distinctions among noise, opacity, concealment, and signal; defines progressive decodability and retrospective interpretation; sketches a learner-relative objective; and presents experiments for separating genuine structure discovery from compression-based overfitting.
 
@@ -78,6 +78,14 @@ $$
 M_t=U_A(M_{t-1},y_t).
 $$
 
+In the strict binary track, $y_t\in\{0,1\}$ and the primitive predictive objective is:
+
+$$
+-\log p_A(y_{t+1}\mid y_{1:t}).
+$$
+
+The learner may internally encode a context-dependent substring as one token, a sequence of learned tokens as a higher-order token, or no token at all. These representations are justified by their contribution to prediction and competence, not by literal agreement with a canonical segmentation. Two learners may therefore construct different registries while being functionally equivalent at the observable bit interface.
+
 The target is deterministic in this paper so that uncertainty about the interaction can be separated from uncertainty in the target itself. This restriction is methodological, not a claim that stochastic processes contain no learnable information. A stochastic target can communicate a stable distribution or conditional law, but it raises a different identification problem.
 
 Even with deterministic $f$, three sources of uncertainty remain:
@@ -86,7 +94,7 @@ Even with deterministic $f$, three sources of uncertainty remain:
 - **channel uncertainty:** the learner does not know which observed variation comes from $Q$;
 - **representation uncertainty:** the learner does not initially know how $x_t$ or $y_t$ should be segmented and interpreted.
 
-The learner therefore learns not only $f$, but also enough of the teacher, channel, and representational protocol to identify which aspects of the transcript are relevant to $f$.
+The learner therefore learns not only $f$, but also enough of the teacher, channel, and representational protocol to identify which aspects of the transcript are relevant to $f$. The hierarchy is: primitive observations are evidence, prediction and task competence are the externally evaluated objectives, and tokens are revisable internal instruments for reaching those objectives.
 
 ---
 
@@ -235,7 +243,7 @@ This conjecture turns clarity into a property of the complete teacher-learner sy
 
 A learner cannot be defined as a system that merely finds patterns. Every finite sequence admits many exact descriptions, including descriptions that have no predictive value.
 
-A better learner extracts **predictive invariants**: representations that compress relevant aspects of the past, improve prediction of the future, remain stable under appropriate perturbations, and support execution or transfer.
+A better learner extracts **predictive invariants**: representations that compress relevant aspects of the past, improve prediction of the future, remain stable under appropriate perturbations, and support execution or transfer. In a bit-level channel, next-bit prediction remains the common external interface throughout this process. Tokenization is one possible internal realization of an invariant, not a separate primitive task.
 
 For learner $A$, define a provisional quality functional:
 
@@ -259,7 +267,7 @@ Here:
 
 ### Conjecture 2 — Learner as invariant extractor
 
-Among learners with comparable resources, the better learner is the one that identifies the smallest stable representation sufficient for predicting future interaction and executing the target, rather than the one that achieves the greatest retrospective fit.
+Among learners with comparable resources, the better learner is the one that identifies the smallest stable representation sufficient for predicting future interaction and executing the target, rather than the one that achieves the greatest retrospective fit. Literal token identity is not part of this criterion: distinct registries should be treated as equivalent when they induce comparable primitive predictions, task behavior, transfer, and total representational cost.
 
 This connects compression to prediction without equating them. Minimum description length supplies a useful bias, but out-of-sample persistence determines whether the compressed regularity is pedagogically real.
 
@@ -294,7 +302,7 @@ Canonical identifiers are therefore an important controlled benchmark, not a uni
 4. IDs that change unpredictably;
 5. encrypted IDs whose key is never pedagogically supplied.
 
-The first isolates structural learning. The second studies emergent coding. The third measures tolerance to arbitrary but stable conventions. The fourth introduces channel-like noise. The fifth is concealment and should not be counted as successful teaching for the specified learner.
+The first isolates structural learning. The second studies emergent coding. The third measures tolerance to arbitrary but stable conventions. The fourth introduces channel-like noise. The fifth is concealment and should not be counted as successful teaching for the specified learner. Exact recovery of any one identifier system is a diagnostic only; the primary comparison is whether the induced representation improves prediction and target competence at the primitive observation interface.
 
 ---
 
@@ -332,7 +340,7 @@ Construct training prefixes with simple but false regularities that reverse out 
 
 ### Experiment 1 — Ideal teaching frontier
 
-For small deterministic function classes, exhaustively search teacher messages under fixed learners. Measure message length, policy complexity, competence threshold, and decodability profile. Test whether optimal messages exhibit staged structure rather than opaque one-shot encodings.
+For small deterministic function classes, exhaustively search teacher messages under fixed learners. Use the same primitive next-observation or next-bit scoring interface for all learner representations. Measure message length, policy complexity, competence threshold, and decodability profile. Test whether optimal messages exhibit staged structure rather than opaque one-shot encodings, and whether different internal token systems can achieve equivalent observable competence.
 
 ### Experiment 2 — Entropy versus grammar
 
@@ -371,7 +379,7 @@ Jointly optimize teacher and learner policies. Observe whether their emergent co
 
 **H3 — Retrospective learning.** Learners with persistent memory and representation revision will extract measurable later value from observations that were initially opaque.
 
-**H4 — Predictive invariance.** Held-out prediction, transfer, and intervention stability will distinguish genuine learned structure from in-sample compression better than description length alone.
+**H4 — Predictive and representational invariance.** Held-out primitive prediction, transfer, and intervention stability will distinguish genuine learned structure from in-sample compression better than description length alone. Distinct token registries that preserve these quantities should be functionally equivalent even when their boundaries and identifiers disagree.
 
 **H5 — Stable arbitrary codes.** Free but stable identifiers will be learnable when their role is demonstrated, though usually at a greater teaching cost than canonical identifiers.
 
@@ -394,7 +402,7 @@ Machine teaching asks which examples an informed teacher should choose for a lea
 3. structured irregularity as a candidate property of optimal curricula;
 4. predictive invariance, rather than retrospective pattern discovery alone, as the criterion for learner quality.
 
-The framework is also compatible with self-tokenizing teaching: learning a registry or code is one form of reducing opacity, and later token reuse is a concrete mechanism by which previously transmitted structure can become increasingly accessible.
+The framework is also compatible with self-tokenizing teaching: learning a registry or code is one form of reducing opacity, and later token reuse is a concrete mechanism by which previously transmitted structure can become increasingly accessible. The primitive prediction substrate need not change when the symbolic scale changes; a learner may continue predicting the next bit while using whatever context-adapted hierarchy of tokens best supports that prediction and the target task.
 
 ---
 
@@ -416,7 +424,7 @@ The ideal teacher may use locally surprising and highly discriminative demonstra
 
 The resulting hypothesis can be stated compactly:
 
-> Optimal pedagogy is structured irregularity made progressively decodable; optimal learning is the extraction of predictive invariants from the mixture of signal, opacity, and noise.
+> Optimal pedagogy is structured irregularity made progressively decodable; optimal learning is the extraction of predictive invariants from the mixture of signal, opacity, and noise. Primitive observations supply the evidence, while tokens are adaptive instruments whose value is earned by future prediction and competence.
 
 ---
 
