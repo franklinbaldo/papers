@@ -1,0 +1,20 @@
+name: Temporary coordinated paper revision
+
+on:
+  pull_request_target:
+    types: [edited]
+
+permissions:
+  contents: write
+
+jobs:
+  revise:
+    if: github.event.pull_request.number == 236
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Revise all related paper branches
+        run: python scripts/temporary_revise_bit_substrate_papers.py
