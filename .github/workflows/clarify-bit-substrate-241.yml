@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - paper/pedagogical-signal-extraction
+  pull_request:
+    branches:
+      - paper/generative-machine-teaching
+    types: [opened, synchronize, reopened, edited]
 
 permissions:
   contents: write
