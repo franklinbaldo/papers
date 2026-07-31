@@ -21,13 +21,13 @@ franklinbaldo@gmail.com
 
 ## Abstract
 
-This paper proposes **generative machine teaching**, a paradigm in which lessons are deterministic programs whose outputs are the only pedagogical evidence available to a student. It then introduces a stronger foundational substrate: a **self-tokenizing concatenative language**. The physical channel contains only two primitive marks, and concatenation is the only primitive operation. A derived object becomes a token when a procedural demonstration constructs it from previously available objects, verifies its expansion, assigns it a stable registry identifier, and makes that identifier available for reuse in later turns.
+This paper proposes **generative machine teaching**, a paradigm in which lessons are deterministic programs whose outputs are the only pedagogical evidence available to a student. It then introduces a stronger foundational substrate: a **self-tokenizing concatenative language**. The physical channel contains only two primitive marks, and concatenation is the only primitive operation. In the strongest benchmark, the learner's externally scored predictive task remains next-bit prediction on the continuous binary stream. A derived object becomes a token when a procedural demonstration constructs it from previously available objects, verifies its expansion, assigns it a stable registry identifier, and makes that identifier available for reuse in later inference. Tokens are therefore endogenous, context-dependent instruments for prediction and competence, not prediction targets supplied in advance.
 
 Each registered token is accompanied by one or more executable construction proofs. A Gödel-style numbering assigns a natural-number code to every finite proof, while a concatenative assembly index measures the smallest known or demonstrable number of distinct join operations required to construct the token when intermediate results may be reused. Tokens can therefore be grouped by assembly index, distinguished by a canonical variation index within each group, and referenced by stable identifiers even when a shorter proof is discovered later. The registry is simultaneously a vocabulary, a proof database, and a learned tokenizer.
 
 A curriculum is an ordered sequence of procedural demonstrations. After each turn, the student updates its state and the available symbolic vocabulary grows. A Bayesian posterior update supplies a normative model of this process: each demonstration changes the learner's beliefs over candidate segmentations, registries, operations, other-agent policies, and target algorithms. Neural learners need not implement literal Bayesian inference; gradient updates, recurrent state updates, in-context inference, and symbolic version-space reduction are treated as alternative realizations of sequential belief revision.
 
-The strongest benchmark presents only a continuous binary stream. The student must infer turn boundaries, discover concatenation, recover the registry protocol, identify reusable substrings as symbols, predict newly constructed token identifiers, reconstruct or improve assembly proofs, recognize the teacher as a structured action-generating agent, and acquire executable algorithms expressed through the emerging vocabulary. The central empirical question becomes: **what is the shortest sequence of procedural demonstrations from which a given learner can construct a useful tokenizer and acquire a given algorithm?**
+The strongest benchmark presents only a continuous binary stream and evaluates the learner through the primitive distribution $p(b_{t+1}\mid b_{1:t})$. The student may infer turn boundaries, discover concatenation, recover a registry protocol, identify reusable substrings as symbols, reconstruct or improve assembly proofs, recognize the teacher as a structured action-generating agent, and acquire executable algorithms expressed through an emerging vocabulary. Registry-ID prediction and proof recovery are secondary diagnostics of the learned representation, not replacements for the bit-level task. The central empirical question becomes: **what is the shortest sequence of procedural demonstrations from which a given learner can improve primitive prediction, construct a useful adaptive symbolic system, and acquire a given algorithm?**
 
 The term *generative machine teaching* does not claim the invention of generating data to teach. The distinctive proposal is the conjunction of hidden deterministic lesson programs, a proof-indexed self-tokenizing language, optional absence of segmentation, learner-relative pedagogical cost, and executable algorithm acquisition.
 
@@ -39,13 +39,15 @@ The term *generative machine teaching* does not claim the invention of generatin
 
 Machine-learning systems usually receive an ontology chosen in advance. A tokenizer decides what the symbols are. A dataset determines where examples begin and end. Input and output fields identify roles. Labels announce relevant distinctions. Even self-supervised prediction ordinarily operates over externally supplied characters, bytes, patches, frames, or subword units.
 
-This paper studies a more austere problem. A learner receives a channel containing only two physical marks. It may receive no natural-language instructions, no permanent token boundaries, no lesson boundaries, and no fixed semantic vocabulary. Instead of assuming tokens, the curriculum must teach the learner how reusable symbolic units come into existence.
+This paper studies a more austere problem. A learner receives a channel containing only two physical marks. It may receive no natural-language instructions, no permanent token boundaries, no lesson boundaries, and no fixed semantic vocabulary. Its primitive observable task is to predict the next mark from the marks already observed. Instead of assuming tokens, the curriculum permits the learner to construct reusable symbolic units whenever doing so improves prediction, execution, transfer, or total cost in the current context.
 
 The motivating construction begins with two primitive marks, written `0` and `1`, and a single operation: concatenation. Their first join constructs the empty token:
 
 $$
 E := 0 \Vert 1 = 01.
 $$
+
+Here `E` is a physically non-empty codeword assigned the protocol-level role *empty*. It is neither the empty string nor the set-theoretic empty set; its role is learned from its procedural use.
 
 The token named *begin* can then be demonstrated as:
 
@@ -61,9 +63,9 @@ $$
 
 The names are researcher-facing mnemonics, not information supplied to the binary-only student. What matters is the procedure. Each new object is produced by references to previously available objects, one join, and a verified result. Once registered, the result can itself be referenced as one symbol in future procedures.
 
-This changes the role of tokenization. A substring is not a token merely because an external preprocessing algorithm selected it. It becomes a token when the language demonstrates its construction, records a stable identity and proof, and begins using that identity compositionally. The language therefore incorporates its own tokenizer. Its vocabulary grows through the same procedural turns by which it teaches operations and algorithms.
+This changes the role of tokenization. A substring is not a token merely because an external preprocessing algorithm selected it, nor because the benchmark declares one segmentation correct. It becomes a token when the learner or shared protocol gives it stable, reusable symbolic function grounded in an expandable construction. The language therefore incorporates an adaptive tokenizer whose vocabulary can change with the learner, target, history, and current predictive context. The same bits may be grouped in one context and left decomposed in another. Vocabulary growth occurs through the same procedural turns by which operations and algorithms are learned.
 
-A standard large language model still has a fixed *physical* tokenizer and output head. The proposal does not erase that engineering fact. It introduces an additional **endogenous symbolic layer**: a registered token identifier can be represented by a sequence of physical model tokens while functioning as one learned symbol in the protocol. A stronger architectural track may dynamically allocate embeddings and output slots for newly registered symbols. The benchmark must distinguish these two meanings of “new token.”
+A standard large language model still has a fixed host tokenizer and output head. The proposal does not erase that engineering fact. In the strict benchmark, host tokens ultimately encode a stream of primitive bits, and the common external score is computed at that bit interface. The proposal introduces an additional **endogenous symbolic layer**: a registered token identifier can be represented by a sequence of host tokens while functioning as one learned symbol in the protocol. A stronger architectural track may dynamically allocate embeddings and internal prediction slots for newly registered symbols. The benchmark must distinguish host tokens, primitive bits, and endogenous symbols, and must not mistake agreement on internal symbols for the primary learning objective.
 
 The pedagogical process is intrinsically sequential. At turn $t$, the teacher demonstrates a construction using the registry available at $t-1$. The student updates its state, the new construction enters the registry, and the next lesson may use it as an atomic symbol. Consequently, a curriculum is not an exchangeable dataset. It is a state-transforming program in which order changes both the learner and the language available to later turns.
 
@@ -116,7 +118,7 @@ Assembly theory characterizes objects through possible formation histories and d
 
 Byte-pair encoding creates subword units by repeatedly merging frequent adjacent units [15]. SentencePiece learns subword models directly from raw sentences without requiring prior word tokenization [16]. These approaches establish that useful representational units can be learned rather than linguistically predefined.
 
-The proposed registry differs in four respects. First, token creation is an explicit procedural event rather than only a statistical merge. Second, every symbol carries a reproducible construction proof. Third, tokens persist as addressable objects available to later lessons. Fourth, token selection can be optimized for teaching an algorithm, not only corpus compression or end-task loss.
+The proposed registry differs in five respects. First, token creation is an explicit procedural event rather than only a statistical merge. Second, every symbol carries a reproducible construction proof. Third, tokens persist as addressable objects available to later lessons. Fourth, token selection can be optimized for teaching an algorithm, not only corpus compression or end-task loss. Fifth, tokenization is learner-, target-, history-, and context-relative while the primitive prediction interface remains fixed, so alternative registries may be functionally equivalent without sharing literal boundaries or identifiers.
 
 ### 2.9 Predictive models of other agents
 
@@ -338,7 +340,7 @@ $$
 V_{t-1}\subseteq V_t.
 $$
 
-This is the central self-tokenizing mechanism. Tokenization is not a preprocessing step performed before the language exists. It is an internal state transition of the language.
+This is the central self-tokenizing mechanism. Tokenization is not a preprocessing step performed before the language exists. It is an internal state transition of the language and learner. The physical evidence remains the bit stream, and the learner may continue to be evaluated by next-bit loss while using the registry as an internal computational scale. No unique registry is presumed: two registries are functionally equivalent when, after charging their costs, they support comparable primitive prediction, algorithm execution, and transfer.
 
 ### 3.8 When should a construction become a token?
 
@@ -355,7 +357,7 @@ $$
 
 where reuse savings measure avoided retransmission, pedagogical information estimates reduction of learner uncertainty, and registration cost includes identifier, proof, and memory overhead.
 
-The optimal tokenization is therefore potentially learner-relative and target-relative. A useful token is not merely frequent; it is a reusable assembly that improves future teaching or execution.
+The optimal tokenization is therefore learner-, target-, history-, and context-relative. A useful token is not merely frequent; it is a reusable assembly that improves future prediction, teaching, execution, or transfer after its cost is charged. The token may cease to be useful when the context changes, and a different decomposition may realize the same competence.
 
 ### 3.9 Symmetry and recursive endogenous tokenization
 
@@ -431,7 +433,7 @@ The benchmark distinguishes:
 2. **latent self-tokenization:** the model learns internal chunk representations without explicit vocabulary growth;
 3. **native self-tokenization:** the architecture dynamically allocates embeddings and prediction slots for new registry entries.
 
-Claims about “predicting a new token” must identify which level is meant.
+Claims about “predicting a new token” must identify which level is meant and must remain secondary to the primitive observable task. A learner can exploit endogenous tokens while emitting only next-bit probabilities, and two learners can succeed with different internal token hierarchies.
 
 ---
 
@@ -641,7 +643,7 @@ $$
 \operatorname{Score}(A(C),P,R_k)\geq q.
 $$
 
-This is stronger than ordering a fixed dataset. The search decides which experiences to generate, which constructions to register as symbols, when to introduce them, and how to reuse them later.
+This is stronger than ordering a fixed dataset. The search decides which experiences to generate, which constructions to register as symbols, when to introduce them, and how to reuse them later. The registry is optimized as an internal instrument under a common primitive prediction and competence interface; exact recovery of the teacher's registry is not required when another registry achieves equivalent observable behavior at comparable total cost.
 
 ### 6.4 No universally best tokenizer or curriculum
 
@@ -750,13 +752,15 @@ N_{q,r}(M,P,\mathcal C)
 \min\{n:\Pr[S(n)\geq q]\geq r\}.
 $$
 
-A separate tokenizer-emergence threshold is:
+A separate representation-emergence threshold may be defined as:
 
 $$
-T_{q,r}(M,\mathcal C)
+T^{\mathrm{rep}}_{q,r}(M,\mathcal C)
 =
-\min\{n:\Pr[\operatorname{TokScore}(n)\geq q]\geq r\}.
+\min\{n:\Pr[\operatorname{RepScore}(n)\geq q]\geq r\}.
 $$
+
+Here $\operatorname{RepScore}$ must combine functional quantities such as next-bit gain, task competence, transfer, expansion correctness, and total registry cost. It must not reduce to literal boundary or identifier agreement with one designated tokenizer.
 
 ### 8.2 Presentation tracks
 
@@ -781,6 +785,7 @@ $$
 
 The learner must:
 
+- predict the next primitive bit under a common bit-level scoring rule;
 - identify the two elementary marks;
 - infer that concatenation is the only primitive operation;
 - recover the empty, begin, and end constructions;
@@ -855,13 +860,13 @@ and refine around observed phase transitions.
 
 ## 9. Evaluation: What Counts as Learning?
 
-### 9.1 Raw prediction is insufficient
+### 9.1 Next-bit prediction is primitive but not exhaustive
 
-High next-bit accuracy can arise without recovering symbols, procedures, agents, or algorithms. Evaluation must separate physical prediction from endogenous symbolic competence.
+Next-bit prediction is the common externally observable task in the strongest track. High next-bit accuracy alone, however, does not establish that the learner acquired reusable procedures, an executable algorithm, or a transferable representation. Evaluation therefore begins with physical prediction and supplements it with functional diagnostics of symbolic competence; it does not replace the primitive task with token matching.
 
-### 9.2 Registry recovery
+### 9.2 Registry recovery as a diagnostic
 
-Measure exact or functional recovery of:
+Where an explicit registry is part of the experimental protocol, measure exact or functional recovery of:
 
 - token identities;
 - raw expansions;
@@ -883,7 +888,7 @@ Report:
 - transfer to longer unseen strings;
 - agreement with the teacher registry and performance of alternative useful registries.
 
-The teacher's registry is not necessarily the only valid tokenization. Functional equivalence and downstream utility must accompany exact-match scores.
+The teacher's registry is not necessarily the only valid tokenization. Exact-match scores are secondary. Functional equivalence should be established through primitive predictive loss, executable behavior, transfer, perturbation stability, expansion correctness where required, and total representational cost.
 
 ### 9.4 Proof reconstruction and optimization
 
@@ -1026,9 +1031,9 @@ Search over lesson generators will outperform reordering a fixed set under match
 
 After accounting for registry overhead, reusable endogenous symbols will reduce the marginal cost of teaching later algorithms.
 
-### H4: Optimal tokenization is learner-relative
+### H4: Optimal tokenization is learner- and context-relative
 
-Registry rankings will differ across transformers, recurrent models, symbolic learners, and pretrained LLMs.
+Registry rankings will differ across transformers, recurrent models, symbolic learners, pretrained LLMs, target tasks, and interaction histories. Distinct registries may nevertheless be functionally equivalent at the primitive prediction and task interfaces.
 
 ### H5: Proof-indexed tokens improve extrapolation
 
@@ -1044,7 +1049,7 @@ Externally supplied boundaries will reduce acquisition thresholds, while interna
 
 ### H8: Virtual and native self-tokenization differ
 
-Architectures with native dynamic vocabulary support will outperform fixed-vocabulary models on registry-ID prediction after controlling for physical input length.
+Architectures with native dynamic vocabulary support may achieve lower primitive next-bit loss, lower computational cost, or faster task acquisition than fixed-vocabulary models after controlling for physical input length and total registry cost. Registry-ID prediction is reported only as a secondary mechanism diagnostic.
 
 ### H9: Bayesian information-gain teachers are bit-efficient
 
@@ -1076,7 +1081,7 @@ Remove all field and turn boundaries. Measure when models recover a productive p
 
 ### Experiment 3: Self-tokenization
 
-Present reusable constructions and symmetry-related variants. Compare single-bit, BPE, SentencePiece, frequency-only, compression-only, symmetry-aware, and proof-indexed registries. Test recursive registration by allowing sequences of learned IDs to become higher-order symbols, and report the total cost of the registry plus indexed transcript rather than compression of the transcript alone.
+Present reusable constructions and symmetry-related variants. Compare single-bit, BPE, SentencePiece, frequency-only, compression-only, symmetry-aware, and proof-indexed registries under the same next-bit prediction interface. Test recursive registration by allowing sequences of learned IDs to become higher-order symbols, and report primitive predictive loss, task competence, functional equivalence among alternative registries, and the total cost of the registry plus indexed transcript rather than compression of the transcript alone.
 
 ### Experiment 4: Assembly-proof optimization
 
@@ -1144,7 +1149,7 @@ Teacher and student may invent an efficient code that transfers to nobody else. 
 
 ### 14.9 What should count as a symbol?
 
-Frequency, compression, proof minimality, pedagogical information, and downstream utility may favor different registries. The benchmark should report Pareto frontiers rather than assume one scalar objective is universally correct.
+Frequency, compression, proof minimality, pedagogical information, primitive predictive gain, and downstream utility may favor different registries in different contexts. The benchmark should report Pareto frontiers and equivalence classes of functionally adequate registries rather than assume one scalar objective or one literal segmentation is universally correct.
 
 ---
 
@@ -1154,9 +1159,9 @@ Frequency, compression, proof minimality, pedagogical information, and downstrea
 
 The central conceptual result is that the tokenizer can be part of the language rather than a preprocessing tool outside it. Token birth, proof, identity, reuse, and retirement can all be expressed within the same procedural system.
 
-### 15.2 Next-token prediction at two levels
+### 15.2 Next-bit prediction as substrate, tokenization as instrument
 
-An LLM predicts physical tokens. In the proposed protocol it may simultaneously learn to predict *endogenous* tokens—registry IDs whose expansions are themselves strings of physical tokens. This layered view converts next-token prediction into a mechanism for constructing a new symbolic alphabet without pretending that the underlying model vocabulary has already changed.
+The strict learner predicts the next primitive bit. A host LLM may implement that distribution through its fixed physical tokens while simultaneously learning *endogenous* symbols—registry IDs whose expansions ultimately resolve to bit strings. This layered view makes tokenization an adaptive internal mechanism for constructing useful symbolic scales without changing the external evidence or pretending that one internal alphabet is the learning target.
 
 ### 15.3 Curricula as executable languages
 
@@ -1174,15 +1179,15 @@ A learner interacting with an adaptive world performs the same abstract operatio
 
 ## 16. Conclusion
 
-This paper proposed a framework in which deterministic lessons teach not only algorithms but the symbolic vocabulary required to express them. The physical substrate contains two marks, and concatenation is the only primitive operation. A procedural demonstration joins previously available objects, verifies the result, registers it under a stable identifier, and makes it available as one symbol in later turns.
+This paper proposed a framework in which deterministic lessons teach not only algorithms but adaptive symbolic vocabularies that can make prediction and execution more efficient. The physical substrate contains two marks, concatenation is the only primitive operation, and the externally scored primitive task is next-bit prediction. A procedural demonstration joins previously available objects, verifies the result, registers it under a stable identifier, and makes it available as one possible internal symbol in later turns.
 
-The resulting registry is self-tokenizing. It stores expansions, alternative construction proofs, Gödel-style proof codes, assembly metadata, and stable identities. Tokenization therefore emerges from interaction rather than being imposed before learning. A model with a fixed physical vocabulary can participate through virtual symbolic IDs, while stronger architectures can implement native dynamic tokens.
+The resulting registry is self-tokenizing. It stores expansions, alternative construction proofs, Gödel-style proof codes, assembly metadata, and stable identities. Tokenization therefore emerges from interaction rather than being imposed before learning, and remains revisable, context-dependent, and non-unique. A model with a fixed host vocabulary can participate through virtual symbolic IDs, while stronger architectures can implement native dynamic tokens; both remain comparable at the primitive bit and task interfaces.
 
 Each turn changes both the learner and the language. Bayesian updating provides a normative description of the resulting belief revision, while neural and symbolic learners provide alternative implementations. The teacher itself becomes an object of inference: intelligence is hypothesized to appear relationally when one order-generating agent recognizes another and gains predictive power over its actions in a shared local interaction space.
 
 The strongest empirical question is:
 
-> What is the shortest sequence of procedural demonstrations from which a given learner can recognize its teacher, construct a useful tokenizer, and acquire a given executable algorithm?
+> What is the shortest sequence of procedural demonstrations from which a given learner can recognize its teacher, improve prediction of the primitive stream, construct any functionally useful context-adaptive symbolic system, and acquire a given executable algorithm?
 
 Answering that question requires programs that teach programs, agents that learn how to be taught, and languages capable of constructing their own symbols.
 
