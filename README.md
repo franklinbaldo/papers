@@ -30,7 +30,7 @@ Position papers and working drafts.
 
 ## Eixo aprendizagem algorítmica / machine teaching
 
-- `generative_machine_teaching.md` — programas que ensinam programas: linguagem concatenativa autotokenizável, provas de montagem e currículos procedurais binários
+- `generative_machine_teaching.md` — previsão do próximo bit como tarefa primitiva; tokenização endógena, adaptativa ao contexto, com provas de montagem e currículos procedurais binários
 
 ## Eixo alignment / agent-bounding
 
