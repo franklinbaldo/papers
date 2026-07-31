@@ -25,7 +25,7 @@ franklinbaldo@gmail.com
 
 This paper proposes a theory of **informational time** for interactions between agents. A demonstration does not instantaneously become an observer update. Information must propagate through a finite causal chain of intermediate states. Under an information-preserving description of the global process, the transported payload may remain unchanged, but every transition counted as a distinct informational event must leave a non-empty recoverable distinction in the causal history. Informational time is the accumulated cost of those distinctions along the realized path.
 
-The framework distinguishes causal time from representational time. A long causal history may be replaced by a short symbolic index without erasing the events that occurred, provided the index retains an executable expansion proof. This motivates **recursive endogenous tokenization**: sequences of primitive marks become tokens; sequences of token indices become higher-order tokens; and the process continues until no admissible registration reduces the combined cost of the registry and the indexed transcript. The endpoint is a registry-relative irreducible residue, not an absolute computable incompressible core.
+The framework distinguishes causal time from representational time. A long causal history may be replaced by a short symbolic index without erasing the events that occurred, provided the index retains an executable expansion proof. This motivates **recursive endogenous tokenization**: sequences of primitive marks become tokens; sequences of token indices become higher-order tokens; and the process continues until no admissible registration reduces the combined cost of the registry and the indexed transcript. These tokens are observer-relative, context-adaptive instruments. They do not replace the primitive physical stream or become mandatory external prediction targets. The endpoint is a registry-relative irreducible residue, not an absolute computable incompressible core.
 
 Symmetry supplies the central mechanism for useful tokenization. Messages related by a transformation can be represented by an invariant token, a transformation token, and an unexplained residual. This does not increase the physical capacity of the communication channel. It increases effective semantic capacity relative to a shared registry by allowing later messages to spend fewer symbols on previously demonstrated structure and more symbols on new distinctions.
 
@@ -43,7 +43,7 @@ This suggests a definition of time that begins not with an external clock but wi
 
 A naive formulation would measure time by the raw length of the message. That is insufficient. The same payload can travel through paths of different causal depth. Conversely, a long history can later be represented by a short index. Compression changes the representation of the past, not necessarily the number or ordering of the events that produced it.
 
-The motivating companion framework, developed in `generative_machine_teaching.md`, introduces a self-tokenizing language in which concatenation is the only primitive operation. A demonstrated construction receives a stable index and an executable proof, allowing later procedures to use the construction as one symbol. The present paper asks what follows when that mechanism is applied recursively to causal histories themselves.
+The motivating companion framework, developed in `generative_machine_teaching.md`, introduces a self-tokenizing language in which concatenation is the only primitive operation. In its strict track, the learner remains externally evaluated on the primitive bit stream, while a demonstrated construction may receive a stable index and executable proof so that later inference can use it as one internal symbol. The present paper asks what follows when that adaptive representational mechanism is applied recursively to causal histories themselves.
 
 Three observations drive the proposal.
 
@@ -88,7 +88,8 @@ It does **not** claim:
 - that compression creates information;
 - that any compressible process is an agent;
 - that Kolmogorov complexity or absolute incompressibility can be computed;
-- that a short token makes the causal history it denotes cease to have occurred.
+- that a short token makes the causal history it denotes cease to have occurred;
+- that one registry, segmentation, or token hierarchy is uniquely correct independently of observer, context, and predictive task.
 
 Instead, the paper defines an operational accounting system for a chosen interaction model. The model specifies:
 
@@ -396,7 +397,7 @@ $$
 \Sigma_0=\{0,1\}.
 $$
 
-After registering useful strings over $\Sigma_0$, obtain a symbolic alphabet $\Sigma_1$. Sequences over $\Sigma_1$ may themselves be registered, producing $\Sigma_2$, and so on:
+The primitive observable interface remains at this level. In a binary prediction benchmark, the learner may be scored throughout on $p(b_{t+1}\mid b_{1:t})$ even while it constructs higher symbolic levels internally. After registering useful strings over $\Sigma_0$, obtain a symbolic alphabet $\Sigma_1$. Sequences over $\Sigma_1$ may themselves be registered, producing $\Sigma_2$, and so on:
 
 $$
 \Sigma_0
@@ -454,7 +455,7 @@ $$
 \right].
 $$
 
-A token may be worthwhile even when it does not compress the past if it substantially reduces expected future teaching, prediction, or action cost.
+A token may be worthwhile even when it does not compress the past if it substantially reduces expected future teaching, primitive prediction, or action cost. Its legitimacy is functional and context-dependent: another registry may be equally good if it yields comparable observable predictions, competence, transfer, and total cost.
 
 ### 7.4 Registry-relative fixed point
 
@@ -520,7 +521,7 @@ For example, an index for a billion zeros has enormous reconstructive expansion 
 
 ### 8.3 Predictive semantic yield
 
-Let $Y$ be the future variable, target action, or task output whose prediction matters. Define predictive semantic yield:
+Let $Y$ be the future variable, target action, primitive next observation, or task output whose prediction matters. For a binary stream, $Y$ may simply be $b_{t+1}$. Define predictive semantic yield:
 
 $$
 \Psi_R(m;Y)
@@ -719,14 +720,14 @@ The framework does not require calling every environment an agent. Whether agent
 
 ### 10.4 Tokens as interactional achievements
 
-A shared token is evidence that:
+A shared token is one possible record that:
 
 1. a structure recurred or transformed systematically;
 2. the demonstrator used it as a unit;
 3. the observer identified and registered it;
 4. later interaction successfully reused the index.
 
-Tokens therefore mark accumulated predictive coordination, not merely static compression.
+Tokens therefore can mark accumulated predictive coordination, not merely static compression. They are not the only possible record: observers may construct different, functionally equivalent registries, and coordination must ultimately be evaluated at the primitive observation and action interfaces.
 
 ---
 
@@ -779,12 +780,14 @@ Compare literal, frequency-based, compression-only, and symmetry-aware tokenizer
 
 ### 11.3 Recursive tokenization
 
-Allow tokens at level $k$ to become atoms for candidate tokens at level $k+1$. Measure:
+Allow tokens at level $k$ to become atoms for candidate tokens at level $k+1$. Keep the primitive bit or observation prediction interface fixed across conditions. Measure:
 
 - total registry cost;
 - indexed transcript length;
 - proof depth;
 - causal history recovery;
+- primitive predictive loss;
+- functional equivalence among alternative registries;
 - compression fixed points;
 - predictive yield;
 - transfer to larger unseen structures.
@@ -997,7 +1000,7 @@ This paper proposed an informational account of time grounded in causal propagat
 
 A demonstration reaches an observer through a sequence of states. Each transition counted as informationally distinct must leave a non-empty recoverable distinction. The accumulated cost of those distinctions defines path-relative informational time.
 
-Proof-preserving tokenization can replace long histories with short indices without erasing the event order that produced them. Because indices can themselves be concatenated and registered, tokenization becomes recursive. The process continues until the combined registry and transcript reach a relative fixed point under the admitted construction language and cost function.
+Proof-preserving tokenization can replace long histories with short indices without erasing the event order that produced them. Because indices can themselves be concatenated and registered, tokenization becomes recursive. The physical evidence nevertheless remains the primitive stream; the hierarchy is an adaptive representational strategy whose value is measured by prediction, action, reconstruction, and cost. The process continues until the combined registry and transcript reach a relative fixed point under the admitted construction language and cost function.
 
 Symmetry makes this compression productive. An invariant token represents shared structure, a transformation token specifies the variation, and a residual carries what remains unexplained. Physical channel capacity does not increase; effective semantic capacity grows relative to the information already shared in the registry.
 
@@ -1017,7 +1020,7 @@ $$
 \text{predictive agent model}.
 $$
 
-The central empirical question is not whether a long sequence is improbable. It is whether interaction produces a proof-preserving representation that compresses what has occurred, predicts what comes next, and does so after the full cost of the representation itself is paid.
+The central empirical question is not whether a long sequence is improbable or whether one canonical tokenization is recovered. It is whether interaction produces a proof-preserving representation that compresses what has occurred, improves prediction at the primitive interface, supports action and transfer, and does so after the full cost of the representation itself is paid.
 
 ---
 
