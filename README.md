@@ -32,6 +32,7 @@ Position papers and working drafts.
 
 - `generative_machine_teaching.md` — programas que ensinam programas: linguagem concatenativa autotokenizável, provas de montagem e currículos procedurais binários
 - `informational_time.md` — tempo como concatenação: simetria, tokenização recursiva e profundidade causal informacional entre agentes
+- `informational_time_negentropy_clarifications.md` — esclarecimento complementar: máxima entropia relativa ao observador, flutuações negentrópicas e reconhecimento relacional de fontes persistentes de ordem
 
 ## Eixo alignment / agent-bounding
 
