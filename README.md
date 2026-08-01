@@ -53,6 +53,7 @@ Position papers and working drafts.
 
 ## Companion pieces
 
+- `machine_interaction_program.md` — mapa editorial que conecta as PRs abertas de machine teaching, informational time, signal extraction, machine discovery, interstitial agency, relay transducers e Forbidden Relay
 - `otherwise/` — argumentos adversariais
 - `yesindeed/` — argumentos de suporte
 - `synthesis/` — árbitro: funde `otherwise/`/`yesindeed/` e roda os ciclos de edição que absorvem conclusões assentadas de volta aos papers principais
