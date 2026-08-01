@@ -35,6 +35,10 @@ Position papers and working drafts.
 - `informational_time_negentropy_clarifications.md` — máxima entropia relativa ao observador; separação entre flutuação, lei externa estruturada e reconhecimento relacional de agente
 - `pedagogical_signal_extraction.md` — irregularidade estruturada e extração de invariantes preditivos; tokens como instrumentos internos, não como segmentação canônica
 
+## Eixo descoberta por máquinas / epistemologia computacional
+
+- `machine_discovery.md` — descoberta como transição certificada entre estados epistêmicos, com novidade relativa, proveniência auditável e expansão recursiva do currículo
+
 ## Eixo alignment / agent-bounding
 
 - `affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
