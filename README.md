@@ -28,6 +28,10 @@ Position papers and working drafts.
 - `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
 
+## Eixo comunicação emergente / controle black-box
+
+- `rl_relay_transducers.md` — transdutores discretos treinados por RL, memória textual associativa e comunicação por canais formados por LLMs congeladas ou coadaptadas
+
 ## Eixo alignment / agent-bounding
 
 - `affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
