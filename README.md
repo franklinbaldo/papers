@@ -28,9 +28,20 @@ Position papers and working drafts.
 - `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
 
+## Eixo aprendizagem algorítmica / machine teaching
+
+- `generative_machine_teaching.md` — previsão do próximo bit como tarefa primitiva; tokenização endógena, adaptativa ao contexto, com provas de montagem e currículos procedurais binários
+- `informational_time.md` — tempo como concatenação: tokenização recursiva como representação adaptativa sobre o fluxo primitivo, simetria e profundidade causal informacional
+- `informational_time_negentropy_clarifications.md` — máxima entropia relativa ao observador; separação entre flutuação, lei externa estruturada e reconhecimento relacional de agente
+- `pedagogical_signal_extraction.md` — irregularidade estruturada e extração de invariantes preditivos; tokens como instrumentos internos, não como segmentação canônica
+
 ## Eixo comunicação emergente / controle black-box
 
 - `rl_relay_transducers.md` — transdutores discretos treinados por RL, memória textual associativa e comunicação por canais formados por LLMs congeladas ou coadaptadas
+
+## Eixo descoberta por máquinas / epistemologia computacional
+
+- `machine_discovery.md` — descoberta como transição certificada entre estados epistêmicos, com novidade relativa, proveniência auditável e expansão recursiva do currículo
 
 ## Eixo alignment / agent-bounding
 
