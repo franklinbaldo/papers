@@ -38,6 +38,7 @@ Position papers and working drafts.
 ## Eixo comunicação emergente / controle black-box
 
 - `rl_relay_transducers.md` — transdutores discretos treinados por RL, memória textual associativa e comunicação por canais formados por LLMs congeladas ou coadaptadas
+- `forbidden_relay.md` — pré-registro benigno de transmissão exata por cadeias de LLMs sem vazamento literal intermediário (resultados ainda não coletados)
 
 ## Eixo descoberta por máquinas / epistemologia computacional
 
@@ -63,6 +64,7 @@ Position papers and working drafts.
 
 ## Companion pieces
 
+- `machine_interaction_program.md` — mapa editorial que conecta machine teaching, informational time, signal extraction, machine discovery, interstitial agency, relay transducers e Forbidden Relay
 - `otherwise/` — argumentos adversariais
 - `yesindeed/` — argumentos de suporte
 - `synthesis/` — árbitro: funde `otherwise/`/`yesindeed/` e roda os ciclos de edição que absorvem conclusões assentadas de volta aos papers principais
