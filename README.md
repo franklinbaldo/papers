@@ -32,6 +32,7 @@ Position papers and working drafts.
 
 - `generative_machine_teaching.md` — previsão do próximo bit como tarefa primitiva; tokenização endógena, adaptativa ao contexto, com provas de montagem e currículos procedurais binários
 - `informational_time.md` — tempo como concatenação: tokenização recursiva como representação adaptativa sobre o fluxo primitivo, simetria e profundidade causal informacional
+- `pedagogical_signal_extraction.md` — irregularidade estruturada e extração de invariantes preditivos; tokens como instrumentos internos, não como segmentação canônica
 
 ## Eixo alignment / agent-bounding
 
