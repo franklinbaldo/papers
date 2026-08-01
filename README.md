@@ -31,6 +31,7 @@ Position papers and working drafts.
 ## Eixo aprendizagem algorítmica / machine teaching
 
 - `generative_machine_teaching.md` — previsão do próximo bit como tarefa primitiva; tokenização endógena, adaptativa ao contexto, com provas de montagem e currículos procedurais binários
+- `informational_time.md` — tempo como concatenação: tokenização recursiva como representação adaptativa sobre o fluxo primitivo, simetria e profundidade causal informacional
 
 ## Eixo alignment / agent-bounding
 
