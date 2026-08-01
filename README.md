@@ -28,10 +28,21 @@ Position papers and working drafts.
 - `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
 
+## Eixo aprendizagem algorítmica / machine teaching
+
+- `generative_machine_teaching.md` — previsão do próximo bit como tarefa primitiva; tokenização endógena, adaptativa ao contexto, com provas de montagem e currículos procedurais binários
+- `informational_time.md` — tempo como concatenação: tokenização recursiva como representação adaptativa sobre o fluxo primitivo, simetria e profundidade causal informacional
+- `informational_time_negentropy_clarifications.md` — máxima entropia relativa ao observador; separação entre flutuação, lei externa estruturada e reconhecimento relacional de agente
+- `pedagogical_signal_extraction.md` — irregularidade estruturada e extração de invariantes preditivos; tokens como instrumentos internos, não como segmentação canônica
+
 ## Eixo comunicação emergente / controle black-box
 
 - `rl_relay_transducers.md` — transdutores discretos treinados por RL, memória textual associativa e comunicação por canais formados por LLMs congeladas ou coadaptadas
 - `forbidden_relay.md` — pré-registro benigno de transmissão exata por cadeias de LLMs sem vazamento literal intermediário (resultados ainda não coletados)
+
+## Eixo descoberta por máquinas / epistemologia computacional
+
+- `machine_discovery.md` — descoberta como transição certificada entre estados epistêmicos, com novidade relativa, proveniência auditável e expansão recursiva do currículo
 
 ## Eixo alignment / agent-bounding
 
@@ -53,7 +64,7 @@ Position papers and working drafts.
 
 ## Companion pieces
 
-- `machine_interaction_program.md` — mapa editorial que conecta as PRs abertas de machine teaching, informational time, signal extraction, machine discovery, interstitial agency, relay transducers e Forbidden Relay
+- `machine_interaction_program.md` — mapa editorial que conecta machine teaching, informational time, signal extraction, machine discovery, interstitial agency, relay transducers e Forbidden Relay
 - `otherwise/` — argumentos adversariais
 - `yesindeed/` — argumentos de suporte
 - `synthesis/` — árbitro: funde `otherwise/`/`yesindeed/` e roda os ciclos de edição que absorvem conclusões assentadas de volta aos papers principais
