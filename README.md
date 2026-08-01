@@ -42,6 +42,7 @@ Position papers and working drafts.
 ## Eixo alignment / agent-bounding
 
 - `affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
+- `interstitial_agent.md` — agência, persistência informacional e segurança end-to-end em cadeias de LLMs conectadas por transdutores aprendidos
 
 ## Eixo interpretabilidade
 
