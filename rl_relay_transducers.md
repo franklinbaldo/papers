@@ -170,18 +170,120 @@ $$
 
 The fixed space preserves identity and reproducibility; the projection adapts retrieval decisions to the current channel.
 
-### 4.2 Memory provenance
+### 4.2 Reward-conditioned retrieval plasticity
+
+Cosine search should be treated as a high-recall candidate generator, not as the final selection rule. The policy should not choose directly among all \(K\) memory entries. Instead, frozen semantic similarity produces a small candidate set, and a learned retrieval layer ranks those candidates by downstream utility:
+
+$$
+\text{semantic cosine recall}
+\longrightarrow
+\text{learned functional ranking}
+\longrightarrow
+\text{relay accept/reject/commit action}.
+$$
+
+Each memory entry may therefore retain both a frozen semantic key and a trainable functional key:
+
+$$
+m_j=(s_j,e_j,k_j,\mu_j),
+\qquad
+k_j^{(0)}=e_j.
+$$
+
+For a selected input span \(u_t\), local relay state \(h_t\), and remaining depth \(d_t\), a trainable query is:
+
+$$
+q_t=\operatorname{norm}
+\left(
+W_q[E_{\mathrm{fixed}}(u_t);E_{\mathrm{fixed}}(x);h_t;d_t]
+\right).
+$$
+
+The first stage remains reproducible and uses only frozen semantic keys:
+
+$$
+\mathcal C_t=
+\operatorname{TopK}_{j}
+\cos(q_t,e_j).
+$$
+
+A contextual reranker then combines semantic affinity, learned functional affinity, historical utility, exploration, and cost:
+
+$$
+S_t(j)=
+\alpha\cos(q_t,e_j)
++\beta\cos(q_t,k_j)
++\gamma U_\omega(h_t,j)
++\kappa\sqrt{\frac{\log T}{n_j+1}}
+-\lambda C_j.
+$$
+
+Here \(U_\omega\) estimates whether chunk \(j\) has been useful in similar model, hop, role, and channel contexts; \(n_j\) is its usage count; and \(C_j\) includes token, leakage, and low-survival penalties. The exploration term prevents early successful chunks from monopolizing exposure before alternatives are tested.
+
+Crucially, **selection alone must not increase future rank**. Promoting a chunk whenever it is chosen would create a self-reinforcing popularity loop in which early retrieval noise becomes permanent. The update should depend on downstream credit, preferably an advantage relative to the expected outcome:
+
+$$
+A_{t,j}=R_t-V_\eta(s_t).
+$$
+
+A simple functional-key update is:
+
+$$
+k_j\leftarrow
+\operatorname{norm}
+\left(k_j+\eta A_{t,j}q_t\right).
+$$
+
+Positive advantage moves the functional key toward similar future queries; negative advantage moves it away. A contextual utility estimate can be updated separately:
+
+$$
+U_{t+1}(h_t,j)
+=
+U_t(h_t,j)
++\eta_U\left(A_{t,j}-U_t(h_t,j)\right).
+$$
+
+Where credit is delayed across several retrieved chunks, the centralized critic may assign per-decision advantages, or counterfactual ablations may estimate whether replacing or removing a specific chunk changes terminal success. This is preferable to assigning the full terminal reward equally to every retrieval in a successful trajectory.
+
+Successful trajectories also define contrastive training pairs. A chunk with positive attributed advantage is a positive key for its query, while exposed but unsuccessful alternatives are negatives:
+
+$$
+\mathcal L_{\mathrm{retrieval}}
+=
+-\log
+\frac{
+\exp(\cos(q_t,k_{j^+})/\tau)
+}{
+\sum_{j\in\mathcal C_t}
+\exp(\cos(q_t,k_j)/\tau)
+}.
+$$
+
+The architecture therefore separates four responsibilities:
+
+1. the frozen semantic encoder preserves meaning and supports broad recall;
+2. trainable query and functional keys learn task- and channel-specific accessibility;
+3. the utility reranker learns contextual survival and cost;
+4. the relay policy decides whether to bind, reject, or commit a candidate.
+
+Utility should be conditioned on model family, checkpoint, hop depth, relay role, and memory version. A string may be useful as an initial transmitter code and harmful as a late relay code, or robust for one language-model family and brittle for another.
+
+All functional keys, utility estimates, and rankings are frozen during held-out evaluation. They may be updated between training episodes, but never through a globally writable store during an evaluation trajectory. Every rollout records the retriever, key-table, and utility-model versions so that improvements in candidate delivery remain auditable and cannot become an undeclared side channel.
+
+### 4.3 Memory provenance
 
 Each entry should record at least:
 
 ```text
 string
 frozen embedding
+functional retrieval key
 embedding-model version
+retriever and utility-model version
 source model and checkpoint
 source episode class
-usage count
-success rate
+usage and exposure counts
+attributed advantage and success rate
 average survived hops
 token cost
 observer decodability
@@ -509,6 +611,9 @@ The minimum comparison set is:
 - insert-only relay;
 - insert-and-delete relay;
 - associative retrieval without RL;
+- cosine-only retrieval;
+- cosine retrieval with a learned reranker;
+- reward-conditioned functional keys;
 - ART with frozen memory;
 - unrestricted textual rewriter;
 - position-specific relay policies;
@@ -523,6 +628,10 @@ Critical ablations remove:
 
 - associative memory;
 - memory performance metadata;
+- functional retrieval keys;
+- contextual utility ranking;
+- retrieval exploration bonus;
+- attributed advantage, replacing it with selection-only promotion;
 - edit-cost penalty;
 - centralized critic;
 - curriculum adaptation;
@@ -567,23 +676,27 @@ Co-trained channels will support more compact arbitrary protocols than frozen ch
 
 A frozen, provenance-aware textual memory will reduce the number of rollouts required to rediscover robust strings.
 
-### H6: Memory can harm transfer
+### H6: Reward-conditioned retrieval improves candidate quality
+
+At matched cosine candidate-pool size, a retriever with functional keys and contextual utility trained from attributed downstream advantage will increase useful-chunk recall and reduce relay sample complexity relative to cosine-only retrieval. Selection-only promotion is expected to collapse toward early popular chunks and transfer worse.
+
+### H7: Memory can harm transfer
 
 Memory entries optimized for one model family may reduce performance on another unless model identity or uncertainty is represented.
 
-### H7: Private-code opacity
+### H8: Private-code opacity
 
 A jointly trained receiver may recover targets from texts that independent receivers and humans cannot decode.
 
-### H8: Ordinary-language regularization limits collusion
+### H9: Ordinary-language regularization limits collusion
 
 Next-token and reference-policy constraints will improve transfer and observer decodability at the cost of lower within-pair channel capacity.
 
-### H9: Curriculum by learning progress outperforms depth-only curricula
+### H10: Curriculum by learning progress outperforms depth-only curricula
 
 A curriculum that adapts across target entropy, memory ambiguity, depth, and channel variability will reach fixed held-out performance with fewer language-model calls.
 
-### H10: Capability duality is conditional, not automatic
+### H11: Capability duality is conditional, not automatic
 
 Broad benign steering performance will correlate with synthetic policy-evasion performance, but narrow communication policies will not necessarily generalize to arbitrary refused targets.
 
@@ -595,12 +708,14 @@ A relay may exploit tokenizer artifacts or API formatting rather than meaningful
 
 Joint training may produce degenerate collusion. Cross-model swaps, independent receivers, adapter removal, and frozen-channel replications are necessary before claiming a general communication phenomenon.
 
+Reward-conditioned retrieval adds another source of path dependence. Early noisy advantages can distort functional keys, and correlated chunk sequences make individual credit difficult. Exposure logging, exploration, counterfactual replacement tests, held-out query families, and comparison with frozen semantic retrieval are required before claiming that the learned ranker discovered generally useful chunks.
+
 The language-model call is expensive even when the relay network is small. Training is likely to be inference-bound and sample-inefficient rather than GPU-memory-bound.
 
 Finally, the formalism describes capability, not authorization. Whether a recoverable signal is a legitimate code or a policy violation depends on the deployment's declared users, receivers, and end-to-end policy.
 
 ## 20. Conclusion
 
-RL relay transducers make the space between language-model calls trainable without requiring differentiable access to the models themselves. Their actions remain discrete and inspectable. Associative memory lets them reuse strings associated with useful embedding regions. Receivers learn what survived; relay policies learn how to preserve or steer it; language models can remain frozen or slowly coadapt.
+RL relay transducers make the space between language-model calls trainable without requiring differentiable access to the models themselves. Their actions remain discrete and inspectable. Associative memory lets them reuse strings associated with useful embedding regions. A frozen cosine layer preserves semantic recall, while reward-conditioned functional keys and contextual utility learn which retrieved strings actually survive and help in particular channel contexts. Receivers learn what survived; relay policies learn how to preserve or steer it; language models can remain frozen or slowly coadapt.
 
 This architecture provides a controlled setting for studying communication through LLMs, black-box textual control, multi-hop credit assignment, learned codebooks, private protocols, and compositional safety. The central empirical question is not simply whether a prompt can cause a desired output. It is whether a learned discrete policy can construct representations that remain recoverable across repeated stochastic transformations, and whether those representations describe general properties of language-model channels or only private agreements among co-trained components.
