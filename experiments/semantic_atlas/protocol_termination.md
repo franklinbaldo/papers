@@ -21,6 +21,16 @@ The experiment deliberately distinguishes four increasingly strong claims:
 
 Only the fourth claim licenses the word **singularity**. The first three do not.
 
+## Frontier correction — learned remaining-length signals are a load-bearing control
+
+Token index, normalized sequence length, and prompt-implied target length are not strong enough controls for the 2026 frontier.
+
+Merzouk et al. (2026), **How Much is Left? LLMs Linearly Encode Their Remaining Output Length** (arXiv:2607.05316), report that simple linear probes on frozen hidden states can decode total response length before generation and track approximate remaining length during generation. Xie et al. (2026), **Predicting LLM Output Length via Entropy-Guided Representations** (arXiv:2602.11812), use on-the-fly hidden states and token entropy for static and progressive remaining-length prediction.
+
+These results create a direct false-green risk for this experiment: an apparent semantic tail, basin, or stopping field may simply recover a pre-existing internal length estimate. Therefore a geometric termination result is interesting only if SRF state/velocity/history adds reproducible information **conditional on a learned remaining-length baseline**, not merely beyond absolute token position.
+
+The primary analysis must freeze a learned remaining-length control before inspecting the geometry result. At minimum use a linear hidden-state probe; when feasible, add a progressive hidden-state-plus-entropy predictor as a stronger secondary baseline. These probes are predictive controls, not claims that the decoded quantity causally determines `EOS`.
+
 ## Motivation
 
 Semantic Atlas already treats generation as a trajectory through a model-relative semantic world. `EOS` then raises a natural boundary-condition question: what does the end of a trajectory look like from inside that world?
@@ -49,13 +59,21 @@ p_{EOS}(t)=P(x_{t+1}=EOS\mid x_{\le t}),
 
 but the atlas claim concerns whether this stopping probability has stable structure after projection into the SRF and whether velocity/history explain residual ambiguity.
 
+For the primary frontier-controlled analysis, let
+
+\[
+\hat r_t = f_{len}(h_t, e_t)
+\]
+
+be the preregistered estimate of remaining output length, where `e_t` may include registered entropy features for the stronger baseline. Compare models that predict `EOS within H` from `\hat r_t` alone against models that add `q_t`, `v_t`, and compressed history. The Semantic Atlas claim requires incremental held-out value beyond `\hat r_t`.
+
 ## Terminal basin
 
 For a candidate region `B`, call it a terminal basin at horizon `H` only if all of the following hold on held-out generations:
 
 - entering `B` increases `lambda_H` relative to matched states outside `B`;
 - trajectories tend to remain in `B` or move toward higher `lambda_H` until termination;
-- the effect survives controls for absolute token position and prompt-implied target length;
+- the effect survives controls for absolute token position, prompt-implied target length, **and learned remaining-length prediction**;
 - the region is not explained solely by one trivial lexical marker such as a final punctuation token.
 
 Multiple terminal basins are expected. A proof conclusion, a refusal, a short factual answer, a narrative ending, and a degenerative repetition may all terminate with the same special token while approaching it through different regions.
@@ -70,7 +88,7 @@ For a threshold `tau`, define a stopping surface
 \{s:\lambda_H(s)=\tau\}.
 \]
 
-The word **horizon** is justified operationally only if crossing such a surface predicts a sharp and reproducible change in short-horizon termination probability.
+The word **horizon** is justified operationally only if crossing such a surface predicts a sharp and reproducible change in short-horizon termination probability after conditioning on the registered length controls.
 
 Unlike a physical event horizon, this surface need not be irreversible: a control intervention may push generation back toward lower stopping probability. Measuring the intervention cost is part of the experiment.
 
@@ -118,13 +136,19 @@ Compare stopping prediction using:
 
 1. token index / normalized sequence length only;
 2. recent lexical tokens only;
-3. native hidden state;
-4. SRF position `q_t` only;
-5. `q_t + v_t`;
-6. `q_t + v_t + compressed history`;
-7. shuffled SRF coordinates matched by marginal distribution.
+3. preregistered linear hidden-state probe for total/remaining output length;
+4. progressive hidden-state + entropy remaining-length predictor when feasible;
+5. native hidden state;
+6. SRF position `q_t` only;
+7. `q_t + v_t`;
+8. `q_t + v_t + compressed history`;
+9. learned remaining-length prediction + `q_t`;
+10. learned remaining-length prediction + `q_t + v_t + compressed history`;
+11. shuffled SRF coordinates matched by marginal distribution.
 
-A semantic termination field is interesting only if it adds predictive or structural information beyond trivial length cues.
+A semantic termination field is interesting only if it adds predictive or structural information beyond both trivial position cues **and a learned internal length signal**.
+
+Train all learned baselines and geometric models on the same registered training families and evaluate on the same held-out families. Do not give the geometric model privileged access to post-hoc endpoint labels or future tokens unavailable to the length baselines.
 
 ## Primary measurements
 
@@ -134,7 +158,11 @@ For horizons `H in {1, 2, 4, 8, 16, 32}` report:
 
 - AUROC / AUPRC for `EOS within H`;
 - Brier score and calibration curves;
-- incremental gain of velocity/history over position alone.
+- incremental gain of velocity/history over position alone;
+- incremental gain of SRF position/velocity/history over the preregistered learned remaining-length predictor;
+- performance split by endpoint type and prompt family.
+
+The load-bearing frontier comparison is the **incremental** held-out value after the learned length control. A strong raw SRF score that disappears after conditioning on predicted remaining length does not support an independent semantic termination geometry.
 
 ### Convergence toward termination
 
@@ -144,7 +172,8 @@ Conditioned on ending type, measure as `k -> 0` for states `k` tokens before `EO
 - between-type separation;
 - trajectory speed and curvature;
 - concentration of `p_EOS`;
-- local transition entropy.
+- local transition entropy;
+- the same convergence summaries after stratifying or residualizing by predicted remaining length.
 
 A universal collapse to one point is **not** expected or required.
 
@@ -156,11 +185,12 @@ Cluster candidate high-`lambda` states on a training split. On held-out trajecto
 - dwell time;
 - return probability after leaving;
 - termination rate within the registered horizon;
-- stability across seeds and reasonable atlas resolutions.
+- stability across seeds and reasonable atlas resolutions;
+- persistence after matching states on predicted remaining length.
 
 ### Horizon sharpness
 
-For registered `tau` values, estimate how termination probability changes when a trajectory crosses `Sigma_(H,tau)`. Compare against randomly rotated or shuffled surfaces with the same marginal occupancy.
+For registered `tau` values, estimate how termination probability changes when a trajectory crosses `Sigma_(H,tau)`. Compare against randomly rotated or shuffled surfaces with the same marginal occupancy and against surfaces induced by the learned remaining-length predictor alone.
 
 ## Control experiment
 
@@ -170,22 +200,24 @@ Measure:
 
 - minimum intervention norm required to change `EOS within H` probability by a registered amount;
 - actual realized change in termination time;
+- change in the learned remaining-length estimate;
 - semantic-route deviation;
 - KL drift and language-quality degradation.
 
-If a small intervention reliably crosses the estimated stopping surface in both directions, the object behaves more like a controllable boundary than a one-way event horizon.
+If a small intervention reliably crosses the estimated stopping surface in both directions, the object behaves more like a controllable boundary than a one-way event horizon. If the intervention changes termination only by first shifting the learned remaining-length estimate, report that mediation rather than claiming an independent geometric mechanism.
 
 ## Falsification
 
 The geometric-termination hypothesis weakens if:
 
 - token position / simple lexical cues explain essentially all predictable stopping behavior;
+- a learned hidden-state remaining-length predictor explains the apparent SRF advantage;
 - candidate basins disappear on held-out prompts or under reasonable observer changes;
-- `q_t`, velocity, and history add no information beyond native length features;
-- high-`lambda` regions do not exhibit persistence or reproducible flow;
+- `q_t`, velocity, and history add no information beyond learned length features;
+- high-`lambda` regions do not exhibit persistence or reproducible flow after matching on predicted remaining length;
 - any apparent singularity disappears under increased resolution or a better-conditioned coordinate system.
 
-A negative result remains useful: it would say that `EOS` is principally an output-policy decision rather than a macroscopic feature of the semantic dynamics.
+A negative result remains useful: it would say that `EOS` is principally an output-policy/length-planning decision rather than a macroscopic feature of the semantic dynamics.
 
 ## Reporting language
 
@@ -198,7 +230,9 @@ Never move rightward because the metaphor is attractive.
 ## References
 
 - Newman, B., Hewitt, J., Liang, P., & Manning, C. D. (2020). **The EOS Decision and Length Extrapolation.** BlackboxNLP 2020, pp. 276–291. https://aclanthology.org/2020.blackboxnlp-1.26/
+- Merzouk, M. A., Carpov, D., Bronzi, M., Fornasiere, D., & Oberman, A. (2026). **How Much is Left? LLMs Linearly Encode Their Remaining Output Length.** arXiv:2607.05316.
+- Xie, H., Chen, Y., Wang, L., Hu, L., & Wang, D. (2026). **Predicting LLM Output Length via Entropy-Guided Representations.** arXiv:2602.11812.
 
 ## Issue
 
-Implements the preregistration for #280; refs #260 #264 #266 #268 #276.
+Implements the preregistration for #280; refs #260 #264 #266 #268 #276 #282.
