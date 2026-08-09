@@ -44,8 +44,22 @@ class InferenceRecord:
 class Neighbor:
     record: InferenceRecord
     distance: float
+    history_alignment: float
     route_alignment: float
     weight: float
+
+
+def _cosine_alignment(a: np.ndarray | None, b: np.ndarray | None) -> float:
+    if a is None or b is None:
+        return 0.0
+    a = np.asarray(a, dtype=np.float64)
+    b = np.asarray(b, dtype=np.float64)
+    if a.shape != b.shape:
+        raise ValueError("alignment vectors must share a shape")
+    denom = float(np.linalg.norm(a) * np.linalg.norm(b))
+    if denom <= 1e-12:
+        return 0.0
+    return float(np.dot(a, b) / denom)
 
 
 class InferenceMemory:
@@ -71,8 +85,10 @@ class InferenceMemory:
         self,
         state: np.ndarray,
         k: int = 8,
+        incoming_velocity: np.ndarray | None = None,
         desired_delta: np.ndarray | None = None,
         bandwidth: float = 0.25,
+        history_weight: float = 1.0,
         route_weight: float = 1.0,
     ) -> list[Neighbor]:
         if not self.records:
@@ -86,37 +102,52 @@ class InferenceMemory:
         states = np.stack([record.state for record in self.records])
         if state.shape != states.shape[1:]:
             raise ValueError("query state dimension does not match memory")
-        distances = np.linalg.norm(states - state, axis=1)
-        indices = np.argpartition(distances, k - 1)[:k]
-        indices = indices[np.argsort(distances[indices])]
+
+        incoming = None
+        if incoming_velocity is not None:
+            incoming = np.asarray(incoming_velocity, dtype=np.float64)
+            if incoming.shape != state.shape:
+                raise ValueError("incoming_velocity must match state dimension")
 
         desired = None
-        desired_norm = 0.0
         if desired_delta is not None:
             desired = np.asarray(desired_delta, dtype=np.float64)
             if desired.shape != state.shape:
                 raise ValueError("desired_delta must match state dimension")
-            desired_norm = float(np.linalg.norm(desired))
+
+        distances = np.linalg.norm(states - state, axis=1)
+        indices = np.argpartition(distances, k - 1)[:k]
+        indices = indices[np.argsort(distances[indices])]
 
         neighbors: list[Neighbor] = []
         for index in indices:
             record = self.records[int(index)]
-            alignment = 0.0
-            if desired is not None and desired_norm > 1e-12 and record.next_state is not None:
-                observed_delta = record.next_state - record.state
-                observed_norm = float(np.linalg.norm(observed_delta))
-                if observed_norm > 1e-12:
-                    alignment = float(
-                        np.dot(observed_delta, desired) / (observed_norm * desired_norm)
-                    )
+            history_alignment = _cosine_alignment(record.velocity, incoming)
+            observed_delta = (
+                None
+                if record.next_state is None
+                else record.next_state - record.state
+            )
+            route_alignment = _cosine_alignment(observed_delta, desired)
+
             positional = np.exp(-0.5 * (float(distances[index]) / bandwidth) ** 2)
-            directional = np.exp(route_weight * alignment) if desired is not None else 1.0
-            weight = float(positional * directional)
+            historical = (
+                np.exp(history_weight * history_alignment)
+                if incoming is not None
+                else 1.0
+            )
+            directional = (
+                np.exp(route_weight * route_alignment)
+                if desired is not None
+                else 1.0
+            )
+            weight = float(positional * historical * directional)
             neighbors.append(
                 Neighbor(
                     record=record,
                     distance=float(distances[index]),
-                    route_alignment=alignment,
+                    history_alignment=history_alignment,
+                    route_alignment=route_alignment,
                     weight=weight,
                 )
             )
@@ -126,16 +157,20 @@ class InferenceMemory:
         self,
         state: np.ndarray,
         k: int = 8,
+        incoming_velocity: np.ndarray | None = None,
         desired_delta: np.ndarray | None = None,
         bandwidth: float = 0.25,
+        history_weight: float = 1.0,
         route_weight: float = 1.0,
         use_stored_topk: bool = True,
     ) -> dict[int, float]:
         neighbors = self.query(
             state,
             k=k,
+            incoming_velocity=incoming_velocity,
             desired_delta=desired_delta,
             bandwidth=bandwidth,
+            history_weight=history_weight,
             route_weight=route_weight,
         )
         distribution: dict[int, float] = {}
