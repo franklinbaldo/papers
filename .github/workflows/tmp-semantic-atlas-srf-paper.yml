@@ -1,0 +1,88 @@
+name: Temporary Semantic Atlas SRF paper patch
+
+on:
+  push:
+    branches:
+      - semantic-atlas/01-paper
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: semantic-atlas/01-paper
+      - name: Patch SRF claims
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('semantic_atlas.md')
+          text = path.read_text()
+          replacements = [
+              (
+                  "Second, model-specific coordinates are aligned to an artificial **Semantic Reference Frame (SRF)** defined by mathematically constructed landmarks, called **semantic quasars**, so that navigation can be expressed relative to a stable external frame.",
+                  "Second, model-specific coordinates are aligned to an artificial **Semantic Reference Frame (SRF)** whose geometry is defined by mathematically constructed landmarks, called **semantic quasars**, while its semantic orientation is fixed empirically by a shared, row-paired calibration set. The quasars define the external gauge; paired examples determine how each model is placed into that gauge."
+              ),
+              (
+                  "The central object is a **Semantic Atlas**: a compressed, multiresolution, model-relative map expressed in a model-independent reference frame.",
+                  "The central object is a **Semantic Atlas**: a compressed, multiresolution, model-relative map expressed in an externally fixed and empirically calibrated reference frame. The frame is not model-independent by construction: cross-model correspondence is a hypothesis that must be earned on held-out paired examples."
+              ),
+              (
+                  "The present proposal introduces a stricter separation between **reference geometry** and **semantic calibration**. Instead of requiring reference anchors to correspond to natural concepts, we define landmarks mathematically and use real data only to align a model to them.",
+                  "The present proposal introduces a stricter separation between **reference geometry** and **semantic calibration**. Instead of requiring the reference landmarks themselves to correspond to natural concepts, we define the quasar geometry mathematically. That does **not** identify semantic axes: a regular simplex is symmetric under orthogonal transformations. Semantic orientation enters through a shared calibration set whose rows denote the same texts or states across observers."
+              ),
+              (
+                  "These points are the first **semantic quasars**. They need not be realizable as natural-language embeddings. Their role is metrological: they define a stable set of directions against which model states are measured.",
+                  "These points are the first **semantic quasars**. They need not be realizable as natural-language embeddings. Their role is metrological: they define a fixed external geometry. Their labels do not carry semantic identity. Calling one vertex `Q17` does not make the corresponding native direction in two independently trained models the same direction."
+              ),
+              (
+                  "A model-specific embedding \\(x\\) is mapped to the SRF through a calibration function\n\n\\[\nT_M:x\\mapsto q.\n\\]\n\nThe first baseline is deliberately simple:\n\n1. center a calibration corpus;\n2. whiten or otherwise reduce anisotropy;\n3. project to an effective dimension \\(k\\);\n4. align to a canonical basis by an orthogonal Procrustes transformation;\n5. express the result relative to the fixed quasar frame.\n\nA learned adapter is a later baseline, not the starting assumption. This ordering makes it possible to ask whether a purely geometric calibration already preserves trajectories.",
+                  "A model-specific embedding \\(x\\) is mapped to the SRF through a calibration function\n\n\\[\nT_M:x\\mapsto q.\n\\]\n\nThe v0 calibration uses **shared correspondences**. Let \\(c_1,\\ldots,c_n\\) be calibration items observed by every model. A designated reference observer is centered and whitened to dimension \\(k\\); its resulting coordinates on those frozen items become a canonical target matrix \\(Y\\in\\mathbb R^{n\\times k}\\). For another model \\(M\\), let \\(X_M\\) be its independently whitened coordinates for the same row-paired items. We then fit\n\n\\[\nR_M^*=\\arg\\min_{R^TR=I}\\|X_MR-Y\\|_F,\n\\]\n\nusing orthogonal Procrustes, and define \\(T_M(x)=W_M(x)R_M^*\\), where \\(W_M\\) is that model's fitted centering/whitening transform. The artificial quasars are then evaluated in this shared coordinate system.\n\nThis calibration resolves the rotational gauge only to the extent that the paired calibration examples span the retained dimension and generalize to unseen items. A second SVD of an already whitened cloud cannot provide this identification: after whitening, equalized variance leaves orthogonal orientation unconstrained. Sign fixing resolves only a \\(\\pm\\) ambiguity and is not a substitute for cross-model anchoring.\n\nA learned adapter is a later baseline, not the starting assumption."
+              ),
+              (
+                  "An SRF is useful if it preserves the relationships needed for navigation, not if it reproduces native coordinates. Relevant tests include:\n\n- neighborhood preservation;\n- local distance and angle preservation;\n- trajectory-shape preservation;\n- stability across random rotations introduced synthetically;\n- alignment between compatible model families;\n- graceful degradation as canonical dimension decreases.\n\nCross-model universality is a stronger claim and requires independent evidence. The initial experiments test only whether a fixed external frame is *usable*, not whether it is universal.",
+                  "An SRF is useful if it preserves the relationships needed for navigation and, when cross-model alignment is claimed, if independently fitted observers produce the **same held-out coordinates** for corresponding items. Relevant tests include:\n\n- held-out canonical-coordinate RMSE and cosine agreement across observers;\n- nearest-quasar agreement on held-out items;\n- degradation under deliberately shuffled calibration correspondences;\n- neighborhood, local distance, angle, and trajectory-shape preservation;\n- synthetic recovery from unknown rotations/reflections and anisotropic scalings;\n- graceful degradation as canonical dimension decreases.\n\nDistance preservation alone cannot validate the shared-frame claim because distances and angles are already invariant under global orthogonal rotations. Cross-model universality is stronger still: success on two observers would establish calibrated interoperability for that pair, not a universal semantic sky."
+              ),
+              (
+                  "Construct a deterministic 64-dimensional simplex SRF with 65 quasars. Embed a frozen corpus of prompts and continuations, calibrate into the SRF, segment trajectories at multiple horizons, and build a graph of semantic cells and transitions.\n\nPrimary questions:\n\n- Does the frame preserve useful local geometry?\n- Are trajectory measures stable across reasonable chunk sizes?\n- Do repeated prompts expose consistent corridors and basin-like regions?\n- Are synthetic rotations removed by the calibration as intended?",
+                  "Construct a deterministic 64-dimensional simplex SRF with 65 quasars. Freeze a row-paired calibration set across a reference observer and at least one independent transfer observer. Derive canonical calibration targets once from the reference observer, fit each transfer observer by paired Procrustes, and reserve separate held-out texts for the identifiability test. Then embed the frozen trajectory corpus, segment trajectories at multiple horizons, and build a graph of semantic cells and transitions.\n\nPrimary questions:\n\n- Do independently fitted observers agree on held-out canonical vectors and quasar coordinates?\n- Does that agreement collapse when calibration correspondences are shuffled?\n- Does the frame preserve useful local geometry?\n- Are trajectory measures stable across reasonable chunk sizes?\n- Do repeated prompts expose consistent corridors and basin-like regions?"
+              ),
+              (
+                  "**Claim:** a fixed quasar frame plus calibration preserves navigation-relevant structure.\n\n**Fails if:** it introduces material distortion relative to native-space baselines or offers no stability under transformations/model changes.",
+                  "**Claim:** fixed quasar geometry plus paired empirical calibration can resolve enough cross-model gauge freedom to preserve navigation-relevant structure.\n\n**Fails if:** independently fitted observers disagree materially on held-out canonical coordinates, if shuffled correspondences perform similarly to correct correspondences, or if the transformation introduces material distortion relative to dimensionality-matched native-space baselines."
+              ),
+              (
+                  "The SRF adopts the relative-coordinate motivation but makes the landmarks artificial and treats model data as calibration for a navigational frame.",
+                  "The SRF adopts the relative-coordinate motivation but separates artificial landmark geometry from semantic anchoring: paired calibration examples align each observer to one frozen target cloud, after which artificial quasars provide a shared metrological basis."
+              ),
+              (
+                  "The SRF is the **geodetic system**: it defines coordinates that do not inherit the arbitrary orientation of one model's embedding space.",
+                  "The SRF is the **geodetic system**: artificial quasars define the external geometry, while shared calibration correspondences determine how each model is oriented within it. The sky can be invented; making two telescopes agree about where that sky is remains an empirical calibration problem."
+              ),
+              (
+                  "Artificial quasars provide a fixed coordinate frame; multiscale trajectories provide the moving object;",
+                  "Artificial quasars provide a fixed external geometry and paired calibration supplies its semantic orientation; multiscale trajectories provide the moving object;"
+              ),
+          ]
+
+          for old, new in replacements:
+              if old not in text:
+                  raise SystemExit(f'missing expected paper fragment: {old[:100]!r}')
+              text = text.replace(old, new, 1)
+
+          path.write_text(text)
+          PY
+      - name: Commit paper correction
+        run: |
+          if git diff --quiet -- semantic_atlas.md; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add semantic_atlas.md
+          git commit -m "fix(paper): anchor SRF semantics with paired calibration"
+          git push origin HEAD:semantic-atlas/01-paper
