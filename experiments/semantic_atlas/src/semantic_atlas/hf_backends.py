@@ -70,3 +70,10 @@ class QwenGenerator:
             text = self.tokenizer.decode(ids, skip_special_tokens=True)
             results.append((text, float(token_scores.sum().item())))
         return results
+
+    def commit_prefix(self, text: str, token_budget: int) -> str:
+        """Return at most token_budget Qwen tokens from a winning rollout."""
+        if token_budget < 1:
+            raise ValueError("token_budget must be >= 1")
+        ids = self.tokenizer(text, add_special_tokens=False)["input_ids"]
+        return self.tokenizer.decode(ids[:token_budget], skip_special_tokens=True)
