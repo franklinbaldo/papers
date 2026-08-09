@@ -18,6 +18,8 @@ This experiment does **not** assume that a token has a unique semantic coordinat
 
 Nearest-neighbor language models already store a representation of a context together with the token that followed it and use nearest-neighbor retrieval to improve next-token prediction. Inference-time memories and retrieval-based speculative decoding extend related ideas.
 
+Gritta, Xue & Lampouras (2025), **DReSD: Dense Retrieval for Speculative Decoding** (arXiv:2502.15572), is a particularly close baseline: it uses approximate nearest-neighbor search over contextualized token embeddings to retrieve semantically relevant token sequences for target-model speculative decoding. Therefore neither dense semantic retrieval nor retrieval-backed drafting is a Semantic Atlas novelty claim.
+
 The additional hypothesis here is specific to Semantic Atlas:
 
 1. store the memory in the calibrated SRF rather than only in one model's native hidden coordinates;
@@ -76,12 +78,15 @@ The central multiresolution prediction is that sufficiently dense, fine local re
 
 1. full target LLM;
 2. native-space kNN-LM-style retrieval;
-3. SRF positional kNN;
-4. SRF position + incoming velocity;
-5. SRF route-conditioned inverse atlas;
-6. inverse atlas with stored top-k logits;
-7. inverse atlas + verified LLM interpolation;
-8. random-neighbor and shuffled-route controls.
+3. DReSD-style dense contextual retrieval/speculative drafting, using the closest faithful reproduction compatible with the frozen model and datastore;
+4. SRF positional kNN;
+5. SRF position + incoming velocity;
+6. SRF route-conditioned inverse atlas;
+7. inverse atlas with stored top-k logits;
+8. inverse atlas + verified LLM interpolation;
+9. random-neighbor and shuffled-route controls.
+
+If an exact DReSD reproduction is not technically compatible with the frozen model, record the deviation and preserve the essential comparison: dense context-conditioned ANN retrieval of candidate token sequences with target-model verification, **without** Atlas route information.
 
 ## Metrics
 
@@ -96,11 +101,13 @@ The central multiresolution prediction is that sufficiently dense, fine local re
 - target-model calls per output token;
 - total FLOPs/latency including failed interpolation attempts.
 
+For speculative-drafting conditions, report accepted tokens per target-model verification and end-to-end speed/latency separately from semantic route quality. Retrieval speedup is not evidence of route conditioning, and route improvement is not automatically a speedup.
+
 ## Key ablations
 
 - state only vs state + desired route;
 - emitted token only vs stored top-k distribution;
-- native coordinates vs calibrated SRF coordinates;
+- native dense retrieval vs calibrated SRF retrieval;
 - correct vs shuffled route directions;
 - exact same-model memory vs cross-model calibrated memory;
 - fixed radius vs adaptive zoom by lexical entropy.
@@ -109,14 +116,20 @@ The central multiresolution prediction is that sufficiently dense, fine local re
 
 The inverse-atlas claim is weakened if SRF retrieval does not beat native-space/dimensionality-matched baselines on held-out lexical prediction or route realization.
 
-The **route-conditioned** claim fails if desired direction provides no held-out advantage over position-only retrieval.
+The **route-conditioned** claim fails if desired direction provides no held-out advantage over position-only retrieval **and over a strong dense contextual retrieval baseline such as DReSD-style drafting**.
 
 The multiresolution claim fails if lexical uncertainty does not decrease predictably with local atlas support or if sufficiently useful resolution requires essentially memorizing every exact context.
 
-The efficiency claim fails if target-model verification/interpolation calls erase any savings from lookup-based draft generation.
+The efficiency claim fails if target-model verification/interpolation calls erase any savings from lookup-based draft generation, or if a non-Atlas dense-retrieval baseline already achieves equal or better acceptance/latency at comparable datastore cost.
 
 ## Claim boundary
 
 A successful result demonstrates statistical recoverability of local lexical realizations from an empirical inference memory. It does not imply a unique inverse function `SRF point -> token`, and it does not make a stored corpus equivalent to a model's unobserved knowledge.
 
-Refs #260 #276.
+Dense semantic retrieval and retrieval-based speculative decoding are prior art. The narrower frontier claim is that **calibrated SRF position plus incoming trajectory plus an independently planned desired displacement** provides useful held-out lexical guidance beyond strong context-only retrieval.
+
+## Frontier reference
+
+- Gritta, M., Xue, H., & Lampouras, G. (2025). **DReSD: Dense Retrieval for Speculative Decoding.** arXiv:2502.15572.
+
+Refs #260 #276 #282.
