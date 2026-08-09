@@ -27,13 +27,18 @@ def test_servo_reduces_linear_prediction_error():
     correction, diagnostics = SemanticServo(head=head, regularization=1e-8).command(state, desired)
 
     assert np.linalg.norm(correction) > 0
-    assert diagnostics["prediction_error_after_linear_control"] < diagnostics["prediction_error_before"]
+    assert diagnostics["prediction_error_after_command"] < diagnostics["prediction_error_before"]
 
 
-def test_servo_respects_control_norm_bound():
+def test_servo_respects_control_norm_bound_after_gain():
     rng = np.random.default_rng(3)
     hidden = rng.normal(size=(100, 4))
     delta = hidden[:, :2]
     head = LinearFutureHead.fit(hidden, delta)
-    correction, _ = SemanticServo(head=head, max_norm=0.05).command(hidden[0], np.array([9.0, -9.0]))
-    assert np.linalg.norm(correction) <= 0.0500001
+    command, diagnostics = SemanticServo(head=head, gain=10.0, max_norm=0.05).command(
+        hidden[0], np.array([9.0, -9.0])
+    )
+    assert np.linalg.norm(command) <= 0.0500001
+    assert diagnostics["preclip_command_norm"] > 0.05
+    assert diagnostics["command_norm"] <= 0.0500001
+    assert diagnostics["clipped"] == 1.0
