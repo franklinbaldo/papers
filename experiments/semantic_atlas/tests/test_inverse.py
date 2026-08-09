@@ -34,6 +34,30 @@ def test_stored_topk_preserves_more_than_sampled_token():
     assert distribution == {1: 0.6, 2: 0.4}
 
 
+def test_incoming_velocity_disambiguates_same_position():
+    eastbound = InferenceRecord(
+        state=np.array([0.0, 0.0]),
+        velocity=np.array([1.0, 0.0]),
+        token_id=1,
+        text="east-history",
+    )
+    westbound = InferenceRecord(
+        state=np.array([0.0, 0.0]),
+        velocity=np.array([-1.0, 0.0]),
+        token_id=2,
+        text="west-history",
+    )
+    memory = InferenceMemory([eastbound, westbound])
+    distribution = memory.token_distribution(
+        np.array([0.0, 0.0]),
+        k=2,
+        incoming_velocity=np.array([1.0, 0.0]),
+        bandwidth=1.0,
+        history_weight=3.0,
+    )
+    assert distribution[1] > distribution[2]
+
+
 def test_route_conditioning_prefers_neighbor_moving_in_requested_direction():
     forward = InferenceRecord(
         state=np.array([0.0, 0.0]),
