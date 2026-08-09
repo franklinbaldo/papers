@@ -47,13 +47,8 @@ def control_delta(
     hidden: np.ndarray,
     desired_delta: np.ndarray,
     regularization: float = 1e-2,
-    max_norm: float | None = None,
 ) -> tuple[np.ndarray, dict[str, float]]:
-    """Return a minimum-energy local hidden-state correction.
-
-    Solves J dh ~= error using the regularized dual form
-    J.T (J J.T + lambda I)^-1 error.
-    """
+    """Return the unconstrained minimum-energy local hidden-state correction."""
 
     hidden = np.asarray(hidden, dtype=np.float64)
     desired_delta = np.asarray(desired_delta, dtype=np.float64)
@@ -63,20 +58,12 @@ def control_delta(
     system = j @ j.T + regularization * np.eye(j.shape[0])
     correction = j.T @ np.linalg.solve(system, error)
 
-    norm = float(np.linalg.norm(correction))
-    clipped = False
-    if max_norm is not None and norm > max_norm:
-        correction = correction * (max_norm / max(norm, 1e-12))
-        clipped = True
-        norm = float(np.linalg.norm(correction))
-
     residual_before = float(np.linalg.norm(error))
     residual_after = float(np.linalg.norm(desired_delta - head.predict(hidden + correction)))
     return correction, {
         "prediction_error_before": residual_before,
-        "prediction_error_after_linear_control": residual_after,
-        "control_norm": norm,
-        "clipped": float(clipped),
+        "prediction_error_after_raw_control": residual_after,
+        "raw_control_norm": float(np.linalg.norm(correction)),
     }
 
 
@@ -93,6 +80,30 @@ class SemanticServo:
             hidden,
             desired_delta,
             regularization=self.regularization,
-            max_norm=self.max_norm,
         )
-        return self.gain * correction, diagnostics
+
+        command = self.gain * correction
+        preclip_norm = float(np.linalg.norm(command))
+        clipped = False
+        if self.max_norm is not None:
+            if self.max_norm < 0:
+                raise ValueError("max_norm must be non-negative")
+            if preclip_norm > self.max_norm:
+                command = command * (self.max_norm / max(preclip_norm, 1e-12))
+                clipped = True
+
+        command_norm = float(np.linalg.norm(command))
+        hidden = np.asarray(hidden, dtype=np.float64)
+        desired_delta = np.asarray(desired_delta, dtype=np.float64)
+        diagnostics.update(
+            {
+                "gain": float(self.gain),
+                "preclip_command_norm": preclip_norm,
+                "command_norm": command_norm,
+                "clipped": float(clipped),
+                "prediction_error_after_command": float(
+                    np.linalg.norm(desired_delta - self.head.predict(hidden + command))
+                ),
+            }
+        )
+        return command, diagnostics
