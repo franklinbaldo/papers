@@ -18,7 +18,7 @@ franklinbaldo@gmail.com
 
 ## Abstract
 
-Autoregressive language models generate text one token at a time even when the task appears to require movement through a much lower-dimensional sequence of semantic states. This paper asks whether that semantic dynamics can be made explicit, mapped, and controlled independently of the model's native token coordinates. We propose **Semantic Atlas**, a multiscale representation of language-model dynamics built on four ideas. First, a text is represented not only by embeddings but by a trajectory through semantic state space, with position, velocity, curvature, and scale. Second, model-specific coordinates are aligned to an artificial **Semantic Reference Frame (SRF)** defined by mathematically constructed landmarks, called **semantic quasars**, so that navigation can be expressed relative to a stable external frame. Third, repeated model trajectories induce an atlas containing density, local competence, transition dynamics, control cost, reachability, and a potential-like quantity informally called **semantic gravity**. Fourth, a planner chooses low-cost routes through this atlas while a **Semantic Servo** converts desired semantic motion into local generation control through rollout selection or hidden-state feedback.
+Autoregressive language models generate text one token at a time even when the task appears to require movement through a much lower-dimensional sequence of semantic states. This paper asks whether that semantic dynamics can be made explicit, mapped, and controlled independently of the model's native token coordinates. We propose **Semantic Atlas**, a multiscale representation of language-model dynamics built on four ideas. First, a text is represented not only by embeddings but by a trajectory through semantic state space, with position, velocity, curvature, and scale. Second, model-specific coordinates are aligned to an artificial **Semantic Reference Frame (SRF)** whose geometry is defined by mathematically constructed landmarks, called **semantic quasars**, while its semantic orientation is fixed empirically by a shared, row-paired calibration set. The quasars define the external gauge; paired examples determine how each model is placed into that gauge. Third, repeated model trajectories induce an atlas containing density, local competence, transition dynamics, control cost, reachability, and a potential-like quantity informally called **semantic gravity**. Fourth, a planner chooses low-cost routes through this atlas while a **Semantic Servo** converts desired semantic motion into local generation control through rollout selection or hidden-state feedback.
 
 The programme deliberately separates six claims that are easy to conflate: (1) semantic trajectories are geometrically informative; (2) an artificial reference frame can preserve useful structure; (3) an atlas can approximate model dynamics; (4) semantic routes can control generation; (5) such control can reduce token or compute cost; and (6) useful parts of the atlas can be compiled directly from model weights rather than discovered solely by autoregressive exploration. We define falsification criteria for each claim and propose a staged experiment using a small open generator and a related embedding model. The long-term hypothesis is not that the atlas replaces language models everywhere, but that planning can occur at a coarser semantic resolution than lexical generation, with the full model invoked only where linguistic resolution is required.
 
@@ -39,7 +39,7 @@ Dense embeddings suggest a different view. A sentence, paragraph, argument, or c
 5. Can planning in the map skip semantic distance that would otherwise be explored token by token, reducing inference cost?
 6. Can part of this map be extracted directly from a model's weights, with dynamic sampling used only for calibration and local refinement?
 
-This paper proposes a framework for asking these questions separately. The central object is a **Semantic Atlas**: a compressed, multiresolution, model-relative map expressed in a model-independent reference frame. The atlas is not assumed to be an exact copy of the model. Indeed, if it preserved every possible lexical distinction at every point, it would collapse into the problem made famous by Borges's *On Exactitude in Science*: a map at 1:1 scale has ceased to be useful as a map. The intended atlas is instead coarse almost everywhere and locally detailed only where the navigation or decoding task requires it.
+This paper proposes a framework for asking these questions separately. The central object is a **Semantic Atlas**: a compressed, multiresolution, model-relative map expressed in an externally fixed and empirically calibrated reference frame. The frame is not model-independent by construction: cross-model correspondence is a hypothesis that must be earned on held-out paired examples. The atlas is not assumed to be an exact copy of the model. Indeed, if it preserved every possible lexical distinction at every point, it would collapse into the problem made famous by Borges's *On Exactitude in Science*: a map at 1:1 scale has ceased to be useful as a map. The intended atlas is instead coarse almost everywhere and locally detailed only where the navigation or decoding task requires it.
 
 The proposed architecture separates five layers:
 
@@ -135,7 +135,7 @@ The empirical question is how much of future semantic motion can be predicted fr
 
 Embedding spaces are useful because relative geometry can be stable while absolute coordinates are not. Two independently trained models can encode similar relations in spaces that differ by rotations, reflections, rescalings, anisotropy, or more complex transformations. Relative representations address part of this problem by expressing a point through its similarity to a set of anchors rather than by its raw coordinates [Moschella et al., 2022].
 
-The present proposal introduces a stricter separation between **reference geometry** and **semantic calibration**. Instead of requiring reference anchors to correspond to natural concepts, we define landmarks mathematically and use real data only to align a model to them.
+The present proposal introduces a stricter separation between **reference geometry** and **semantic calibration**. Instead of requiring the reference landmarks themselves to correspond to natural concepts, we define the quasar geometry mathematically. That does **not** identify semantic axes: a regular simplex is symmetric under orthogonal transformations. Semantic orientation enters through a shared calibration set whose rows denote the same texts or states across observers.
 
 ### 3.2 Artificial quasars
 
@@ -151,7 +151,7 @@ with
 \|q_i\|=1,\qquad q_i\cdot q_j=-\frac1k\quad(i\neq j).
 \]
 
-These points are the first **semantic quasars**. They need not be realizable as natural-language embeddings. Their role is metrological: they define a stable set of directions against which model states are measured.
+These points are the first **semantic quasars**. They need not be realizable as natural-language embeddings. Their role is metrological: they define a fixed external geometry. Their labels do not carry semantic identity. Calling one vertex `Q17` does not make the corresponding native direction in two independently trained models the same direction.
 
 For a normalized semantic state \(y\), define its quasar coordinates by
 
@@ -169,28 +169,30 @@ A model-specific embedding \(x\) is mapped to the SRF through a calibration func
 T_M:x\mapsto q.
 \]
 
-The first baseline is deliberately simple:
+The v0 calibration uses **shared correspondences**. Let \(c_1,\ldots,c_n\) be calibration items observed by every model. A designated reference observer is centered and whitened to dimension \(k\); its resulting coordinates on those frozen items become a canonical target matrix \(Y\in\mathbb R^{n\times k}\). For another model \(M\), let \(X_M\) be its independently whitened coordinates for the same row-paired items. We then fit
 
-1. center a calibration corpus;
-2. whiten or otherwise reduce anisotropy;
-3. project to an effective dimension \(k\);
-4. align to a canonical basis by an orthogonal Procrustes transformation;
-5. express the result relative to the fixed quasar frame.
+\[
+R_M^*=\arg\min_{R^TR=I}\|X_MR-Y\|_F,
+\]
 
-A learned adapter is a later baseline, not the starting assumption. This ordering makes it possible to ask whether a purely geometric calibration already preserves trajectories.
+using orthogonal Procrustes, and define \(T_M(x)=W_M(x)R_M^*\), where \(W_M\) is that model's fitted centering/whitening transform. The artificial quasars are then evaluated in this shared coordinate system.
+
+This calibration resolves the rotational gauge only to the extent that the paired calibration examples span the retained dimension and generalize to unseen items. A second SVD of an already whitened cloud cannot provide this identification: after whitening, equalized variance leaves orthogonal orientation unconstrained. Sign fixing resolves only a \(\pm\) ambiguity and is not a substitute for cross-model anchoring.
+
+A learned adapter is a later baseline, not the starting assumption.
 
 ### 3.4 What would count as success?
 
-An SRF is useful if it preserves the relationships needed for navigation, not if it reproduces native coordinates. Relevant tests include:
+An SRF is useful if it preserves the relationships needed for navigation and, when cross-model alignment is claimed, if independently fitted observers produce the **same held-out coordinates** for corresponding items. Relevant tests include:
 
-- neighborhood preservation;
-- local distance and angle preservation;
-- trajectory-shape preservation;
-- stability across random rotations introduced synthetically;
-- alignment between compatible model families;
+- held-out canonical-coordinate RMSE and cosine agreement across observers;
+- nearest-quasar agreement on held-out items;
+- degradation under deliberately shuffled calibration correspondences;
+- neighborhood, local distance, angle, and trajectory-shape preservation;
+- synthetic recovery from unknown rotations/reflections and anisotropic scalings;
 - graceful degradation as canonical dimension decreases.
 
-Cross-model universality is a stronger claim and requires independent evidence. The initial experiments test only whether a fixed external frame is *usable*, not whether it is universal.
+Distance preservation alone cannot validate the shared-frame claim because distances and angles are already invariant under global orthogonal rotations. Cross-model universality is stronger still: success on two observers would establish calibrated interoperability for that pair, not a universal semantic sky.
 
 ## 4. The Semantic Atlas
 
@@ -485,14 +487,15 @@ A same-family pair is a convenience for the toy study, not evidence of generalit
 
 ### 9.2 Experiment A: reference frame and observational atlas
 
-Construct a deterministic 64-dimensional simplex SRF with 65 quasars. Embed a frozen corpus of prompts and continuations, calibrate into the SRF, segment trajectories at multiple horizons, and build a graph of semantic cells and transitions.
+Construct a deterministic 64-dimensional simplex SRF with 65 quasars. Freeze a row-paired calibration set across a reference observer and at least one independent transfer observer. Derive canonical calibration targets once from the reference observer, fit each transfer observer by paired Procrustes, and reserve separate held-out texts for the identifiability test. Then embed the frozen trajectory corpus, segment trajectories at multiple horizons, and build a graph of semantic cells and transitions.
 
 Primary questions:
 
+- Do independently fitted observers agree on held-out canonical vectors and quasar coordinates?
+- Does that agreement collapse when calibration correspondences are shuffled?
 - Does the frame preserve useful local geometry?
 - Are trajectory measures stable across reasonable chunk sizes?
 - Do repeated prompts expose consistent corridors and basin-like regions?
-- Are synthetic rotations removed by the calibration as intended?
 
 ### 9.3 Experiment B: MPC navigation
 
@@ -591,9 +594,9 @@ The programme is useful only if its claims can fail independently.
 
 ### H2 — Artificial reference frame
 
-**Claim:** a fixed quasar frame plus calibration preserves navigation-relevant structure.
+**Claim:** fixed quasar geometry plus paired empirical calibration can resolve enough cross-model gauge freedom to preserve navigation-relevant structure.
 
-**Fails if:** it introduces material distortion relative to native-space baselines or offers no stability under transformations/model changes.
+**Fails if:** independently fitted observers disagree materially on held-out canonical coordinates, if shuffled correspondences perform similarly to correct correspondences, or if the transformation introduces material distortion relative to dimensionality-matched native-space baselines.
 
 ### H3 — Atlas approximation
 
@@ -623,7 +626,7 @@ The programme is useful only if its claims can fail independently.
 
 The proposal sits at the intersection of several established research lines and should not be interpreted as claiming invention of their components.
 
-**Relative representations.** Moschella et al. (2022) showed that representing samples by similarity to fixed anchors can create invariance to latent-space transformations and enable communication across latent spaces. The SRF adopts the relative-coordinate motivation but makes the landmarks artificial and treats model data as calibration for a navigational frame.
+**Relative representations.** Moschella et al. (2022) showed that representing samples by similarity to fixed anchors can create invariance to latent-space transformations and enable communication across latent spaces. The SRF adopts the relative-coordinate motivation but separates artificial landmark geometry from semantic anchoring: paired calibration examples align each observer to one frozen target cloud, after which artificial quasars provide a shared metrological basis.
 
 **Text geometry.** Grover et al. (2026) propose a text-native curvature signal derived from left/right contextual beliefs and show practical uses in compression and routing. Semantic Atlas instead treats an entire generated discourse as a trajectory and asks whether trajectory geometry is useful for planning and control.
 
@@ -661,7 +664,7 @@ The Semantic Atlas framework deliberately assigns different jobs to different re
 
 The language model is the **microscopic engine**: it contains the detailed conditional machinery required to produce grammatical, context-sensitive language.
 
-The SRF is the **geodetic system**: it defines coordinates that do not inherit the arbitrary orientation of one model's embedding space.
+The SRF is the **geodetic system**: artificial quasars define the external geometry, while shared calibration correspondences determine how each model is oriented within it. The sky can be invented; making two telescopes agree about where that sky is remains an empirical calibration problem.
 
 The atlas is the **macroscopic map**: it summarizes which regions exist, how they connect, what costs are associated with movement, and where the map is uncertain.
 
@@ -675,7 +678,7 @@ The strongest version of the hypothesis is therefore not that semantic embedding
 
 ## 15. Conclusion
 
-This paper proposes a research programme for turning language-model semantics into a navigable dynamical object. Artificial quasars provide a fixed coordinate frame; multiscale trajectories provide the moving object; the Semantic Atlas records density, potential, transition, control cost, and reachability; route planning chooses admissible low-cost paths; and the Semantic Servo attempts to realize those paths through local generation control.
+This paper proposes a research programme for turning language-model semantics into a navigable dynamical object. Artificial quasars provide a fixed external geometry and paired calibration supplies its semantic orientation; multiscale trajectories provide the moving object; the Semantic Atlas records density, potential, transition, control cost, and reachability; route planning chooses admissible low-cost paths; and the Semantic Servo attempts to realize those paths through local generation control.
 
 The framework is intentionally more ambitious than the evidence currently supports. Its value therefore depends on disciplined decomposition. A useful SRF can exist even if weight compilation fails. Semantic MPC can demonstrate controllability even if it is computationally inefficient. A Semantic Servo can reduce wasted rollouts without proving that hidden reasoning is universally lower-dimensional. A compiled output-head map can preserve lexical geometry without reproducing transformer dynamics.
 
