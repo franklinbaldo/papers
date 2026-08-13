@@ -20,6 +20,7 @@ every pull request.
 * [Interpretability Paper](types/interpretability-paper.md) - general interpretability position paper.
 * [Companion Note](types/companion-note.md) - subordinate supporting document for a paper.
 * [Adversarial Critique](types/adversarial-critique.md) - living attack thread against a paper's thesis.
+* [Adversarial Blog](types/adversarial-blog.md) - dated long-form record of one substantive adversarial round.
 * [Supportive Defense](types/supportive-defense.md) - living defense thread for a paper's thesis.
 * [Session Log Entry](types/session-log-entry.md) - dated changelog entry for one debate-apparatus session.
 * [Protocol](types/protocol.md) - canonical rules document for a repeatable process.
