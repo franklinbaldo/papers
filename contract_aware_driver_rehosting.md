@@ -1,62 +1,60 @@
 ---
 type: "Technical Paper"
-title: "Privilege Ceilings, Capability Floors: User-Mode Rehosting of Windows Drivers"
-description: "A position and methodology paper on lowering the practical cost of driver analysis without elevating the researcher's Windows privilege token."
-tags: [driver-rehosting, windows, litebox, security-research, methodology, dual-use]
+title: "Contract-Aware Shadow Checking for User-Mode Windows Driver Rehosting"
+description: "A methodology for detecting buffered-I/O contract violations in a calibrated driver-rehosting harness, framed by privilege ceilings and researcher affordance floors."
+tags: [driver-rehosting, windows, litebox, shadow-checking, security-research, methodology, dual-use]
 timestamp: 2026-08-13T00:00:00-04:00
 ---
 
-# Privilege Ceilings, Capability Floors: User-Mode Rehosting of Windows Drivers
+# Contract-Aware Shadow Checking for User-Mode Windows Driver Rehosting
+
+## Privilege ceilings and researcher affordance floors
 
 > **Position and methodology paper.** LiteBox capability brokering and two
 > read-only Windows backends have been demonstrated. Windows `.sys` loading, a
 > synthetic NT ABI, shadow checking, and third-party-driver evaluation remain
-> proposals. This paper reports no driver vulnerability.
+> proposals. This paper reports no driver vulnerability. Empirical results must
+> revise this paper rather than be implied retroactively.
 
 ## Abstract
 
 Privilege is often modeled as a scalar: a process either gains authorization or
 it does not. Program rehosting exposes a second axis. A non-administrative
 Windows process that rehosts selected driver logic retains the same token, yet
-may gain practical access to relocation, synthetic requests, memory tracing, and
-process-local fuzzing without installing the driver, possessing its hardware,
-or rebooting after every failure. We call the invariant authorization boundary
-the **privilege ceiling** and the minimum routinely accessible analytical
-repertoire the **capability floor**.
+may lower the cost of relocation, synthetic requests, memory tracing, and
+process-local fuzzing. We call the invariant authorization boundary the
+**privilege ceiling** and the set of research actions affordable under an
+explicit resource budget the **researcher affordance floor**. This usage follows
+the repository's [affordance-restriction framework](affordance_restriction.md);
+it is intentionally distinct from LiteBox's capability-based access registry.
 
-This paper formalizes that distinction and proposes a fail-closed methodology
-for rehosting purpose-built Windows driver binaries in user mode. The design
-combines a PE loader, minimal NT ABI, synthetic `METHOD_BUFFERED` requests, an
-instrumented allocator, explicit IRQL state, and a SystemBuffer Shadow Checker
-that detects contractual out-of-bounds writes even when they remain inside the
-I/O manager's physical allocation. Calibration, abandonment, isolation, and
-coordinated-disclosure gates must pass before any third-party driver is tested.
-The claim is not that rehosting reproduces Windows kernel execution. It is that
-a calibrated artifact may lower the cost of producing useful, qualified
-evidence while leaving the Windows privilege ceiling unchanged.
+The primary technical proposal is a SystemBuffer Shadow Checker for synthetic
+`METHOD_BUFFERED` requests. It detects contractual out-of-bounds writes even
+when they remain inside the I/O manager's physical allocation, a class invisible
+to a trailing guard page alone. A PE loader, minimal NT ABI, instrumented
+allocator, explicit IRQL state, isolation, calibration, abandonment, and
+coordinated-disclosure gates support that sensor. The paper does not claim that
+rehosting reproduces Windows or eliminates VMs for hostile targets. Toys written
+by the researcher may support local iteration; third-party native code requires
+a disposable VM unless a stronger boundary is demonstrated.
 
-## 1. Privilege and capability are different axes
+## 1. Privilege ceiling and affordance cost
 
-Represent an actor's effective position as
+Let `A` be a preregistered set of research actions, such as relocating a PE,
+dispatching one request, recovering from a fault, and reproducing a finding.
+For workflow `w`, measure each action with the cost vector
+`cost_w(a) = (operator time, machine time, privileged steps, resets, hardware,
+uncontained failures)`. Given an explicit budget `B`, its affordable set is
+`F_w(B) = {a in A | cost_w(a) <= B}`. The **researcher affordance floor** is this
+measured set, not a mathematical minimum and not an authorization primitive.
 
-\[
-S=(P,C),
-\]
-
-where \(P\) is the highest host authority available and \(C\) is the set of
-actions practically achievable with available tooling, knowledge, time, and
-infrastructure. A rehosting workflow may preserve \(P\) while expanding \(C\):
-
-\[
-P'=P, \qquad C'=C\cup\{\text{relocation, synthetic dispatch, write tracing,
-process-local fuzzing}\}.
-\]
-
-Therefore \(P'=P\) does not imply \(C'=C\). “No privilege is gained” is correct
-about authorization and incomplete about practical power. The converse
-overstatement is also wrong: a rehosted `.sys` has no ring-0 execution, DMA,
-interrupts, physical memory, or arbitrary device handles merely because its
-code can be invoked.
+The Windows privilege ceiling `P_w` is recorded separately from cost. The
+testable hypothesis is that `P_rehost = P_baseline` while, for at least one
+preregistered budget, `F_rehost(B)` strictly contains `F_baseline(B)`. Failure
+to observe that difference rejects the cost claim. “No privilege is gained” is
+therefore correct about authorization but does not settle empirical questions
+about accessibility. Conversely, invoking `.sys` code grants no ring-0
+execution, DMA, interrupts, physical memory, or arbitrary device handles.
 
 The distinction has a dual-use consequence. Removing installation, hardware,
 recovery, and instrumentation costs can broaden defensive participation. It can
@@ -130,32 +128,28 @@ sensor, not containment; crashes and loops require a separate process boundary.
 ## 4. The SystemBuffer Shadow Checker
 
 For a synthetic `METHOD_BUFFERED` request, the modeled I/O manager allocates
-
-\[
-N=\max(\text{InputBufferLength},\text{OutputBufferLength}),
-\]
-
-copies bounded input into `SystemBuffer`, invokes dispatch, and models bounded
+`N = max(InputBufferLength, OutputBufferLength)`, copies bounded input into
+`SystemBuffer`, invokes dispatch, and models bounded
 copy-back. Physical bounds and caller contract are different. With input length
 64 and output length 8, a 32-byte write may remain inside the allocation while
 violating the output contract. A guard page alone misses it.
 
-The checker records every write interval
-
-\[
-W_i=[o_i,o_i+s_i)
-\]
-
-and its high-water mark \(H=\max_i(o_i+s_i)\). At dispatch return or synthetic
+The checker records every write interval `W_i = [o_i, o_i + s_i)` and the
+high-water mark `H = max_i(o_i + s_i)`. At dispatch return or synthetic
 completion, `H > OutputBufferLength` emits `UNBOUNDED_WRITE`, independently of
 page faults. `IoStatus.Information > OutputBufferLength` emits a distinct
 invalid-completion event. Events include IOCTL, input/output lengths, offending
 interval, high-water mark, completion length, and available write-site trace.
 
-Contractual overflow inside \(N\), physical overflow beyond \(N\), and harness
+Contractual overflow inside `N`, physical overflow beyond `N`, and harness
 bookkeeping error are separate evidence classes. Any compatibility exception
 must be explicit, narrow, hash- and operation-bound, documented, and visible in
 output—never silently suppressed.
+
+Microsoft documents broad I/O checks in Driver Verifier's Enhanced I/O
+Verification, but not a guarantee for this exact contractual-within-allocation
+case. Whether Driver Verifier reports the same seeded violation is therefore a
+controlled baseline question, not an assumed advantage of this checker.
 
 ## 5. Threat model and isolation
 
@@ -173,6 +167,14 @@ registry, and event serialization all process hostile input. `--hardware none`
 requires external effects to be rejected or simulated; it does not make native
 code harmless.
 
+Two execution regimes keep the cost claim honest. A purpose-built toy, whose
+source and build are controlled by the researchers, may run locally in the
+disposable child after ordinary review. Any third-party `.sys` runs only in a
+disposable VM without personal credentials or unrelated user data, with network
+access disabled unless the protocol requires it. Rehosting may remove repeated
+guest crash/reboot cycles; it does not remove the VM requirement for hostile
+native code.
+
 The initial experiment forbids driver installation, SCM registration, physical
 memory, port I/O, DMA, interrupts, and arbitrary `DeviceIoControl` relay. Any
 future physical effect must cross a typed, policy-checked capability backend.
@@ -183,10 +185,13 @@ The empirical question is whether rehosting changes research cost while
 producing calibrated evidence.
 
 - **RQ1:** Which actions become practical under an unchanged Windows token?
-- **RQ2:** How do setup, recovery, throughput, and infrastructure compare with a
+- **RQ2:** Under local-toy and disposable-VM regimes, how do setup, recovery,
+  throughput, privileged steps, and uncontained failures compare with a
   Windows VM/kernel-debugging workflow?
-- **RQ3:** Does shadow checking detect every seeded buffered-I/O violation,
-  including writes contained within the physical allocation?
+- **RQ3:** What sensitivity and false-positive rate does shadow checking achieve
+  on preregistered, mutation-generated, and held-out buffered-I/O cases?
+- **RQ3b:** Does Driver Verifier report the same contractual-within-allocation
+  violations under an otherwise matched native execution?
 - **RQ4:** Which false-positive and false-negative classes follow from the
   minimal ABI, fixed IRQL, and missing hardware/concurrency?
 - **RQ5:** Which crash, hang, exhaustion, and forbidden-operation cases can be
@@ -203,18 +208,40 @@ producing calibrated evidence.
 | Fidelity | Windows baseline | partial and bounded |
 | Host-crash exposure | possible | target: process-local failure |
 
+Before implementation, the study records task definitions, corpus and mutation
+seeds, repository commits, image hashes, Windows/WDK/WinDbg/Verifier versions,
+snapshot state, hardware, and start/stop rules. Wall-clock time begins when an
+operator starts target setup and ends at classified evidence or a declared
+inconclusive result. Recovery time begins at fault detection and ends when the
+next clean trial can start. Raw per-run data records operator and machine time,
+privileged steps, resets, executions, failures, and exclusions.
+
+The same machine and VM image are used where possible. Task order is
+counterbalanced (`AB`/`BA`) to reduce learning effects. Multiple operators are
+preferred; an author-only run is labeled a pilot or anecdotal cost report, not
+general evidence. Third-party targets are compared inside disposable VMs in
+both workflows; an unsafe local third-party run is never used to improve the
+rehosting result.
+
 The positive toy corpus seeds boundary writes, contractual and physical
 overflows, oversized completion, use-after-free, double-free, IRQL mismatch,
 unsupported import, forbidden operation, crash, and loop. A conforming negative
-corpus mirrors request shapes. Outcomes are machine-readable and classified as
-expected finding, harness defect, unsupported, inconclusive, or unexpected.
+corpus mirrors request shapes. At least one corpus commit predates detector
+implementation, mutations are generated independently of detector branches,
+and a held-out set is disclosed only after the checker is frozen. HEVD is a
+prospective GPL-licensed community baseline after all safety gates pass; its
+supported IOCTL paths and expected outcomes must be selected in advance, and a
+partial result must not be described as broad HEVD support. Outcomes are
+machine-readable and classified as expected finding, harness defect,
+unsupported, inconclusive, or unexpected.
 
 ## 7. Calibration and abandonment
 
 No third-party driver executes merely because the toy runs. The proposed gate
-requires 100% detection of seeded cases across repeated clean runs, zero
-unexplained findings in the conforming corpus, and containment of every crash
-and hang toy. These are preregistered targets, not retrospective claims.
+requires 100% detection of preregistered seeded cases across repeated clean
+runs, zero unexplained findings in the conforming corpus, successful evaluation
+of the frozen held-out set, and containment of every crash and hang toy. These
+are calibration criteria, not a claim of general sensitivity.
 
 The experiment stops at read-only PE inspection if:
 
@@ -251,7 +278,7 @@ traces, negative controls, and a minimally weaponized private PoC. Restricted
 binaries and private dump data are not published. Disclosure waits for vendor
 coordination or an agreed timeline.
 
-## 9. Dual use
+## 9. Dual use and artifact release
 
 Rehosting may remove installation, hardware, recovery, and instrumentation
 costs. That helps defenders and may also broaden access to defect discovery.
@@ -264,6 +291,18 @@ states, private findings, and coordinated disclosure.
 is granted. The system raises practical capacity within a constrained research
 domain.
 
+Release is staged. Documentation and read-only PE inspection may be public.
+The toy ABI, checker, and non-weaponized synthetic corpus may be released only
+after calibration, with fail-closed defaults and no third-party trigger inputs.
+Third-party adapters, corpora, or reproductions require a separate security and
+licensing review; material tied to an undisclosed finding remains private until
+coordination permits release. Arbitrary host-effect bridges are neither bundled
+nor enabled by a hardware profile.
+
+Publication cannot force downstream users to preserve these controls. That
+residual dual-use risk must be reassessed at every release gate and documented
+alongside which components, targets, and evidence were withheld.
+
 ## 10. Related work
 
 ECMO demonstrates peripheral transplantation for embedded-Linux-kernel
@@ -273,10 +312,17 @@ driver reachability and replay. These systems motivate dependency control, but
 our proposed experiment is narrower: a purpose-built Windows driver, no real
 device, and a contract-level buffered-I/O sensor.
 
+kAFL established hardware-assisted OS fuzzing and has a documented
+Windows-driver workflow; syzkaller now lists Windows as a supported platform.
+BSOD and USBFuzz directly study Windows-driver fuzzing, while HEVD provides a
+public vulnerable-driver training corpus. These are baselines and candidate
+corpora, not evidence that the proposed checker is superior.
+
 Windows Driver Verifier is the kernel-realistic baseline for memory and IRQL
-checks, not something this artifact replaces. The proposed contribution is
-earlier, cheaper, process-local instrumentation whose findings remain qualified
-until reproduced independently.
+checks, not something this artifact replaces. The proposed contribution is a
+contract-aware, process-local sensor. Claims that it is earlier or cheaper are
+pending RQ2/RQ3b measurements and remain qualified until independent
+reproduction.
 
 ## 11. Limitations
 
@@ -286,12 +332,25 @@ objects may diverge from Windows. Compiler, WDK, framework, and ABI differences
 may make binaries unsupported. A non-admin process sandbox is not a hypervisor.
 Instrumentation can alter behavior and can itself be defective.
 
-The capability-floor thesis remains conceptual until research costs are
+The affordance-floor thesis remains conceptual until research costs are
 measured. Current toys establish typed brokering and CPU access, not `.sys`
 execution or the magnitude of cost reduction. Empirical results must revise
 this paper rather than be implied retroactively.
 
-## 12. Conclusion
+## 12. Validation roadmap
+
+- **August–September 2026:** freeze the RFC, threat model, read-only PE
+  inspector, task protocol, corpus commit, mutation method, and VM baseline.
+- **October–November 2026:** implement the toy ABI and disposable-child
+  boundary; stop if containment or import bounds fail.
+- **December 2026–January 2027:** freeze the checker, execute positive,
+  negative, mutation-generated, and held-out toy trials, and publish raw data.
+- **February–March 2027:** run the counterbalanced VM/WinDbg/Driver Verifier
+  comparison; label a single-operator result as a pilot.
+- **After all gates pass:** preregister and evaluate narrowly selected HEVD
+  paths in a credential-free disposable VM. No date overrides a failed gate.
+
+## 13. Conclusion
 
 Privilege and practical capability are non-identical. Driver rehosting may keep
 a non-admin token unchanged while making driver logic easier to execute,
@@ -326,3 +385,17 @@ If calibration fails, read-only inspection is the honest endpoint.
 [11] Jang et al., [ReUSB](https://www.usenix.org/system/files/usenixsecurity23-jang.pdf), USENIX Security 2023.
 
 [12] [Microsoft Coordinated Vulnerability Disclosure](https://www.microsoft.com/en-us/msrc/cvd) and [MSRC Researcher Portal](https://msrc.microsoft.com/report/vulnerability/new).
+
+[13] Schumilo et al., [kAFL: Hardware-Assisted Feedback Fuzzing for OS Kernels](https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/schumilo), USENIX Security 2017.
+
+[14] Intel Labs, [Fuzzing a Windows Kernel Driver with kAFL](https://intellabs.github.io/kAFL/tutorials/windows/driver/index.html).
+
+[15] Google, [syzkaller: Supported OSes](https://github.com/google/syzkaller/blob/master/README.md).
+
+[16] Maier and Toepfer, [BSOD: Binary-only Scalable fuzzing Of device Drivers](https://dmnk.co/raid21-bsod.pdf), RAID 2021.
+
+[17] Peng and Payer, [USBFuzz: A Framework for Fuzzing USB Drivers by Device Emulation](https://www.usenix.org/system/files/sec20-peng_0.pdf), USENIX Security 2020.
+
+[18] HackSys Team, [HackSys Extreme Vulnerable Driver](https://github.com/hacksysteam/HackSysExtremeVulnerableDriver), GPL-3.0.
+
+[19] Microsoft Learn, [Enhanced I/O Verification](https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/enhanced-i-o-verification).

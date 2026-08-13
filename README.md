@@ -51,7 +51,7 @@ Position papers and working drafts.
 
 ## Eixo segurança de sistemas / driver rehosting
 
-- `capability_floor_driver_rehosting.md` — position and methodology paper distinguishing privilege ceilings from capability floors and specifying a calibrated, fail-closed Windows-driver rehosting experiment
+- `contract_aware_driver_rehosting.md` — methodology paper proposing contract-aware SystemBuffer shadow checking, framed by privilege ceilings and researcher affordance floors
 
 ## Eixo interpretabilidade
 
