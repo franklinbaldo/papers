@@ -49,6 +49,10 @@ Position papers and working drafts.
 - `affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
 - `interstitial_agent.md` — agência, persistência informacional e segurança end-to-end em cadeias de LLMs conectadas por transdutores aprendidos
 
+## Eixo segurança de sistemas / driver rehosting
+
+- `capability_floor_driver_rehosting.md` — position and methodology paper distinguishing privilege ceilings from capability floors and specifying a calibrated, fail-closed Windows-driver rehosting experiment
+
 ## Eixo interpretabilidade
 
 - `pontifex.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
