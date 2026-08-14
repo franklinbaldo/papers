@@ -24,6 +24,7 @@ every pull request.
 * [Supportive Defense](types/supportive-defense.md) - living defense thread for a paper's thesis.
 * [Session Log Entry](types/session-log-entry.md) - dated changelog entry for one debate-apparatus session.
 * [Protocol](types/protocol.md) - canonical rules document for a repeatable process.
+* [Routine Prompt](types/routine-prompt.md) - verbatim operating instructions loaded by a scheduled routine.
 * [Audit Report](types/audit-report.md) - dated external review with findings and execution status.
 * [Session Log](types/session-log.md) - superseded precursor to Session Log Entry.
 * [Index](types/catalog-index.md) - human-facing catalog and reading guide (this repository's `README.md`).
