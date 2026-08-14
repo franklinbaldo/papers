@@ -181,6 +181,8 @@ This calibration resolves the rotational gauge only to the extent that the paire
 
 A learned adapter is a later baseline, not the starting assumption.
 
+The paired alignment, not the quasar construction, carries cross-model identification. Orthogonal Procrustes alignment for embedding interoperability is established prior art [Maystre et al., 2025], and shared multi-model reference spaces have been studied with Generalized Procrustes Analysis [Achara et al., 2026]. The SRF contribution under test is therefore not Procrustes or a shared latent universe by itself. It is whether a frozen calibrated frame, combined with explicit trajectory and route observables, supports the downstream navigation experiments better than matched native-space and alignment baselines.
+
 ### 3.4 What would count as success?
 
 An SRF is useful if it preserves the relationships needed for navigation and, when cross-model alignment is claimed, if independently fitted observers produce the **same held-out coordinates** for corresponding items. Relevant tests include:
@@ -376,22 +378,24 @@ e=\Delta q^*-F_H(h_{\ell,t}).
 
 ### 7.3 Semantic Jacobian
 
-The local sensitivity
+The trained future head supplies the surrogate sensitivity
 
 \[
-J^{sem}_{\ell,H}=\frac{\partial F_H}{\partial h_{\ell,t}}
+\widehat J^{sem}_{\ell,H}=\frac{\partial F_H}{\partial h_{\ell,t}}.
 \]
 
-answers a precise control question: how does a small change in the current hidden state change predicted semantic motion over horizon \(H\)? A regularized local intervention can solve
+This answers a limited question: how does a small change in the head's input change the head's **predicted** semantic motion over horizon \(H\)? Because \(F_H\) is fitted on observational hidden states, its derivative is not automatically the causal derivative of the transformer's generated trajectory under intervention. Before it is used as a controller, registered small perturbations must be injected at the frozen layer and token position; the measured change in future SRF state must then be compared with \(\widehat J^{sem}\delta h\), against matched random directions and across an error-versus-norm curve.
+
+Subject to that perturb-and-measure calibration, a regularized local intervention can solve
 
 \[
-J^{sem}\delta h\approx e.
+\widehat J^{sem}\delta h\approx e.
 \]
 
 One minimum-norm form is
 
 \[
-\delta h=(J^{sem})^\top(J^{sem}(J^{sem})^\top+\lambda I)^{-1}e.
+\delta h=(\widehat J^{sem})^\top(\widehat J^{sem}(\widehat J^{sem})^\top+\lambda I)^{-1}e.
 \]
 
 The intervention is then
@@ -462,11 +466,14 @@ Within a sufficiently small semantic cell \(c\), approximate the dynamics by
 q_{t+1}\approx A_cq_t+B_cu_t+b_c.
 \]
 
-If this approximation remains valid over multiple steps, then coarse planning can use operator composition rather than lexical simulation:
+If this approximation remains valid over multiple steps within one cell, then coarse planning can use operator composition rather than lexical simulation. For a registered control sequence,
 
 \[
-q_{t+n}\approx A_c^nq_t+\sum_{j=0}^{n-1}A_c^jb_c.
+q_{t+n}\approx A_c^nq_t+
+\sum_{j=0}^{n-1}A_c^j\left(B_cu_{t+n-1-j}+b_c\right).
 \]
+
+The simpler expression \(A_c^nq_t+\sum_{j=0}^{n-1}A_c^jb_c\) applies only to the explicitly uncontrolled case \(u_t=0\).
 
 This is the strongest efficiency hypothesis in the programme. It would allow the planner to jump across semantic time at coarse resolution and invoke token-level generation only when required. It is also the easiest hypothesis to falsify if local linear models rapidly lose predictive accuracy.
 
@@ -514,7 +521,7 @@ A result in which MPC reaches goals more reliably but consumes substantially mor
 
 ### 9.4 Experiment C: Semantic Servo
 
-Collect hidden states and future SRF displacements, train \(F_H\), and test whether closed-loop Jacobian steering can follow the same routes with fewer discarded generations.
+Collect hidden states and future SRF displacements and train \(F_H\). Before route steering, freeze a layer, token position, horizon, perturbation-norm grid, and held-out prompt-family split; inject registered small perturbations and test whether \(\widehat J^{sem}\delta h\) predicts the **measured** change in future SRF state. Only after that causal local-calibration gate should closed-loop Jacobian steering be tested on the same routes with fewer discarded generations.
 
 Compare against static activation addition and random control vectors with matched norm. Measure semantic route error, KL drift, control energy, output quality, token count, and total runtime.
 
@@ -690,10 +697,12 @@ The intended end state is therefore not a map the size of Borges's empire. It is
 
 ## References
 
+- Achara, A., Gaintseva, T., Mahaut, M., et al. (2026). **Multi-Way Representation Alignment.** arXiv:2602.06205. https://arxiv.org/abs/2602.06205
 - Gurnee, W., Sofroniew, N., Pearce, A., et al. (2026). **Verbalizable Representations Form a Global Workspace in Language Models.** Transformer Circuits Thread / arXiv:2607.15495. https://transformer-circuits.pub/2026/workspace/index.html
 - Grover, K., Zeng, H., Xia, Y., Faloutsos, C., & Gordon, G. J. (2026). **Text Has Curvature.** arXiv:2602.13418. https://arxiv.org/abs/2602.13418
 - Jiang, E. H., Ou, W., Liu, R., et al. (2026). **Mitigating Over-Refusal in Aligned Large Language Models via Inference-Time Activation Energy.** ACL 2026. https://aclanthology.org/2026.acl-long.1759/
 - Li, J., Li, Y., & Huang, K.-H. (2026). **Steering Vector Fields for Context-Aware Inference-Time Control in Large Language Models.** arXiv:2602.01654. https://arxiv.org/abs/2602.01654
+- Maystre, L., Ortega Gonzalez, A., Park, C., et al. (2025). **When Embedding Models Meet: Procrustes Bounds and Applications.** arXiv:2510.13406. https://arxiv.org/abs/2510.13406
 - Moschella, L., Maiorca, V., Fumero, M., Norelli, A., Locatello, F., & Rodolà, E. (2022). **Relative representations enable zero-shot latent space communication.** arXiv:2209.15430. https://arxiv.org/abs/2209.15430
 - Zhang, Y., Li, M., Long, D., et al. (2025). **Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models.** arXiv:2506.05176. https://arxiv.org/abs/2506.05176
 
