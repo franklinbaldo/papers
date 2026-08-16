@@ -193,6 +193,7 @@ Mitigations include:
 4. Which reward components are most predictive of later successful publication or merge?
 5. Can a small ledger plus bandit selector outperform a fixed hourly prompt?
 6. How much of the system can remain deterministic while the reasoning stays in ChatGPT?
+7. Can populations of independently trained ASP agents be merged or distilled into a policy that preserves complementary temporal and contextual strengths better than simple weight averaging?
 
 ## 12. Conclusion
 
@@ -240,3 +241,172 @@ r_t = mean_h(v'_t,h) - lambda * calibration_error_t
 while preserving the full vector `G_t+1[h]` in the training data. This scalar is only a temporary interface for a bandit selector. A richer RL model should consume the multi-horizon vector directly and learn representations of which strategies lead to desirable future-state distributions.
 
 This temporal critic loop adds a second learning problem to ASP: the system learns not only which prompt strategies produce good futures, but also how well its current agent can anticipate the future value of its own work. Calibration itself therefore becomes part of the learned representation of agent quality.
+
+## Appendix B. Parallel Agent Training, Fusion, and Policy Lineage
+
+ASP naturally supports training more than one agent in parallel. Two agents may start from the same policy family but receive different sampled prompts, different trajectories, or different subsets of project experience. The objective of fusion is therefore not to average personalities or parameters indiscriminately. It is to combine **evidence about which futures each policy tends to produce** while preserving uncertainty, temporal specialization, and provenance.
+
+### B.1. Bayesian posterior fusion for compatible linear heads
+
+For the initial neural-linear or Bayesian-linear form of ASP, each temporal output head can retain its posterior sufficient statistics instead of storing only a point estimate of the final weights. Let a Gaussian linear head be represented in natural parameters by precision matrix `Lambda` and precision-weighted mean `eta = Lambda mu`.
+
+If two agents `A` and `B` were initialized from the same prior `(Lambda_0, eta_0)` and trained on non-overlapping evidence, their posterior information can be combined without replaying every observation:
+
+```text
+Lambda_AB = Lambda_A + Lambda_B - Lambda_0
+eta_AB    = eta_A    + eta_B    - eta_0
+mu_AB     = inverse(Lambda_AB) eta_AB
+```
+
+The subtraction prevents the common prior from being counted twice. The merge is performed independently for every ASP output, for example:
+
+```text
+hour.importance
+hour.quality
+day.importance
+day.quality
+week.importance
+week.quality
+month.importance
+month.quality
+year.importance
+year.quality
+```
+
+This permits one agent's stronger short-horizon evidence and another agent's stronger long-horizon evidence to contribute according to posterior confidence rather than an arbitrary 50/50 average.
+
+A direct posterior merge is valid only when the checkpoints share a compatible coordinate system. A merge manifest should therefore bind at least:
+
+```text
+model_family
+architecture_version
+encoder_id
+encoder_version
+feature_schema_hash
+prior_id
+reward_schema_version
+```
+
+If any of these differ materially, direct parameter fusion must be rejected rather than silently producing a meaningless model.
+
+### B.2. Why naive neural weight averaging is insufficient
+
+Once agents learn independent neural representations, parameter coordinates need not remain semantically aligned. One network may encode a feature such as `external blocker` in one hidden unit while another encodes an equivalent feature in a different unit or distributed direction. Elementwise averaging can therefore destroy useful representations even when the two policies behave similarly.
+
+Weight averaging or model soups remain plausible when models are fine-tuned from the same base checkpoint, use the same architecture, remain in a compatible basin, and pass empirical interpolation checks. ASP should nevertheless treat this as an evaluated merge method, not a default assumption.
+
+### B.3. Mixture of experts as contextual fusion
+
+A stronger notion of obtaining the “best of both” is to learn when each agent should be trusted. Let two trained policies produce action distributions `pi_A(a|s)` and `pi_B(a|s)`. A gating model can learn a contextual coefficient `alpha(s)`:
+
+```text
+pi_mix(a|s) = alpha(s) pi_A(a|s)
+            + (1 - alpha(s)) pi_B(a|s)
+```
+
+The gate can itself be multi-horizon. Agent `A` may be more reliable for immediate gate closure while agent `B` produces states that score better at week or year horizons. A horizon-conditioned gate can therefore estimate:
+
+```text
+V_h^mix(s, a)
+  = alpha_h(s) V_h^A(s, a)
+  + (1 - alpha_h(s)) V_h^B(s, a)
+```
+
+This turns agent fusion into a policy-selection problem over policies. Instead of constructing an average agent, the system learns **which agent is a useful expert in which state and at which horizon**.
+
+### B.4. Distillation into a single successor agent
+
+An ensemble or mixture may be expensive to serve. Once a gating ensemble demonstrates superior behavior, it can become a teacher for a single student policy. A replay corpus supplies project states and candidate prompts; the teacher produces action probabilities, multi-horizon values, successor-feature targets, and uncertainty estimates. The student then learns to approximate the combined policy:
+
+```text
+state + candidate prompts
+        ↓
+teacher ensemble / mixture
+        ↓
+policy distribution
+multi-horizon value vector
+successor representation
+        ↓
+student ASP agent
+```
+
+Distillation should preserve more than the selected action. Matching the teacher's full action distribution and temporal value vector allows the student to retain information about near-ties, uncertainty, and complementary long-horizon strengths.
+
+### B.5. Recursive fusion and populations
+
+Fusion can be recursive. Agents `A` and `B` may form `AB`; agents `C` and `D` may form `CD`; the descendants may later be combined or distilled again. This creates a population-level optimization process:
+
+```text
+A ─┐
+   ├→ AB ─┐
+B ─┘      │
+          ├→ ABCD
+C ─┐      │
+   ├→ CD ─┘
+D ─┘
+```
+
+The important object is therefore not only a checkpoint but a **policy lineage**. Each checkpoint artifact should record its parents and the transformation that created it:
+
+```yaml
+agent_id: agent-AB
+parents:
+  - agent-A
+  - agent-B
+fusion:
+  method: bayesian-posterior
+  compatibility_manifest: sha256:...
+```
+
+For mixtures or distilled descendants, the lineage records the gate, teacher ensemble, training corpus manifest, and evaluation set. This makes population experiments reproducible and allows retrospective analysis of which lineages produced better future-state distributions.
+
+### B.6. Preventing double counting
+
+Parallel agents may train on overlapping trajectories. Naively combining their posterior statistics would then count shared evidence multiple times. Every training corpus and checkpoint should therefore identify the experience set from which it was derived, ideally by immutable cycle-report concept IDs or a digest of the selected corpus rows.
+
+A merger can then distinguish:
+
+- disjoint evidence, which permits direct posterior addition under compatible priors;
+- partially overlapping evidence, which requires subtracting or replaying the shared subset;
+- identical evidence with divergent stochastic training, which is better handled as an ensemble or distillation experiment rather than evidence fusion.
+
+This is especially important in repository-bound ASP because multiple agents can observe the same public Git state while exploring different prompt strategies.
+
+### B.7. Population selection and evolutionary experiments
+
+A population of ASP agents permits a higher-level experimental loop. Agents can be varied by strategy generator, exploration parameter, temporal scalarization, representation architecture, or critic calibration. Evaluation then selects parents using held-out trajectories or online outcomes, and a new generation is produced by posterior fusion, mixture gating, distillation, mutation, or fresh initialization.
+
+The resulting process resembles evolutionary search, but the inheritance mechanism is explicit and auditable. Instead of treating a child as an opaque mutation, ASP can state what was inherited: posterior evidence, prompt-generation behavior, representation weights, or teacher policy outputs.
+
+A particularly useful experiment is to compare three descendants from the same parents:
+
+```text
+Bayesian merged child
+Mixture-of-experts child
+Distilled child
+```
+
+against both parents and a fixed-policy baseline. The comparison can be performed separately at hour, day, week, month, and year horizons. This tests whether policy fusion actually preserves complementary strengths or merely raises average short-term reward.
+
+### B.8. Artifact contract for mergeable agents
+
+A mergeable ASP checkpoint should be a structured artifact rather than a bare tensor file. A minimal bundle is:
+
+```text
+policy-checkpoint/
+  manifest.json
+  feature-schema.json
+  prior.json
+  posterior/
+    hour-importance.*
+    hour-quality.*
+    ...
+    year-quality.*
+  training-corpus-manifest.json
+  evaluation.json
+  lineage.json
+```
+
+The manifest binds representation coordinates; the corpus manifest prevents accidental evidence duplication; `evaluation.json` records comparative performance; and `lineage.json` makes the agent genealogically inspectable. GitHub artifacts or equivalent immutable artifact stores can hold the large derived files, while the repository preserves the small manifests and OKF trajectory evidence required to reproduce them.
+
+The larger implication is that ASP can learn not only *which prompt should be selected next*, but also *which learned agent should govern the next decision*. Policy selection, agent selection, agent fusion, and agent evolution therefore become different scales of the same successor-oriented optimization problem.
