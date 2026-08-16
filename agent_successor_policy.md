@@ -197,3 +197,46 @@ Mitigations include:
 ## 12. Conclusion
 
 Agent Successor Policy reframes prompt selection as trajectory control. A recurring agent should not merely choose the next action; it should learn which behavioral mode tends to produce good future states across multiple time scales. The practical implementation can begin simply: store candidate prompts, select one by a lightweight policy, record outcomes, and upload derived weights as artifacts. Over time, the repository accumulates a dataset of agent behavior, rewards, and futures. The prompt becomes the executable surface of a learned representation of what kind of agent to be next.
+
+## Appendix A. Temporal Evaluator Ensemble and Forecast Calibration
+
+A practical difficulty in multi-horizon reinforcement signals is that genuinely observed weekly, monthly, or annual rewards arrive slowly. ASP can bootstrap a denser signal by asking the reasoning agent to simulate a small ensemble of temporally situated evaluators while keeping those simulations explicitly separate from external evidence.
+
+At the end of cycle `t`, the agent predicts how five future evaluators — hour, day, week, month, and year — would grade the cycle on two independent dimensions:
+
+```text
+F_t[h] = (importance_t,h, quality_t,h, rationale_t,h)
+```
+
+At the beginning of cycle `t+1`, before selecting the new strategy prompt, the agent reconstructs cycle `t` from repository evidence and again simulates each temporal evaluator:
+
+```text
+G_t+1[h] = (importance'_t,h, quality'_t,h, rationale'_t,h)
+```
+
+The first object is a **forecast**, not a reward. The second is a **retrospective simulated evaluation** made with one additional cycle of context. Their disagreement provides a calibration signal:
+
+```text
+E_t[h] = |importance_t,h - importance'_t,h|
+       + |quality_t,h - quality'_t,h|
+```
+
+This creates a useful separation between anticipated value and later self-critique. An agent that systematically exaggerates the future importance or quality of its own work accumulates forecast error even if it produces locally attractive reports. Conversely, an initially modest action that proves more useful to the next cycle can be revised upward.
+
+The evaluator horizons should not be interpreted as literal time travel. The year evaluator is a role-conditioned simulation asking whether the work appears durable under a year-scale objective, not an observed annual outcome. Real delayed outcomes can later supersede or augment these simulated grades. The ledger must therefore label forecasts, next-cycle retrospectives, and external rewards distinctly.
+
+A simple bootstrap scalarization can combine the two grades at each horizon as:
+
+```text
+v_t,h = importance_t,h × quality_t,h
+```
+
+and then penalize miscalibration:
+
+```text
+r_t = mean_h(v'_t,h) - lambda * calibration_error_t
+```
+
+while preserving the full vector `G_t+1[h]` in the training data. This scalar is only a temporary interface for a bandit selector. A richer RL model should consume the multi-horizon vector directly and learn representations of which strategies lead to desirable future-state distributions.
+
+This temporal critic loop adds a second learning problem to ASP: the system learns not only which prompt strategies produce good futures, but also how well its current agent can anticipate the future value of its own work. Calibration itself therefore becomes part of the learned representation of agent quality.
