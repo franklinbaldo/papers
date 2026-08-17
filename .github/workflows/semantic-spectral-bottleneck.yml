@@ -1,0 +1,50 @@
+name: Semantic spectral bottleneck smoke
+
+on:
+  pull_request:
+    paths:
+      - "experiments/semantic_atlas/spectral_bottleneck/**"
+      - ".github/workflows/semantic-spectral-bottleneck.yml"
+  push:
+    branches:
+      - "semantic-atlas/manifold-followup"
+      - main
+    paths:
+      - "experiments/semantic_atlas/spectral_bottleneck/**"
+      - ".github/workflows/semantic-spectral-bottleneck.yml"
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: experiments/semantic_atlas/spectral_bottleneck/requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r experiments/semantic_atlas/spectral_bottleneck/requirements.txt
+
+      - name: Run unit tests
+        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        run: python -m unittest -v test_experiment.py
+
+      - name: Run multi-seed spectral smoke
+        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        run: python experiment.py --seeds 0,1,2,3,4 --k-values 8,12,16 --output results
+
+      - name: Publish summary
+        if: always()
+        run: cat experiments/semantic_atlas/spectral_bottleneck/results/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload result artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: semantic-spectral-bottleneck-smoke
+          path: experiments/semantic_atlas/spectral_bottleneck/results/
+          if-no-files-found: error
