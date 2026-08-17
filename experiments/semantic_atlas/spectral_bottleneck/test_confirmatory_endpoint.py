@@ -11,7 +11,7 @@ from real_model_experiment import build_corpus
 
 
 class ConfirmatoryCorpusTests(unittest.TestCase):
-    def test_confirmation_reuses_no_first-smoke_sentence(self):
+    def test_confirmation_reuses_no_first_smoke_sentence(self):
         old = {row.text for row in build_corpus()}
         new = {row.text for row in build_confirm_corpus()}
         self.assertTrue(old.isdisjoint(new))
@@ -21,22 +21,31 @@ class ConfirmatoryCorpusTests(unittest.TestCase):
         for axis in CONFIRM_AXES:
             train = [r for r in corpus if r.axis == axis.name and r.split == "train"]
             test = [r for r in corpus if r.axis == axis.name and r.split == "test"]
-            self.assertTrue({r.context_id for r in train}.isdisjoint({r.context_id for r in test}))
-            self.assertTrue({r.phrase_id for r in train}.isdisjoint({r.phrase_id for r in test}))
+            self.assertTrue(
+                {r.context_id for r in train}.isdisjoint(
+                    {r.context_id for r in test}
+                )
+            )
+            self.assertTrue(
+                {r.phrase_id for r in train}.isdisjoint(
+                    {r.phrase_id for r in test}
+                )
+            )
             self.assertEqual({r.label for r in train}, {-1, 0, 1})
             self.assertEqual({r.label for r in test}, {-1, 0, 1})
 
     def test_connectivity_rule_uses_smallest_connected_candidate(self):
-        # Three well-separated pairs: k=1 remains disconnected, k=2 connects the line.
-        # The public graph helper requires k>=2, so use candidate 2 before 4 and
-        # simply assert deterministic selection from geometry alone.
         corpus = build_confirm_corpus()
         axis = CONFIRM_AXES[0].name
-        train_count = sum(1 for r in corpus if r.axis == axis and r.split == "train")
+        train_count = sum(
+            1 for r in corpus if r.axis == axis and r.split == "train"
+        )
         rng = np.random.default_rng(4)
         embeddings = rng.normal(size=(len(corpus), 5))
         embeddings /= np.linalg.norm(embeddings, axis=1, keepdims=True)
-        k, trace = choose_connected_k(embeddings, corpus, axis, [2, 4, 8, 12, 20])
+        k, trace = choose_connected_k(
+            embeddings, corpus, axis, [2, 4, 8, 12, 20]
+        )
         self.assertIn(k, {2, 4, 8, 12, 20})
         selected = next(item for item in trace if item["k"] == k)
         self.assertEqual(selected["components"], 1)
