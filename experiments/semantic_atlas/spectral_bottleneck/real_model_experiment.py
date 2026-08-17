@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Real-model smoke test for semantic spectral bottlenecks.
 
-This is deliberately a small CPU experiment. It extracts hidden states from a
-frozen compact language model, constructs label-blind kNN/Laplacian geometry on
-training sentences, and asks whether the resulting Fiedler coordinate extends
-to held-out contexts and held-out paraphrases.
+This deliberately small CPU experiment extracts hidden states from a frozen
+compact language model, builds label-blind kNN/Laplacian geometry on training
+sentences, and asks whether the learned Fiedler coordinate extends to held-out
+contexts and held-out paraphrases.
 
-A positive result is evidence that the *measurement pipeline* finds reproducible
-semantic structure in one small model. It is not yet evidence for the full
-Semantic Atlas, for universal concept manifolds, or for a causal steering cost.
+A positive result is evidence that the measurement pipeline finds reproducible
+semantic structure in one small model. It is not evidence for universal concept
+manifolds, causal steering advantage, or the full Semantic Atlas.
 """
 
 from __future__ import annotations
@@ -31,7 +31,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from experiment import conductance
 
-
 MODEL_DEFAULT = "HuggingFaceTB/SmolLM2-135M"
 
 
@@ -41,7 +40,7 @@ class Example:
     split: str
     context_id: str
     phrase_id: str
-    label: int  # -1 pole, 0 bridge, +1 pole
+    label: int
     text: str
 
 
@@ -186,12 +185,7 @@ AXES: tuple[AxisSpec, ...] = (
 
 
 def build_corpus() -> list[Example]:
-    """Freeze train/test by both context and paraphrase family.
-
-    Train: first 8 contexts x first 4 phrases per semantic class.
-    Test: last 4 contexts x last 2 phrases per semantic class.
-    This prevents a held-out success from being only sentence memorization.
-    """
+    """Freeze train/test by both context and paraphrase family."""
     rows: list[Example] = []
     for spec in AXES:
         phrase_groups = ((-1, spec.negative), (0, spec.bridge), (1, spec.positive))
@@ -290,8 +284,7 @@ def orient_fiedler(fiedler: np.ndarray, labels: np.ndarray) -> tuple[np.ndarray,
     sign = 1.0 if positive_mean >= negative_mean else -1.0
     oriented = sign * fiedler
     prediction = np.where(oriented[pole] >= 0.0, 1, -1)
-    accuracy = float(np.mean(prediction == labels[pole]))
-    return oriented, accuracy
+    return oriented, float(np.mean(prediction == labels[pole]))
 
 
 def weighted_extension(
@@ -348,20 +341,30 @@ def shuffled_label_accuracy(
     pole = labels != 0
     true = labels[pole].copy()
     pred = np.where(scores[pole] >= 0.0, 1, -1)
-    values = []
-    for _ in range(repeats):
-        shuffled = rng.permutation(true)
-        values.append(float(np.mean(pred == shuffled)))
-    return float(np.mean(values))
+    return float(np.mean([np.mean(pred == rng.permutation(true)) for _ in range(repeats)]))
 
 
 def scramble_features(values: np.ndarray, seed: int) -> np.ndarray:
-    """Destroy row-level geometry while preserving every feature marginal."""
+    """Destroy row-level geometry while preserving each feature marginal."""
     rng = np.random.default_rng(seed)
     scrambled = values.copy()
     for column in range(scrambled.shape[1]):
         scrambled[:, column] = scrambled[rng.permutation(len(scrambled)), column]
     return normalize_rows(scrambled)
+
+
+def configure_padding(tokenizer, model) -> str:
+    """Use EOS only for masked batch padding when a causal tokenizer has no PAD."""
+    if tokenizer.pad_token_id is None:
+        if tokenizer.eos_token_id is None:
+            raise ValueError("tokenizer defines neither pad_token nor eos_token")
+        tokenizer.pad_token = tokenizer.eos_token
+        strategy = "eos_as_masked_padding"
+    else:
+        strategy = "native_pad_token"
+    if getattr(model.config, "pad_token_id", None) is None:
+        model.config.pad_token_id = tokenizer.pad_token_id
+    return strategy
 
 
 def extract_representations(
@@ -371,8 +374,10 @@ def extract_representations(
     batch_size: int,
     max_length: int,
 ) -> tuple[dict[str, np.ndarray], dict[str, object]]:
+    torch.manual_seed(0)
     tokenizer = AutoTokenizer.from_pretrained(model_name, revision=revision)
     model = AutoModelForCausalLM.from_pretrained(model_name, revision=revision)
+    padding_strategy = configure_padding(tokenizer, model)
     model.eval()
     model.to("cpu")
     torch.set_grad_enabled(False)
@@ -387,9 +392,8 @@ def extract_representations(
     storage: dict[str, list[np.ndarray]] = {name: [] for name in selected}
 
     for start in range(0, len(texts), batch_size):
-        batch = texts[start : start + batch_size]
         encoded = tokenizer(
-            batch,
+            texts[start : start + batch_size],
             return_tensors="pt",
             padding=True,
             truncation=True,
@@ -422,6 +426,7 @@ def extract_representations(
         "num_hidden_layers": layer_count,
         "selected_hidden_state_indices": selected,
         "pooling": "attention-mask weighted token mean, then L2 normalization",
+        "padding_strategy": padding_strategy,
     }
     return arrays, metadata
 
@@ -452,9 +457,6 @@ def evaluate_one(
     oriented, train_accuracy = orient_fiedler(fiedler, train_labels)
     test_scores = weighted_extension(train, oriented, test, k=k, sigma=sigma)
 
-    shuffled = shuffled_label_accuracy(test_scores, test_labels, seed=31_000 + k)
-    centroid = centroid_accuracy(train, train_labels, test, test_labels)
-
     scrambled_train = scramble_features(train, seed=71_000 + k)
     scrambled_test = scramble_features(test, seed=91_000 + k)
     scrambled_graph, scrambled_sigma = knn_graph_with_sigma(scrambled_train, k)
@@ -479,8 +481,12 @@ def evaluate_one(
         "train_pole_accuracy": train_accuracy,
         "heldout_pole_accuracy": pole_accuracy(test_scores, test_labels),
         "heldout_bridge_abs_score_ratio": bridge_ratio(test_scores, test_labels),
-        "centroid_heldout_accuracy": centroid,
-        "shuffled_label_accuracy": shuffled,
+        "centroid_heldout_accuracy": centroid_accuracy(
+            train, train_labels, test, test_labels
+        ),
+        "shuffled_label_accuracy": shuffled_label_accuracy(
+            test_scores, test_labels, seed=31_000 + k
+        ),
         "scrambled_representation_accuracy": pole_accuracy(
             scrambled_scores, test_labels
         ),
@@ -493,14 +499,15 @@ def median(records: list[dict[str, object]], key: str) -> float:
 
 def aggregate_result(records: list[dict[str, object]]) -> dict[str, object]:
     registered = [record for record in records if record["layer"] == "mid"]
+    axes = sorted({str(record["axis"]) for record in registered})
     axis_accuracy = {
         axis: median(
             [record for record in registered if record["axis"] == axis],
             "heldout_pole_accuracy",
         )
-        for axis in sorted({str(record["axis"]) for record in registered})
+        for axis in axes
     }
-    robust = [
+    robust_flags = [
         float(record["heldout_pole_accuracy"]) >= 0.65
         and float(record["heldout_bridge_abs_score_ratio"]) <= 0.95
         and float(record["scrambled_representation_accuracy"]) <= 0.70
@@ -523,7 +530,7 @@ def aggregate_result(records: list[dict[str, object]]) -> dict[str, object]:
         ),
         "median_conductance": median(registered, "conductance"),
         "median_lambda2": median(registered, "lambda2"),
-        "robust_axis_k_fraction": float(np.mean(robust)),
+        "robust_axis_k_fraction": float(np.mean(robust_flags)),
         "axis_median_heldout_accuracy": axis_accuracy,
     }
     gates = {
@@ -541,7 +548,11 @@ def aggregate_result(records: list[dict[str, object]]) -> dict[str, object]:
         "not_driven_by_one_axis": min(axis_accuracy.values()) >= 0.60,
         "robust_across_axis_and_k": aggregate["robust_axis_k_fraction"] >= 0.60,
     }
-    return {"aggregate": aggregate, "gates": gates, "supported": all(gates.values())}
+    return {
+        "aggregate": aggregate,
+        "gates": gates,
+        "supported": all(gates.values()),
+    }
 
 
 def write_outputs(
@@ -555,12 +566,13 @@ def write_outputs(
         json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     (output / "corpus.json").write_text(
-        json.dumps([asdict(row) for row in corpus], indent=2) + "\n", encoding="utf-8"
+        json.dumps([asdict(row) for row in corpus], indent=2) + "\n",
+        encoding="utf-8",
     )
     np.savez_compressed(output / "registered-mid-embeddings.npz", mid=embeddings["mid"])
 
-    aggregate = result["aggregate"]
-    gates = result["gates"]
+    a = result["aggregate"]
+    g = result["gates"]
     lines = [
         "# Real-model semantic spectral bottleneck smoke",
         "",
@@ -570,20 +582,20 @@ def write_outputs(
         "",
         "## Registered aggregate (mid layer)",
         "",
-        f"- held-out pole accuracy: `{aggregate['median_heldout_pole_accuracy']:.4f}`",
-        f"- bridge |Fiedler-extension| / pole ratio: `{aggregate['median_bridge_abs_score_ratio']:.4f}`",
-        f"- supervised centroid held-out accuracy: `{aggregate['median_centroid_heldout_accuracy']:.4f}`",
-        f"- shuffled-label accuracy: `{aggregate['median_shuffled_label_accuracy']:.4f}`",
-        f"- scrambled-representation accuracy: `{aggregate['median_scrambled_representation_accuracy']:.4f}`",
-        f"- robust axis×k fraction: `{aggregate['robust_axis_k_fraction']:.4f}`",
+        f"- held-out pole accuracy: `{a['median_heldout_pole_accuracy']:.4f}`",
+        f"- bridge |Fiedler-extension| / pole ratio: `{a['median_bridge_abs_score_ratio']:.4f}`",
+        f"- supervised centroid held-out accuracy: `{a['median_centroid_heldout_accuracy']:.4f}`",
+        f"- shuffled-label accuracy: `{a['median_shuffled_label_accuracy']:.4f}`",
+        f"- scrambled-representation accuracy: `{a['median_scrambled_representation_accuracy']:.4f}`",
+        f"- robust axis×k fraction: `{a['robust_axis_k_fraction']:.4f}`",
         "",
         "### Per-axis held-out accuracy",
         "",
     ]
-    for axis, value in aggregate["axis_median_heldout_accuracy"].items():
+    for axis, value in a["axis_median_heldout_accuracy"].items():
         lines.append(f"- {axis}: `{value:.4f}`")
     lines.extend(["", "## Gates", ""])
-    lines.extend(f"- {'PASS' if ok else 'FAIL'} — `{name}`" for name, ok in gates.items())
+    lines.extend(f"- {'PASS' if ok else 'FAIL'} — `{name}`" for name, ok in g.items())
     lines.extend(
         [
             "",
@@ -686,8 +698,7 @@ def main() -> None:
             indent=2,
         )
     )
-    # A negative scientific result is not a CI execution failure. Runtime/test failures
-    # still fail normally through exceptions; hypothesis gates are recorded in artifacts.
+    # Negative scientific gates intentionally exit 0. Runtime errors still fail CI.
 
 
 if __name__ == "__main__":
