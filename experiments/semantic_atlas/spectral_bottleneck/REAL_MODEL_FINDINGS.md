@@ -1,6 +1,6 @@
 # Real-model spectral bottleneck findings
 
-This note records the first real-model checks added after the synthetic spectral-bottleneck smoke. It separates frozen results from post-hoc sensitivity analyses.
+This note records the real-model checks added after the synthetic spectral-bottleneck smoke. It separates frozen results, post-hoc sensitivity analyses, fresh confirmation, and cross-realization transfer.
 
 ## Frozen first real-model smoke — negative
 
@@ -54,29 +54,110 @@ Per-axis median held-out accuracy:
 
 The endpoint observer therefore changes the result dramatically, but the same all-axis gates still fail because the third axis remains at chance and robustness is insufficient.
 
-**Claim boundary:** this is a post-hoc observer-sensitivity result. It cannot retroactively convert the negative mean-pooling experiment into confirmation. It motivates a fresh, separately frozen confirmatory experiment.
+**Claim boundary:** this is a post-hoc observer-sensitivity result. It cannot retroactively convert the negative mean-pooling experiment into confirmation.
 
-## Interpretation
+## Fresh endpoint confirmation — generic hypothesis rejected, confidence replicated
 
-The evidence currently supports a narrower statement than the initial spectral-bottleneck hypothesis:
+A second experiment was frozen before inspection. It used the exact checkpoint above, the middle-layer causal-endpoint observer, entirely new contexts and paraphrases, an explicit token-length nuisance baseline, shuffled-label and representation-scramble controls, and a label-blind neighborhood rule: choose the smallest registered `k` for which the training graph is connected.
 
-1. semantic polarity can be linearly decodable without being the first graph-Laplacian mode;
-2. observer choice is load-bearing — mean pooling and causal endpoint states expose very different graph geometry;
-3. for at least two controlled semantic contrasts, a causal endpoint observer produced a Fiedler partition that generalized to unseen contexts and paraphrases;
-4. this behavior did not generalize to every tested semantic contrast;
-5. therefore `small lambda2` or a visually clean Fiedler cut must not be treated as a generic marker of semantic structure.
+The three preregistered contrasts were:
 
-## Next confirmatory gate
+1. stance/support vs opposition;
+2. epistemic confidence vs uncertainty;
+3. permission vs prohibition, a contrast not used in the exploratory run.
 
-The next run must be frozen before inspection and must not reuse the first corpus. It should:
+The experiment was defined to confirm the **generic** spectral-semantic claim only if all three contrasts passed six registered gates. That all-axis hypothesis **did not confirm**.
 
-- pin the exact model revision above;
-- preregister the middle-layer causal-endpoint observer;
-- use entirely new contexts and paraphrases;
-- use multiple semantic contrasts, including a new contrast not present in the exploratory run;
-- choose graph neighborhood size using a label-blind connectivity rule rather than by downstream accuracy;
-- report token-length prediction as an explicit nuisance baseline;
-- preserve shuffled-label and representation-scramble controls;
-- keep a negative result as a scientific result rather than a CI execution failure.
+### Stance
 
-Only after such a confirmation should the paper escalate from “observer-sensitive exploratory signal” to evidence that selected semantic contrasts form reproducible low-conductance geometry in this model.
+- selected `k`: **8**;
+- training Fiedler pole accuracy: **0.6250**;
+- held-out pole accuracy: **0.5000**;
+- bridge ratio: **0.8460**;
+- token-length accuracy: **0.5000**;
+- supervised centroid accuracy: **1.0000**;
+- shuffled-label accuracy: **0.5000**;
+- scrambled-representation accuracy: **0.6250**.
+
+### Epistemic confidence
+
+- selected `k`: **8**;
+- training Fiedler pole accuracy: **1.0000**;
+- held-out pole accuracy: **0.9375**;
+- bridge ratio: **0.7917**;
+- token-length accuracy: **0.3125**;
+- supervised centroid accuracy: **0.9375**;
+- shuffled-label accuracy: **0.5038**;
+- scrambled-representation accuracy: **0.3750**;
+- conductance: **0.0191**;
+- `lambda2`: **0.0244**.
+
+**All six confidence gates passed.**
+
+### Permission
+
+- selected `k`: **6**;
+- training Fiedler pole accuracy: **0.5156**;
+- held-out pole accuracy: **0.5000**;
+- bridge ratio: **2.3201**;
+- token-length accuracy: **0.5000**;
+- supervised centroid accuracy: **1.0000**;
+- shuffled-label accuracy: **0.5000**;
+- scrambled-representation accuracy: **0.6250**.
+
+This comparison is load-bearing. Stance and permission were perfectly linearly decodable by the supervised centroid baseline while remaining at chance under the Fiedler partition. Therefore **linear semantic decodability and low-conductance topology are empirically distinct properties** in this setup.
+
+The correct update is not “semantic concepts generally form spectral bottlenecks.” It is the narrower hypothesis that **epistemic confidence may be a privileged low-frequency/topological variable in causal language-model state**.
+
+## Cross-realization transfer — confidence survives without explicit certainty vocabulary
+
+The confidence result was then subjected to a stricter frozen transfer test. The training set was exactly the explicit `confidence_confirm` training set from the fresh confirmation. The held-out set consisted of 24 entirely new descriptions in which epistemic confidence was implied by evidence patterns rather than directly named:
+
+- repeated independent replications and convergent measurements for the positive pole;
+- failed replications, unstable measurements, outlier dependence, or contradictory instruments for the negative pole;
+- mixed replications or conflicting evidence for bridge states.
+
+The protocol rejected the run if any registered explicit certainty terms appeared in the implicit test set. The observed forbidden-term count was **zero**.
+
+With the already-registered endpoint observer and `k = 8`:
+
+- training pole accuracy: **1.0000**;
+- implicit held-out pole accuracy: **0.8750**;
+- implicit bridge ratio: **0.8638**;
+- token-length held-out accuracy: **0.6250**;
+- supervised centroid held-out accuracy: **0.8125**;
+- shuffled-label accuracy: **0.5013**;
+- scrambled-representation accuracy: **0.5625**;
+- conductance: **0.0191**;
+- `lambda2`: **0.0244**.
+
+All five registered transfer gates passed. Notably, the label-blind spectral coordinate slightly exceeded the supervised centroid baseline on the implicit realization shift (`0.8750` vs `0.8125`).
+
+This makes a pure direct-vocabulary explanation substantially less plausible. It does **not** eliminate all lexical/style confounds: replication language itself has regularities, the corpus remains controlled, and only one small model/checkpoint has been tested.
+
+## Current interpretation
+
+The evidence now supports a substantially narrower but more interesting claim than the original broad proposal:
+
+1. **The generic claim fails.** Arbitrary linearly decodable semantic contrasts are not automatically first spectral bottlenecks.
+2. **Observer choice is load-bearing.** Mean pooling destroyed the signal that appears at the causal endpoint.
+3. **Epistemic confidence replicated prospectively.** On a fresh corpus with a frozen endpoint observer and label-blind graph scale selection, confidence passed every registered gate.
+4. **The result transfers across linguistic realization.** A Fiedler coordinate learned/oriented from explicit confidence language generalized to descriptions of replication evidence containing none of the registered explicit confidence terms.
+5. **Topology and decodability differ.** Other contrasts can be decoded perfectly without forming the first low-conductance partition.
+6. **The result is not yet an Atlas-level law.** Natural corpora, additional checkpoints/model families, causal interventions, and navigation/control cost remain untested.
+
+A useful working hypothesis is therefore:
+
+> In some causal LLM representations, epistemic confidence/uncertainty behaves as a low-frequency global variable whose poles are separated by a low-conductance region, while many other semantic distinctions remain ordinary decodable directions without comparable topological separation.
+
+## Next gates
+
+The highest-value next tests are, in order:
+
+1. **checkpoint/model replication:** repeat the frozen confidence-transfer protocol on another checkpoint/model without tuning thresholds;
+2. **natural-language transfer:** replace controlled templates with naturally occurring passages labelled only after corpus freezing;
+3. **causal test:** intervene approximately along the confidence spectral coordinate and ask whether measured confidence/calibration changes more cheaply than matched Euclidean or random controls;
+4. **dynamics:** test whether crossing the confidence bottleneck predicts trajectory persistence, correction difficulty, or semantic steering cost;
+5. **cross-model geometry:** ask whether the confidence partition aligns only in sign/classification or preserves richer diffusion/geodesic structure.
+
+Only after those gates should the manuscript promote the confidence result from a controlled pilot finding to a broader claim about semantic spectral geometry.
