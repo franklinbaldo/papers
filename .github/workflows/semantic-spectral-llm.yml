@@ -4,15 +4,15 @@ on:
   pull_request:
     paths:
       - "experiments/semantic_atlas/spectral_bottleneck/real_model_experiment.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/observer_comparison.py"
       - "experiments/semantic_atlas/spectral_bottleneck/test_real_model_experiment.py"
       - "experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt"
       - ".github/workflows/semantic-spectral-llm.yml"
   push:
-    branches:
-      - "semantic-atlas/manifold-followup"
-      - main
+    branches: [main]
     paths:
       - "experiments/semantic_atlas/spectral_bottleneck/real_model_experiment.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/observer_comparison.py"
       - "experiments/semantic_atlas/spectral_bottleneck/test_real_model_experiment.py"
       - "experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt"
       - ".github/workflows/semantic-spectral-llm.yml"
@@ -44,28 +44,28 @@ jobs:
         working-directory: experiments/semantic_atlas/spectral_bottleneck
         run: python -m unittest -v test_real_model_experiment.py
 
-      - name: Run frozen real-model smoke
+      - name: Run observer-sensitivity smoke on pinned model
         working-directory: experiments/semantic_atlas/spectral_bottleneck
         run: >-
-          python real_model_experiment.py
+          python observer_comparison.py
           --model HuggingFaceTB/SmolLM2-135M
-          --revision main
+          --revision 93efa2f097d58c2a74874c7e644dbc9b0cee75a2
           --batch-size 16
           --max-length 64
           --k-values 6,10,14
-          --output results-real
+          --output results-observers
 
       - name: Publish scientific result summary
         if: always()
         run: |
-          if [ -f experiments/semantic_atlas/spectral_bottleneck/results-real/summary.md ]; then
-            cat experiments/semantic_atlas/spectral_bottleneck/results-real/summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f experiments/semantic_atlas/spectral_bottleneck/results-observers/summary.md ]; then
+            cat experiments/semantic_atlas/spectral_bottleneck/results-observers/summary.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Upload real-model result artifact
+      - name: Upload observer-comparison artifact
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: semantic-spectral-bottleneck-real-model
-          path: experiments/semantic_atlas/spectral_bottleneck/results-real/
+          name: semantic-spectral-bottleneck-observer-comparison
+          path: experiments/semantic_atlas/spectral_bottleneck/results-observers/
           if-no-files-found: error
