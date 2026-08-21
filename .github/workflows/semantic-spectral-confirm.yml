@@ -1,0 +1,73 @@
+name: Semantic spectral bottleneck — endpoint confirmation
+
+on:
+  pull_request:
+    paths:
+      - "experiments/semantic_atlas/spectral_bottleneck/confirmatory_endpoint.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/test_confirmatory_endpoint.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/observer_comparison.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/real_model_experiment.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt"
+      - ".github/workflows/semantic-spectral-confirm.yml"
+  push:
+    branches: [main]
+    paths:
+      - "experiments/semantic_atlas/spectral_bottleneck/confirmatory_endpoint.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/test_confirmatory_endpoint.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/observer_comparison.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/real_model_experiment.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt"
+      - ".github/workflows/semantic-spectral-confirm.yml"
+  workflow_dispatch:
+
+jobs:
+  confirm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      HF_HOME: /tmp/hf-cache
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+
+      - name: Install CPU PyTorch
+        run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install experiment dependencies
+        run: python -m pip install -r experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+
+      - name: Validate frozen confirmation protocol
+        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        run: python -m unittest -v test_real_model_experiment.py test_confirmatory_endpoint.py
+
+      - name: Run fresh endpoint confirmation
+        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        run: >-
+          python confirmatory_endpoint.py
+          --model HuggingFaceTB/SmolLM2-135M
+          --revision 93efa2f097d58c2a74874c7e644dbc9b0cee75a2
+          --batch-size 16
+          --max-length 64
+          --k-candidates 6,8,10,12,14,16,20
+          --output results-confirm
+
+      - name: Publish scientific result summary
+        if: always()
+        run: |
+          if [ -f experiments/semantic_atlas/spectral_bottleneck/results-confirm/summary.md ]; then
+            cat experiments/semantic_atlas/spectral_bottleneck/results-confirm/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload confirmatory result artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: semantic-spectral-endpoint-confirmation
+          path: experiments/semantic_atlas/spectral_bottleneck/results-confirm/
+          if-no-files-found: error

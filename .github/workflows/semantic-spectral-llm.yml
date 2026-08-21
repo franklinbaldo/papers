@@ -1,0 +1,71 @@
+name: Semantic spectral bottleneck — real LLM smoke
+
+on:
+  pull_request:
+    paths:
+      - "experiments/semantic_atlas/spectral_bottleneck/real_model_experiment.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/observer_comparison.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/test_real_model_experiment.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt"
+      - ".github/workflows/semantic-spectral-llm.yml"
+  push:
+    branches: [main]
+    paths:
+      - "experiments/semantic_atlas/spectral_bottleneck/real_model_experiment.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/observer_comparison.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/test_real_model_experiment.py"
+      - "experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt"
+      - ".github/workflows/semantic-spectral-llm.yml"
+  workflow_dispatch:
+
+jobs:
+  real-model-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      HF_HOME: /tmp/hf-cache
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+
+      - name: Install CPU PyTorch
+        run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install experiment dependencies
+        run: python -m pip install -r experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+
+      - name: Run helper and corpus tests
+        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        run: python -m unittest -v test_real_model_experiment.py
+
+      - name: Run observer-sensitivity smoke on pinned model
+        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        run: >-
+          python observer_comparison.py
+          --model HuggingFaceTB/SmolLM2-135M
+          --revision 93efa2f097d58c2a74874c7e644dbc9b0cee75a2
+          --batch-size 16
+          --max-length 64
+          --k-values 6,10,14
+          --output results-observers
+
+      - name: Publish scientific result summary
+        if: always()
+        run: |
+          if [ -f experiments/semantic_atlas/spectral_bottleneck/results-observers/summary.md ]; then
+            cat experiments/semantic_atlas/spectral_bottleneck/results-observers/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload observer-comparison artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: semantic-spectral-bottleneck-observer-comparison
+          path: experiments/semantic_atlas/spectral_bottleneck/results-observers/
+          if-no-files-found: error
