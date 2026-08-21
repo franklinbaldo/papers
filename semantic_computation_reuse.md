@@ -1,12 +1,12 @@
 ---
 type: "Technical Paper"
-title: "Semantic Computation Reuse: Reasoning as Navigation over a Memory of Reusable States"
-description: "Position paper proposing that past language-model computation can be stored as semantically addressable states and recombined into novel retrieval paths that substitute for part of future inference."
-tags: [semantic-computation-reuse, reasoning-memory, retrieval, test-time-compute]
-timestamp: 2026-08-21T00:00:00+00:00
+title: "Semantic Computation Reuse: Amortized Reasoning by Composing Reusable Textual States"
+description: "Position paper proposing that concrete textual checkpoints from heterogeneous past LLM computations can be openly recombined so that retrieval causally displaces part of fresh inference on novel tasks."
+tags: [semantic-computation-reuse, reasoning-memory, retrieval, test-time-compute, amortized-reasoning]
+timestamp: 2026-08-21T19:53:00-04:00
 ---
 
-# Semantic Computation Reuse: Reasoning as Navigation over a Memory of Reusable States
+# Semantic Computation Reuse: Amortized Reasoning by Composing Reusable Textual States
 
 **Franklin Baldo**  
 Independent Researcher  
@@ -14,359 +14,366 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Position paper.** This article proposes a hypothesis and experimental program. It reports no new empirical results. Claims about computation savings, state reuse, navigation, and scaling are falsifiable predictions rather than measurements.
+> **Position paper.** This article proposes a narrow hypothesis and staged experimental programme. It reports no new empirical results. It does not claim novelty for semantic navigation, trajectory stitching, successor representations, experience graphs, reasoning memory, semantic caching, or the general proposition that past inference can be amortized. The open claim is narrower: whether concrete textual states from heterogeneous prior computations can be recombined into a previously unseen path that causally substitutes for fresh LLM inference on a novel task.
 
 ## Abstract
 
-Large language models repeatedly spend inference compute producing reasoning that overlaps with computation performed before. Retrieval-augmented generation reduces some redundancy by retrieving knowledge, semantic caches reuse answers to similar requests, and recent reasoning-memory systems retrieve workflows, strategies, or procedural subroutines from prior trajectories. We propose a stronger use of external memory: **semantic computation reuse**. Past textual states are embedded and stored as key-value entries, optionally together with observed transitions and outcomes. At inference time, a new computation may navigate through these stored states and concatenate their associated texts, constructing a path that need not have appeared in any previous trajectory. The retrieved path is then supplied to a language model, which resumes generation only near the frontier where new computation is required.
+Large language models repeatedly pay autoregressive inference cost for computations that may overlap with work performed in earlier trajectories. Recent systems already reuse documents, strategies, procedures, episodic memories, trajectory segments, compiled reasoning programs, and internal key-value caches. These results make a broad claim that "memory can replace reasoning" too weak to be novel.
 
-The central hypothesis is not that embedding proximity reproduces a language model's hidden state. Rather, some texts may be **continuation-equivalent**: conditioning on them places a model in states with sufficiently similar useful futures. A valuable retrieved state can therefore function as a computational waypoint even when it is not a solution, is not a known skill for the current problem, and is not an obvious semantic intermediate between the initial problem and the eventual answer. We call states with unusually high prospective reachability **landmark states**. A path through landmark states may be textually incoherent yet computationally useful.
+We isolate a stricter hypothesis, **semantic computation reuse (SCR)**. A corpus of prior LLM computations is segmented into concrete textual checkpoints. Each checkpoint is stored with a semantic address and provenance, and may retain observed predecessor/successor relations and downstream outcomes. On a new task whose terminal solution is not known and whose complete solution trajectory is absent from memory, a system composes checkpoints drawn from heterogeneous historical trajectories into a new ordered textual path. The path is supplied to a black-box language model, which receives a deliberately small remaining generation budget.
 
-This view distinguishes retrieval as **guidance** from retrieval as **computation substitution**. It predicts a measurable trade-off between memory coverage and new inference: as a datastore becomes denser and its transition structure becomes more informative, the amount of fresh generation required to reach useful terminal states may fall. We formulate falsifiers and a minimal experiment comparing ordinary reasoning, nearest-neighbor RAG, procedural-memory retrieval, novel path composition, shuffled paths, and edge-destroyed controls under compute-matched evaluation.
+The central claim is causal and cost-sensitive: if the ordered retrieved path permits the model to preserve task performance while using less fresh generation than matched baselines, then some effect of earlier computation has been amortized through text. Retrieval must do more than provide useful facts or procedural hints. Same-fragment shuffles, edge-destroyed paths, semantic top-k retrieval, procedural summaries, and ordinary reasoning are therefore necessary controls.
 
-**Keywords:** reasoning memory, semantic retrieval, test-time compute, associative memory, trajectory reuse, compositional retrieval, non-parametric memory, language-model inference
+The paper separates three questions that should not be solved at once. **Existence:** do substitutive textual paths exist even with an oracle path selector? **Navigation:** can such paths be found without knowing the destination cheaply enough to matter? **Scaling:** does a denser memory reduce the fresh inference required at fixed performance after all retrieval, prefill, storage, and build costs are counted? Failure at the first stage should stop the programme before sophisticated semantic planning is built.
+
+**Keywords:** reasoning memory, test-time compute, amortized inference, trajectory reuse, compositional retrieval, external memory, black-box language models
 
 ---
 
-## 1. The problem: computation is usually discarded
+## 1. The narrow claim
 
-A language model solving a difficult problem may generate a long sequence of intermediate text before reaching a useful answer. Another model, or the same model later, may encounter a different problem that requires traversing part of the same conceptual region. Today, that computation is usually performed again.
+A useful reasoning-memory literature now exists. It is no longer enough to propose that prior experience can guide later reasoning, that trajectories can be recombined, or that expensive inference can be cached.
 
-This is not inevitable. Approximate nearest-neighbor lookup over a large vector store can be much cheaper than autoregressive generation. If useful intermediate computations can be made externally addressable, a system may be able to replace some fresh reasoning with retrieval.
+This paper claims only the following empirical possibility:
 
-Existing approaches already exploit weaker forms of this idea. Semantic caches reuse whole answers when a new request is sufficiently similar to an old one. Retrieval-augmented generation retrieves facts or documents. Agent memories retrieve successful workflows or distilled strategies. Procedural reasoning memories retrieve subroutines relevant to the current subproblem. These systems show that external memory can improve performance and reduce redundant work.
+> **SCR hypothesis.** Concrete textual checkpoints from heterogeneous prior LLM computations can serve as behaviorally substitutable computation states, such that a novel ordered sequence of those checkpoints can be assembled at inference time and causally displace fresh reasoning on a held-out task.
 
-We ask a different question:
+The claim has four load-bearing parts.
 
-> **Can previously generated computation itself become a reusable substrate from which new reasoning trajectories are assembled?**
+1. **Concrete textual checkpoints.** The reusable object is an observed textual state from an earlier computation, not only a distilled skill, template, rule, or hidden activation.
+2. **Heterogeneous provenance.** Useful states may come from different tasks and trajectories; the complete path need not have existed before.
+3. **Novel composition.** The sequence used on the test task was not itself a stored solution trajectory.
+4. **Computation substitution.** The retrieved path reduces new inference required at matched task performance; it does not merely improve performance while the model reasons again at roughly the same cost.
 
-The distinction matters most on genuinely new problems. A skill is useful when a problem can be mapped to a known procedure. A cached answer is useful when the new request is sufficiently close to an old request. But a new problem may have no matching answer, workflow, or skill. It may nevertheless benefit from states that were produced in unrelated historical computations and have never before appeared together.
+The claim is deliberately weaker than saying that text reproduces a model hidden state. A stored string is a black-box intervention. Its value is behavioral: what useful continuations become accessible after the model reads it?
 
-The proposed system therefore does not merely retrieve a previous solution. It attempts to compose a **new path through old computation**.
+## 2. What is already prior art
 
-## 2. From reasoning traces to an external state memory
+Several broad versions of the idea are already occupied.
 
-Consider a textual reasoning trajectory
+### 2.1 Memory and retrieval can improve language modeling and reasoning
+
+kNN-LM, Memorizing Transformers, RETRO, MassiveDS, and large memory layers establish that sparse non-parametric memory can improve prediction and can trade storage/retrieval against dense model capacity or compute. SCR does not claim this principle.
+
+### 2.2 Reasoning experience can be retrieved as procedure or strategy
+
+Agent Workflow Memory, ReasoningBank, ProcMEM, MemRL, ExpGraph, and especially *Procedural Knowledge at Scale Improves Reasoning* show that prior trajectories can be converted into reusable experience. The latter constructs roughly 32 million subquestion-subroutine entries and uses retrieved procedures as priors for fresh reasoning. ExpGraph combines graph-structured experience, utility-aware ranking, and frozen/replaceable executors. MemRL similarly separates semantic candidate recall from learned downstream utility.
+
+These works make "semantic memory plus utility learning" prior art rather than the novelty of SCR.
+
+### 2.3 Trajectories can be stitched or recombined
+
+Trajectory stitching has a substantial offline-RL lineage. Work on offline RL under partial observability also connects successful stitching to representations that preserve action-relevant future behavior, including bisimulation-style conditions. In LLM agents, SE-Agent explicitly uses revision, recombination, and refinement across reasoning trajectories.
+
+SCR therefore does not claim that cross-trajectory recombination itself is new.
+
+### 2.4 Reasoning can be compiled and amortized
+
+CACHE-ED2 has an LLM reason once over a document format, compile the logic into a reusable DSL program, and execute later matches without LLM inference. ReaComp compiles small sets of reasoning traces into reusable symbolic solvers that can execute with zero test-time LLM calls on supported tasks. These are strong demonstrations of amortized reasoning.
+
+SCR differs by asking whether useful reuse is possible **without first compiling a complete reusable solver or procedure for the new task family**.
+
+### 2.5 Internal computation can be cached and composed
+
+KV-cache reuse already attacks redundant inference directly. C²KV goes further by learning compressed, position-agnostic KV representations that can be independently stored and concatenated. This is an important precedent for composable computation representations.
+
+SCR asks whether ordinary text can act as a weaker but portable black-box interface for an analogous kind of composition.
+
+## 3. Guidance is not computation substitution
+
+The critical distinction is operational.
+
+```text
+retrieval as guidance
+past computation
+    ↓ distill/retrieve
+strategy, fact, procedure
+    ↓
+NEW REASONING
+    ↓
+answer
+```
+
+SCR requires something stronger:
+
+```text
+past computation
+    ↓ retain concrete checkpoints
+x_a   x_b   x_c
+ \     |    /
+  \-- compose --/
+       ↓
+reused textual path
+       ↓
+small fresh-compute frontier
+       ↓
+answer
+```
+
+A memory system can be highly useful while failing the SCR claim. If retrieved material improves accuracy but the downstream model performs roughly the same amount of new reasoning, the mechanism is guidance.
+
+The cleanest evidence for substitution is therefore obtained by **strangling the remaining generation budget**. If a retrieved path allows a model to succeed with a short answer-only continuation where no-memory, RAG, and procedural-hint controls require substantially more generated computation, the path has evidence of carrying reusable computational work.
+
+## 4. Text as a portable state intervention
+
+Let a historical reasoning trajectory contain textual checkpoints
 
 \[
-T = (x_0, x_1, \ldots, x_n),
+T_i=(x_{i,0},x_{i,1},\ldots,x_{i,n_i}).
 \]
 
-where each \(x_i\) is a textual checkpoint: a problem statement, partial analysis, intermediate conclusion, reformulation, hypothesis, plan, or other state-bearing text.
-
-Let an external encoder \(E\) map each checkpoint to a vector
+A frozen external encoder gives each checkpoint an address
 
 \[
-z_i = E(x_i).
+z_{i,j}=E(x_{i,j}).
 \]
 
-A memory entry can then store at least
+A memory record may retain
 
 \[
-(z_i, x_i),
+m_{i,j}=(z_{i,j},x_{i,j},\mathrm{prev},\mathrm{next},o_{i,j},c_{i,j},p_{i,j}),
 \]
 
-and may additionally store observed successors, predecessor relations, task metadata, costs, and outcomes:
+where `o` records outcomes, `c` costs, and `p` provenance.
+
+The embedding is not identified with the LLM's internal computational state. It is only an address for a real text. The text is then inserted into the model context and functions as an intervention on future generation.
+
+This architecture matters for closed models. Exact hidden states and KV caches may be unavailable, but text remains a common interface across model families and providers.
+
+## 5. Behavioral substitutability and continuation equivalence
+
+Semantic proximity is not sufficient for substitutability. Two almost identical statements can imply opposite next actions. Conversely, text that is distant under a generic embedding may induce similar future behavior for a particular task.
+
+For task distribution \(\mathcal D\), model \(M\), remaining budget \(b\), and utility \(U\), define a practical behavioral relation
 
 \[
-(z_i, x_i, \mathcal{N}^+_i, \mathcal{N}^-_i, o_i).
+x \simeq_{c} y
 \]
 
-The embedding is an **address**, not the computational state itself. This distinction is essential. A sentence embedding is not assumed to equal, reconstruct, or expose the hidden state of the language model. The stored text is instead a black-box control surface: by placing that text in context, we induce some internal state in the downstream model.
+when replacing \(x\) with \(y\) preserves downstream utility under the matched continuation budget to within a declared tolerance.
 
-At inference time, a current textual state \(q\) is embedded and used to retrieve candidate memory entries. A conventional retrieval system would return the nearest entries and expose them as information. Semantic computation reuse instead asks whether retrieved states can be **ordered and composed as a trajectory**, after which the language model continues from the resulting context.
+This is called **continuation equivalence** here, but the underlying idea is not presented as conceptually novel. It is closely related to predictive-state equivalence and to bisimulation-style abstractions in reinforcement learning: states are grouped by the futures and decisions they preserve, not by surface identity.
 
-A new path might therefore be
+The experimental implication is important:
+
+> semantic similarity should be used for candidate recall; behavioral substitutability must be earned by downstream intervention.
+
+## 6. The mountain as a later navigation problem
+
+A useful terminal state may be difficult to discover from the current state under a limited generation budget. Another state may be valuable because it opens a much larger or more useful set of futures. The intuitive "mountain" is such a waypoint.
+
+This idea has strong conceptual neighbors in successor representations, options, landmarks, reachability, and the repository's own Semantic Atlas and Agent Successor Policy work. It is therefore **not** the novelty claim of SCR.
+
+It belongs to Stage 2: once Stage 1 establishes that substitutive textual paths exist, a navigation policy can ask which remembered waypoint is prospectively valuable when the final destination is not yet known.
+
+A future successor-like quantity might estimate
 
 \[
-q \rightarrow x_a \rightarrow x_b \rightarrow x_c \rightarrow \text{fresh generation},
+\Psi(x;b)=\text{useful future occupancy reachable from }x\text{ within budget }b.
 \]
 
-where \(x_a\), \(x_b\), and \(x_c\) originated in three different historical reasoning traces and have never previously been concatenated.
+The navigation system may then combine frozen semantic candidate recall with learned functional ranking, observed transition structure, incoming trajectory, and successor value. None of this complexity is justified before the existence test passes.
 
-The possibility of such a path is the core speculative claim.
+## 7. Open composition
 
-## 3. Retrieval as guidance versus retrieval as computation substitution
-
-Most reasoning-memory systems use retrieved content as **guidance**. A retrieved item says, in effect, "a similar problem was solved with this strategy; use it while reasoning." The model still performs substantial fresh inference.
-
-Semantic computation reuse aims at a stronger operational criterion. A retrieved state is valuable when using it allows the model to **avoid recomputing a segment that would otherwise have to be generated**.
-
-This yields a simple distinction:
-
-- **Knowledge reuse:** retrieve information needed by the computation.
-- **Procedure reuse:** retrieve a method that guides the computation.
-- **Computation reuse:** retrieve a state or path that substitutes for part of the computation.
-
-The categories can overlap, but they make different empirical claims. A procedural hint may improve accuracy while increasing prompt length and leaving generated reasoning unchanged. Computation reuse requires a cost-sensitive demonstration that retrieval actually displaces new inference while preserving useful outcomes.
-
-The primary quantity of interest is therefore not retrieval accuracy alone. It is a frontier such as
+Memory may contain historical fragments
 
 \[
-\text{memory coverage} \;\longleftrightarrow\; \text{fresh inference cost} \;\longleftrightarrow\; \text{task performance}.
-\]
-
-## 4. Continuation equivalence
-
-Semantic similarity is not sufficient for safe state substitution. Two texts may have high cosine similarity while implying different next steps. Conversely, two lexically and semantically different texts may induce similar useful continuations.
-
-We therefore define the central behavioral notion informally.
-
-Two textual states \(x\) and \(y\) are **continuation-equivalent with respect to task distribution \(\mathcal{D}\), model \(M\), and utility \(U\)** when replacing one with the other preserves the distribution of useful downstream continuations closely enough for the intended application.
-
-A strong version could compare continuation distributions directly. A practical version can be task-level and counterfactual:
-
-\[
-x \simeq_c y
-\]
-
-when conditioning on \(x\) versus \(y\), under matched remaining inference budget, yields statistically indistinguishable downstream utility.
-
-This definition deliberately avoids claiming that the two texts have identical meanings or induce identical hidden activations. The relevant equivalence is **prospective**: what useful futures remain reachable after the substitution?
-
-This also suggests that ordinary embedding distance should be treated as a candidate-generation heuristic, not as the ground truth metric for state reuse.
-
-## 5. The mountain: landmark states and prospective reachability
-
-Suppose reasoning begins in state \(A\) and a useful terminal region \(Z\) exists, but from \(A\) the model rarely discovers \(Z\) within the available inference budget. There may exist another state \(M\) that is neither the answer nor an obvious semantic midpoint between \(A\) and \(Z\), but from which \(Z\) becomes much easier to reach.
-
-State \(M\) is analogous to a mountain: reaching it changes what can be reached next.
-
-We call such a state a **landmark state**. Its value is not primarily retrospective similarity to the current query. Its value is **prospective reachability**: conditioning on it expands or improves the set of useful futures accessible under a bounded generation budget.
-
-A crude prospective-value functional might be written
-
-\[
-V(M; b) = \mathbb{E}[U(Y) \mid M, \text{fresh generation budget}=b],
-\]
-
-or, when diversity of reachable useful regions matters,
-
-\[
-R(M; b) = \mu\left(\{y : y \text{ is usefully reachable from } M \text{ within } b\}\right),
-\]
-
-for an appropriate measure \(\mu\).
-
-A landmark need not be nearest to the starting state. It may even initially move the context away from the apparent target. This is why pure greedy nearest-neighbor traversal is not the complete proposal.
-
-Historical reasoning traces can provide more than points: they provide observed **transitions**. With enough traces, the datastore induces a directed graph whose nodes are semantically addressable textual states and whose edges represent observed or inferred reachability. The memory then becomes not only a collection of facts but an empirical map of how computation has moved through state space.
-
-## 6. Novelty by recombination
-
-The strongest version of the hypothesis concerns **open composition**.
-
-Suppose memory contains trajectories
-
-\[
-A \rightarrow B \rightarrow C,
+A\rightarrow B\rightarrow C,
 \]
 
 \[
-D \rightarrow E \rightarrow F,
+D\rightarrow E\rightarrow F,
 \]
 
 and
 
 \[
-G \rightarrow H \rightarrow I.
+G\rightarrow H\rightarrow I.
 \]
 
-A new problem need not replay any of these paths. It might construct
+SCR asks whether a new task can benefit from an unseen composition such as
 
 \[
-Q \rightarrow B \rightarrow E \rightarrow H \rightarrow Y,
+Q\rightarrow B\rightarrow E\rightarrow H\rightarrow Y,
 \]
 
-where the sequence \(B,E,H\) never occurred historically.
+where the stored textual payloads for \(B,E,H\) came from distinct trajectories and were never previously concatenated.
 
-The concatenated text may be poor discourse. Its fragments may come from different domains, use different terminology, or lack an obvious human narrative. The hypothesis is that discourse coherence is not the relevant criterion. The sequence may still alter the model's internal computation in a way that makes a useful terminal state easier to generate.
+The sequence need not be good prose. The stronger hypothesis is precisely that **textual coherence and computational usefulness can come apart**. If the same fragments work equally well after permutation, however, the correct explanation is likely a bag of semantic hints rather than a reusable trajectory.
 
-This yields the paper's strongest claim:
+This creates a direct causal test of order.
 
-> **A sufficiently rich memory of prior computational states may create new capability through recombination, rather than merely reproduce previously solved tasks.**
+## 8. Three-stage programme
 
-If true, memory would not be only a cache. It would be a non-parametric substrate for constructing new computations.
+The research programme should proceed in increasing order of complexity.
 
-## 7. Why this is not ordinary RAG, semantic caching, or a skill library
+### Stage 1 — Existence
 
-### 7.1 Not semantic caching
+Question:
 
-Semantic caching asks whether a new request is similar enough to an old request that the old answer can be reused. It is strongest when the desired terminal output has already been computed.
+> Do ordered combinations of concrete historical textual states ever substitute for fresh reasoning?
 
-Semantic computation reuse targets cases where the terminal output is unknown and may never have existed.
+Use an oracle or deliberately expensive path-discovery procedure if necessary. This stage estimates an upper bound on whether the phenomenon exists at all. It does **not** claim a deployable retrieval algorithm.
 
-### 7.2 Not ordinary RAG
+The decisive outcome is task performance under sharply restricted fresh generation, compared with same-information controls.
 
-RAG retrieves content relevant to the current query. If a proposed path works only because its fragments form a bag of relevant facts or concepts, ordinary RAG is a sufficient explanation and the stronger hypothesis fails.
+If Stage 1 fails, stop. There is no reason to build a sophisticated semantic navigator for paths that do not have a measurable substitutive effect.
 
-For this reason, top-k semantic retrieval is an indispensable baseline.
+### Stage 2 — Navigation
 
-### 7.3 Not a skill library
+Only after an existence result, ask:
 
-A skill encodes a reusable transformation for a recognized class of problems. Skills can efficiently move many agents into similar useful configurations, but they presuppose that the relevant procedure has already been abstracted.
+> Can useful paths be found without knowing the terminal destination and at a cost below the inference they replace?
 
-Open state composition does not require a stored procedure for the new problem. Its claimed advantage is precisely that states from unrelated historical trajectories may be recombined into a useful path that no skill author or previous execution specified.
+This stage can draw on Semantic Atlas reachability, inverse-atlas textual realization, reward-conditioned retrieval, successor representations, learned functional keys, graph search, or other planners.
 
-### 7.4 Not KV-cache reuse
+### Stage 3 — Scaling
 
-KV-cache reuse literally reuses internal inference computation and can provide large serving speedups. It generally requires model-level access and strong compatibility conditions. Semantic computation reuse is intended to work, at least in its textual form, with black-box language-model APIs. It trades exact internal-state reuse for a weaker but portable interface: retrieved text.
-
-The two approaches are complementary. If textual state reuse proves real, open-weight models could later test whether the same navigation principle works more efficiently with hidden-state or KV representations.
-
-## 8. Relation to prior work
-
-The proposal sits at the intersection of several established lines.
-
-**Product-key and memory layers.** Lample et al. [2019] showed that very large key-value memories can add capacity with small computational overhead. More recently, Berges et al. [2025] scaled trainable memory layers to 128B memory parameters and showed that sparse lookup can outperform substantially more compute-intensive dense alternatives. These works establish that associative lookup can be a computationally efficient model component, but their memories are trained inside the model rather than assembled from external reasoning traces.
-
-**Nearest-neighbor and retrieval language models.** kNN-LM [Khandelwal et al., 2020], Memorizing Transformers [Wu et al., 2022], RETRO [Borgeaud et al., 2022], and MassiveDS retrieval scaling [Shao et al., 2024] demonstrate that non-parametric datastores can improve language modeling and that increasing datastore scale can substitute for some parametric capacity. These systems primarily retrieve tokens, internal representations, or documents to improve prediction; they do not test novel composition of reasoning-state paths as a substitute for generated reasoning.
-
-**Agent and procedural memory.** Agent Workflow Memory [Wang et al., 2025] induces reusable workflows from previous agent trajectories and reduces the number of steps needed on later tasks. ReasoningBank [Ouyang et al., 2026] retrieves strategies distilled from successful and failed experiences and explicitly frames memory as a dimension of test-time scaling. ProcMEM [Mi et al., 2026] learns reusable procedural skills from experience to avoid repeatedly deriving solutions in recurring scenarios. These systems provide strong evidence for experience reuse, but they primarily reuse abstractions known to be useful.
-
-**Reasoning Memory at scale.** Wu et al. [2026] provide the closest direct precedent. They decompose reasoning trajectories into approximately 32 million subquestion-subroutine pairs, retrieve procedural knowledge inside the reasoning stream, and outperform compute-matched test-time scaling baselines. This is strong evidence that large procedural datastores can improve reasoning. The remaining distinction is that retrieved subroutines serve as procedural priors under which the model performs new reasoning. The present proposal asks whether stored states can instead be composed into **novel paths that directly displace portions of that reasoning**.
-
-**Semantic and KV caching.** Semantic response caches reuse outputs for similar requests. CacheBlend [Yao et al., 2025] and SemShareKV [Zhao & Mastorakis, 2025] show increasingly flexible reuse of precomputed KV representations, including reuse across semantically similar but lexically different prompts. These systems directly attack redundant inference, but at the serving/state-representation level rather than through open-ended graph navigation over reasoning experiences.
-
-The novelty claim of this position paper is therefore deliberately narrow. It is **not** that memory helps reasoning, that vector lookup is cheaper than dense inference, or that reasoning trajectories contain reusable procedures. Those claims already have substantial prior art. The open hypothesis is that **semantically addressable states from heterogeneous prior computations can be recombined into previously unseen paths whose causal effect is to reduce the fresh inference required on genuinely novel tasks**.
-
-## 9. A minimal falsifiable experiment
-
-A first experiment should test the recombination claim without requiring a new model architecture.
-
-### 9.1 Datastore
-
-Start from a public corpus of verified reasoning trajectories in at least one domain with objective outcomes, such as mathematics or code.
-
-Segment each trajectory into checkpoints. For every checkpoint store:
-
-1. the checkpoint text;
-2. its embedding;
-3. trajectory and step identifiers;
-4. observed predecessor and successor edges;
-5. final trajectory outcome;
-6. generation-token and, where possible, latency/cost metadata.
-
-The evaluation problems must be held out at the problem-family level as far as practical, so that simple answer or trajectory memorization is not the intended solution.
-
-### 9.2 Arms
-
-Use a fixed downstream language model and compare at least:
-
-**A. No-memory reasoning.** The model solves the problem with a fixed inference budget.
-
-**B. Top-k semantic RAG.** Retrieve the same number of fragments by direct similarity to the current problem and provide them without path structure.
-
-**C. Procedural-memory baseline.** Retrieve a known subroutine/workflow or the closest available implementation of Reasoning Memory.
-
-**D. Composed state path.** Construct a path through stored states using the proposed semantic/transition graph, concatenate the textual payloads, and let the model continue from the path endpoint.
-
-**E. Same-fragment shuffle.** Use exactly the fragments from D but randomly permute their order.
-
-**F. Edge-destroyed path.** Preserve node content and approximate similarity statistics while randomizing historical transition edges before path construction.
-
-The last two controls are crucial. If D does not outperform E, ordering contributes little and the mechanism may reduce to bag-of-hints retrieval. If D does not outperform F, the historical topology of computation contributes little and semantic retrieval alone may explain the effect.
-
-### 9.3 Outcomes
-
-The primary result should be a Pareto frontier rather than accuracy alone:
-
-- task success or exact correctness;
-- fresh generated reasoning tokens;
-- retrieved input tokens;
-- embedding/retrieval cost;
-- total inference latency and monetary/compute proxy;
-- fraction of the baseline reasoning trajectory displaced by retrieval.
-
-A useful system should improve the amount of task utility obtained per unit of **new** inference.
-
-### 9.4 Memory scaling
-
-Repeat the experiment with increasing datastore sizes. The key predicted curve is
+Finally ask whether memory density creates a stable memory-compute frontier:
 
 \[
-|M| \uparrow \quad \Rightarrow \quad C_{\text{fresh}}(U \geq U_0) \downarrow,
+|\mathcal M|\uparrow
+\quad\Rightarrow\quad
+C_{\mathrm{fresh}}(U\ge U_0)\downarrow.
 \]
 
-where \(|M|\) is usable memory size and \(C_{\text{fresh}}\) is the fresh inference required to maintain a fixed utility threshold \(U_0\).
+This must include build cost, index/storage cost, lookup, path-construction compute, prompt-prefill cost, fresh decoding cost, latency, and amortization horizon.
 
-The strong version predicts more than ordinary retrieval scaling: larger memory should increase the probability of finding useful **compositional paths**, not merely better single neighbors.
+A positive Stage 3 result would be stronger than ordinary retrieval scaling: more memory would increase the fraction of **previous computation that can be reused in novel compositions**.
 
-## 10. Falsifiers
+## 9. Stage 1 controls that distinguish rival explanations
 
-The proposal should be abandoned or substantially weakened if any of the following hold under well-powered, compute-matched tests.
+The companion preregistration `semantic_computation_reuse_experiment1.md` specifies the first test in detail. Its minimum arms are:
 
-1. **Top-k RAG matches composed paths.** Then path navigation adds no evidence beyond retrieving relevant material.
+1. **fresh reasoning** — no memory;
+2. **semantic top-k** — same retrieval-token budget, no trajectory structure;
+3. **procedural abstraction** — a concise procedure/summary derived from comparable retrieved evidence;
+4. **ordered composed path** — concrete checkpoints from heterogeneous trajectories;
+5. **same-fragment shuffle** — identical fragments and token budget, order randomized;
+6. **edge-destroyed composition** — same memory nodes but transition structure randomized before selection.
 
-2. **Shuffling path order does not hurt.** Then the trajectory carries no detectable sequential information; the fragments function as an unordered hint set.
+The primary mechanism question is not whether arm 4 has the highest unrestricted accuracy. It is whether arm 4 preserves more success than its controls when the model has little fresh generation left.
 
-3. **Destroying transition edges does not hurt.** Then historical reachability is not contributing useful structure.
+The strongest simple falsifiers are:
 
-4. **Memory scaling improves accuracy but does not reduce fresh inference at fixed accuracy.** Then memory is useful guidance but not computation substitution.
+- ordered path = shuffled path → order carries no detectable computational work;
+- ordered path = semantic top-k → navigation/topology adds nothing beyond relevant content;
+- ordered path = procedural abstraction → a compact reusable procedure explains the effect;
+- all retrieval arms still require the same fresh reasoning budget → memory is guidance, not substitution.
 
-5. **Composed paths help only on problem families already represented in memory.** Then the mechanism is closer to skill or case reuse than open recombination.
+## 10. Cost accounting: amortization, not erased history
 
-6. **Semantic proximity fails to predict continuation equivalence and no learnable retrieval criterion repairs it.** Then textual embeddings may be inadequate addresses for reusable computational states.
+Past computation was paid once. Retrieval does not make that causal work disappear.
 
-7. **The cost of constructing, retrieving, and ingesting paths exceeds the generation they replace.** Then the hypothesis may be scientifically true but economically uninteresting in the tested regime.
+For memory-build cost \(C_{build}\), storage/index cost \(C_{store}\), lookup/path cost \(C_{lookup}\), input-prefill cost \(C_{prefill}\), and remaining generation cost \(C_{fresh}\), a practical claim requires a horizon \(N\) for which
 
-## 11. The role of semantic inversion
+\[
+C_{build}+C_{store}+\sum_{n=1}^{N}(C_{lookup}+C_{prefill}+C_{fresh})
+<
+\sum_{n=1}^{N}C_{recompute}
+\]
 
-Embedding inversion is not required when every memory key has an associated textual value. Nearest-neighbor retrieval already returns a text that approximately addresses the desired region.
+at matched task performance.
 
-Inversion becomes relevant only in harder regimes: when a navigation algorithm identifies a useful vector-space waypoint with no stored textual realization, when interpolation or extrapolation creates an off-datastore target, or when one wants to test whether scalar feedback can synthesize a text that realizes a desired region.
+Stage 1 need only establish a substitutive mechanism. Stage 3 must establish the economic crossover.
 
-Semantic inversion should therefore be treated as a possible **bridge technology** for semantic computation reuse, not as the central scientific claim.
+This distinction also prevents a trivial token-count claim. A long retrieved path may reduce output tokens while increasing prefill FLOPs or latency. Such a result is mechanistically interesting but not yet an efficiency win.
 
-## 12. Open problems
+## 11. Negative evidence is informative
 
-Several questions determine whether the proposal becomes useful or collapses into ordinary retrieval.
+Current memory systems already show that retrieval and composition can be difficult. RECON, for example, reports low performance for non-oracle systems on compositional long-context tasks involving multi-hop chains, invalidation propagation, conflicts, counterfactuals, and temporal constraints. This makes it unsafe to assume that locally useful memory fragments compose reliably.
 
-### 12.1 What is a state?
+SCR could fail for several principled reasons:
 
-A sentence, a paragraph, a summarized reasoning prefix, a subproblem, and a hidden activation are different objects. The optimal granularity may depend on the downstream model and task.
+- textual interventions may be too lossy to stand in for computational states;
+- continuation equivalence may be strongly model- and task-specific;
+- useful substitution may not be transitive across multiple hops;
+- ordering effects may wash out after the model reinterprets the whole prompt;
+- the model may need to regenerate hidden dependencies even when the surface path is present;
+- prefill cost may erase any decode savings;
+- state density may scale too slowly to yield useful coverage.
 
-### 12.2 How are landmarks found without knowing the destination?
+Any of these results would narrow the role of external memory back toward procedural guidance, compiled solvers, or internal-state caches.
 
-The terminal answer to a new problem is unknown. Landmark selection therefore cannot depend on distance to a known target. Candidate criteria include historical reachability, successor diversity, outcome-conditioned centrality, learned value functions, and cheap exploration over the transition graph. This is closely related to landmark and waypoint planning in reinforcement learning.
+## 12. Relation to the existing research programme
 
-### 12.3 Does textual incoherence matter?
+This paper is intentionally narrower than several related manuscripts in this repository.
 
-A composed path may be locally addressable in embedding space yet globally nonsensical as prose. This is a feature of the hypothesis, not an implementation detail: if incoherent-but-ordered paths work, the result would separate discourse coherence from computational usefulness. If only coherent paths work, the system may reduce to a sophisticated retrieval-and-summarization pipeline.
+- **Semantic Atlas** owns the broad claim that reasoning can be studied as controlled movement through a semantic/dynamical map.
+- **Inverse Atlas** explores textual realization of locally desired semantic movement from historical inference records.
+- **RL Relay Transducers** already separates semantic candidate recall from reward-conditioned functional ranking.
+- **Agent Successor Policy** supplies a trajectory-conditioned and successor-style account of which future behavioral regions are valuable.
+- **Informational Time** supplies the distinction between historical causal work and its later compressed/indexed representation.
+- **Structured Irregularity** supplies the warning that local textual incoherence can still participate in a globally useful ordered process, and that order must be tested rather than assumed.
 
-### 12.4 Is the useful geometry semantic or dynamical?
+SCR's job is not to restate those mechanisms. It asks one bridging question:
 
-Cosine similarity measures a static relation between representations. The relevant geometry may instead be defined by transition and reachability probabilities. A learned graph metric could outperform the original embedding space even if embeddings remain useful for candidate generation.
+> **Can their shared object — a semantically addressable textual state — carry enough previously paid computational work that recombining such states measurably reduces new inference?**
 
-### 12.5 Where is the economic crossover?
+The internal lineage is documented separately in `semantic_computation_reuse_internal_lineage.md`.
 
-Retrieval is not free. Embedding queries, ANN search, input-token prefill, storage, graph traversal, and validation all consume resources. The practical question is not whether memory can replace generation in principle, but where the total cost curve crosses that of fresh inference.
+## 13. The role of semantic inversion
 
-## 13. Prediction
+Embedding inversion is not required when a memory key already has a stored textual value. The text is simply retrieved.
 
-The conservative prediction is that semantic computation reuse will work first in domains with repeated latent structure and objective verification, such as mathematics, code, tool use, and formal procedures. In these domains, historical trajectories provide dense evidence about useful transitions and failures can be detected cheaply.
+Inversion becomes relevant only when a later navigator proposes a useful off-datastore vector waypoint for which no textual realization is stored. In that regime an inversion system, including experiments developed in Perquire, could serve as a bridge technology.
 
-The stronger prediction is a scaling effect: once memory is sufficiently dense, useful landmark states and cross-trajectory connections become common enough that the cost of reaching a productive reasoning region falls nonlinearly. Under this view, past inference becomes infrastructure. Reasoning traces are not merely logs to be summarized or discarded; they are observations of a reusable computational topology.
+Semantic inversion is therefore downstream and optional. It is not evidence for the SCR hypothesis itself.
 
-If this prediction is wrong, procedural memory remains the more parsimonious model: retrieve a useful skill and reason again. If it is right, a large semantic memory may do something stronger. It may allow future systems to **navigate computation that has already happened and recombine it into computation that has never happened before**.
+## 14. Claim boundary after the 2026 frontier scan
+
+The following statements should not be presented as SCR novelty:
+
+- memory can improve reasoning;
+- vector retrieval can be cheaper than dense inference;
+- experience can be ranked by downstream utility;
+- trajectories can be stitched or recombined;
+- future reachability can define useful state similarity;
+- reasoning can be compiled and amortized;
+- internal inference representations can be cached and composed.
+
+The surviving research question is narrower:
+
+> **Can cross-trajectory composition of concrete textual checkpoints itself perform part of a novel computation, as demonstrated by causal displacement of fresh LLM inference under matched information and cost controls?**
+
+That statement is the working novelty boundary. The companion frontier note records the literature scan that motivated it and should be revised if closer prior art appears.
+
+## 15. Conclusion
+
+The interesting question is no longer whether language-model agents can remember, retrieve experience, recombine trajectories, or cache computation. They can.
+
+The unresolved question is whether **language itself can serve as a portable cache format for partially computed reasoning**. If concrete textual states can be behaviorally substituted and openly recombined, past inference may become a non-parametric computational substrate rather than only a source of facts or advice. If ordered-state paths fail to beat same-information controls under a restricted continuation budget, the stronger interpretation should be abandoned.
+
+The next step is therefore not a larger semantic map. It is a small, adversarial existence test designed to give the hypothesis a clean chance to die.
 
 ---
 
 ## References
 
-Berges, V.-P., Oğuz, B., Haziza, D., Yih, W.-t., Zettlemoyer, L., & Ghosh, G. (2025). *Memory Layers at Scale*. ICML 2025. https://proceedings.mlr.press/v267/berges25a.html
+Bhoi, S., Tripathi, A., Raza, A., & Jauhari, M. (2026). *CACHE-ED2: Compiling LLM Reasoning into Reusable Extraction Programs for Document Extraction at Scale*. ICML 2026 SCALE Workshop. https://www.amazon.science/publications/cache-ed2-compiling-llm-reasoning-into-reusable-extraction-programs-for-document-extraction-at-scale
 
-Borgeaud, S., et al. (2022). *Improving language models by retrieving from trillions of tokens*. ICML 2022. https://proceedings.mlr.press/v162/borgeaud22a.html
+Borgeaud, S., et al. (2022). *Improving Language Models by Retrieving from Trillions of Tokens*. ICML 2022. https://proceedings.mlr.press/v162/borgeaud22a.html
+
+Dayan, P. (1993). *Improving Generalization for Temporal Difference Learning: The Successor Representation*. Neural Computation, 5(4), 613–624. https://doi.org/10.1162/neco.1993.5.4.613
+
+Du, C., Chen, J., Tang, H., et al. (2026). *C²KV: Compressed and Composable KV Cache Reuse for Efficient LLM Inference*. https://arxiv.org/abs/2607.17715
+
+Feng, T., Ye, C., Luo, T., et al. (2026). *ExpGraph: Model-Agnostic Experience Learning with Graph-Structured Memory for LLM Agents*. https://arxiv.org/abs/2605.30712
+
+Guo, Y., Lin, J., Wang, H., et al. (2025). *SE-Agent: Self-Evolution Trajectory Optimization in Multi-Step Reasoning with LLM-Based Agents*. NeurIPS 2025. https://papers.nips.cc/paper_files/paper/2025/hash/a911e543a95493ae5004fdc01909043e-Abstract-Conference.html
+
+Hong, J., Dragan, A., & Levine, S. (2024). *Offline RL with Observation Histories: Analyzing and Improving Sample Complexity*. ICLR 2024. https://proceedings.iclr.cc/paper_files/paper/2024/file/1c3d419b754cb4de0a67a453cb28d959-Abstract-Conference.html
 
 Khandelwal, U., Levy, O., Jurafsky, D., Zettlemoyer, L., & Lewis, M. (2020). *Generalization through Memorization: Nearest Neighbor Language Models*. ICLR 2020. https://arxiv.org/abs/1911.00172
 
-Lample, G., Sablayrolles, A., Ranzato, M. A., Denoyer, L., & Jégou, H. (2019). *Large Memory Layers with Product Keys*. NeurIPS 2019. https://arxiv.org/abs/1907.05242
+Mi, Q., Ma, Z., Yang, M., et al. (2026). *ProcMEM: Learning Reusable Procedural Memory from Experience via Non-Parametric PPO for LLM Agents*. https://arxiv.org/abs/2602.01869
 
-Mi, Q., Ma, Z., Yang, M., Li, H., Wang, Y., Zhang, H., & Wang, J. (2026). *ProcMEM: Learning Reusable Procedural Memory from Experience via Non-Parametric PPO for LLM Agents*. https://arxiv.org/abs/2602.01869
+Naik, A., Mathur, Y., Prakam, Rose, C., & Mortensen, D. (2026). *ReaComp: Compiling LLM Reasoning into Symbolic Solvers for Efficient Program Synthesis*. https://arxiv.org/abs/2605.05485
 
 Ouyang, S., et al. (2026). *ReasoningBank: Scaling Agent Self-Evolving with Reasoning Memory*. ICLR 2026. https://arxiv.org/abs/2509.25140
 
-Shao, R., He, J., Asai, A., Shi, W., Dettmers, T., Min, S., Zettlemoyer, L., & Koh, P. W. (2024). *Scaling Retrieval-Based Language Models with a Trillion-Token Datastore*. NeurIPS 2024. https://arxiv.org/abs/2407.12854
+Shriniwas Arya, M. (2026). *RECON: Benchmarking Agent Memory for Compositional Reasoning over Long Contexts*. https://arxiv.org/abs/2607.16716
 
 Wang, Z. Z., Mao, J., Fried, D., & Neubig, G. (2025). *Agent Workflow Memory*. ICML 2025. https://proceedings.mlr.press/v267/wang25bx.html
 
@@ -374,6 +381,4 @@ Wu, D., Sachan, D. S., Yih, W.-t., & Chen, M. (2026). *Procedural Knowledge at S
 
 Wu, Y., Rabe, M. N., Hutchins, D., & Szegedy, C. (2022). *Memorizing Transformers*. ICLR 2022. https://arxiv.org/abs/2203.08913
 
-Yao, J., et al. (2025). *CacheBlend: Fast Large Language Model Serving for RAG with Cached Knowledge Fusion*. EuroSys 2025. https://arxiv.org/abs/2405.16444
-
-Zhao, X., & Mastorakis, S. (2025). *SemShareKV: Efficient KVCache Sharing for Semantically Similar Prompts via Token-Level LSH Matching*. Findings of IJCNLP-AACL 2025. https://aclanthology.org/2025.findings-ijcnlp.25/
+Zhang, S., Wang, J., Zhou, R., et al. (2026). *MemRL: Self-Evolving Agents via Runtime Reinforcement Learning on Episodic Memory*. https://arxiv.org/abs/2601.03192
