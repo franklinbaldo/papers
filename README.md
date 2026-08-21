@@ -28,6 +28,10 @@ Position papers and working drafts.
 - `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
 
+## Eixo memória semântica / reutilização de computação
+
+- `semantic_computation_reuse.md` — position paper sobre navegação em memória de estados semanticamente endereçáveis, landmark states, continuation equivalence e substituição de inference por composição de computação passada
+
 ## Eixo aprendizagem algorítmica / machine teaching
 
 - `generative_machine_teaching.md` — previsão do próximo bit como tarefa primitiva; tokenização endógena, adaptativa ao contexto, com provas de montagem e currículos procedurais binários
