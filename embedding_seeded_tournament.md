@@ -1,9 +1,9 @@
 ---
 type: "Technical Paper"
 title: "Embedding-Seeded Hierarchical Tournament Ranking: A Scalable Method for Evaluating Judicial Decision Quality with LLM Panels"
-description: "ESHTR: avaliacao por painel de LLMs de qualidade de decisoes judiciais via clustering por embedding e torneio hierarquico."
+description: "ESHTR: avaliacao por painel de LLMs de qualidade de decisoes judiciais via clustering por embedding e torneio hierarquico. §7.3 adds a C1/C2 ground-truth limitation (ementa elevation-error risk) absorbed from the C2 structural-distinctness debate (otherwise/eshtr-phase3-gap.md, yesindeed/phase3-coherence-defense.md), edit cycle 13."
 tags: [eshtr]
-timestamp: 2026-07-09T11:04:50+00:00
+timestamp: 2026-08-22T00:00:00+00:00
 ---
 
 # Embedding-Seeded Hierarchical Tournament Ranking: A Scalable Method for Evaluating Judicial Decision Quality with LLM Panels
@@ -621,6 +621,69 @@ answers is expected to vary by precedent type; calibration design
 should measure arm-specific reliability differentials between
 contested constitutional precedents and more determinate precedent
 classes (`otherwise/eshtr-phase3-gap.md` §3 rounds 9–10).
+
+**C1/C2 ground-truth reliability: the ementa elevation-error risk.**
+The C1 and C2 protocols above both resolve the cited precedent's
+fundamento determinante by reading its ementa rather than
+synthesizing across the underlying votos (§5.4). A 26-round
+adversarial/supportive exchange examined whether this design choice
+is well-founded and, if so, how reliable it is. Two points from that
+exchange are now bilaterally settled and should be read into the
+protocol above.
+
+First, the design choice itself is sound: the ementa is
+ratio-constitutive — the relator's official, per-decision
+characterization of which element of the votos' (possibly
+divergent) reasoning was decisive — a distinct function-type from
+the *relatório*, which merely narrates external procedural and
+factual history and carries no such characterization. Anchoring C1/C2
+ground truth to the ementa rather than the relatório is therefore not
+an arbitrary convenience; it targets the document the tribunal's own
+procedural rules assign to state the ratio (`otherwise/eshtr-phase3-gap.md`
+§3 rounds 16, 20, 25–26; `yesindeed/phase3-coherence-defense.md`
+§§4.11, 4.15).
+
+Second, that design choice carries a genuine, previously unstated
+risk that the protocol did not account for: *elevation errors*, where
+the ementa's characterization diverges from what the votos actually
+establish as decisive. Two structural drivers concentrate elevation
+errors in a specific, identifiable subclass of the corpus: secretariat
+synthesis under fragmented plenary deliberation (the same collegial,
+multi-voto cases already flagged above as difficult for a different
+reason), and a breadth incentive in the ementa's cross-court citation
+function that favors principle-level generality over case-specific
+accuracy. Annotators should not treat the ementa as infallible ground
+truth for these cases; the calibration corpus (§5.4) should track
+elevation-error incidence as a distinct annotation-quality metric,
+concentrated in the collegial-fragmentation and high-adversarial-record
+class already under heightened scrutiny for the abstraction-level
+reasons above.
+
+The exchange also examined, and rejects, one route that might have
+made this risk self-correcting rather than merely disclosed: Brazilian
+doctrine does not establish that an ementa/voto elevation error
+triggers art. 93, IX CF constitutional nullity as a distinct defect
+category — no primary authority for that claim was produced by either
+side across the full exchange. The cited court's duty to keep its
+ementa accurate is grounded instead in art. 926 caput's systemic
+jurisprudential-integrity requirement, enforced through the ordinary
+compliance and recalibration framework of arts. 926–927 rather than
+through case-by-case invalidation. Practically, this means an elevation
+error is not reliably flagged or corrected by the primary legal record
+itself, which is the reason the calibration protocol — not the courts'
+own error-correction mechanisms — must be the place this risk is
+tracked (`otherwise/eshtr-phase3-gap.md` §3 rounds 18, 21–26;
+`yesindeed/phase3-coherence-defense.md` §§4.12–4.15).
+
+One sub-question from the same exchange remains open and is not
+absorbed here: whether the ementa's characterization, precisely
+because it states only the *conclusion* of the relator's second-order
+reasoning about which voto element controls rather than that reasoning
+itself, fully satisfies art. 93, IX CF's fundamentação standard. That
+question is about the ementa's own constitutional adequacy as a
+judicial output, not about whether this protocol may rely on it as an
+annotation reference document, and does not bear on C1/C2 as specified
+above.
 
 **C3 preprocessing residuals.** Official-database preprocessing does
 not reach all sources of legally mandated verbatim text recurrence.
