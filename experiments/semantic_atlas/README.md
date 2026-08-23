@@ -1,3 +1,11 @@
+---
+type: "Companion Note"
+title: "Semantic Atlas Toy Experiments"
+description: "Map of the falsifiable toy harnesses supporting semantic_atlas.md, and of the boundary between the cheap synthetic test layer and anything run against a real model."
+tags: [semantic-atlas, experiment, preregistration, toy-harness]
+timestamp: 2026-08-09T00:20:00Z
+---
+
 # Semantic Atlas toy experiments
 
 This directory contains the falsifiable toy harnesses for `semantic_atlas.md`.
