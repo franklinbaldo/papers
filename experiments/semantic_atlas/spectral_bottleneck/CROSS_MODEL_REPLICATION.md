@@ -1,3 +1,11 @@
+---
+type: "Findings Record"
+title: "Cross-Model Replication: SmolLM2-360M"
+description: "Execution record for repeating the frozen implicit-confidence transfer protocol, unchanged, on SmolLM2-360M: the result that passed on the 135M model did not replicate, failing three of the registered gates while the shuffled-label control held."
+tags: [semantic-atlas, spectral-geometry, findings, replication, smollm2, negative-result]
+timestamp: 2026-08-17T03:00:00Z
+---
+
 # Cross-model replication: SmolLM2-360M
 
 The frozen implicit-confidence transfer protocol that passed on `HuggingFaceTB/SmolLM2-135M` was repeated unchanged on the larger model from the same family.

@@ -1,3 +1,11 @@
+---
+type: "Findings Record"
+title: "Real-Model Spectral Bottleneck Findings"
+description: "Execution record for the spectral-bottleneck probes on SmolLM2-135M: the frozen mean-pooling smoke that failed its registered gates, a post-hoc observer-sensitivity probe explicitly barred from confirming it, and a fresh endpoint run that rejected the generic all-axis hypothesis while the confidence axis passed all six gates."
+tags: [semantic-atlas, spectral-geometry, findings, falsification, smollm2, negative-result]
+timestamp: 2026-08-17T03:00:00Z
+---
+
 # Real-model spectral bottleneck findings
 
 This note records the real-model checks added after the synthetic spectral-bottleneck smoke. It separates frozen results, post-hoc sensitivity analyses, fresh confirmation, and cross-realization transfer.

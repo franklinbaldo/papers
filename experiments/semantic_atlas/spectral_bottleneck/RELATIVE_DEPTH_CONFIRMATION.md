@@ -1,3 +1,11 @@
+---
+type: "Findings Record"
+title: "Relative-Depth Confirmation — Falsified"
+description: "Execution record for the pre-registered mechanistic prediction about relative layer depth derived from the 17/30 and 18/32 alignment: the fresh training-alignment gate failed on SmolLM2-135M, so the cross-model confirmation it required was never reached."
+tags: [semantic-atlas, spectral-geometry, findings, falsification, layer-depth, smollm2]
+timestamp: 2026-08-17T03:00:00Z
+---
+
 # Fresh relative-depth confirmation — falsified
 
 An exploratory all-layer scan on the original explicit-to-implicit confidence-transfer corpus found passing confidence windows at layers `15–18/30` in SmolLM2-135M and at layers `18`, `20–21/32` in SmolLM2-360M. The especially close alignment of `17/30 = 0.5667` and `18/32 = 0.5625` motivated a preregistered mechanistic prediction:
