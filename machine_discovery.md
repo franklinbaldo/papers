@@ -1,9 +1,9 @@
 ---
 type: "Technical Paper"
 title: "When the Learner Changes the Curriculum: Machine Discovery as Recursive Expansion of Verifiable Knowledge"
-description: "Position paper defining machine discovery as a certified, provenance-aware transition between public epistemic states, with downstream curriculum expansion as its recursive consequence."
+description: "Position paper defining machine discovery as a certified, provenance-aware transition between public epistemic states, with downstream curriculum expansion as its recursive consequence. §19's central claim now states the machine-originated/machine-assisted (Definition 2) restriction explicitly, absorbed from the r4/r5 adversarial-supportive exchange over §19's prior wording, edit cycle 13."
 tags: [machine-discovery, epistemic-expansion, verification, provenance, formal-mathematics]
-timestamp: 2026-08-01T17:41:00Z
+timestamp: 2026-08-22T00:00:00Z
 ---
 
 # When the Learner Changes the Curriculum: Machine Discovery as Recursive Expansion of Verifiable Knowledge
@@ -1050,7 +1050,9 @@ $$
 
 This yields the paper's central claim:
 
-> **A machine discovers when an artifact to which it made an essential contribution survives the relevant certificate and novelty procedures and thereby enlarges a public epistemic state. The discovery becomes recursive when that enlargement measurably changes what later learners can infer, solve, or discover.**
+> **A machine discovers when it makes a machine-originated contribution — essential to the first generation of the claim, construction, or method, not only to its verification, formatting, or retrieval (Definition 2) — to an artifact that survives the relevant certificate and novelty procedures and thereby enlarges a public epistemic state. The discovery becomes recursive when that enlargement measurably changes what later learners can infer, solve, or discover.**
+
+This restates the claim with Definition 2's machine-originated/machine-assisted distinction made explicit on the surface of the text rather than left for the reader to supply from context. A verification-only or formatting-only machine contribution — however essential to the pipeline that produced the artifact — is machine-assisted, not machine discovery, under this statement. Both `otherwise/machine-discovery-scope.md` (rounds 4–5) and `yesindeed/definition1-machine-discovery-defense.md` (§§3.6–3.7) converged on this specific textual fix as removing a genuine ambiguity in the prior wording, independent of their continuing disagreement over whether Definition 1 itself needs its own generation-essentiality requirement — that broader question is not resolved by this revision and remains open in the adversarial/supportive exchange.
 
 A learner changes the curriculum not when it produces a remarkable-looking answer, but when its contribution becomes a durable and reusable part of what comes next.
 
