@@ -27,6 +27,7 @@ Position papers and working drafts.
 - `proveniencia_claims.md` — proveniência de claims
 - `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
+- `structural_identification_from_restricted_truths.md` — teoria matemática de identificação estrutural relativa a classe de hipóteses, equivalência, família de verdades e custo, com núcleo formalizado em Lean 4
 
 ## Eixo aprendizagem algorítmica / machine teaching
 
