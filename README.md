@@ -27,6 +27,7 @@ Position papers and working drafts.
 - `proveniencia_claims.md` — proveniência de claims
 - `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
+- `truth_preserving_representations.md` — representações arbitrárias, transporte de estrutura e identificação de estrutura latente por verdades preservadas até isomorfismo
 
 ## Eixo aprendizagem algorítmica / machine teaching
 
@@ -70,7 +71,7 @@ Position papers and working drafts.
 
 - `machine_interaction_program.md` — mapa editorial que conecta machine teaching, informational time, signal extraction, machine discovery, interstitial agency, relay transducers e Forbidden Relay
 - `otherwise/` — argumentos adversariais
-- `yesindeed/` — argumentos de suporte
+- `yesindeed/` — defesas supportivas, mesma estrutura
 - `synthesis/` — árbitro: funde `otherwise/`/`yesindeed/` e roda os ciclos de edição que absorvem conclusões assentadas de volta aos papers principais
 - `PROTOCOL.md` — regras do aparato de debate acima (papéis, gatilho de absorção, corte de debates em loop)
 
