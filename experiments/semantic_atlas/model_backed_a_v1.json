@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "experiment": "semantic-atlas-a-model-backed-v1",
+  "source_commit": "ff68b0653063e11e9cc3da887003bc0d46b14d26",
+  "reference_observer": {
+    "model": "Qwen/Qwen3-Embedding-0.6B",
+    "revision": "97b0c61"
+  },
+  "transfer_observer": {
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "1110a24"
+  },
+  "generator": {
+    "model": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de"
+  },
+  "srf_dim": 64,
+  "corpus": {
+    "source": "markdown files from source_commit",
+    "selection": "sort by sha256(path); first 80 calibration, next 24 heldout, next 12 trajectory",
+    "excerpt_chars": 1200,
+    "calibration_count": 80,
+    "heldout_count": 24,
+    "trajectory_count": 12
+  },
+  "trajectory": {
+    "seeds": [11, 23],
+    "max_new_tokens": 24,
+    "chunk_tokens": 6,
+    "do_sample": true,
+    "temperature": 0.8
+  },
+  "atlas": {
+    "center_count": 32,
+    "center_selection": "first 32 calibration coordinates after frozen path-hash ordering"
+  },
+  "primary_metrics": [
+    "heldout_coordinate_rmse",
+    "heldout_canonical_cosine",
+    "nearest_quasar_agreement",
+    "shuffled_coordinate_rmse",
+    "atlas_coverage",
+    "transition_count"
+  ],
+  "gate": {
+    "require_shuffled_worse_than_paired": true,
+    "notes": "This manifest freezes identity and collection policy only. It does not predeclare a success threshold not already present in protocol.md. Results remain descriptive until a threshold addendum is frozen before inspection."
+  }
+}
