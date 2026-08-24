@@ -1,3 +1,11 @@
+---
+type: "Findings Record"
+title: "Semantic Atlas Experiment A — model-backed results (v1 and API replication)"
+description: "Execution record for both frozen model-backed Experiment A manifests on the same corpus derivation: Qwen3-Embedding×MiniLM on GitHub Actions and a Gemini×Jina API replication, with the shuffled-correspondence gate passing in both pairings and moderate absolute held-out coordinate agreement."
+tags: [semantic-atlas, findings, preregistration, embeddings, srf, replication]
+timestamp: 2026-08-24T22:19:14Z
+---
+
 # Semantic Atlas Experiment A — model-backed results (v1 and API replication)
 
 Both pre-registered manifests were executed end-to-end on 2026-08-24 against the
