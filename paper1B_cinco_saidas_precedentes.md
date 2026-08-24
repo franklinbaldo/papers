@@ -3,7 +3,7 @@ type: "Dogmatic Paper"
 title: "As Cinco Saídas Legítimas do Tribunal diante de Precedente Vinculante: Vinculação Racional e Superação no CPC 2015"
 description: "As cinco saidas legitimas do tribunal diante de precedente vinculante (art. 927, par. 1o c/c art. 489, par. 1o, V-VI)."
 tags: [paper1b]
-timestamp: 2026-07-09T12:12:59+00:00
+timestamp: 2026-08-14T00:00:00+00:00
 ---
 
 # As Cinco Saídas Legítimas do Tribunal diante de Precedente Vinculante: Vinculação Racional e Superação no CPC 2015
@@ -811,6 +811,18 @@ expressa, sob controle recursal. O risco de instabilidade é
 contido pelo próprio desenho do ônus; o risco de erro
 inquestionável, ao contrário, é estrutural na leitura puramente
 hierárquica.
+
+### 7.7 O fundamento conjunto das saídas 4 e 5: paridade estrutural entre a leitura de reconhecimento de forma e a leitura de autorização
+
+**Objeção.** A conjugação dos arts. 927 e 489 como estrutura conjunta produz ambiguidade genuína sobre o que "legítimas" em "saídas legítimas" constitutivamente exige. Duas leituras coerentes são identificáveis a partir do texto do CPC 2015, cada uma enfatizando uma das funções do binômio normativo.
+
+A *leitura de autorização* sustenta que o art. 927 é o dispositivo de constituição do sujeito da compliance — é a norma que cria a obrigação de precedente vinculante —, e que "legítima" marca as respostas que o sistema de compliance *autoriza* como navegações permissíveis da obrigação. Sob essa leitura, as saídas 4 e 5 — superação racional e abstenção da invocação — integram o conjunto das "saídas legítimas" apenas se o regime do art. 927 as autorizar como respostas permissíveis à obrigação que ele mesmo constitui.
+
+A *leitura de reconhecimento de forma* — adotada implicitamente pela taxonomia deste artigo — sustenta que o art. 489 é o critério de classificação do conjunto, e que "legítima" marca as respostas que o art. 489 *reconhece* na estrutura de processamento ordinário como tipos regulados de resposta. Sob essa leitura, as saídas 4 e 5 qualificam como "legítimas" porque o art. 489 as reconhece como respostas no domínio do processamento ordinário, independentemente de qualquer determinação autorizante prévia pelo art. 927.
+
+A literatura adversarial sobre esta tese — quinze rodadas de debate bilateral preservadas em `otherwise/paper1b-rational-supersession.md` — estabeleceu que o vocabulário estrutural disponível a partir do texto do CPC 2015 é exaurido sem adjudicar a questão entre as duas leituras. Ambas são expressões coerentes de suas premissas contestadas; nenhuma constitui argumento estrutural independente que resolve a questão sem pressupor a leitura que expressa. O que o debate estabeleceu é paridade pro tanto ao nível da conjunção dos arts. 927 e 489: a leitura de reconhecimento de forma, que organiza este artigo, é plausível, não privilegiada. O mecanismo de resolução remanescente é doutrina processual brasileira primária sobre o que "saídas legítimas" constitutivamente exige no regime do CPC 2015 — especificamente, o que a operação conjunta do art. 927 (como dispositivo de constituição da obrigação de compliance) e do art. 489 (como critério de classificação das respostas) produz para o predicado organizador da taxonomia.
+
+**Reconhecimento.** Este artigo sustenta a leitura de reconhecimento de forma como interpretação coerente com o modelo de vinculação racional desenvolvido na seção 4 — em que o tribunal é vinculado à ratio porque ela articula razão jurídica, não porque a autoridade de fonte a autoriza. Reconhece, contudo, que essa preferência é pro tanto pari à leitura de autorização ao nível do fundamento conjunto: nenhuma das duas leituras demonstra superioridade sobre a outra pela análise estrutural das disposições do CPC 2015. As saídas 4 e 5 permanecem categorias dogmáticas válidas e úteis — o espaço das cinco saídas encontra fundamento direto no texto dos arts. 927, §1º, e 489, §1º, V e VI. O que o debate adversarial estabeleceu é que o fundamento profundo dessas saídas — a razão pela qual o sistema as reconhece como formas, e não como anomalias toleradas — é genuinamente indeterminado ao nível da conjunção dos arts. 927 e 489. Essa indeterminação não compromete o alcance prático das saídas; compromete apenas a pretensão de fundamento privilegiado de uma leitura sobre a outra.
 
 ---
 

@@ -3,7 +3,7 @@ type: "Dogmatic Paper"
 title: "O Livre Convencimento como Doutrinização do Patrimonialismo Judicial: Genealogia Histórico-Institucional do Equilíbrio de Baixa Qualidade Argumentativa no Sistema de Precedentes Brasileiro"
 description: "Genealogia historico-institucional do livre convencimento como doutrinizacao do patrimonialismo judicial."
 tags: [paper1g]
-timestamp: 2026-07-09T14:51:32+00:00
+timestamp: 2026-08-14T00:00:00+00:00
 ---
 
 # O Livre Convencimento como Doutrinização do Patrimonialismo Judicial: Genealogia Histórico-Institucional do Equilíbrio de Baixa Qualidade Argumentativa no Sistema de Precedentes Brasileiro
@@ -299,6 +299,8 @@ independentemente de seu conteúdo racional: bastava que o juiz
 indicasse algo como motivo, e a decisão estava formalmente
 fundamentada. A motivação era casca — não núcleo.
 
+A genealogia adversarial desta tese estabeleceu dois ajustes ao argumento desta seção. *Primeiro*, a especificidade direcional do transplante — o fato de que o livre convencimento se fixou especificamente à valoração judicial de provas, e não a algum outro aspecto da discricionariedade judicial — pode ser explicada pela arquitetura interna da tradição italiana de origem, sem recurso ao patrimonialismo brasileiro como mecanismo diferencial: o contraste com a prova legal era o alvo imediato da reforma processual; a distinção já era altamente saliente na tradição civilista continental; e o CPC italiano de 1940 codificara separadamente a liberdade da prova legal e a dimensão de fundamentação, tornando a direção do transplante estruturalmente determinada antes de chegar ao campo receptor. *Segundo*, a seleção de conteúdo — qual prática foi o alvo de validação — pode igualmente ser explicada pela saliência do contraste com a prova legal na agenda reformista: o que foi validado foi o que estava mais proeminentemente em disputa na tradição de origem, não o que o substrato patrimonialista brasileiro especificamente demandava. Essas duas dimensões do transplante — direção e conteúdo — têm explicações alternativas que não dependem do patrimonialismo como mecanismo explicativo diferencial (cf. `otherwise/paper1g-transplant-specification.md`, rr. 1–4).
+
 ### 3.3 A doutrina como legitimação
 
 A tradição doutrinária do processo civil brasileiro, formada sob
@@ -326,6 +328,10 @@ perspectiva de dentro de uma tradição que formou suas categorias
 em contexto diferente do brasileiro e que não precisou enfrentar
 o problema da discricionariedade patrimonialista como problema
 central de teoria processual.
+
+A genealogia adversarial desta tese estabeleceu um ajuste relevante à explicação da orientação validatória. A escolha de apresentar o livre convencimento como descrição de prática existente — nomeando o que os tribunais já faziam como estado processual legítimo já realizado, em vez de enquadrá-lo como norma prospectiva a ser alcançada — pode ser explicada pela dinâmica de legitimação de campo periférico (*peripheral-field legitimation dynamics*): campos receptores que se encontram na periferia de uma tradição doutrinária de origem tendem a absorver os conceitos transplantados por validação retrospectiva, identificando na prática existente a realização do princípio importado, em vez de marcá-lo como patamar normativo ainda não atingido. Essa dinâmica é estrutural ao campo periférico enquanto tal e independe do patrimonialismo como substrato cultural específico (cf. `otherwise/paper1g-transplant-specification.md`, rr. 2–4).
+
+O debate adversarial estabeleceu, portanto, que o mecanismo patrimonialista, corretamente especificado, não é necessário para explicar três dimensões da doutrinização do livre convencimento: a especificidade direcional, a orientação validatória e a seleção de conteúdo. O que permanece como contribuição diferencial do substrato patrimonialista é uma dimensão mais estreita: por que a absorção adotou a forma de validação retrospectiva que especificamente nomeia práticas existentes como estado legítimo já realizado — forma (i) — em vez da forma de alinhamento normativo prospectivo, que afirmaria o princípio sem identificar a prática existente como sua expressão correta atual — forma (ii). A análise das formas absorptivas disponíveis ao campo receptor periférico e a pergunta sobre qual delas o substrato patrimonialista especificamente prediz permanecem sob exame doutrinário (cf. `otherwise/paper1g-transplant-specification.md`, rr. 4–7; `yesindeed/paper1g-doctrinalization-mechanism.md`).
 
 ---
 
@@ -629,6 +635,8 @@ mostra que o sistema está em movimento. O avanço é real: o CPC
 fundamentação específica, e criou mecanismo de temas repetitivos
 que torna a estrutura racional mais explícita e mais difícil de
 fingir do que o mecanismo anterior da súmula vinculante.
+
+O alcance desta genealogia deve ser delimitado com precisão à luz do debate doutrinário subsequente. A análise adversarial estabeleceu que o mecanismo patrimonialista não é necessário para explicar três dimensões da doutrinização do livre convencimento: a especificidade direcional do transplante, a orientação validatória da absorção e a seleção de conteúdo. Essas dimensões têm explicações alternativas — na arquitetura da tradição de origem e nas dinâmicas de legitimação de campo periférico — que não dependem do patrimonialismo como mecanismo diferencial. O que o substrato patrimonialista especificamente explica, e o que este artigo sustenta como contribuição diferencial desta genealogia, é a dimensão da seleção de forma absorptiva: por que o campo receptor adotou a forma de validação retrospectiva que nomeia práticas existentes como estado legítimo já realizado, em vez da forma de alinhamento normativo prospectivo. Essa dimensão permanece sob exame doutrinário (cf. `otherwise/paper1g-transplant-specification.md`; `yesindeed/paper1g-doctrinalization-mechanism.md`).
 
 O habitus patrimonialista resiste. Mas resistência não é permanência.
 O campo jurídico brasileiro está sendo perturbado de múltiplos

@@ -22,11 +22,13 @@ every pull request.
 * [Adversarial Critique](types/adversarial-critique.md) - living attack thread against a paper's thesis.
 * [Adversarial Blog](types/adversarial-blog.md) - dated long-form record of one substantive adversarial round.
 * [Supportive Defense](types/supportive-defense.md) - living defense thread for a paper's thesis.
+* [Supportive Blog](types/supportive-blog.md) - dated supportive-session record that preserves a complete round-specific defense and its assessment.
 * [Session Log Entry](types/session-log-entry.md) - dated changelog entry for one debate-apparatus session.
 * [Protocol](types/protocol.md) - canonical rules document for a repeatable process.
 * [Audit Report](types/audit-report.md) - dated external review with findings and execution status.
 * [Session Log](types/session-log.md) - superseded precursor to Session Log Entry.
 * [Index](types/catalog-index.md) - human-facing catalog and reading guide (this repository's `README.md`).
+* [Reference](types/reference.md) - vendored external material, mirrored into this repository so its OKF adoption does not depend on that material staying reachable (`okf/SPEC.md`).
 * [OKF Type Spec](types/okf-type-spec.md) - a document that specifies how one type should be used (this list's own entries).
 
 # Tooling
