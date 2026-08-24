@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "experiment": "semantic-atlas-a-model-backed-api-v2",
+  "source_commit": "ff68b0653063e11e9cc3da887003bc0d46b14d26",
+  "reference_observer": {
+    "provider": "gemini",
+    "model": "gemini-embedding-001",
+    "endpoint": "https://generativelanguage.googleapis.com/v1beta",
+    "credential_env": "GEMINI_API_KEY"
+  },
+  "transfer_observer": {
+    "provider": "jina",
+    "model": "jina-embeddings-v3",
+    "dimensions": 1024,
+    "task": "retrieval.passage",
+    "endpoint": "https://api.jina.ai",
+    "credential_env": "JINA_API_KEY"
+  },
+  "generator": {
+    "model": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de",
+    "note": "Kept local and frozen so trajectory continuations share the v1 substrate; only observers moved to hosted APIs."
+  },
+  "srf_dim": 64,
+  "corpus": {
+    "source": "markdown files from source_commit",
+    "selection": "sort by sha256(path); first 80 calibration, next 24 heldout, next 12 trajectory",
+    "excerpt_chars": 1200,
+    "calibration_count": 80,
+    "heldout_count": 24,
+    "trajectory_count": 12
+  },
+  "trajectory": {
+    "seeds": [11, 23],
+    "max_new_tokens": 24,
+    "chunk_tokens": 6,
+    "do_sample": true,
+    "temperature": 0.8
+  },
+  "atlas": {
+    "center_count": 32,
+    "center_selection": "first 32 calibration coordinates after frozen path-hash ordering"
+  },
+  "api": {
+    "gemini_batch_size": 32,
+    "jina_batch_size": 32,
+    "max_retries": 5
+  },
+  "primary_metrics": [
+    "heldout_coordinate_rmse",
+    "heldout_canonical_cosine",
+    "nearest_quasar_agreement",
+    "shuffled_coordinate_rmse",
+    "atlas_coverage",
+    "transition_count"
+  ],
+  "gate": {
+    "require_shuffled_worse_than_paired": true,
+    "notes": "Same gate as model-backed A v1. Results remain descriptive until a threshold addendum is frozen before inspection."
+  },
+  "deviation_notes": "New manifest version per protocol.md ('Corrections require a new manifest version and explanation'). Observers are hosted API models instead of locally-run open weights: Gemini gemini-embedding-001 as reference and Jina jina-embeddings-v3 as an independent native coordinate system. Provider-side identifiers are recorded here and in every artifact; reproducibility therefore depends on provider behavior, not weight hashes. Corpus derivation, split rule, SRF dimension, trajectory parameters, generator revision, atlas construction, metrics and gate are identical to model_backed_a_v1."
+}

@@ -1,0 +1,31 @@
+name: Semantic Atlas model-backed A (API)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: experiments/semantic_atlas
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e '.[models]'
+      - name: Run API-backed Experiment A v2
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
+        run: python scripts/run_model_backed_a_api.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-atlas-model-backed-a-v2-api
+          path: experiments/semantic_atlas/artifacts/model_backed_a_v2_api.json
+          if-no-files-found: error
