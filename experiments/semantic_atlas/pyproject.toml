@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "semantic-atlas-toy"
+version = "0.1.0"
+description = "Toy experiments for the Semantic Atlas paper"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2.0",
+]
+
+[project.optional-dependencies]
+models = [
+  "torch>=2.5",
+  "transformers>=4.51",
+  "sentence-transformers>=5.0",
+]
+dev = [
+  "pytest>=8.3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/semantic_atlas"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
