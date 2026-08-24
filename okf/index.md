@@ -28,6 +28,7 @@ every pull request.
 * [Audit Report](types/audit-report.md) - dated external review with findings and execution status.
 * [Session Log](types/session-log.md) - superseded precursor to Session Log Entry.
 * [Index](types/catalog-index.md) - human-facing catalog and reading guide (this repository's `README.md`).
+* [Reference](types/reference.md) - vendored external material, mirrored into this repository so its OKF adoption does not depend on that material staying reachable (`okf/SPEC.md`).
 * [OKF Type Spec](types/okf-type-spec.md) - a document that specifies how one type should be used (this list's own entries).
 
 # Tooling
