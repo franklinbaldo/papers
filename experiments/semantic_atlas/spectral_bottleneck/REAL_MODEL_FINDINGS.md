@@ -143,7 +143,56 @@ All five registered transfer gates passed. Notably, the label-blind spectral coo
 
 This makes a pure direct-vocabulary explanation substantially less plausible. It does **not** eliminate all lexical/style confounds: replication language itself has regularities, the corpus remains controlled, and only one small model/checkpoint has been tested.
 
+## Post-replication amendment (2026-08-24)
+
+The sections below were written before `CROSS_MODEL_REPLICATION.md` and
+`RELATIVE_DEPTH_CONFIRMATION.md` existed. Read together with those records,
+their weights change. No number or gate outcome above is altered; what changes
+is how much each item was ever entitled to carry, and which claims remain live.
+
+Separating three outcomes that the original narrative ran together:
+
+1. **Assumption removal, not discovery (mean pooling vs endpoint).** The
+   frozen mean-pooling run was the registered first probe, and its failure is a
+   sanity check on the instrument plus a demonstration that the observer is
+   load-bearing. For an autoregressive model there was never a theoretical
+   reason to expect prefix averaging and the causal endpoint to share global
+   graph topology, so the contrast teaches us about our own pipeline, not about
+   semantic geometry. What remains substantive in that first run is internal to
+   the same observer: the supervised centroid decoded at 0.7500 while the
+   Fiedler partition sat at chance on identical states.
+2. **Assumption removal with sanity-check value (decodable ≠ Fiedler).** Stance
+   and permission being perfectly linearly decodable while absent from the first
+   spectral mode confirms a possibility the programme already knew was open:
+   no theorem requires a chosen semantic variable to be the graph's weakest
+   global connection. Killing this interpretation inside our own programme was
+   necessary — the original M4 formulation invited exactly this shortcut — but
+   it is not an independent empirical discovery about representations, and
+   should not be cited as one.
+3. **Genuine falsification with content (instability of the confidence
+   property).** The confidence result is the one place where the sequence
+   learned something the theory did not already anticipate: a geometric
+   property that passed six registered gates, survived an explicit-to-implicit
+   realization shift, then failed unchanged cross-model replication and a
+   preregistered fresh-corpus relative-depth rule. The surviving claim is not
+   "Fiedler does not work"; it is that the property
+   *epistemic confidence is the first low-conductance partition* is strongly
+   conditional on checkpoint, layer, corpus realization, and graph
+   construction. Instability across realizations — established prospectively,
+   with the failure occurring before the transfer step on 360M — is the
+   scientific payload of this file when combined with the other two records.
+
 ## Current interpretation
+
+> **Status note (2026-08-24):** items 1, 2, and 5 below stand as written.
+> Items 3 and 4 are **superseded**: the cross-model replication
+> (`CROSS_MODEL_REPLICATION.md`) failed the same frozen protocol on SmolLM2-360M,
+> and the relative-depth rule motivated by the exploratory scan was
+> preregistered and falsified (`RELATIVE_DEPTH_CONFIRMATION.md`). The working
+> hypothesis quoted below therefore no longer has standing support in the form
+> stated; any successor hypothesis must carry checkpoint, layer, corpus, and
+> graph construction as explicit parameters of the claim, per the
+> reclassification above.
 
 The evidence now supports a substantially narrower but more interesting claim than the original broad proposal:
 
