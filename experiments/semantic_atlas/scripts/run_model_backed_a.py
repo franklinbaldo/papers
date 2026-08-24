@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import subprocess
@@ -12,16 +13,30 @@ from semantic_atlas.atlas import SemanticAtlas
 from semantic_atlas.frame import QuasarFrame
 
 
-def _git_paths(commit: str) -> list[str]:
+@functools.lru_cache(maxsize=1)
+def _repo_root() -> str:
+    here = Path(__file__).resolve().parent
     output = subprocess.check_output(
-        ["git", "ls-tree", "-r", "--name-only", commit], text=True
+        ["git", "-C", str(here), "rev-parse", "--show-toplevel"], text=True
+    )
+    return output.strip()
+
+
+def _git_paths(commit: str) -> list[str]:
+    # The corpus domain is every markdown file in the tree of source_commit.
+    # ls-tree is CWD-sensitive, so pin git to the repository root: running from
+    # experiments/semantic_atlas would otherwise collapse the corpus to the 7
+    # markdown files inside that subdirectory instead of the whole repo.
+    root = _repo_root()
+    output = subprocess.check_output(
+        ["git", "-C", root, "ls-tree", "-r", "--name-only", commit], text=True
     )
     paths = [line.strip() for line in output.splitlines() if line.strip().endswith(".md")]
     return sorted(paths, key=lambda path: hashlib.sha256(path.encode()).hexdigest())
 
 
 def _git_text(commit: str, path: str, limit: int) -> str:
-    raw = subprocess.check_output(["git", "show", f"{commit}:{path}"])
+    raw = subprocess.check_output(["git", "-C", _repo_root(), "show", f"{commit}:{path}"])
     text = raw.decode("utf-8", errors="replace").strip()
     return text[:limit]
 
