@@ -71,7 +71,7 @@ Position papers and working drafts.
 
 - `machine_interaction_program.md` — mapa editorial que conecta machine teaching, informational time, signal extraction, machine discovery, interstitial agency, relay transducers e Forbidden Relay
 - `otherwise/` — argumentos adversariais
-- `yesindeed/` — defesas supportivas, mesma estrutura
+- `yesindeed/` — defesas supportivas, mesma estrutura.
 - `synthesis/` — árbitro: funde `otherwise/`/`yesindeed/` e roda os ciclos de edição que absorvem conclusões assentadas de volta aos papers principais
 - `PROTOCOL.md` — regras do aparato de debate acima (papéis, gatilho de absorção, corte de debates em loop)
 
