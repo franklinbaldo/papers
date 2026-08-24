@@ -129,6 +129,40 @@ def test_missing_credential_fails_fast(monkeypatch):
         api_runner._gemini_encode(["text"], spec, {}, {})
 
 
+def test_gemini_rotates_keys_on_429(monkeypatch):
+    slept = []
+
+    def fake_sleep(seconds):
+        slept.append(seconds)
+
+    monkeypatch.setattr(api_runner.time, "sleep", fake_sleep)
+    calls = []
+    keys_seen = []
+
+    def fake_http(url, payload, headers, max_retries):
+        calls.append(1)
+        keys_seen.append(headers["x-goog-api-key"])
+        if len(calls) == 1:
+            raise RuntimeError("HTTP 429 from https://example.test: quota exceeded")
+        return {"embeddings": [{"values": [float(len(calls))]} for _ in payload["requests"]]}
+
+    monkeypatch.setattr(api_runner, "_http_json", fake_http)
+    monkeypatch.setenv("GEMINI_API_KEY", "key-aaaaaaaaaaaaaaa, key-bbbbbbbbbbbbbbb")
+
+    spec = {
+        "provider": "gemini",
+        "model": "gemini-embedding-001",
+        "endpoint": "https://example.test/v1beta",
+        "credential_env": "GEMINI_API_KEY",
+    }
+    vectors = api_runner._gemini_encode(["x", "y"], spec, {"gemini_batch_size": 2}, {})
+
+    assert vectors.shape == (2, 1)
+    assert keys_seen[0] == "key-aaaaaaaaaaaaaaa"
+    assert keys_seen[1] == "key-bbbbbbbbbbbbbbb"
+    assert slept
+
+
 def test_unsupported_provider_is_rejected():
     usage: dict = {}
     with pytest.raises(RuntimeError, match="unsupported observer provider"):

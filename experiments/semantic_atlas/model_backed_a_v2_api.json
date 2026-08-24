@@ -42,7 +42,8 @@
     "center_selection": "first 32 calibration coordinates after frozen path-hash ordering"
   },
   "api": {
-    "gemini_batch_size": 32,
+    "gemini_batch_size": 16,
+    "gemini_request_interval_seconds": 8,
     "jina_batch_size": 32,
     "max_retries": 5
   },

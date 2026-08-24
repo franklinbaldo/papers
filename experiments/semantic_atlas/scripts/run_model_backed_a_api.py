@@ -62,11 +62,22 @@ def _credential(env_name: str) -> str:
     return value
 
 
+def _key_pool(env_name: str) -> list[str]:
+    keys = [part.strip() for part in os.getenv(env_name, "").replace(";", ",").split(",")]
+    keys = [key.strip().strip('"').strip("'") for key in keys if key.strip()]
+    if not keys:
+        raise RuntimeError(f"missing credential: set the {env_name} environment variable")
+    return keys
+
+
 def _gemini_encode(texts: list[str], spec: dict, api_cfg: dict, usage: dict) -> np.ndarray:
-    key = _credential(spec["credential_env"])
+    keys = _key_pool(spec["credential_env"])
     vectors: list[list[float]] = []
-    batch_size = int(api_cfg.get("gemini_batch_size", 32))
+    batch_size = int(api_cfg.get("gemini_batch_size", 16))
+    interval = float(api_cfg.get("gemini_request_interval_seconds", 0))
+    attempts = max(int(api_cfg.get("max_retries", 5)), 1) * len(keys)
     url = f"{spec['endpoint']}/models/{spec['model']}:batchEmbedContents"
+    key_index = 0
     for start in range(0, len(texts), batch_size):
         batch = texts[start : start + batch_size]
         payload = {
@@ -78,14 +89,27 @@ def _gemini_encode(texts: list[str], spec: dict, api_cfg: dict, usage: dict) -> 
                 for text in batch
             ]
         }
-        response = _http_json(
-            url, payload, {"x-goog-api-key": key}, int(api_cfg.get("max_retries", 5))
-        )
+        response = None
+        for _ in range(attempts):
+            key = keys[key_index % len(keys)]
+            try:
+                response = _http_json(url, payload, {"x-goog-api-key": key}, 1)
+                break
+            except RuntimeError as exc:
+                if "HTTP 429" not in str(exc):
+                    raise
+                key_index += 1
+                rotated = key_index // len(keys) + 1
+                time.sleep(min(20 * rotated, 90))
+        if response is None:
+            raise RuntimeError("gemini quota exhausted across the whole credential pool")
         embeddings = response.get("embeddings")
         if embeddings is None or len(embeddings) != len(batch):
             raise RuntimeError("gemini batchEmbedContents returned a malformed response")
         vectors.extend(item["values"] for item in embeddings)
         usage["gemini_requests"] = usage.get("gemini_requests", 0) + 1
+        if interval:
+            time.sleep(interval)
     return np.asarray(vectors, dtype=np.float64)
 
 
