@@ -1,5 +1,5 @@
 ---
-type: "Checklist"
+type: "Companion Note"
 title: "Synergy–Geometry Model-Backed Run Checklist"
 description: "Pre-run checklist that must be satisfied before opening the first confirmatory hidden-state results for the Synergy–Geometry programme."
 tags: [interaction-geometry, preregistration, checklist, experiment]
