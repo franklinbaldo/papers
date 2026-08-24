@@ -1,0 +1,7 @@
+# Python bytecode and tool caches — build artifacts must never be tracked
+# (a cpython-3.13 __pycache__/ tree was accidentally committed with the
+# Semantic Atlas experiment in 0178214; see .gitignore introduction commit).
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
