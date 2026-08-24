@@ -27,6 +27,7 @@ Position papers and working drafts.
 - `proveniencia_claims.md` — proveniência de claims
 - `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
+- `truth_preserving_representations.md` — representações arbitrárias, transporte de estrutura e identificação de estrutura latente por verdades preservadas até isomorfismo
 
 ## Eixo aprendizagem algorítmica / machine teaching
 
