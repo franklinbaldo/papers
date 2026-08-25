@@ -14,10 +14,11 @@ from pathlib import Path
 import numpy as np
 
 from semantic_atlas.atlas import SemanticAtlas
+from semantic_atlas.embedding_cache import write_embedding_cache
 from semantic_atlas.frame import QuasarFrame
 
-# The frozen v1 runner stays untouched; this variant reuses its helpers so the
-# corpus derivation, split rule and metrics cannot drift between the two runs.
+# This variant reuses v1 helpers so corpus derivation, split rules and metrics
+# cannot drift between local and API observer runs.
 _SCRIPT = Path(__file__).resolve().parent / "run_model_backed_a.py"
 _SPEC = importlib.util.spec_from_file_location("run_model_backed_a_v1", _SCRIPT)
 _v1 = importlib.util.module_from_spec(_SPEC)
@@ -172,7 +173,6 @@ def _load_local_generator(spec: dict):
 
 
 def _generate_paths_api(manifest: dict, prompts: list[str], encode_reference, frame):
-    """Lineage of run_model_backed_a._generate_paths with the reference encoder injected."""
     cfg = manifest["trajectory"]
     torch, tokenizer, model = _load_local_generator(manifest["generator"])
 
@@ -212,7 +212,12 @@ def _generate_paths_api(manifest: dict, prompts: list[str], encode_reference, fr
     return rows
 
 
-def run(manifest_path: Path, output: Path) -> dict:
+def _observer_cache_identity(spec: dict) -> dict:
+    # Keep scientific call identity, but never credential names/values or headers.
+    return {key: value for key, value in spec.items() if key != "credential_env"}
+
+
+def run(manifest_path: Path, output: Path, embedding_cache_dir: Path | None = None) -> dict:
     manifest_bytes = manifest_path.read_bytes()
     manifest = json.loads(manifest_bytes)
     started = _dt.datetime.now(_dt.timezone.utc).isoformat()
@@ -230,10 +235,45 @@ def run(manifest_path: Path, output: Path) -> dict:
     encode_reference = _encode_with(manifest["reference_observer"], api_cfg, usage)
     encode_transfer = _encode_with(manifest["transfer_observer"], api_cfg, usage)
 
+    # These four arrays are provider observations. Persist them before using them
+    # for alignment so a later method comparison never has to re-query an API.
     ref_cal = encode_reference(cal_texts)
     transfer_cal = encode_transfer(cal_texts)
     ref_held = encode_reference(held_texts)
     transfer_held = encode_transfer(held_texts)
+
+    embedding_caches: dict[str, dict[str, str]] = {}
+    if embedding_cache_dir is not None:
+        paths_by_split = {"calibration": cal_paths, "heldout": held_paths}
+        texts_by_split = {"calibration": cal_texts, "heldout": held_texts}
+        ref_cache = write_embedding_cache(
+            embedding_cache_dir / "reference_observer",
+            observer=_observer_cache_identity(manifest["reference_observer"]),
+            source_commit=commit,
+            paths_by_split=paths_by_split,
+            texts_by_split=texts_by_split,
+            raw_by_split={"calibration": ref_cal, "heldout": ref_held},
+            normalized_by_split={
+                "calibration": _v1._l2_normalize(ref_cal),
+                "heldout": _v1._l2_normalize(ref_held),
+            },
+        )
+        transfer_cache = write_embedding_cache(
+            embedding_cache_dir / "transfer_observer",
+            observer=_observer_cache_identity(manifest["transfer_observer"]),
+            source_commit=commit,
+            paths_by_split=paths_by_split,
+            texts_by_split=texts_by_split,
+            raw_by_split={"calibration": transfer_cal, "heldout": transfer_held},
+            normalized_by_split={
+                "calibration": _v1._l2_normalize(transfer_cal),
+                "heldout": _v1._l2_normalize(transfer_held),
+            },
+        )
+        embedding_caches = {
+            "reference_observer": _v1._cache_ref_dict(ref_cache),
+            "transfer_observer": _v1._cache_ref_dict(transfer_cache),
+        }
 
     frame, canonical_targets = QuasarFrame.reference(ref_cal, dim=manifest["srf_dim"])
     transfer_frame = QuasarFrame.fit(transfer_cal, canonical_targets)
@@ -276,6 +316,7 @@ def run(manifest_path: Path, output: Path) -> dict:
             "heldout": held_paths,
             "trajectory": trajectory_paths,
         },
+        "embedding_caches": embedding_caches,
         "metrics": {
             "heldout_coordinate_rmse": paired_rmse,
             "heldout_canonical_cosine": paired_cosine,
@@ -317,10 +358,18 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", type=Path, default=Path("model_backed_a_v2_api.json"))
     parser.add_argument("--output", type=Path, default=Path("artifacts/model_backed_a_v2_api.json"))
+    parser.add_argument(
+        "--embedding-cache-dir",
+        type=Path,
+        default=Path("artifacts/embedding_cache_v2_api"),
+        help="Persist API observer outputs before alignment or metric computation.",
+    )
     args = parser.parse_args()
-    result = run(args.manifest, args.output)
+    result = run(args.manifest, args.output, args.embedding_cache_dir)
     print(json.dumps(result["metrics"], indent=2))
     print(f"artifact={args.output}")
+    for observer, ref in result["embedding_caches"].items():
+        print(f"embedding_cache[{observer}]={ref['data_sha256']}")
     return 0
 
 
