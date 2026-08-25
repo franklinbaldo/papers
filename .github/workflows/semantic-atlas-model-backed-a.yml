@@ -24,5 +24,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: semantic-atlas-model-backed-a-v1
-          path: experiments/semantic_atlas/artifacts/model_backed_a_v1.json
+          path: |
+            experiments/semantic_atlas/artifacts/model_backed_a_v1.json
+            experiments/semantic_atlas/artifacts/embedding_cache_v1/**
           if-no-files-found: error
