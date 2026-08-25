@@ -142,6 +142,164 @@ def fit_regularized_cca(
     )
 
 
+def _pairwise_distances(x: np.ndarray) -> np.ndarray:
+    x = _as_2d(x, "x")
+    squared = np.sum(x * x, axis=1, keepdims=True)
+    distances_sq = np.maximum(squared + squared.T - 2.0 * (x @ x.T), 0.0)
+    return np.sqrt(distances_sq)
+
+
+def _symmetric_knn_laplacian(x: np.ndarray, *, k: int) -> np.ndarray:
+    """Build a binary symmetric normalized kNN Laplacian without labels."""
+
+    x = _as_2d(x, "x")
+    if not 1 <= k < len(x):
+        raise ValueError("k must be between 1 and n_rows - 1")
+    distances = _pairwise_distances(x)
+    np.fill_diagonal(distances, np.inf)
+    nearest = np.argsort(distances, axis=1)[:, :k]
+    adjacency = np.zeros((len(x), len(x)), dtype=np.float64)
+    rows = np.repeat(np.arange(len(x)), k)
+    adjacency[rows, nearest.reshape(-1)] = 1.0
+    adjacency = np.maximum(adjacency, adjacency.T)
+    degree = adjacency.sum(axis=1)
+    inverse_sqrt_degree = np.zeros_like(degree)
+    positive = degree > 0
+    inverse_sqrt_degree[positive] = 1.0 / np.sqrt(degree[positive])
+    normalized_adjacency = (
+        inverse_sqrt_degree[:, None] * adjacency * inverse_sqrt_degree[None, :]
+    )
+    return np.eye(len(x)) - normalized_adjacency
+
+
+@dataclass(frozen=True)
+class GraphRegularizedAlignment:
+    matrix: np.ndarray
+    intercept: np.ndarray
+    ridge_alpha: float
+    graph_regularization: float
+    neighbors: int
+
+    def transform(self, x: np.ndarray) -> np.ndarray:
+        value = _as_2d(x, "x")
+        if value.shape[1] != self.matrix.shape[0]:
+            raise ValueError("input feature dimension does not match graph map")
+        return l2_rows(value @ self.matrix + self.intercept)
+
+
+def fit_graph_regularized_alignment(
+    reference: np.ndarray,
+    transfer: np.ndarray,
+    canonical_targets: np.ndarray,
+    *,
+    neighbors: int,
+    graph_regularization: float,
+    ridge_alpha: float,
+) -> GraphRegularizedAlignment:
+    """Fit M3 using paired loss plus calibration-only local-geometry smoothness.
+
+    The reference and transfer kNN graphs are built independently in their native
+    spaces. Their normalized Laplacians are added as a row-geometry regularizer
+    on the predicted canonical coordinates; no spectral labels or held-out rows
+    enter the fit.
+    """
+
+    reference = _as_2d(reference, "reference")
+    transfer = _as_2d(transfer, "transfer")
+    canonical_targets = _as_2d(canonical_targets, "canonical_targets")
+    if len(reference) != len(transfer) or len(reference) != len(canonical_targets):
+        raise ValueError("reference, transfer, and targets must have paired rows")
+    if not 1 <= neighbors < len(reference):
+        raise ValueError("neighbors must be between 1 and n_rows - 1")
+    if graph_regularization < 0:
+        raise ValueError("graph_regularization must be >= 0")
+    if ridge_alpha < 0:
+        raise ValueError("ridge_alpha must be >= 0")
+
+    transfer_mean = transfer.mean(axis=0)
+    target_mean = canonical_targets.mean(axis=0)
+    x = transfer - transfer_mean
+    target = canonical_targets - target_mean
+    reference_laplacian = _symmetric_knn_laplacian(reference, k=neighbors)
+    transfer_laplacian = _symmetric_knn_laplacian(transfer, k=neighbors)
+    geometry = 0.5 * (reference_laplacian + transfer_laplacian)
+    scale = float(max(len(transfer), 1))
+    gram = (x.T @ x) / scale
+    graph_gram = (x.T @ geometry @ x) / scale
+    rhs = (x.T @ target) / scale
+    matrix = np.linalg.solve(
+        gram
+        + graph_regularization * graph_gram
+        + ridge_alpha * np.eye(transfer.shape[1]),
+        rhs,
+    )
+    intercept = target_mean - transfer_mean @ matrix
+    return GraphRegularizedAlignment(
+        matrix=matrix,
+        intercept=intercept,
+        ridge_alpha=float(ridge_alpha),
+        graph_regularization=float(graph_regularization),
+        neighbors=int(neighbors),
+    )
+
+
+@dataclass(frozen=True)
+class LocalProcrustesAlignment:
+    transfer_anchors: np.ndarray
+    canonical_targets: np.ndarray
+    neighbors: int
+    alpha: float
+
+    def transform(self, transfer: np.ndarray) -> np.ndarray:
+        """Map each query from a transfer-native neighborhood selected ex ante."""
+
+        transfer = _as_2d(transfer, "transfer")
+        if transfer.shape[1] != self.transfer_anchors.shape[1]:
+            raise ValueError("transfer feature dimension does not match local fit")
+        rows: list[np.ndarray] = []
+        for query in transfer:
+            distances = np.linalg.norm(self.transfer_anchors - query, axis=1)
+            indices = np.argsort(distances)[: self.neighbors]
+            local = fit_affine_ridge(
+                self.transfer_anchors[indices],
+                self.canonical_targets[indices],
+                alpha=self.alpha,
+            )
+            rows.append(local.transform(query[None, :])[0])
+        return np.asarray(rows, dtype=np.float64)
+
+
+def fit_local_procrustes(
+    transfer: np.ndarray,
+    canonical_targets: np.ndarray,
+    *,
+    neighbors: int,
+    alpha: float,
+) -> LocalProcrustesAlignment:
+    """Fit M4 with transfer-space-only neighborhood selection.
+
+    The name follows the preregistration; the local map is the registered
+    regularized affine variant. Query neighborhoods use only native transfer
+    distances to frozen calibration anchors, never held-out labels or
+    cross-observer held-out distances.
+    """
+
+    transfer = _as_2d(transfer, "transfer")
+    canonical_targets = _as_2d(canonical_targets, "canonical_targets")
+    if len(transfer) != len(canonical_targets):
+        raise ValueError("transfer and targets must have paired rows")
+    if not 2 <= neighbors <= len(transfer):
+        raise ValueError("neighbors must be between 2 and n_rows")
+    if alpha < 0:
+        raise ValueError("alpha must be >= 0")
+    return LocalProcrustesAlignment(
+        transfer_anchors=transfer.copy(),
+        canonical_targets=canonical_targets.copy(),
+        neighbors=int(neighbors),
+        alpha=float(alpha),
+    )
+
+
 def deterministic_folds(paths: Sequence[str], *, folds: int) -> list[np.ndarray]:
     """Return stable calibration-only validation folds from path identity."""
 
@@ -181,13 +339,6 @@ def coordinate_rmse(reference: np.ndarray, candidate: np.ndarray) -> float:
     if reference.shape != candidate.shape:
         raise ValueError("reference and candidate must have the same shape")
     return float(np.sqrt(np.mean((reference - candidate) ** 2)))
-
-
-def _pairwise_distances(x: np.ndarray) -> np.ndarray:
-    x = _as_2d(x, "x")
-    squared = np.sum(x * x, axis=1, keepdims=True)
-    distances_sq = np.maximum(squared + squared.T - 2.0 * (x @ x.T), 0.0)
-    return np.sqrt(distances_sq)
 
 
 def local_distance_correlation(reference: np.ndarray, candidate: np.ndarray) -> float:
