@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "experiment": "semantic-atlas-a1-alignment-tournament-v1",
+  "source_commit": "ff68b0653063e11e9cc3da887003bc0d46b14d26",
+  "calibration_count": 80,
+  "heldout_count": 24,
+  "trajectory_count": 12,
+  "folds": 5,
+  "shuffle_seed": 991,
+  "metrics": {
+    "knn_values": [3, 5]
+  },
+  "methods": {
+    "M0": {
+      "name": "whitening_orthogonal_procrustes",
+      "tunable": false
+    },
+    "M1": {
+      "name": "affine_ridge",
+      "alpha": [0.0001, 0.001, 0.01, 0.1, 1.0]
+    },
+    "M2": {
+      "name": "regularized_cca",
+      "regularization": [0.0001, 0.001, 0.01, 0.1, 1.0],
+      "components": [8, 16, 32, 48, 64],
+      "canonical_alpha": 0.000001
+    },
+    "M3": {
+      "name": "graph_regularized_manifold_alignment",
+      "neighbors": [3, 5, 8, 12],
+      "graph_regularization": [0.0, 0.01, 0.1, 1.0],
+      "ridge_alpha": [0.001, 0.01, 0.1]
+    },
+    "M4": {
+      "name": "local_procrustes_affine",
+      "neighbors": [8, 12, 20, 32],
+      "alpha": [0.001, 0.01, 0.1, 1.0],
+      "neighborhood_space": "transfer_native_calibration_only"
+    }
+  },
+  "selection": {
+    "scope": "calibration_only",
+    "fold_rule": "deterministic sha256(path) round-robin",
+    "primary_order": [
+      "canonical_cosine",
+      "coordinate_rmse",
+      "local_distance_correlation",
+      "knn_overlap_k3",
+      "knn_overlap_k5"
+    ],
+    "heldout_may_not_change_configuration": true
+  },
+  "notes": "Frozen before any A.1 held-out outcome. M5 GW/fused-GW remains secondary diagnostic and is excluded from primary method selection. Components exceeding a calibration-fold rank bound are skipped, not replaced by post-hoc values."
+}

@@ -7,6 +7,8 @@ from semantic_atlas.alignment import (
     complement_indices,
     deterministic_folds,
     fit_affine_ridge,
+    fit_graph_regularized_alignment,
+    fit_local_procrustes,
     fit_regularized_cca,
     knn_overlap,
     local_distance_correlation,
@@ -67,6 +69,34 @@ def test_regularized_cca_recovers_shared_signal():
     assert local_distance_correlation(canonical_held, predicted) > 0.95
 
 
+def test_graph_regularized_alignment_recovers_shared_signal():
+    ref_cal, transfer_cal, canonical_cal, _, transfer_held, canonical_held = _synthetic_pair()
+    alignment = fit_graph_regularized_alignment(
+        ref_cal,
+        transfer_cal,
+        canonical_cal,
+        neighbors=5,
+        graph_regularization=0.05,
+        ridge_alpha=0.01,
+    )
+    predicted = alignment.transform(transfer_held)
+    assert row_cosine(canonical_held, predicted) > 0.97
+    assert local_distance_correlation(canonical_held, predicted) > 0.94
+
+
+def test_local_procrustes_uses_transfer_native_anchors_and_generalizes():
+    _, transfer_cal, canonical_cal, _, transfer_held, canonical_held = _synthetic_pair()
+    alignment = fit_local_procrustes(
+        transfer_cal,
+        canonical_cal,
+        neighbors=20,
+        alpha=0.1,
+    )
+    predicted = alignment.transform(transfer_held)
+    assert row_cosine(canonical_held, predicted) > 0.94
+    assert local_distance_correlation(canonical_held, predicted) > 0.90
+
+
 def test_shuffled_correspondence_destroys_affine_signal():
     _, transfer_cal, canonical_cal, _, transfer_held, canonical_held = _synthetic_pair()
     rng = np.random.default_rng(991)
@@ -74,6 +104,29 @@ def test_shuffled_correspondence_destroys_affine_signal():
     paired = fit_affine_ridge(transfer_cal, canonical_cal, alpha=0.1).transform(transfer_held)
     negative = fit_affine_ridge(transfer_cal, shuffled, alpha=0.1).transform(transfer_held)
     assert row_cosine(canonical_held, paired) > row_cosine(canonical_held, negative) + 0.5
+
+
+def test_shuffled_correspondence_destroys_graph_signal():
+    ref_cal, transfer_cal, canonical_cal, _, transfer_held, canonical_held = _synthetic_pair()
+    rng = np.random.default_rng(991)
+    shuffled = canonical_cal[rng.permutation(len(canonical_cal))]
+    paired = fit_graph_regularized_alignment(
+        ref_cal,
+        transfer_cal,
+        canonical_cal,
+        neighbors=5,
+        graph_regularization=0.05,
+        ridge_alpha=0.01,
+    ).transform(transfer_held)
+    negative = fit_graph_regularized_alignment(
+        ref_cal,
+        transfer_cal,
+        shuffled,
+        neighbors=5,
+        graph_regularization=0.05,
+        ridge_alpha=0.01,
+    ).transform(transfer_held)
+    assert row_cosine(canonical_held, paired) > row_cosine(canonical_held, negative) + 0.4
 
 
 def test_folds_are_deterministic_disjoint_and_complete():
@@ -103,3 +156,29 @@ def test_bad_cca_configuration_fails_before_any_evaluation():
         fit_regularized_cca(reference, transfer, targets, regularization=0.0, components=2)
     with pytest.raises(ValueError, match="rank bound"):
         fit_regularized_cca(reference, transfer, targets, regularization=0.1, components=4)
+
+
+def test_bad_graph_and_local_configuration_fail_closed():
+    reference = np.eye(5)
+    transfer = np.eye(5)
+    targets = np.eye(5)
+    with pytest.raises(ValueError, match="neighbors"):
+        fit_graph_regularized_alignment(
+            reference,
+            transfer,
+            targets,
+            neighbors=5,
+            graph_regularization=0.1,
+            ridge_alpha=0.1,
+        )
+    with pytest.raises(ValueError, match="graph_regularization"):
+        fit_graph_regularized_alignment(
+            reference,
+            transfer,
+            targets,
+            neighbors=2,
+            graph_regularization=-1.0,
+            ridge_alpha=0.1,
+        )
+    with pytest.raises(ValueError, match="neighbors"):
+        fit_local_procrustes(transfer, targets, neighbors=1, alpha=0.1)
