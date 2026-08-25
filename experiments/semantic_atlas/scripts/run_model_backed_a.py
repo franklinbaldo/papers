@@ -10,6 +10,7 @@ from pathlib import Path
 import numpy as np
 
 from semantic_atlas.atlas import SemanticAtlas
+from semantic_atlas.embedding_cache import write_embedding_cache
 from semantic_atlas.frame import QuasarFrame
 
 
@@ -23,10 +24,6 @@ def _repo_root() -> str:
 
 
 def _git_paths(commit: str) -> list[str]:
-    # The corpus domain is every markdown file in the tree of source_commit.
-    # ls-tree is CWD-sensitive, so pin git to the repository root: running from
-    # experiments/semantic_atlas would otherwise collapse the corpus to the 7
-    # markdown files inside that subdirectory instead of the whole repo.
     root = _repo_root()
     output = subprocess.check_output(
         ["git", "-C", root, "ls-tree", "-r", "--name-only", commit], text=True
@@ -68,11 +65,17 @@ def _load_sentence_model(spec: dict):
     return SentenceTransformer(spec["model"], revision=spec["revision"])
 
 
-def _encode(model, texts: list[str]) -> np.ndarray:
+def _encode_raw(model, texts: list[str]) -> np.ndarray:
     return np.asarray(
-        model.encode(texts, convert_to_numpy=True, normalize_embeddings=True),
+        model.encode(texts, convert_to_numpy=True, normalize_embeddings=False),
         dtype=np.float64,
     )
+
+
+def _l2_normalize(values: np.ndarray) -> np.ndarray:
+    values = np.asarray(values, dtype=np.float64)
+    norms = np.linalg.norm(values, axis=1, keepdims=True)
+    return values / np.maximum(norms, 1e-12)
 
 
 def _generate_paths(manifest: dict, prompts: list[str], reference_model, frame: QuasarFrame):
@@ -110,7 +113,7 @@ def _generate_paths(manifest: dict, prompts: list[str], reference_model, frame: 
                 cumulative.append(prompt + continuation)
                 if end >= len(new_ids):
                     break
-            embeddings = _encode(reference_model, cumulative)
+            embeddings = _l2_normalize(_encode_raw(reference_model, cumulative))
             path = frame.coordinates(embeddings)
             rows.append(
                 {
@@ -124,7 +127,16 @@ def _generate_paths(manifest: dict, prompts: list[str], reference_model, frame: 
     return rows
 
 
-def run(manifest_path: Path, output: Path) -> dict:
+def _cache_ref_dict(ref) -> dict[str, str]:
+    return {
+        "manifest": str(ref.manifest_path),
+        "data": str(ref.data_path),
+        "data_sha256": ref.data_sha256,
+        "corpus_sha256": ref.corpus_sha256,
+    }
+
+
+def run(manifest_path: Path, output: Path, embedding_cache_dir: Path | None = None) -> dict:
     manifest_bytes = manifest_path.read_bytes()
     manifest = json.loads(manifest_bytes)
     corpus = manifest["corpus"]
@@ -137,10 +149,41 @@ def run(manifest_path: Path, output: Path) -> dict:
 
     reference_model = _load_sentence_model(manifest["reference_observer"])
     transfer_model = _load_sentence_model(manifest["transfer_observer"])
-    ref_cal = _encode(reference_model, cal_texts)
-    transfer_cal = _encode(transfer_model, cal_texts)
-    ref_held = _encode(reference_model, held_texts)
-    transfer_held = _encode(transfer_model, held_texts)
+    ref_cal_raw = _encode_raw(reference_model, cal_texts)
+    transfer_cal_raw = _encode_raw(transfer_model, cal_texts)
+    ref_held_raw = _encode_raw(reference_model, held_texts)
+    transfer_held_raw = _encode_raw(transfer_model, held_texts)
+    ref_cal = _l2_normalize(ref_cal_raw)
+    transfer_cal = _l2_normalize(transfer_cal_raw)
+    ref_held = _l2_normalize(ref_held_raw)
+    transfer_held = _l2_normalize(transfer_held_raw)
+
+    embedding_caches: dict[str, dict[str, str]] = {}
+    if embedding_cache_dir is not None:
+        paths_by_split = {"calibration": cal_paths, "heldout": held_paths}
+        texts_by_split = {"calibration": cal_texts, "heldout": held_texts}
+        reference_cache = write_embedding_cache(
+            embedding_cache_dir / "reference_observer",
+            observer=manifest["reference_observer"],
+            source_commit=commit,
+            paths_by_split=paths_by_split,
+            texts_by_split=texts_by_split,
+            raw_by_split={"calibration": ref_cal_raw, "heldout": ref_held_raw},
+            normalized_by_split={"calibration": ref_cal, "heldout": ref_held},
+        )
+        transfer_cache = write_embedding_cache(
+            embedding_cache_dir / "transfer_observer",
+            observer=manifest["transfer_observer"],
+            source_commit=commit,
+            paths_by_split=paths_by_split,
+            texts_by_split=texts_by_split,
+            raw_by_split={"calibration": transfer_cal_raw, "heldout": transfer_held_raw},
+            normalized_by_split={"calibration": transfer_cal, "heldout": transfer_held},
+        )
+        embedding_caches = {
+            "reference_observer": _cache_ref_dict(reference_cache),
+            "transfer_observer": _cache_ref_dict(transfer_cache),
+        }
 
     frame, canonical_targets = QuasarFrame.reference(ref_cal, dim=manifest["srf_dim"])
     transfer_frame = QuasarFrame.fit(transfer_cal, canonical_targets)
@@ -181,6 +224,7 @@ def run(manifest_path: Path, output: Path) -> dict:
             "heldout": held_paths,
             "trajectory": trajectory_paths,
         },
+        "embedding_caches": embedding_caches,
         "metrics": {
             "heldout_coordinate_rmse": paired_rmse,
             "heldout_canonical_cosine": paired_cosine,
@@ -221,10 +265,18 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", type=Path, default=Path("model_backed_a_v1.json"))
     parser.add_argument("--output", type=Path, default=Path("artifacts/model_backed_a_v1.json"))
+    parser.add_argument(
+        "--embedding-cache-dir",
+        type=Path,
+        default=Path("artifacts/embedding_cache_v1"),
+        help="Persist raw + normalized observer embeddings with content-addressed sidecars.",
+    )
     args = parser.parse_args()
-    result = run(args.manifest, args.output)
+    result = run(args.manifest, args.output, args.embedding_cache_dir)
     print(json.dumps(result["metrics"], indent=2))
     print(f"artifact={args.output}")
+    for observer, ref in result["embedding_caches"].items():
+        print(f"embedding_cache[{observer}]={ref['data_sha256']}")
     return 0
 
 
