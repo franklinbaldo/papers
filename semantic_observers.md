@@ -1,12 +1,12 @@
 ---
 type: "Technical Paper"
-title: "Semantic Observers: Decision-Theoretic Informativeness, Multiscale Measurement, and Parallax in Learned Representation Spaces"
-description: "Revised position paper treating embedding models as task-relative observation channels, grounding observer comparison in Blackwell-Le Cam decision theory, and defining multiscale observability, apparent-topology errors, and alignment-capacity parallax as falsifiable measurement protocols."
-tags: [semantic-observers, embeddings, representation-alignment, semantic-geometry, decision-theory, le-cam-deficiency, probing, topology, interpretability]
-timestamp: 2026-08-26T01:10:00Z
+title: "Semantic Parallax: Realization Invariance and Observer-Specific Residuals in Learned Representation Spaces"
+description: "Position paper proposing realization-invariance profiles and alignment-robust semantic parallax as testable properties of embedding observers, while formally recording why several natural observer-ordering constructions collapse or remain benchmark-relative."
+tags: [semantic-observers, semantic-parallax, embeddings, representation-alignment, invariance, paraphrase-robustness, probing, formal-verification]
+timestamp: 2026-08-26T02:05:00Z
 ---
 
-# Semantic Observers: Decision-Theoretic Informativeness, Multiscale Measurement, and Parallax in Learned Representation Spaces
+# Semantic Parallax: Realization Invariance and Observer-Specific Residuals in Learned Representation Spaces
 
 **Franklin Baldo**  
 Independent Researcher  
@@ -14,836 +14,927 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Position paper and experimental programme, revised after adversarial review.** This manuscript proposes a measurement framework for comparing learned representations as observation channels. It does **not** claim that an observer-independent semantic universe has been established, that larger models uniformly see semantic structure more clearly, or that representational reconstructability is equivalent to informativeness. The central comparison is decision-theoretic: an observer is more informative only relative to a registered family of decision problems, and approximate bilateral comparison is grounded in Blackwell's comparison of experiments and Le Cam deficiency. The terms "observer," "resolution," "parallax," and "tomography" are operational metaphors whose value depends on surviving the falsification tests below.
+> **Position paper and experimental programme after three adversarial revisions.** The original manuscript asked whether stronger embedding models could be ordered as progressively clearer observers of a shared semantic structure. Three natural formalizations of that intuition either collapse, become benchmark-relative, or depend on the allowed probe class. This revision treats those failures as results, not inconveniences. The positive programme is narrower: measure how representations behave under independently specified families of meaning-preserving realizations, and test whether observer-specific residuals after cross-model alignment contain reproducible item-level information that predicts each model's behavior. Blackwell, Le Cam, restricted decision orders, and the Lean companion are retained primarily to explain why the obvious ranking route does not identify an intrinsic semantic-resolution order.
 
 ## Abstract
 
-Independently trained neural representations often share substantial structure. The Platonic Representation Hypothesis proposes convergence toward a common statistical model of reality; `vec2vec` demonstrates unpaired translation among text embedding spaces through a learned common latent representation; multi-view and multi-way methods recover shared coordinates across models and modalities. Recent null-calibrated work, however, weakens the strongest global-convergence reading: model width and depth can inflate common similarity statistics, while calibrated local neighborhood relations remain more robust than global geometry. This suggests a narrower question. Rather than identifying an embedding space with semantic reality, can embedding models be treated as **observation channels** whose usefulness, distortions, and blind spots can be measured locally, at multiple scales, and relative to explicit decision problems?
+Independently trained neural representations often share substantial structure, and modern alignment methods can translate or align embeddings across architectures and modalities. It is therefore tempting to treat embedding models as observers of a common semantic world and to ask whether stronger models simply see that world at higher resolution. We argue that this intuition is not well-defined without additional structure.
 
-We revise the observer proposal around three constraints. First, **informativeness is not reconstruction error**. Mapping one embedding space into another can be easier in one direction merely because the target is lower-dimensional, smoother, or more anisotropic. We therefore ground observer comparison in Blackwell's decision order and Le Cam deficiency: observer \(A\) is at least as informative as observer \(B\), relative to a registered task family, when optimal risk under \(A\) is no worse across that family; bilateral deficiency measures approximate loss when one experiment is substituted for another. This comparison is invariant to invertible reparameterizations of the observed coordinates. Second, **resolution is a measurement suite, not a new latent quantity by fiat**. We define registered multiscale probes over neighborhoods, boundaries, bridges, manifolds, and topology, but require density-, dimension-, and estimator-matched nulls and explicitly connect the construction to the probing literature. Third, **observer disagreement is not automatically semantic parallax**. Residuals after alignment count only when their per-item content predicts within-observer behavior beyond model identity, item difficulty, and marginal covariates, and only when the effect survives a curve over alignment-model capacity.
+First, for a finite benchmark indexed directly by input item, deterministic encoders are almost always injective. In that regime an unrestricted simulator can memorize the mapping from one embedding to another, so any two injective observers are exactly mutually simulable on the benchmark. Second, dominance over a restricted family of decisions can reverse on another family and therefore does not define an observer-level order. Third, invariance to an invertible reparameterization holds for unrestricted decision rules but can fail for restricted probe classes unless those classes transform equivariantly. A Lean 4 companion machine-checks these elementary but load-bearing negative results.
 
-The framework also separates three mechanisms that the telescope metaphor otherwise conflates: limited resolution, missing exposure, and objective-induced quotienting. A model may fail to distinguish two semantic states because its observations are noisy, because relevant distinctions were absent from training, or because its objective rewarded invariance to that distinction. These mechanisms are observationally confounded without interventions and must not be collapsed into a single notion of "seeing less." For topology, persistent-homology claims require bootstrap uncertainty and density-matched nulls because bridge loss and spurious components are default finite-sample phenomena in high dimensions.
+The positive proposal starts by making the source of stochasticity explicit. Let a registered semantic index \(\theta\in\Theta\) admit multiple surface realizations generated by an experimenter-specified protocol \(\nu\): paraphrases, context swaps, register changes, equivalent programs, controlled renderings, or other transformations intended to preserve the registered semantic state. An observer is then studied through a **realization-invariance profile**: how task-relevant distinctions and local structural relations survive as the realization family and perturbation scale vary. The realization protocol is not treated as a property of the observer; it is part of the measurement environment and must be generated independently of all tested models and replicated across structurally different protocols.
 
-The proposed contribution is therefore methodological rather than ontological: a preregistered protocol for asking which semantic distinctions are recoverable by which learned observers, at which scales, for which decision families, and whether multiple observers provide complementary information beyond the best single observer. The programme is rejected if the decision-theoretic ordering fails coordinate-invariance controls, if resolution profiles disappear under matched nulls, if parallax vanishes under richer non-destructive alignment, or if multi-observer fusion cannot beat strong single-observer baselines on externally specified held-out structure.
+The central positive hypothesis is **semantic parallax**. After several observers are aligned into a common comparison frame, each stimulus leaves an observer-specific residual. Such residuals are not interesting merely because they are nonzero. They count as parallax only if they predict, on untouched items, which cases a particular observer succeeds or fails on beyond observer identity, global capability, item difficulty, marginal embedding statistics, and other nuisance variables; the effect must also survive a registered curve over alignment capacity and transfer across realization protocols. This extends recent stimulus-level representational-dispersion work from measuring disagreement to testing whether model-specific residual content has behavioral value.
 
-**Keywords:** representation geometry, semantic embeddings, Blackwell order, Le Cam deficiency, statistical experiments, probing, multiscale observability, representation alignment, semantic parallax, persistent homology, interpretability
+The programme therefore asks two empirical questions. **Primary:** does alignment-robust, item-specific semantic parallax predict observer behavior across independently generated realization protocols? **Secondary:** do observer invariance profiles and pairwise decision orders transfer across increasingly distant task families after controlling for global capability and seed-level variation? A negative answer to the second question is compatible with a positive answer to the first and would support a plural, complementary-observer view rather than a semantic-resolution hierarchy.
 
----
-
-## 1. From universal representation to comparison of observers
-
-A growing literature asks whether independently trained models converge toward common representations. Huh et al. (2024) formulate the **Platonic Representation Hypothesis (PRH)**: sufficiently capable models, even across modalities, appear to converge toward a shared statistical structure of the world. Relative representations, Procrustes-style alignment, model stitching, representational similarity analysis, Gromov-Wasserstein methods, and related approaches had already shown that raw coordinate systems need not agree for learned representations to be meaningfully comparable.
-
-The recent alignment literature raises the stakes. Jha et al. (2025/2026), in **Harnessing the Universal Geometry of Embeddings**, introduce `vec2vec`, which translates between independently trained text embedding spaces without paired samples or access to the source encoders by learning a shared latent representation. Yacobi et al. (2025) show that shared representations can be learned from largely unpaired data. Achara et al. (2026) address multi-way alignment, explicitly separating geometry-preserving and agreement-maximizing objectives.
-
-These results make it increasingly difficult to claim novelty merely from the existence of common representational structure. But they do not establish that every model instantiates one globally identical semantic metric space.
-
-Gröger, Wen, and Brbić (2026), **Revisiting the Platonic Representation Hypothesis: An Aristotelian View**, provide an important correction. Their ICML 2026 camera-ready paper shows that model width and depth can inflate common representational-similarity measures. They introduce permutation-based null calibration and report that the apparent scaling trend of global spectral similarity largely flattens after calibration, whereas **local neighborhood similarity, but not local distances, retains significant cross-modal agreement**. Their proposed Aristotelian Representation Hypothesis is correspondingly local: representations converge more robustly on neighborhood relationships than on one global statistical geometry.
-
-This paper starts from that narrower empirical footing. It proposes that a learned representation be treated not as "the semantic universe" but as an **experiment** or **observation channel** over a set of task-relevant semantic states. The scientific questions are then:
-
-1. Which registered decisions can be made from each observer's output, and at what risk?
-2. Are two observers decision-theoretically equivalent, ordered, or incomparable?
-3. Which structural predicates are recoverable locally and at multiple scales after matched null calibration?
-4. When observers disagree, does the residual disagreement contain item-specific behavioral information, or merely model identity and alignment error?
-5. Do multiple observers contain complementary information that improves held-out reconstruction or decision risk beyond the best single observer?
-
-The observer metaphor earns its keep only if these questions produce reproducible asymmetries that cannot be reduced to coordinate choice, probe capacity, sample density, training exposure, or model identity.
+**Keywords:** semantic embeddings, representation alignment, semantic parallax, paraphrase robustness, invariance, multi-view representations, probing, representational convergence, Lean 4
 
 ---
 
-## 2. Semantic states, stimuli, and observation channels
+## 1. The observer intuition and what survived criticism
 
-Let \(\Theta\) denote a finite or measurable set of **registered semantic states** relevant to an experiment. A state need not be an ontological atom of meaning. In controlled experiments it may be a scene graph, a compositional attribute tuple, a legal relation, a taxonomic position, a logical entailment state, or another externally specified variable.
+The motivating intuition is simple. Different embedding models often appear to preserve related semantic neighborhoods despite different architectures, training data, dimensions, and coordinate systems. Huh et al. (2024) frame this broad phenomenon as the **Platonic Representation Hypothesis**. Jha et al. (2025) make the alignment story constructive for text embeddings with `vec2vec`, learning translations through a shared latent representation without paired examples. Achara et al. (2026) extend the interoperability problem to several models in one shared reference. Gröger, Wen, and Brbić (2026), however, show that common global similarity statistics can be inflated by architecture scale and that, after null calibration, local neighborhood agreement survives more robustly than global metric convergence.
 
-A state \(\theta\in\Theta\) gives rise to stimuli
+These results justify asking whether several models are measuring related semantic structure. They do **not** justify a scalar statement that model \(A\) "sees more" than model \(B\).
 
-\[
-x\sim P_X(\cdot\mid\theta),
-\]
+The first versions of this paper tried three ways to make that phrase precise:
 
-where different realizations may be paraphrases, images, code, or other surface forms that instantiate the same registered state.
+1. directional reconstruction between embedding spaces;
+2. Blackwell/Le Cam-style information ordering;
+3. dominance over registered decision suites.
 
-An embedding model \(m\) maps the stimulus to an observed representation
+All three remain useful, but none supports the original hierarchy claim without additional assumptions.
 
-\[
-z_m=O_m(x)\in\mathcal Z_m.
-\]
+The surviving positive idea is different:
 
-Marginalizing over realization variability induces a statistical experiment
+> Models may share a common component while retaining structured, behaviorally meaningful observer-specific residuals, and they may differ systematically in which semantic distinctions survive controlled changes of surface realization.
 
-\[
-\mathcal E_m
-=
-\{P_m(\cdot\mid\theta):\theta\in\Theta\},
-\]
-
-where
-
-\[
-P_m(A\mid\theta)
-=
-\Pr[O_m(X)\in A\mid\theta].
-\]
-
-This construction is deliberately weaker than positing one true vector space. The common object is the **registered parameter/state family** and its decision problems, not a privileged coordinate system.
-
-### 2.1 Deterministic embedding APIs are still statistical experiments
-
-Many embedding APIs are deterministic conditional on a string. Stochasticity can nevertheless arise from the stimulus-generating distribution: paraphrases, controlled renderings, equivalent programs, image viewpoints, lexical realizations, or repeated contexts sampled from the same latent state. The experiment is over the distribution of observed embeddings induced by these realizations.
-
-Where no meaningful realization distribution exists, the analysis must be stated as a finite deterministic benchmark rather than invoking full statistical-experiment semantics.
-
-### 2.2 Observer quality is task-relative
-
-The phrase "observer \(A\) is better than observer \(B\)" is incomplete until a decision family is specified. An encoder optimized for retrieval may intentionally collapse distinctions useful for syntax; a legal-domain model may preserve distinctions irrelevant to a generic semantic-similarity objective. There is no reason to expect a universal total order.
-
-The natural object is therefore a family of comparisons indexed by registered decision problems and structural measurements.
+This paper calls the first phenomenon **semantic parallax** and the second a **realization-invariance profile**.
 
 ---
 
-## 3. Observer informativeness: Blackwell first, representation reconstruction second
+## 2. A formal ledger of routes that do not identify intrinsic observer resolution
 
-### 3.1 Decision problems
+The repository contains a Lean 4 companion at `formalizations/semantic_observers/SemanticObservers.lean`. Its role is deliberately modest. The theorems are elementary. The value of formalization is that it prevents the paper from quietly reintroducing an intuitively attractive but vacuous definition of "sees more."
 
-A decision problem is a tuple
+### 2.1 Deterministic point-indexed experiments collapse under injectivity
 
-\[
-d=(\mathcal A,\ell,\pi),
-\]
-
-where \(\mathcal A\) is an action space, \(\ell(\theta,a)\) is a loss, and \(\pi\) is a prior over semantic states when a Bayesian formulation is used.
-
-Given experiment \(\mathcal E_m\), a decision rule \(q(a\mid z)\) maps the observed embedding to an action. Its Bayes risk is
+Let
 
 \[
-\mathcal R(\mathcal E_m,d)
-=
-\inf_q
-\mathbb E_{\theta\sim\pi,\,z\sim P_m(\cdot\mid\theta),\,a\sim q(\cdot\mid z)}
-[\ell(\theta,a)].
-\]
-
-For a preregistered family \(\mathcal D\) of semantic decisions, define **restricted decision dominance**
-
-\[
-\mathcal E_A\succeq_{\mathcal D}\mathcal E_B
-\]
-
-when
-
-\[
-\mathcal R(\mathcal E_A,d)
-\le
-\mathcal R(\mathcal E_B,d)
-\qquad\forall d\in\mathcal D.
-\]
-
-If the inequalities cross across tasks, the observers are incomparable relative to \(\mathcal D\). This is a feature, not a defect: "sees more" and "sees something different" should not be forced into one scalar ranking.
-
-### 3.2 Blackwell order
-
-Blackwell's comparison of experiments gives the unrestricted ideal. Under the classical conditions, experiment \(A\) is at least as informative as experiment \(B\) for every decision problem if and only if \(B\) can be obtained by a stochastic **garbling** of \(A\).
-
-Thus the semantic claim
-
-> "A contains everything B reveals, plus possibly more"
-
-should be grounded in decision risk or an equivalent comparison-of-experiments criterion, not in the difficulty of regressing one embedding vector onto another.
-
-### 3.3 Le Cam deficiency
-
-Exact Blackwell dominance is often too strong. Le Cam introduced a quantitative approximate comparison.
-
-For experiments
-
-\[
-\mathcal E_A=\{P_A^\theta\}_{\theta\in\Theta},
+A:\Theta\to Z_A,
 \qquad
-\mathcal E_B=\{P_B^\theta\}_{\theta\in\Theta},
+B:\Theta\to Z_B
 \]
 
-define the deficiency of \(A\) relative to \(B\) schematically as
+be deterministic observers. An exact deterministic garbling from \(A\) to \(B\) is a function
 
 \[
-\delta(\mathcal E_A,\mathcal E_B)
-=
-\inf_K\sup_{\theta\in\Theta}
-\left\|
-K P_A^\theta-P_B^\theta
-\right\|_{TV},
+g:Z_A\to Z_B
 \]
 
-where \(K\) ranges over Markov kernels from observations of \(A\) to simulated observations of \(B\). A small value means that \(A\) can simulate \(B\) with little loss. The bilateral pair
+such that
+
+\[
+g(A(\theta))=B(\theta)
+\qquad\forall\theta\in\Theta.
+\]
+
+The Lean theorem `deterministicGarbling_iff_fiberRefines` verifies
+
+\[
+\exists g,\;g\circ A=B
+\quad\Longleftrightarrow\quad
+A(x)=A(y)\Rightarrow B(x)=B(y).
+\]
+
+Thus \(A\) can simulate \(B\) exactly whenever every collision of \(A\) is also a collision of \(B\).
+
+A direct corollary is
+
+\[
+A\text{ injective}\Rightarrow
+\forall B,\;A\text{ exactly simulates }B.
+\]
+
+If both \(A\) and \(B\) are injective on the registered finite benchmark, exact garblings exist in both directions.
+
+For real floating-point embeddings on a finite benchmark, exact collisions are atypical. Therefore the choice
+
+\[
+\Theta=\{\text{individual input items}\}
+\]
+
+makes unrestricted observer comparison scientifically uninformative in the generic case: a simulator can simply memorize the finite correspondence.
+
+This is not an estimator failure. It is a population-level identifiability failure caused by choosing the wrong state index.
+
+### 2.2 Restricted decision dominance is benchmark-relative
+
+Suppose a risk functional is evaluated only over a family \(\mathcal D\) of decisions. Define
+
+\[
+A\succeq_{\mathcal D}B
+\iff
+R_A(d)\le R_B(d)
+\quad\forall d\in\mathcal D.
+\]
+
+The Lean companion contains a finite counterexample in which
+
+\[
+A\succeq_{\mathcal D_1}B
+\]
+
+while
+
+\[
+B\succeq_{\mathcal D_2}A
+\]
+
+for disjoint decision families.
+
+Therefore one registered benchmark can support a task-relative order but not an observer-level semantic hierarchy.
+
+### 2.3 Reparameterization invariance depends on the rule class
+
+Unrestricted decision information is invariant to bijective coordinate changes. Restricted extractability need not be.
+
+If
+
+\[
+\phi:Z\simeq W
+\]
+
+is invertible, a rule on \(W\) can be pulled back to \(Z\), and vice versa. The Lean theorem `optimal_values_invariant_under_corresponding_probe_classes` shows that restricted optimum values are preserved only if the admissible rule classes themselves correspond under pullback and pushforward.
+
+A second finite theorem shows that a bijection can preserve all unrestricted information while changing the score of a fixed probe class.
+
+Thus the empirical object is never simply "information in the embedding." It is information **accessible under a declared measurement protocol**.
+
+### 2.4 What the Lean file does and does not establish
+
+The companion is best read as a ledger of negative constraints:
+
+- point-indexed deterministic Blackwell comparison generically collapses under injectivity;
+- a restricted task order need not transfer;
+- extractability is relative to the allowed rule class.
+
+The file does not prove a new theorem about statistical experiments, does not formalize Le Cam deficiency, and is not evidence that the remaining positive hypotheses are true.
+
+---
+
+## 3. The protocol index
+
+Any empirical observer claim in this paper is indexed by
+
+\[
+\Pi=(\Theta,\nu,\mathcal D,\mathcal H,\mathcal A).
+\]
+
+The five components play different scientific roles.
+
+| Index | Meaning | Status in the claim |
+|---|---|---|
+| \(\Theta\) | registered semantic states or distinctions | **defining**; declared before evaluation |
+| \(\nu\) | realization protocol generating surface variants conditional on \(\theta\) | **defining**; independently generated and varied for robustness |
+| \(\mathcal D\) | family of downstream semantic decisions | **axis across which transfer/invariance is tested** |
+| \(\mathcal H\) | allowed probe/decision-rule class | **nuisance**; swept over capacity and reported as a curve |
+| \(\mathcal A\) | alignment class used for cross-observer residuals | **nuisance**; swept over capacity and reported as a curve |
+
+This table is load-bearing. The framework is not allowed to rescue a failed result by silently changing one of these indices.
+
+### 3.1 \(\Theta\) is an index set, not a hidden Euclidean universe
+
+The common state variable need not be a vector space. It may be a finite set of generated scene graphs, logical relations, semantic-factor tuples, legal-rule configurations, taxonomic nodes, equivalent programs, or human-validated semantic intents.
+
+The paper therefore remains agnostic about whether one observer-independent Euclidean semantic geometry exists.
+
+### 3.2 Why \(\nu\) is unavoidable
+
+Because \(\Theta=x\) collapses under injectivity, one needs multiple surface realizations per registered state:
+
+\[
+X\sim\nu(\cdot\mid\theta).
+\]
+
+For text, these may include:
+
+- lexical paraphrases;
+- syntactic paraphrases;
+- discourse-context substitutions;
+- register changes;
+- controlled insertion or deletion of semantically irrelevant material;
+- translation/back-translation families;
+- domain-preserving rewrites.
+
+For code, they may include semantics-preserving refactorings. For vision, viewpoint, illumination, background, or style interventions may play the same role when the registered state is known.
+
+The stochastic experiment is then induced by
+
+\[
+Z_m=O_m(X),
+\qquad
+X\sim\nu(\cdot\mid\theta).
+\]
+
+But the resulting distribution is a property of **observer plus realization protocol**, not observer alone.
+
+---
+
+## 4. What makes a realization protocol \(\nu\) principled?
+
+This is the central design problem created by abandoning \(\Theta=x\).
+
+### 4.1 Generator independence
+
+The process that generates realizations must be independent of every model under evaluation.
+
+If model \(M\) generates the paraphrases used to evaluate \(M\), or a close family member generates them, apparent invariance can reflect generator-observer affinity rather than semantic stability.
+
+Preferred designs, in decreasing order of control, are:
+
+1. programmatic transformations with known semantics;
+2. human-authored or human-validated realization sets;
+3. realizations generated by a held-out model family excluded from all observer analyses;
+4. mixtures of independent generators with generator identity retained as a nuisance variable.
+
+### 4.2 Structural diversity across realization families
+
+One \(\nu\) is insufficient. A model can be robust to lexical paraphrase yet sensitive to context or register.
+
+At least two structurally different protocols should be used for confirmatory claims, for example
+
+\[
+\nu_{lexical},\quad
+\nu_{context},\quad
+\nu_{register}.
+\]
+
+The main result must report whether the same qualitative observer profile appears across these families.
+
+### 4.3 Semantic preservation must be audited independently
+
+A realization protocol is useful only if the registered state is actually preserved. This requires either generative ground truth or external validation.
+
+For natural language, semantic-preservation checks should not reuse the tested observers. Human judgments, symbolic constraints, or an independent adjudication process are preferable.
+
+### 4.4 Scale belongs to the realization protocol
+
+The scale variable is defined as a property of the intervention, not as a raw radius inside an embedding space.
+
+Write
+
+\[
+\nu_{j,s}(\cdot\mid\theta)
+\]
+
+for realization family \(j\) at intervention scale \(s\).
+
+Examples include paraphrase edit severity, context distance, amount of irrelevant insertion, transformation strength, hierarchy depth, or controlled latent displacement in a synthetic world.
+
+This avoids pretending that Euclidean radii are comparable across embedding spaces.
+
+---
+
+## 5. Realization-invariance profiles
+
+The phrase "semantic resolution" is retained only as an informal interpretation. The directly measured object is an **invariance profile under registered realizations**.
+
+### 5.1 Invariance without discriminability is meaningless
+
+A constant encoder is perfectly invariant to every transformation and semantically useless. Therefore invariance must always be paired with baseline discriminability or task competence.
+
+For decision problem \(d\), rule class \(\mathcal H\), observer \(m\), and realization protocol \(\nu_{j,s}\), let
+
+\[
+R_{m,d,\mathcal H}(\nu_{j,s})
+\]
+
+be held-out risk using realizations sampled from \(\nu_{j,s}\).
+
+Let \(\nu_{j,0}\) denote the canonical or least perturbed condition. Define the realization sensitivity
+
+\[
+\Delta R_{m,d,\mathcal H}(j,s)
+=
+R_{m,d,\mathcal H}(\nu_{j,s})
+-
+R_{m,d,\mathcal H}(\nu_{j,0}).
+\]
+
+The useful report is the pair
 
 \[
 \left(
-\delta(\mathcal E_A,\mathcal E_B),
-\delta(\mathcal E_B,\mathcal E_A)
-\right)
+R_{m,d,\mathcal H}(\nu_{j,0}),
+\Delta R_{m,d,\mathcal H}(j,s)
+\right),
 \]
 
-separates approximate dominance, approximate equivalence, and incomparability. The associated symmetric Le Cam distance uses the larger of the two deficiencies.
+not \(\Delta R\) alone.
 
-In finite empirical settings, directly estimating the full deficiency may be difficult. The paper therefore distinguishes two levels:
+A model that is bad in both conditions has not demonstrated useful invariance.
 
-1. **decision-suite comparison**, estimated through held-out risks over a preregistered family \(\mathcal D\);
-2. **channel deficiency**, estimated only when the induced experiments are sufficiently controlled for a defensible estimator.
+### 5.2 The observer invariance fingerprint
 
-The first must not be mislabeled as the second.
-
-### 3.4 Why reconstruction asymmetry is not informativeness
-
-A map
+For a registered set of decisions, realization families, scales, and probe classes, define
 
 \[
-g:\mathcal Z_A\to\mathcal Z_B
+\mathcal I_m
+=
+\left\{
+R_{m,d,\mathcal H}(\nu_{j,0}),
+\Delta R_{m,d,\mathcal H}(j,s)
+\right\}_{d,j,s,\mathcal H}.
 \]
 
-can have lower prediction error than a reverse map
+This is a profile rather than a scalar.
 
-\[
-h:\mathcal Z_B\to\mathcal Z_A
-\]
+The profile may reveal that an observer is stable to lexical rewrites but fragile to context shifts, or that a domain-specialized model preserves a legal distinction under register changes that a generic model loses.
 
-for reasons unrelated to information: target dimension, entropy, anisotropy, smoothness, estimator class, regularization, or sample size. Reconstruction asymmetry is therefore only a diagnostic of representational compatibility.
+### 5.3 Relation to existing robustness and augmentation work
 
-It is **not** the primary observer-informativeness test.
+This territory has substantial prior art.
 
-### 3.5 Coordinate-invariance falsifier
+In vision, augmentation methods explicitly induce invariances, and prior work shows that different augmentations create different task consequences; excessive invariance can erase fine-grained information. Hounie et al. (2023) formulate augmentation through invariance-constrained learning. Zhang and Ma (2022) show that augmentation-specific invariances can help or harm different downstream tasks.
 
-The first required synthetic falsifier is an invertible reparameterization.
+In NLP, paraphrase robustness is also established. Burdick et al. (2022) use paraphrases to study contextual embeddings. Verma et al. (2023) measure paraphrastic robustness in entailment. Hagen et al. (2024) study query-variation robustness across retrieval models. Most importantly for this paper, Frank and Afli's **PTEB** (EACL 2026) evaluates text embeddings using stochastic, meaning-preserving paraphrases at evaluation time and shows that encoder performance changes under token-space variation even when semantics are held fixed.
 
-Let \(A\) be an experiment and define
+Therefore this paper does **not** claim to invent stochastic paraphrase evaluation or transformation invariance.
 
-\[
-B'=\phi(A),
-\]
+The proposed extension is narrower:
 
-where \(\phi\) is a known invertible nonlinear transformation chosen to alter geometry, anisotropy, marginal entropy, or regression difficulty while preserving all information.
-
-Then \(A\) and \(B'\) are decision-theoretically equivalent. A valid observer-informativeness instrument must report no directional advantage except estimation error:
-
-\[
-\mathcal R(A,d)=\mathcal R(B',d)
-\quad\forall d\in\mathcal D,
-\]
-
-and, in the controlled channel setting,
-
-\[
-\delta(A,B')\approx\delta(B',A)\approx0.
-\]
-
-If the instrument reports \(A\succ B'\) merely because one coordinate system is easier to regress into, the instrument has failed.
+1. require several structurally different, observer-independent realization protocols;
+2. treat the full cross-protocol sensitivity profile as the observer descriptor;
+3. connect that profile to alignment residuals and item-level behavior across multiple observers;
+4. test whether profile relations transfer across decision families after capability and seed controls.
 
 ---
 
-## 4. Resolution profiles are a measurement suite, not a new information theory
+## 6. Semantic parallax
 
-The observer programme also needs local and multiscale measurements. But the relevant prior art is substantial: supervised probing, control tasks, information-theoretic probing, Bayesian probing, and minimum-description-length probing all study what properties can be extracted from learned representations and how probe capacity or sample efficiency confounds interpretation.
-
-Accordingly, the **resolution profile is best presented as a registered measurement protocol**, not as a fundamentally new theoretical object.
-
-### 4.1 Registered structural tasks
-
-Let \(\alpha\) index a preregistered structural predicate or loss, such as:
-
-- local neighborhood membership;
-- side of a known boundary;
-- bridge membership or connectivity;
-- compositional factor identity;
-- monotonic position on a generated semantic path;
-- local intrinsic dimension in a synthetic manifold;
-- tangent orientation;
-- persistence of a known topological feature;
-- transition or reachability relation when dynamic data exist.
-
-For each observer \(m\), a frozen estimator \(Q_{m,\alpha,s}\) is trained with the same data budget and protocol. Its held-out performance is calibrated against matched controls.
-
-The resulting quantity
+Suppose \(M\) observers embed the same registered realization \(x_i\):
 
 \[
-R_m(u,s,\alpha)
+z_{mi}=O_m(x_i).
 \]
 
-is therefore shorthand for **calibrated local recoverability** of structural task \(\alpha\) near location \(u\) at scale \(s\). It should not be interpreted as a directly observed physical resolution parameter.
-
-### 4.2 Probe controls are mandatory
-
-A structural probe can learn the task rather than reveal accessible structure in the representation. The protocol therefore inherits the discipline of Hewitt and Liang's control tasks, Pimentel et al.'s information-theoretic probing, and Voita and Titov's MDL probing.
-
-At minimum, report:
-
-- task accuracy or calibrated loss;
-- a control task or label-permutation baseline;
-- probe class and capacity;
-- learning curves as a function of sample size;
-- MDL or another sample-efficiency/extractability statistic when appropriate;
-- matched random or synthetic representations;
-- uncertainty across seeds and stimulus families.
-
-A "resolution" gain that disappears when probe capacity or sample size is equalized is not evidence of observer resolution.
-
----
-
-## 5. What is scale?
-
-The symbol \(s\) is dangerous because embedding spaces do not share a canonical metric radius. Raw Euclidean radius is incomparable across models with different norm, anisotropy, density, and intrinsic dimension. A fixed \(k\) in k-nearest-neighbor graphs also renormalizes local density and can erase the very sparsity or crowding differences under study.
-
-There is therefore **no single universal scale variable** in the framework. Scale must be operationalized per structural experiment.
-
-### 5.1 Admissible scale parameterizations
-
-Examples include:
-
-1. **latent intervention scale** in controlled synthetic worlds: known perturbation magnitude in the generative state \(\Theta\);
-2. **probability-mass scale**: neighborhoods containing a fixed estimated mass fraction rather than a raw metric radius;
-3. **density-quantile scale**: observer-specific radii chosen by matched quantiles of local density;
-4. **geodesic rank scale** when a ground-truth path metric exists;
-5. **filtration quantile** for persistent-homology experiments, defined relative to a matched distance distribution rather than absolute radius;
-6. **semantic granularity level** in generated taxonomies or hierarchical state spaces.
-
-The paper should report exactly what \(s\) means for each predicate rather than pretending these scales are interchangeable.
-
-### 5.2 Null-calibrated scale profiles
-
-For every observed profile, construct null observers matched on properties that can mechanically affect the statistic:
-
-- sample size;
-- ambient dimension;
-- estimated intrinsic dimension;
-- marginal norm distribution;
-- anisotropy spectrum;
-- local density or graph degree distribution;
-- model-layer search multiplicity where applicable.
-
-The null is applied to the **final reported statistic**, following the logic of Gröger et al.'s calibration rather than only calibrating intermediate representations.
-
-If scale-dependent observer differences disappear after dimension- and density-matched calibration, the resolution claim fails.
-
----
-
-## 6. Resolution, exposure, and objective-induced quotienting are different mechanisms
-
-The telescope metaphor is incomplete because learned representations are not passive sensors. They are produced by training objectives and data.
-
-Suppose observer \(A\) distinguishes semantic states \(\theta_1\) and \(\theta_2\), while observer \(B\) collapses them. At least three mechanisms can explain the collapse:
-
-1. **limited measurement resolution:** relevant variation reaches the model but is represented unreliably;
-2. **missing exposure:** the training process did not contain enough information about the distinction;
-3. **objective-induced quotienting:** the training objective rewarded invariance to the distinction, deliberately mapping both states into the same equivalence class.
-
-These mechanisms are observationally confounded if only the final embedding API is available.
-
-### 6.1 No causal attribution without interventions
-
-From a frozen black-box embedding alone, one may report only the operational fact:
-
-> the distinction is not recoverable under the registered measurement protocol.
-
-One may **not** infer that the model "could not see" the distinction rather than never receiving it or intentionally discarding it.
-
-### 6.2 Controlled exposure experiments
-
-To separate exposure from representational capacity, train or obtain matched model families where corpus exposure is experimentally manipulated while architecture and objective are held fixed. Synthetic semantic micro-worlds are particularly useful because the relevant distinction can be inserted, withheld, or varied at known frequency.
-
-If adding exposure restores the distinction without changing architecture or objective, the original failure is better described as coverage/exposure than resolution.
-
-### 6.3 Controlled objective experiments
-
-To test objective-induced quotienting, hold training data and architecture fixed while changing which distinctions the objective rewards. If a contrast disappears specifically under an invariance-inducing objective while decision performance on the intended task improves, the collapse is not a generic loss of quality. It is a task-relative sufficient-statistic or quotient effect.
-
-This point limits the observer metaphor in a productive way:
-
-> a learned observer is not merely a noisy telescope; it is an instrument whose optics were optimized for a task family.
-
-Decision-theoretic comparison is therefore essential. An observer can be sufficient for one family of decisions while deliberately discarding information needed by another.
-
----
-
-## 7. Apparent geometry and topology require statistical inference
-
-A finite learned representation can make connected structures appear disconnected, merge distinct regions, or introduce apparent holes. But in high-dimensional sampled data, such effects are common even when the underlying topology is unchanged.
-
-Therefore "bridge disappearance" is not interesting until compared with a strong null.
-
-### 7.1 Bridge and connectivity tests
-
-For generated data with known connectivity, register a bridge-recovery statistic before inspection. Compare the observer against null point clouds matched for:
-
-- sample count;
-- intrinsic dimension;
-- local density profile;
-- anisotropy;
-- graph degree distribution;
-- cluster imbalance.
-
-A bridge-loss claim requires excess failure beyond these matched finite-sample effects.
-
-### 7.2 Persistent homology
-
-Persistent homology provides multiscale summaries, but persistence diagrams are random objects under finite sampling. Prior statistical work derives confidence sets for persistence diagrams and bootstrap confidence bands for persistence landscapes.
-
-Accordingly, topological claims require:
-
-- a preregistered filtration and distance normalization;
-- bootstrap confidence sets or bands;
-- matched synthetic nulls with the same sample size and density structure;
-- sensitivity analysis across admissible filtration scales;
-- replication on new stimulus sets;
-- no post-hoc selection of the most favorable homology dimension or layer.
-
-A feature that does not clear its uncertainty band is topological noise, not observer-specific semantic structure.
-
----
-
-## 8. Semantic parallax as conditional, item-level residual information
-
-Alignment produces another tempting overclaim. Let \(T_m\) map observer \(m\)'s representation into a common comparison space. Define a consensus representation
+Let \(T_{m,a}\) be an alignment map for observer \(m\) under alignment class/capacity \(a\in\mathcal A\). A common representation can be constructed by a registered aggregation rule:
 
 \[
-\bar z(x)=\operatorname{Agg}_m T_m(O_m(x))
+c_i^{(a)}
+=
+\operatorname{Agg}_{m=1}^M T_{m,a}(z_{mi}).
 \]
 
-and residual
+Define the model-specific residual
 
 \[
-\delta_m(x)=T_m(O_m(x))-\bar z(x).
+r_{mi}^{(a)}
+=
+T_{m,a}(z_{mi})-c_i^{(a)}.
 \]
 
-A nonzero residual is guaranteed whenever alignment is imperfect. It is **not** by itself semantic parallax.
+A nonzero residual is not evidence of parallax. It can arise from alignment error, dimension mismatch, model identity, source artifacts, or finite-sample noise.
 
-### 8.1 The hard parallax criterion
+### 6.1 Closest prior art: stimulus-level dispersion
 
-Let \(Y_{mi}\) denote an item-level behavioral outcome for observer \(m\) on held-out item \(i\): correctness, calibrated loss, retrieval success, ranking error, sensitivity to a controlled contrast, or another preregistered quantity.
+Hosseini, Cheung, Fedorenko, and Williams (2026) use Generalized Procrustes Analysis to align populations of vision models and define a **single-stimulus dispersion** from each model's Procrustes residual to the joint representation. They show that stimuli with low intra-modal dispersion exhibit greater vision-language alignment. Their paper explicitly notes that stimulus-level residuals are a classical by-product of GPA and applies them to neural-representation convergence.
 
-Let \(B_{mi}\) be a baseline nuisance model containing at least:
+This occupies a large part of the naive parallax idea. Merely computing residuals, ranking stimuli by disagreement, or showing that dispersion predicts cross-modal alignment is not novel here.
+
+Recent LLM work also shows that cross-model disagreement itself can be useful. Gorbett and Jana (2026) use cross-model disagreement as a label-free correctness signal, while Hamidieh et al. (2026) combine self-consistency with cross-model semantic disagreement for uncertainty quantification.
+
+Therefore the positive claim must be stronger than "models disagree more on hard examples."
+
+### 6.2 Behavioral semantic parallax
+
+Let \(Y_{mi}\) be an item-level behavioral outcome for observer \(m\) on item \(i\): retrieval success, rank loss, classification error, sensitivity to a registered semantic contrast, or another external outcome.
+
+Let \(B_{mi}\) be a nuisance model containing at least:
 
 - observer identity;
-- item identity or independently estimated item difficulty;
-- observer-level capability summaries;
-- norm, anisotropy, sequence length, and other marginal embedding statistics;
-- domain/source metadata;
-- tokenizer or modality indicators where relevant.
+- independently measured global capability;
+- item identity or item difficulty;
+- domain/source;
+- sequence length or modality-specific size variables;
+- embedding norm and anisotropy summaries;
+- realization-family identity and scale;
+- generator identity when relevant.
 
-A residual counts as semantic parallax only if item-specific features of \(\delta_m(x_i)\) improve prediction of \(Y_{mi}\) beyond \(B_{mi}\) on untouched data:
+We call \(r_{mi}^{(a)}\) **behavioral semantic parallax** only if residual features improve prediction of \(Y_{mi}\) on untouched data:
 
 \[
-\operatorname{Risk}(B+\delta)
+\operatorname{Risk}(B+r^{(a)})
 <
 \operatorname{Risk}(B),
 \]
 
-with uncertainty excluding zero improvement under the preregistered analysis.
+with uncertainty excluding the preregistered null.
 
-This is a **within-observer, per-item** claim. Predicting model identity is insufficient.
+This is a within-observer, item-level statement. A residual that merely identifies which model produced it does not count.
 
-### 8.2 Alignment-capacity curve
+### 6.3 Alignment-capacity curve
 
-Parallax is a function of the alignment class. A rigid orthogonal map leaves larger residuals than a flexible nonlinear map. Therefore report a capacity curve
+Residuals depend on the alignment class. Report
 
 \[
-\mathcal P(c)
+\mathcal P(a)
 =
-\text{incremental held-out value of residuals after alignment class }\mathcal T_c,
+\text{held-out incremental behavioral value of }r^{(a)}
 \]
 
-for a registered sequence such as:
+across a registered ladder such as
 
 \[
 \text{orthogonal}
-\rightarrow
+\to
 \text{linear}
-\rightarrow
-\text{shallow MLP}
-\rightarrow
-\text{more flexible nonlinear map}.
+\to
+\text{shallow nonlinear}
+\to
+\text{richer nonlinear}.
 \]
 
-The scientific claim is the component that survives increasing **non-destructive** alignment capacity. If residual predictive value smoothly vanishes as alignment improves, the parsimonious interpretation is alignment error, not parallax.
+Alignment is trained only on correspondence objectives, never on \(Y\).
 
-### 8.3 Alignment must not erase the target by construction
+If predictive value vanishes as alignment improves on held-out correspondences, the residual was primarily alignment error.
 
-A highly flexible aligner trained directly on the behavioral target can trivially remove useful residuals. Alignment is therefore fitted only on representation correspondence objectives and frozen before behavioral evaluation. The capacity curve measures robustness to coordinate matching, not supervised deletion of the phenomenon under test.
+### 6.4 Cross-realization transfer is the hard test
 
----
+The strongest parallax result is not same-protocol prediction.
 
-## 9. Multi-observer reconstruction: complementarity, not consensus
+Fit the residual-behavior relationship under one realization family \(\nu_j\) and test under another structurally different family \(\nu_k\):
 
-Multi-view learning and nonlinear-ICA theory already establish that multiple noisy views can, under assumptions, identify latent factors unavailable from a single view. Thus "several observers can reconstruct a latent source" is not a novelty claim.
+\[
+\mathcal P_{j\to k}(a).
+\]
 
-The narrower test here is whether **independently trained embedding observers** provide complementary decision-relevant information after strong baselines.
+For example, residual features discovered under lexical paraphrases should predict observer-specific failures under context changes or register shifts.
 
-For a task family \(\mathcal D\), compare:
+A stable cross-realization effect is harder to explain as generator affinity or local tokenization noise.
 
-- the best single observer chosen only on training/validation data;
-- a parameter-matched ensemble of same-family observers;
-- equal-weight aligned averaging;
-- GPA/GCPA or another multi-way common frame;
-- `vec2vec` or another shared-latent baseline where applicable;
-- observer-aware fusion using only training-estimated reliability and parallax features.
+### 6.5 Seed-null floor
 
-The multi-observer claim passes only if fusion improves held-out decision risk or recovery of externally specified structure beyond the best single observer, with confidence intervals excluding zero.
+Every cross-observer parallax effect must be compared with a same-recipe seed null.
 
-Consensus is never treated as ground truth. Correlated observers can share the same error.
+Train or obtain independent runs with the same architecture, data, objective, and recipe. Apply the full alignment and residual pipeline between these runs.
 
----
-
-## 10. Prior art and novelty boundary
-
-### 10.1 Representation convergence and alignment
-
-The PRH, representational similarity analysis, CKA/SVCCA, relative representations, Procrustes alignment, model stitching, Gromov-Wasserstein alignment, `vec2vec`, shared unpaired representations, and multi-way alignment already occupy the terrain of cross-model correspondence.
-
-**Not claimed:** discovering common structure, inventing coordinate alignment, or proving a universal semantic vector space.
-
-### 10.2 Local calibrated convergence
-
-Gröger, Wen, and Brbić (2026) are particularly close prior art. Their primary-source abstract and project materials explicitly report width/depth confounds in representational similarity, permutation-based null calibration, flattening of global spectral convergence after calibration, and persistence of local neighborhood agreement.
-
-**Not claimed:** discovering that local neighborhoods can be more stable than global geometry.
-
-### 10.3 Probing and extractability
-
-Hewitt and Liang (2019) show why probe accuracy must be contextualized by control tasks and selectivity. Pimentel et al. (2020) frame probing information-theoretically, while Voita and Titov (2020) use minimum description length to measure how efficiently labels can be extracted from representations. Later Bayesian probing work emphasizes finite-data agents and extractability.
-
-**Not claimed:** inventing local probing accuracy, extractability, or sample-efficiency measurement.
-
-The proposed **resolution profile** is a protocol that sweeps preregistered structural tasks over controlled scales with matched null calibration. Its contribution, if any, is methodological synthesis and experimental discipline.
-
-### 10.4 Blackwell and Le Cam
-
-Blackwell's 1951 and 1953 comparison-of-experiments results formalize when one information structure is at least as useful as another across decision problems. Le Cam's theory of deficiency quantifies approximate loss between statistical experiments; Torgersen's monograph develops the relationship among risks, deficiency, sufficiency, randomization, and comparison.
-
-**Not claimed:** a new information order or new concept of approximate dominance.
-
-The observer programme applies this established machinery to learned semantic representations and makes the decision family explicit.
-
-### 10.5 Multi-view latent recovery
-
-Multi-view learning and nonlinear-ICA identifiability, including the Incomplete Rosetta Stone line of work, already show how multiple views can help identify latent structure.
-
-**Not claimed:** generic latent identifiability from multiple views.
-
-### 10.6 Topological inference
-
-Persistent homology, confidence sets for persistence diagrams, bootstrap inference for persistence landscapes, and topological analysis of neural representations are established literatures.
-
-**Not claimed:** inventing topological analysis of embeddings.
-
-### 10.7 Candidate contribution after these concessions
-
-The remaining contribution is deliberately narrow:
-
-1. cast embedding models as **task-relative statistical experiments** rather than as candidate copies of one semantic coordinate space;
-2. compare informativeness through **registered decision risk and, where estimable, bilateral Le Cam deficiency**, not representation reconstruction error;
-3. operationalize "semantic resolution" as a **multiscale, null-calibrated probing suite** over registered structural predicates;
-4. explicitly separate **resolution, exposure, and objective-induced quotienting**;
-5. require topology claims to survive bootstrap uncertainty and density/dimension-matched nulls;
-6. define parallax through **incremental per-item behavioral prediction** and an **alignment-capacity curve**;
-7. test multi-observer complementarity against the best single observer and modern shared-space baselines.
-
-The paper should be rejected as an originality claim if prior work is found that already combines this same decision-theoretic comparison, multiscale registered measurement, causal mechanism separation, and residual-capacity analysis for learned semantic observers.
+The cross-model effect is scientifically interesting only if it exceeds variation caused by seed-level non-identifiability.
 
 ---
 
-## 11. Experimental programme
+## 7. A secondary test: observer-order stability across decision families
 
-The experiments are staged so that stronger claims cannot survive failed prerequisites.
+The original paper made observer refinement central. It is now a secondary diagnostic.
 
-### Stage 0A — Reparameterization invariance
+### 7.1 Capability confounding
 
-Construct a known experiment \(A\) and an invertibly transformed version \(B'=\phi(A)\) with deliberately different dimension-conditioned smoothness, anisotropy, or regression difficulty.
+A larger or generally stronger model can outperform another across unrelated tasks simply because of global capability. That does not establish semantic observer resolution.
 
-Required result:
+Therefore order-stability analyses must either:
 
-- decision risks indistinguishable within uncertainty;
-- bilateral deficiency approximately symmetric and near zero when directly estimable;
-- any representation-reconstruction asymmetry explicitly ignored as evidence of informativeness.
+1. compare observers matched on an independently defined global capability index; or
+2. residualize task risk against that index before constructing pairwise orders.
 
-**Failure interpretation:** the instrument measures coordinate convenience rather than information.
+The capability index must be frozen before the task families used in the stability test are inspected.
 
-### Stage 0B — Dimension- and density-matched nulls
+### 7.2 Decision-family distance
 
-Construct observer pairs with no planted semantic resolution difference but matched or manipulated:
+Formal disjointness is insufficient. Two task sets may use different labels while depending on the same topical or lexical signal.
 
+Let each decision family \(\mathcal D_j\) induce a risk signature over a fixed reference panel of models and items. After removing the global capability component, define family similarity by a preregistered association measure \(\rho\), and distance
+
+\[
+d_{fam}(\mathcal D_j,\mathcal D_k)
+=
+1-\rho(\mathcal D_j,\mathcal D_k).
+\]
+
+Alternative distances may be used, but they must be frozen before evaluating observer-order transfer.
+
+The interesting object is then a decay curve:
+
+\[
+\operatorname{OrderAgreement}
+=
+f(d_{fam}).
+\]
+
+A long-range positive tail would support observer-level structure beyond benchmark affinity. Rapid decay to the permutation null would support task-relative extractability instead.
+
+### 7.3 Comparing partial orders
+
+Because observer pairs can be incomparable, Kendall's \(\tau\) alone is insufficient.
+
+Report at least two quantities:
+
+1. **directional concordance among jointly comparable pairs** — among observer pairs ordered in both families, how often is the direction the same?
+2. **comparability concordance** — how often do the two families agree on whether a pair is comparable at all?
+
+Both are evaluated against permutation nulls that preserve the number of comparable pairs and the marginal observer frequencies.
+
+A third useful quantity is coverage: the fraction of all observer pairs that are comparable in each family. High directional concordance on a tiny set of pairs should not be overinterpreted.
+
+### 7.4 Observer Order Stability hypothesis
+
+After capability adjustment and above the seed-null floor:
+
+> Pairwise partial-order relations induced by one decision family predict pairwise relations in other families at rates that decay systematically with registered family distance.
+
+This hypothesis can fail without invalidating semantic parallax.
+
+---
+
+## 8. Multiscale structure, edges, curves, and topology
+
+The original motivating language spoke of better observers seeing edges, curves, bridges, and objects more clearly. This remains useful only as a measurement layer attached to \(\nu\), not as a universal hierarchy.
+
+### 8.1 Structural predicates
+
+In controlled semantic worlds, register predicates such as:
+
+- neighborhood membership;
+- side of a known semantic boundary;
+- bridge membership or graph connectivity;
+- factor identity;
+- tangent direction;
+- local intrinsic dimension;
+- monotonic position along a generated semantic path;
+- persistence of a known topological feature.
+
+Then vary the realization protocol and scale and ask whether those externally specified relations remain recoverable.
+
+### 8.2 Nulls
+
+Every structural statistic must be calibrated against controls matched on quantities that mechanically influence the estimator:
+
+- sample size;
 - ambient dimension;
 - intrinsic dimension;
 - anisotropy;
-- density;
-- sample size;
-- graph degree distribution.
+- local density;
+- graph degree distribution;
+- cluster imbalance;
+- layer or hyperparameter search multiplicity.
 
-Run the complete multiscale profile pipeline.
+### 8.3 Persistent topology
 
-**Required result:** calibrated resolution differences remain at nominal false-positive rates.
+Persistent homology is especially fragile in finite high-dimensional data. Confirmatory claims require preregistered filtrations, matched point-cloud nulls, bootstrap uncertainty, independent stimulus replication, and no post-hoc selection of the favorable homology dimension.
 
-**Failure interpretation:** the profile is a geometric nuisance detector.
-
-### Stage 0C — Known coarse-graining and incomparability
-
-Construct three synthetic experiments:
-
-1. \(B\) is a known stochastic garbling of \(A\);
-2. \(A\) and \(C\) preserve complementary independent factors;
-3. \(D\) is invertibly equivalent to \(A\).
-
-The decision suite must recover:
-
-\[
-A\succeq B,
-\]
-
-incomparability of \(A\) and \(C\) for a task family spanning both factors, and equivalence of \(A\) and \(D\).
-
-### Stage 1 — Controlled semantic micro-worlds
-
-Generate latent semantic states with known factors and relations, then multiple surface realizations per state. Candidate worlds include:
-
-- scene graphs;
-- compositional attribute tuples;
-- taxonomies;
-- small logical worlds;
-- programmatically generated legal-rule scenarios;
-- code semantics with controlled refactorings.
-
-Freeze train/validation/test splits before embedding.
-
-### Stage 2 — Exposure versus objective interventions
-
-Where training is feasible, construct matched encoder families:
-
-- same architecture/objective, controlled inclusion or exclusion of a semantic distinction;
-- same architecture/data, objectives that either preserve or encourage invariance to the distinction.
-
-Measure whether non-recoverability follows exposure or objective manipulation.
-
-**Failure interpretation:** if mechanisms cannot be separated, later claims remain operational only and must not receive optical causal language.
-
-### Stage 3 — Multiscale registered measurement
-
-For each structural family \(\alpha\), register the meaning of scale \(s\), probe class, sample budget, and matched null. Estimate
-
-\[
-R_m(u,s,\alpha)
-\]
-
-with uncertainty.
-
-Primary question:
-
-> Do observer differences survive probe-capacity, density, intrinsic-dimension, and scale calibration?
-
-### Stage 4 — Decision comparison and deficiency
-
-Register a task suite \(\mathcal D\) that spans the semantic distinctions of interest. Estimate held-out Bayes-risk proxies with probe families sufficiently expressive to approximate the relevant decisions, alongside sample-efficiency diagnostics.
-
-Report the matrix
-
-\[
-\Delta R_{A,B}(d)
-=
-\mathcal R(A,d)-\mathcal R(B,d)
-\]
-
-for every registered task rather than collapsing immediately to one score.
-
-Where controlled distributions make it feasible, estimate bilateral deficiency or validated bounds on it.
-
-### Stage 5 — Apparent topology
-
-Use only datasets with externally known or independently justified topology/connectivity for confirmatory claims. Apply:
-
-- matched density/dimension nulls;
-- preregistered filtrations;
-- bootstrap confidence sets/bands;
-- independent stimulus replication.
-
-Bridge or component loss counts only when it exceeds finite-sample null behavior.
-
-### Stage 6 — Alignment-capacity parallax
-
-Fit common frames under a frozen ladder of alignment capacities. For each capacity, compute held-out residuals and test incremental item-level prediction of observer behavior beyond nuisance baselines.
-
-The output is a curve
-
-\[
-\mathcal P(c),
-\]
-
-not one favored residual statistic.
-
-### Stage 7 — Multi-observer complementarity
-
-Fuse observers using only training-estimated quantities. Evaluate against best-single and shared-space baselines on untouched test data.
-
-The claim survives only if complementary observers reduce decision risk or structural error beyond all preregistered baselines.
+This component is deliberately downstream. A positive parallax result does not require a positive topological result.
 
 ---
 
-## 12. Revised hypotheses
+## 9. Experimental programme
 
-### H1 — Calibrated local commonality
+The programme is ordered so that the strongest claims are tested last.
 
-**Hypothesis.** Competent independently trained observers share non-trivial local neighborhood relations above width-, depth-, density-, and dimension-matched nulls.
+### Stage 0 — Formal and synthetic sanity checks
 
-**Status.** Close prior art; foundation rather than claimed novelty.
+Retain the Lean companion as a constraint ledger.
 
-**Falsified if.** Agreement disappears under final-statistic calibration or independent-corpus replication.
+Synthetic tests must include:
 
-### H2 — Multiscale recoverability differentiation
+- injective deterministic observers showing point-indexed mutual simulation;
+- known coarse-grainings with planted collisions;
+- order reversal across decision families;
+- invertible reparameterizations under both equivariant and non-equivariant probe classes.
 
-**Hypothesis.** Registered structural-task profiles differ reproducibly among observers after controlling probe capacity, sample size, intrinsic dimension, density, anisotropy, and model-size confounds.
+The purpose is to prevent the empirical pipeline from rediscovering a known definitional artifact.
 
-**Falsified if.** Profiles collapse under matched nulls or are unstable across resamples and corpora.
+### Stage 1 — Build independent realization protocols
 
-### H3 — Decision-theoretic refinement
+For each semantic state family, construct at least two structurally different \(\nu_j\).
 
-**Hypothesis.** For at least some controlled observer families and task suites, higher-capability observers weakly dominate lower-capability observers in registered decision risk and show lower deficiency in the high-to-low direction than the reverse.
+For text, a strong initial suite is:
 
-**Falsified if.** The ordering is driven by coordinate parameterization, disappears on the invertible-transform control, or risk curves cross systematically rather than show refinement.
+1. human-validated lexical/syntactic paraphrase;
+2. context-preserving rewrite with changed surrounding discourse;
+3. register/style transformation that preserves the target proposition.
 
-A crossed risk profile is interpreted as **incomparability**, not a failed attempt to force a ranking.
+Generator families and validation procedures are frozen before observer evaluation.
 
-### H4 — Mechanism-sensitive non-recoverability
+### Stage 2 — Establish baseline competence and invariance profiles
 
-**Hypothesis.** Controlled exposure and objective interventions can distinguish at least some cases of missing semantic information from objective-induced invariance.
-
-**Falsified if.** The proposed interventions do not change recoverability in the predicted directions or cannot separate mechanisms.
-
-### H5 — Statistically non-trivial apparent topology
-
-**Hypothesis.** Some observer-specific bridge, connectivity, or persistence errors exceed density/dimension-matched finite-sample nulls and covary with independently measured recoverability.
-
-**Falsified if.** Effects lie inside bootstrap uncertainty or are reproduced by matched null point clouds.
-
-### H6 — Alignment-robust semantic parallax
-
-**Hypothesis.** Observer residuals contain item-specific information that predicts within-observer behavior beyond identity and nuisance covariates, and a non-zero component survives increasing non-destructive alignment capacity.
-
-**Falsified if.** Prediction is explained by observer identity, marginal statistics, or item difficulty, or if the effect vanishes under a richer correspondence-preserving aligner.
-
-### H7 — Multi-observer complementarity
-
-**Hypothesis.** Heterogeneous observers contain complementary decision-relevant information such that preregistered fusion outperforms the best single observer and modern shared-space baselines on untouched data.
-
-**Falsified if.** Gains vanish against the best-single baseline, same-family ensemble controls, or independent test sets.
-
----
-
-## 13. Implications for related programmes
-
-### 13.1 Semantic Atlas
-
-A Semantic Atlas need not assume one embedding observer supplies the map. The revised observer framework suggests attaching **task-relative measurement uncertainty** to atlas regions and distinguishing common neighborhood structure from observer-specific dynamics.
-
-The decision-theoretic correction is important: an observer that preserves a region's geometry is not necessarily more useful for navigation unless the relevant route decisions can be made with lower risk.
-
-### 13.2 Pontifex
-
-Pontifex's multi-space comparison can be reframed around consensus and residual information without assuming alignment is impossible. The observer framework suggests a stricter test: does residual response to an occlusion predict **which items a given observer changes behavior on**, beyond observer identity, and does that effect survive increasing alignment capacity?
-
-This turns "multi-space disagreement" into a falsifiable item-level question.
-
-### 13.3 Perquire and adaptive observer selection
-
-A search or navigation system could eventually choose observers by task-relative decision value rather than by a global model leaderboard. A cheap observer may suffice for coarse decisions while a specialized observer is invoked near a registered ambiguity.
-
-This is an engineering implication, not evidence for the scientific framework.
-
----
-
-## 14. Limitations
-
-### 14.1 The latent semantic state is experimenter-defined
-
-The framework avoids positing one true vector space, but it still requires registered semantic states and decision problems. In synthetic worlds these are explicit; in natural language they are contestable. Conclusions therefore inherit the validity of the benchmark ontology.
-
-### 14.2 Restricted decision families give restricted orders
-
-Empirical experiments cannot quantify performance over every conceivable decision problem. A result
+For each observer and decision family, estimate
 
 \[
-A\succeq_{\mathcal D}B
+R_{m,d,\mathcal H}(\nu_{j,0})
 \]
 
-means dominance only for the registered family \(\mathcal D\), not universal Blackwell dominance.
+and the scale-dependent sensitivity
 
-### 14.3 Deficiency estimation can be difficult
+\[
+\Delta R_{m,d,\mathcal H}(j,s).
+\]
 
-Full Le Cam deficiency is a theoretical object over experiments, not a free empirical statistic. In high-dimensional continuous embeddings, estimation may be impractical without controlled generative models. When only downstream risks are measured, the paper must say so explicitly.
+Sweep \(\mathcal H\) rather than reporting one favored probe.
 
-### 14.4 Training histories are usually unavailable
+Primary output: observer-by-realization-family invariance fingerprints with seed uncertainty.
 
-For proprietary or pretrained black-box embeddings, exposure and objective effects cannot be causally separated. The optical metaphor must remain operational in those settings.
+### Stage 3 — Align observers and compute residuals
 
-### 14.5 Alignment capacity has no unique endpoint
+Use several alignment families:
 
-A sufficiently flexible aligner can memorize finite correspondences. The parallax curve therefore needs held-out correspondence tests and complexity control; there is no magic "perfect alignment" class.
+- orthogonal Procrustes;
+- GPA/GCPA for multi-way alignment;
+- a regularized linear map;
+- `vec2vec` where data and compute permit;
+- at least one held-out nonlinear correspondence model.
 
-### 14.6 Topology is sample hungry
+All alignment hyperparameters are selected without behavioral labels.
 
-High-dimensional topological inference is fragile. Negative results may reflect insufficient power; positive results require severe correction for sampling and model selection.
+### Stage 4 — Test behavioral parallax
+
+For each alignment capacity, compare a nuisance-only predictor \(B\) with \(B+r\) on held-out items.
+
+Required analyses:
+
+- within-observer item prediction;
+- leave-one-observer-out or held-out observer-family transfer where feasible;
+- seed-null comparison;
+- calibration across domains;
+- cross-realization transfer \(\nu_j\to\nu_k\).
+
+The main result is the parallax curve over alignment capacity, not one residual score.
+
+### Stage 5 — Order-stability decay
+
+Construct several decision families, estimate their registered distances, adjust for global capability, and compare induced partial orders.
+
+Report:
+
+- jointly comparable directional concordance;
+- comparability concordance;
+- comparable-pair coverage;
+- permutation nulls;
+- agreement as a function of family distance;
+- same-recipe seed floor.
+
+### Stage 6 — Multi-observer fusion
+
+Only after parallax has predictive value should it be used for fusion or routing.
+
+Compare against:
+
+- best single observer chosen on validation data;
+- same-family ensembles;
+- equal-weight aligned averaging;
+- GPA/GCPA consensus;
+- `vec2vec` shared latent where applicable;
+- a nuisance-only routing model.
+
+A parallax-aware method is useful only if it improves untouched decision risk beyond these baselines.
+
+---
+
+## 10. Core hypotheses
+
+### H1 — Cross-realization behavioral parallax
+
+**Hypothesis.** Observer-specific alignment residuals contain item-level information that predicts each observer's held-out behavior beyond observer identity, global capability, item difficulty, realization metadata, and marginal embedding statistics; a nonzero component survives increasing non-destructive alignment capacity and transfers across structurally different realization protocols.
+
+**Falsified if.** Incremental predictive value disappears under nuisance controls, seed nulls, richer held-out alignment, or cross-realization transfer.
+
+This is the primary positive claim.
+
+### H2 — Structured realization-invariance profiles
+
+**Hypothesis.** Observers exhibit reproducible differences in which registered semantic distinctions survive independently generated realization families and perturbation scales, after controlling for baseline competence and probe capacity.
+
+**Falsified if.** Profiles are unstable across generators, collapse under independent semantic-preservation validation, or reduce to baseline capability.
+
+### H3 — Observer-order stability decays with family distance
+
+**Hypothesis.** After capability adjustment, partial observer orders transfer above seed and permutation nulls across decision families, with a measurable decay as family distance increases.
+
+**Falsified if.** Order agreement is fully explained by global capability, disappears above the seed floor, or falls immediately to the permutation null outside near-duplicate task families.
+
+This is secondary. Its failure supports task-relative extractability rather than invalidating H1 or H2.
+
+### H4 — Multi-observer complementarity
+
+**Hypothesis.** Parallax-aware fusion or routing improves held-out decision risk beyond the best single observer, same-family ensembles, and shared-space baselines.
+
+**Falsified if.** Gains vanish under strong baseline selection or independent test sets.
+
+---
+
+## 11. Prior art and novelty boundary
+
+### 11.1 Universal and shared representations
+
+Huh et al. (2024), Jha et al. (2025), Yacobi et al. (2025), Achara et al. (2026), and a large alignment literature already establish substantial common representational structure and practical cross-model interoperability.
+
+**Not claimed:** discovery of a universal embedding space or the first cross-model alignment method.
+
+### 11.2 Local convergence and stimulus-level dispersion
+
+Gröger, Wen, and Brbić (2026) show that calibrated local neighborhood agreement is more robust than broad global convergence claims. Hosseini et al. (2026) already define per-stimulus Procrustes residuals/dispersion across model populations and show that stimulus-level dispersion modulates cross-modal convergence.
+
+**Not claimed:** invention of stimulus-level representational residuals or discovery that model agreement varies by item.
+
+### 11.3 Robustness and invariance under transformations
+
+Transformation invariance is foundational in representation learning. Vision work explicitly studies augmentation-induced invariance and its trade-offs. NLP work studies paraphrase robustness, context sensitivity, and dynamic stochastic evaluation. PTEB (Frank & Afli, 2026) is especially close: it generates stochastic meaning-preserving paraphrases at evaluation time and demonstrates text-embedding sensitivity to token-level realization changes.
+
+**Not claimed:** first paraphrase-robustness benchmark or first invariance measurement.
+
+### 11.4 Probing and extractability
+
+Hewitt and Liang (2019), Pimentel et al. (2020), Voita and Titov (2020), and later work establish that what is extractable from a representation depends on probe capacity and sample efficiency.
+
+**Not claimed:** a new general notion of extractability.
+
+### 11.5 Blackwell, Le Cam, and restricted comparisons
+
+Blackwell's comparison of experiments, Le Cam deficiency, and Torgersen's treatment of statistical experiments provide the correct classical language for unrestricted and restricted comparison.
+
+**Not claimed:** a new information order.
+
+The Lean companion certifies only the elementary consequences needed to stop the paper from misusing these theories on finite deterministic embeddings.
+
+### 11.6 Cross-model disagreement and uncertainty
+
+Recent work uses cross-model disagreement to detect confident errors and improve uncertainty estimation.
+
+**Not claimed:** first use of model disagreement as a correctness signal.
+
+### 11.7 Candidate contribution
+
+After these concessions, the candidate contribution is the following combination:
+
+1. a formal negative ledger showing why point-indexed deterministic observer ordering and single-family dominance do not identify intrinsic semantic resolution;
+2. a requirement that realization protocols be observer-independent and replicated across structurally distinct \(\nu_j\);
+3. realization-invariance fingerprints that pair baseline competence with sensitivity across intervention scale;
+4. **behavioral semantic parallax** defined by observer-specific alignment residuals that predict item-level behavior beyond strong nuisance controls;
+5. parallax reported as a curve over alignment capacity and tested for cross-realization transfer;
+6. observer-order stability treated as a secondary decay curve over decision-family distance, with global-capability and seed nulls.
+
+The originality claim should be rejected if prior work is found that already operationalizes this same combination.
+
+---
+
+## 12. Relation to Semantic Atlas, Pontifex, and Perquire
+
+### 12.1 Semantic Atlas
+
+The Semantic Atlas should not assume that one embedding model supplies a privileged map. A region can instead carry an observer-by-realization reliability profile and parallax uncertainty.
+
+The Atlas's stronger claim remains dynamic: even when static representations align, transition structure, reachability, and control cost may remain model-specific.
+
+### 12.2 Pontifex
+
+Pontifex is the most direct beneficiary of the parallax formulation. Its use of several independent embedding spaces need not be justified by the impossibility of alignment. The scientific question becomes whether observer-specific perturbation responses contain item-level predictive information after the alignable/common component is removed.
+
+A strong Pontifex experiment would compare:
+
+\[
+\text{consensus perturbation signal}
+\quad+\quad
+\text{observer-specific residual signal}
+\]
+
+and require the residual component to predict which items or spans change each observer's behavior across realization families.
+
+### 12.3 Perquire
+
+Perquire can use observer profiles operationally without assuming a global hierarchy. Different embedding models may be useful for different local decisions or transformation regimes.
+
+A future routing policy could select an observer based on validated local risk or parallax-derived complementarity rather than one global embedding leaderboard.
+
+This is an engineering implication, not evidence for the scientific claims above.
+
+---
+
+## 13. Limitations
+
+### 13.1 \(\nu\) is experimenter-made
+
+Once point-indexed comparison is rejected, the measurement environment depends on the realization protocol. No amount of notation turns \(\nu\) into an observer-independent law of nature.
+
+The defence is transparency, independence, structural diversity, and replication across several \(\nu_j\), not pretending the dependence disappears.
+
+### 13.2 Semantic preservation is contestable
+
+Natural-language paraphrases can alter implicature, register, presupposition, or pragmatic content. Controlled synthetic worlds provide stronger ground truth but weaker ecological validity.
+
+Both are needed.
+
+### 13.3 Alignment capacity has no canonical endpoint
+
+A flexible map can memorize finite correspondences. Alignment curves therefore require held-out correspondence evaluation, capacity regularization, and no access to behavioral outcomes.
+
+### 13.4 Global capability is difficult to define
+
+Any residualization against a capability index inherits the limitations of that index. Several independent capability summaries should be tested, and results that depend on one convenient index should be treated as fragile.
+
+### 13.5 Observer populations share ancestry
+
+Models are not independent scientific instruments. They may share data, architectures, distillation teachers, objectives, and benchmark contamination. Agreement and parallax can reflect common ancestry.
+
+### 13.6 Parallax may be useful without being ontological
+
+Even if residuals predict behavior, that does not prove that each model occupies a literal viewing angle on one semantic object. "Parallax" is justified operationally by reproducible observer-specific residual information, not by metaphysics.
+
+---
+
+## 14. What positive and negative outcomes would mean
+
+### 14.1 Strong positive result
+
+Suppose:
+
+1. observer-independent realization protocols pass semantic-preservation audits;
+2. invariance fingerprints replicate across structurally different \(\nu_j\);
+3. alignment residuals predict item-level observer behavior beyond nuisance models;
+4. predictive residual content survives richer held-out alignment and exceeds seed nulls;
+5. residual-behavior relationships transfer across realization families;
+6. parallax-aware fusion improves downstream risk.
+
+Then a defensible conclusion is:
+
+> Independently trained embedding systems share an alignable component while retaining reproducible observer-specific residual structure that predicts how semantic distinctions survive changes of realization and how individual models behave.
+
+This is weaker than a universal semantic geometry and stronger than generic model disagreement.
+
+### 14.2 Negative parallax, positive invariance profiles
+
+If residuals lose all behavioral value after alignment but invariance fingerprints remain reproducible, then the useful object is transformation robustness rather than semantic parallax.
+
+### 14.3 Positive parallax, no order stability
+
+If residuals are predictive but observer orders fail to transfer across distant decision families, then the data support complementary specialized observers rather than a resolution hierarchy.
+
+This is an important and plausible outcome.
+
+### 14.4 Everything collapses to capability or seed
+
+If invariance profiles, parallax, and order transfer are explained by global capability, generator choice, or same-recipe seed variation, then the observer metaphor adds no scientific content and should be retired.
 
 ---
 
 ## 15. Conclusion
 
-The most defensible version of the semantic-observer idea is not that larger embedding models are telescopes of increasing aperture pointed at one already-given semantic universe. Learned representations are task-shaped experiments. They can be noisy, underexposed, intentionally invariant, or genuinely complementary.
+The phrase "better model sees semantic space more clearly" is attractive because it compresses several intuitions into one image. Formalization shows why that compression is dangerous.
 
-The comparison should therefore begin with decisions:
+On finite point-indexed benchmarks, deterministic injective embeddings are mutually simulable under unrestricted garbling. Restricted decision orders can reverse across task families. Restricted extractability can change under invertible coordinates when probe classes do not transform with them. None of these routes yields an intrinsic observer hierarchy.
+
+A more defensible programme begins with controlled variation in the input realization itself:
 
 \[
-\boxed{
-\text{Which observer permits which decisions, at what risk?}
-}
+X\sim\nu_{j,s}(\cdot\mid\theta).
 \]
 
-Blackwell's order and Le Cam deficiency supply the right conceptual language for refinement and approximate equivalence. Multiscale structural probes then describe **where and how** the relevant information is accessible, provided they survive probe-capacity, density, intrinsic-dimension, and null calibration. Apparent topology requires statistical inference. Residual disagreement becomes semantic parallax only when it predicts item-level behavior beyond identity and survives increasing alignment capacity.
+The observer is asked to preserve registered semantic distinctions through declared, independently generated perturbations. This produces realization-invariance fingerprints rather than a universal scalar resolution.
 
-Under this revised framework, "better observer" is not a synonym for larger model, lower reconstruction error, or prettier geometry. It is a task-relative statement about decision-relevant information.
+The stronger positive hypothesis lies in what remains after observers are aligned. If an observer-specific residual predicts **which items that observer will succeed or fail on**, beyond capability, identity, difficulty, and marginal statistics, and if that signal survives increasing alignment capacity and transfers across structurally distinct realization protocols, then disagreement is not merely noise around a universal representation. It contains behaviorally meaningful observer-specific structure.
 
-That narrower claim is also more testable. An invertible coordinate change must not alter informativeness. Missing exposure must not be mislabeled as poor resolution. Objective-induced invariance must be allowed to count as useful compression rather than blindness. Parallax must survive strong nuisance and alignment controls. Multi-observer fusion must beat the best single observer.
+The central question is therefore no longer
 
-If those tests fail, the observer metaphor should be retired. If they survive, learned representation spaces can be studied as a population of partially ordered, partially complementary semantic experiments rather than as competing claims to one privileged coordinate system.
+\[
+\boxed{\text{Which model sees more?}}
+\]
+
+but
+
+\[
+\boxed{\text{What observer-specific information survives alignment and controlled changes of realization?}}
+\]
+
+That question can produce a positive result without requiring a universal hierarchy of semantic observers.
 
 ---
 
 ## References
 
-Achara, N., et al. (2026). **Multi-Way Representation Alignment.** arXiv:2602.06205.
+Achara, N., Gaintseva, T., Mahaut, M., Chakraborty, P., Stenby Johansson, V., Barsbey, M., Rodolà, E., & Crisostomi, D. (2026). **Multi-Way Representation Alignment.** ICML 2026. arXiv:2602.06205.
 
 Blackwell, D. (1951). **Comparison of Experiments.** *Proceedings of the Second Berkeley Symposium on Mathematical Statistics and Probability*, 93–102.
 
-Blackwell, D. (1953). **Equivalent Comparisons of Experiments.** *The Annals of Mathematical Statistics*, 24(2), 265–272. https://doi.org/10.1214/aoms/1177729032
+Blackwell, D. (1953). **Equivalent Comparisons of Experiments.** *The Annals of Mathematical Statistics*, 24(2), 265–272.
+
+Burdick, L., Kummerfeld, J. K., & Mihalcea, R. (2022). **Using Paraphrases to Study Properties of Contextual Embeddings.** NAACL 2022.
 
 Chazal, F., Fasy, B. T., Lecci, F., Rinaldo, A., Singh, A., & Wasserman, L. (2014). **On the Bootstrap for Persistence Diagrams and Landscapes.** arXiv:1311.0376.
 
-Fasy, B. T., Lecci, F., Rinaldo, A., Wasserman, L., Balakrishnan, S., & Singh, A. (2014). **Confidence Sets for Persistence Diagrams.** *The Annals of Statistics*, 42(6), 2301–2339. https://doi.org/10.1214/14-AOS1252
+Fasy, B. T., Lecci, F., Rinaldo, A., Wasserman, L., Balakrishnan, S., & Singh, A. (2014). **Confidence Sets for Persistence Diagrams.** *The Annals of Statistics*, 42(6), 2301–2339.
 
-Gresele, L., et al. (2020). **The Incomplete Rosetta Stone Problem: Identifiability Results for Multi-View Nonlinear ICA.** *UAI 2020 / PMLR 115*.
+Frank, M., & Afli, H. (2026). **PTEB: Towards Robust Text Embedding Evaluation via Stochastic Paraphrasing at Evaluation Time with LLMs.** EACL 2026, 2832–2851.
 
-Gröger, F., Wen, S., & Brbić, M. (2026). **Revisiting the Platonic Representation Hypothesis: An Aristotelian View.** ICML 2026; arXiv:2602.14486.
+Gorbett, M., & Jana, S. (2026). **Cross-Model Disagreement as a Label-Free Correctness Signal.** arXiv:2603.25450.
 
-Hewitt, J., & Liang, P. (2019). **Designing and Interpreting Probes with Control Tasks.** *EMNLP-IJCNLP 2019*, 2733–2743. https://doi.org/10.18653/v1/D19-1275
+Gröger, F., Wen, S., & Brbić, M. (2026). **Revisiting the Platonic Representation Hypothesis: An Aristotelian View.** ICML 2026. arXiv:2602.14486.
 
-Huh, M., Cheung, B., Wang, T., & Isola, P. (2024). **The Platonic Representation Hypothesis.** *ICML 2024 / PMLR 235*.
+Hagen, T., Scells, H., & Potthast, M. (2024). **Revisiting Query Variation Robustness of Transformer Models.** Findings of EMNLP 2024.
 
-Jha, A., Zhang, Y., Shmatikov, V., & Morris, J. X. (2025/2026). **Harnessing the Universal Geometry of Embeddings.** arXiv:2505.12540; NeurIPS 2025.
+Hamidieh, K., Thost, V., Gerych, W., Yurochkin, M., & Ghassemi, M. (2026). **Complementing Self-Consistency with Cross-Model Disagreement for Uncertainty Quantification.** arXiv:2604.17112.
+
+Hewitt, J., & Liang, P. (2019). **Designing and Interpreting Probes with Control Tasks.** EMNLP-IJCNLP 2019.
+
+Hosseini, E. A., Cheung, B., Fedorenko, E., & Williams, A. H. (2026). **Modulating Cross-Modal Convergence with Single-Stimulus, Intra-Modal Dispersion.** ICLR 2026 Re-Align Workshop. arXiv:2604.21836.
+
+Hounie, I., Chamon, L. F. O., & Ribeiro, A. (2023). **Automatic Data Augmentation via Invariance-Constrained Learning.** ICML 2023, PMLR 202.
+
+Huh, M., Cheung, B., Wang, T., & Isola, P. (2024). **Position: The Platonic Representation Hypothesis.** ICML 2024, PMLR 235.
+
+Jha, R., Zhang, C., Shmatikov, V., & Morris, J. X. (2025). **Harnessing the Universal Geometry of Embeddings.** NeurIPS 2025. arXiv:2505.12540.
 
 Le Cam, L. (1964). **Sufficiency and Approximate Sufficiency.** *The Annals of Mathematical Statistics*, 35(4), 1419–1455.
 
 Le Cam, L. (1986). **Asymptotic Methods in Statistical Decision Theory.** Springer.
 
-Pimentel, T., Valvoda, J., Maudslay, R. H., Zmigrod, R., Williams, A., & Cotterell, R. (2020). **Information-Theoretic Probing for Linguistic Structure.** arXiv:2004.03061.
-
-Pimentel, T., & Cotterell, R. (2021). **A Bayesian Framework for Information-Theoretic Probing.** *EMNLP 2021*.
-
-Raginsky, M. (2011). **Shannon Meets Blackwell and Le Cam: Channels, Codes, and Statistical Experiments.** *IEEE ISIT 2011*, 1220–1224. https://doi.org/10.1109/ISIT.2011.6033729
+Pimentel, T., Valvoda, J., Maudslay, R. H., Zmigrod, R., Williams, A., & Cotterell, R. (2020). **Information-Theoretic Probing for Linguistic Structure.** ACL 2020.
 
 Torgersen, E. (1991). **Comparison of Statistical Experiments.** Cambridge University Press.
 
-Voita, E., & Titov, I. (2020). **Information-Theoretic Probing with Minimum Description Length.** arXiv:2003.12298.
+Verma, D., Lal, Y. K., Sinha, S., Van Durme, B., & Poliak, A. (2023). **Evaluating Paraphrastic Robustness in Textual Entailment Models.** ACL 2023.
 
-Yacobi, et al. (2025). **Learning Shared Representations from Unpaired Data.** arXiv:2505.21524; NeurIPS 2025.
+Voita, E., & Titov, I. (2020). **Information-Theoretic Probing with Minimum Description Length.** EMNLP 2020.
+
+Yacobi, A., Ben-Ari, N., Talmon, R., & Shaham, U. (2025). **Learning Shared Representations from Unpaired Data.** NeurIPS 2025. arXiv:2505.21524.
+
+Zhang, J., & Ma, K. (2022). **Rethinking the Augmentation Module in Contrastive Learning: Learning Hierarchical Augmentation Invariance With Expanded Views.** CVPR 2022, 16650–16659.
