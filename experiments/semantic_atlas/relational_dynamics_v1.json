@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "experiment": "semantic-atlas-relational-dynamics-v1",
+  "base_manifest": "model_backed_a_v1.json",
+  "frozen_encoders": true,
+  "corpus": "all 116 markdown documents selected by the frozen Experiment A source commit and path-hash rule; calibration, heldout, and trajectory documents are embedded, but no text is generated",
+  "chronology": "first git-touch timestamp at or before source_commit; ties broken by sha256(path)",
+  "k": 5,
+  "sensitivity_k": [3, 10],
+  "initial_n": 24,
+  "batch_size": 4,
+  "region_count": 6,
+  "region_definition": "deterministic spherical k-means over the midpoint of the two baseline-aligned canonical vectors, fit once on the final frozen corpus",
+  "normalized_hazard": "mean fraction of k neighbors replaced divided by the exchangeable expectation added/(previous_n - 1 + added)",
+  "primary_endpoint": "mean absolute cross-observer difference in normalized neighborhood-churn hazard over chronological insertion steps",
+  "regional_endpoint": "mean absolute cross-observer difference in normalized hazard over region-by-step cells",
+  "nonstationarity_endpoint": "mean cosine distance between each arriving batch centroid and the previous-prefix centroid, averaged over the two frozen observers",
+  "null_model": "exchangeable insertion: 128 shared random permutations of the same final corpus and fixed observer geometries",
+  "null_permutations": 128,
+  "null_seed": 20260825,
+  "alpha": 0.05,
+  "hubness_controls": {
+    "fit_policy": "fit the score correction once on the final frozen corpus, then hold it fixed during insertion replay so correction statistics do not themselves become a second moving process",
+    "csls": {
+      "neighborhood": 10,
+      "mode": "symmetric within-corpus CSLS"
+    },
+    "mutual_proximity": {
+      "mode": "exact empirical Mutual Proximity on the final cosine-distance matrix"
+    },
+    "dbnorm_note": "DBNorm is not a primary control here because its published setting uses distinct query and gallery banks in cross-modal retrieval. Treating one symmetric corpus as both banks would be an unvalidated method adaptation. CSLS and exact empirical Mutual Proximity provide two established, structurally appropriate hubness-control families."
+  },
+  "gap_mechanism": "before each insertion batch, record the top-1 cosine gap and the k-versus-(k+1) boundary gap; compare churn rates in the lowest and highest boundary-gap quartiles",
+  "resolution": "for anchors present at initial_n, record added documents and added final-corpus mass until the first kNN change, with right-censoring when no change occurs",
+  "decision_rule": {
+    "stationary_null_not_rejected": "nonstationarity endpoint p >= alpha; do not interpret churn as a corpus-flow phenomenon",
+    "dynamic_transfer_not_rejected": "nonstationarity detected but raw cross-observer dynamic-divergence p >= alpha",
+    "model_specific_relational_dynamics": "nonstationarity detected, raw divergence p < alpha, and divergence remains p < alpha under every hubness control that reduces k-occurrence skewness in both observers",
+    "hubness_sensitive": "nonstationarity detected and raw divergence p < alpha, but at least one effective hubness control makes divergence non-significant"
+  },
+  "interpretation_rule": "The encoders are frozen. A document vector never moves. The only dynamical object is corpus-induced relational structure (neighbor identity/rank, hubness-corrected neighbor identity, and region-level churn). Static alignment is inherited context, not selected from these outcomes."
+}
