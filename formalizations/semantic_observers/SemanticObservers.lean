@@ -1,11 +1,16 @@
 namespace SemanticObservers
 
-universe u v w s d
+universe u v w s
 
 abbrev Family (α : Type u) := α → Prop
 
 def Subset {α : Type u} (A B : Family α) : Prop :=
   ∀ x, A x → B x
+
+/-- Minimal injectivity predicate, kept local so the companion needs no
+additional library imports. -/
+def Injective {α : Type u} {β : Type v} (f : α → β) : Prop :=
+  ∀ ⦃x y⦄, f x = f y → x = y
 
 /-! ## Deterministic experiments and exact garbling -/
 
@@ -70,7 +75,7 @@ theorem injective_source_simulates_any
     {Θ : Type u} {ZA : Type v} {ZB : Type w}
     [Nonempty ZB]
     (A : Θ → ZA) (B : Θ → ZB)
-    (hA : Function.Injective A) :
+    (hA : Injective A) :
     DeterministicGarbling A B := by
   apply (deterministicGarbling_iff_fiberRefines A B).2
   intro x y hxy
@@ -82,8 +87,8 @@ theorem injective_encoders_are_bilaterally_garbling
     {Θ : Type u} {ZA : Type v} {ZB : Type w}
     [Nonempty ZA] [Nonempty ZB]
     (A : Θ → ZA) (B : Θ → ZB)
-    (hA : Function.Injective A)
-    (hB : Function.Injective B) :
+    (hA : Injective A)
+    (hB : Injective B) :
     DeterministicGarbling A B ∧ DeterministicGarbling B A := by
   exact ⟨injective_source_simulates_any A B hA,
     injective_source_simulates_any B A hB⟩
@@ -104,26 +109,26 @@ theorem resolved_collision_blocks_garbling
 /-! ## Restricted decision orders -/
 
 /-- Empirical dominance relative to one registered family of decision
-problems and one externally supplied risk functional. -/
+problems, one externally supplied risk functional, and one risk order. -/
 def RestrictedDominates
     {Observer : Type u} {Decision : Type v} {Score : Type w}
-    [LE Score]
+    (le : Score → Score → Prop)
     (risk : Observer → Decision → Score)
     (D : Family Decision)
     (A B : Observer) : Prop :=
-  ∀ d, D d → risk A d ≤ risk B d
+  ∀ d, D d → le (risk A d) (risk B d)
 
 /-- Dominance on a larger decision family implies dominance on every
 subfamily. The converse is not valid in general. -/
 theorem restrictedDominance_descends
     {Observer : Type u} {Decision : Type v} {Score : Type w}
-    [LE Score]
+    (le : Score → Score → Prop)
     (risk : Observer → Decision → Score)
     (D E : Family Decision)
     (A B : Observer)
     (hDE : Subset D E)
-    (h : RestrictedDominates risk E A B) :
-    RestrictedDominates risk D A B := by
+    (h : RestrictedDominates le risk E A B) :
+    RestrictedDominates le risk D A B := by
   intro d hd
   exact h d (hDE d hd)
 
@@ -138,37 +143,39 @@ def OnlyFalse : Family Bool := fun d => d = false
 def OnlyTrue : Family Bool := fun d => d = true
 
 theorem toy_false_dominates_on_false :
-    RestrictedDominates toyRisk OnlyFalse false true := by
+    RestrictedDominates (fun a b : Nat => a ≤ b) toyRisk OnlyFalse false true := by
   intro d hd
   subst d
   decide
 
 theorem toy_true_dominates_on_true :
-    RestrictedDominates toyRisk OnlyTrue true false := by
+    RestrictedDominates (fun a b : Nat => a ≤ b) toyRisk OnlyTrue true false := by
   intro d hd
   subst d
   decide
 
 theorem toy_false_does_not_dominate_on_true :
-    ¬ RestrictedDominates toyRisk OnlyTrue false true := by
+    ¬ RestrictedDominates (fun a b : Nat => a ≤ b) toyRisk OnlyTrue false true := by
   intro h
-  have hbad := h true rfl
-  decide at hbad
+  have hbad : 1 ≤ 0 := by
+    simpa [toyRisk] using h true rfl
+  cases hbad
 
 theorem toy_true_does_not_dominate_on_false :
-    ¬ RestrictedDominates toyRisk OnlyFalse true false := by
+    ¬ RestrictedDominates (fun a b : Nat => a ≤ b) toyRisk OnlyFalse true false := by
   intro h
-  have hbad := h false rfl
-  decide at hbad
+  have hbad : 1 ≤ 0 := by
+    simpa [toyRisk] using h false rfl
+  cases hbad
 
 /-- Dominance on one decision family can reverse on a disjoint family. This
 is why a single restricted order cannot by itself support an observer-level
 claim. -/
 theorem disjoint_decision_families_can_reverse_order :
-    RestrictedDominates toyRisk OnlyFalse false true ∧
-    RestrictedDominates toyRisk OnlyTrue true false ∧
-    ¬ RestrictedDominates toyRisk OnlyTrue false true ∧
-    ¬ RestrictedDominates toyRisk OnlyFalse true false := by
+    RestrictedDominates (fun a b : Nat => a ≤ b) toyRisk OnlyFalse false true ∧
+    RestrictedDominates (fun a b : Nat => a ≤ b) toyRisk OnlyTrue true false ∧
+    ¬ RestrictedDominates (fun a b : Nat => a ≤ b) toyRisk OnlyTrue false true ∧
+    ¬ RestrictedDominates (fun a b : Nat => a ≤ b) toyRisk OnlyFalse true false := by
   exact ⟨toy_false_dominates_on_false,
     toy_true_dominates_on_true,
     toy_false_does_not_dominate_on_true,
@@ -176,49 +183,55 @@ theorem disjoint_decision_families_can_reverse_order :
 
 /-! ## Reparameterization and probe-class dependence -/
 
+/-- A minimal explicit isomorphism between observation types. -/
+structure Iso (Z : Type u) (W : Type v) where
+  toFun : Z → W
+  invFun : W → Z
+  leftInv : ∀ z, invFun (toFun z) = z
+  rightInv : ∀ w, toFun (invFun w) = w
+
 abbrev Rule (Z : Type u) (Action : Type v) := Z → Action
 
-/-- Pull a decision rule on `W` back through an invertible coordinate change
-`φ : Z ≃ W`. -/
+/-- Pull a decision rule on `W` back through an invertible coordinate change. -/
 def pullRule
     {Z : Type u} {W : Type v} {Action : Type w}
-    (φ : Z ≃ W) (q : Rule W Action) : Rule Z Action :=
-  fun z => q (φ z)
+    (φ : Iso Z W) (q : Rule W Action) : Rule Z Action :=
+  fun z => q (φ.toFun z)
 
 /-- Push a rule on `Z` forward through an invertible coordinate change. -/
 def pushRule
     {Z : Type u} {W : Type v} {Action : Type w}
-    (φ : Z ≃ W) (q : Rule Z Action) : Rule W Action :=
-  fun w => q (φ.symm w)
+    (φ : Iso Z W) (q : Rule Z Action) : Rule W Action :=
+  fun w => q (φ.invFun w)
 
 theorem pull_push_rule
     {Z : Type u} {W : Type v} {Action : Type w}
-    (φ : Z ≃ W) (q : Rule Z Action) :
+    (φ : Iso Z W) (q : Rule Z Action) :
     pullRule φ (pushRule φ q) = q := by
   funext z
-  simp [pullRule, pushRule]
+  exact congrArg q (φ.leftInv z)
 
 theorem push_pull_rule
     {Z : Type u} {W : Type v} {Action : Type w}
-    (φ : Z ≃ W) (q : Rule W Action) :
+    (φ : Iso Z W) (q : Rule W Action) :
     pushRule φ (pullRule φ q) = q := by
   funext w
-  simp [pullRule, pushRule]
+  exact congrArg q (φ.rightInv w)
 
 /-- An attained optimum for an unrestricted or restricted rule class. -/
 def IsOptimal
     {RuleType : Type u} {Score : Type v}
-    [LE Score]
+    (le : Score → Score → Prop)
     (admissible : Family RuleType)
     (eval : RuleType → Score)
     (q : RuleType) : Prop :=
-  admissible q ∧ ∀ r, admissible r → eval q ≤ eval r
+  admissible q ∧ ∀ r, admissible r → le (eval q) (eval r)
 
 /-- The transformed evaluator measures a rule after pulling it back to the
 original observation coordinates. -/
 def reparamEval
     {Z : Type u} {W : Type v} {Action : Type w} {Score : Type s}
-    (φ : Z ≃ W)
+    (φ : Iso Z W)
     (evalZ : Rule Z Action → Score)
     (qW : Rule W Action) : Score :=
   evalZ (pullRule φ qW)
@@ -227,7 +240,7 @@ def reparamEval
 pullback and pushforward preserve admissibility. -/
 def ProbeClassesCorrespond
     {Z : Type u} {W : Type v} {Action : Type w}
-    (φ : Z ≃ W)
+    (φ : Iso Z W)
     (HZ : Family (Rule Z Action))
     (HW : Family (Rule W Action)) : Prop :=
   (∀ qW, HW qW → HZ (pullRule φ qW)) ∧
@@ -237,55 +250,62 @@ def ProbeClassesCorrespond
 provided the probe classes themselves correspond under that change. -/
 theorem optimal_rule_transports_under_corresponding_probe_classes
     {Z : Type u} {W : Type v} {Action : Type w} {Score : Type s}
-    [Preorder Score]
-    (φ : Z ≃ W)
+    (le : Score → Score → Prop)
+    (φ : Iso Z W)
     (HZ : Family (Rule Z Action))
     (HW : Family (Rule W Action))
     (evalZ : Rule Z Action → Score)
     (qZ : Rule Z Action)
     (hclasses : ProbeClassesCorrespond φ HZ HW)
-    (hopt : IsOptimal HZ evalZ qZ) :
-    IsOptimal HW (reparamEval φ evalZ) (pushRule φ qZ) := by
+    (hopt : IsOptimal le HZ evalZ qZ) :
+    IsOptimal le HW (reparamEval φ evalZ) (pushRule φ qZ) := by
   constructor
   · exact hclasses.2 qZ hopt.1
   · intro rW hrW
     have hrZ : HZ (pullRule φ rW) := hclasses.1 rW hrW
     have hle := hopt.2 (pullRule φ rW) hrZ
-    simpa [reparamEval, pull_push_rule] using hle
+    change le (evalZ (pullRule φ (pushRule φ qZ)))
+      (evalZ (pullRule φ rW))
+    rw [pull_push_rule]
+    exact hle
 
 /-- If both restricted problems attain optima and their probe classes
 correspond, the optimal values agree exactly after reparameterization. -/
 theorem optimal_values_invariant_under_corresponding_probe_classes
     {Z : Type u} {W : Type v} {Action : Type w} {Score : Type s}
-    [PartialOrder Score]
-    (φ : Z ≃ W)
+    (le : Score → Score → Prop)
+    (antisymm : ∀ a b, le a b → le b a → a = b)
+    (φ : Iso Z W)
     (HZ : Family (Rule Z Action))
     (HW : Family (Rule W Action))
     (evalZ : Rule Z Action → Score)
     (qZ : Rule Z Action)
     (qW : Rule W Action)
     (hclasses : ProbeClassesCorrespond φ HZ HW)
-    (hoptZ : IsOptimal HZ evalZ qZ)
-    (hoptW : IsOptimal HW (reparamEval φ evalZ) qW) :
+    (hoptZ : IsOptimal le HZ evalZ qZ)
+    (hoptW : IsOptimal le HW (reparamEval φ evalZ) qW) :
     evalZ qZ = reparamEval φ evalZ qW := by
-  apply le_antisymm
+  apply antisymm
   · have hqWZ : HZ (pullRule φ qW) := hclasses.1 qW hoptW.1
     exact hoptZ.2 (pullRule φ qW) hqWZ
   · have htransport :=
       optimal_rule_transports_under_corresponding_probe_classes
-        φ HZ HW evalZ qZ hclasses hoptZ
+        le φ HZ HW evalZ qZ hclasses hoptZ
     have hle := hoptW.2 (pushRule φ qZ) htransport.1
-    simpa [reparamEval, pull_push_rule] using hle
+    change le (evalZ (pullRule φ qW))
+      (evalZ (pullRule φ (pushRule φ qZ))) at hle
+    rw [pull_push_rule] at hle
+    exact hle
 
 /-! ### Concrete counterexample: invertible information, non-invariant probe -/
 
-def boolNotEquiv : Bool ≃ Bool where
+def boolNotIso : Iso Bool Bool where
   toFun := Bool.not
   invFun := Bool.not
-  left_inv := by
+  leftInv := by
     intro b
     cases b <;> rfl
-  right_inv := by
+  rightInv := by
     intro b
     cases b <;> rfl
 
@@ -304,14 +324,13 @@ theorem identity_probe_perfect_before_reparameterization :
   rfl
 
 theorem identity_probe_fails_after_not_reparameterization :
-    reparamEval boolNotEquiv boolIdentityLoss id = 2 := by
+    reparamEval boolNotIso boolIdentityLoss id = 2 := by
   rfl
 
-/-- A wild-enough invertible coordinate change can alter restricted-probe
-extractability even though unrestricted decision information is preserved.
-The missing hypothesis is probe-class correspondence/equivariance. -/
+/-- An invertible coordinate change can alter restricted-probe extractability
+when the probe class is not equivariant under the change. -/
 theorem invertible_reparameterization_need_not_preserve_fixed_probe_score :
-    boolIdentityLoss id ≠ reparamEval boolNotEquiv boolIdentityLoss id := by
+    boolIdentityLoss id ≠ reparamEval boolNotIso boolIdentityLoss id := by
   decide
 
 #print axioms deterministicGarbling_iff_fiberRefines
