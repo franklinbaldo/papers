@@ -1,5 +1,5 @@
 ---
-type: "Observation"
+type: "Findings Record"
 title: "Semantic Atlas — Gallery-Scale Gate v1 Results"
 description: "Terminal result of the preregistered static gallery-size gate on 382 documents."
 tags: [semantic-atlas, observation, embeddings, mknn, gallery-size]
