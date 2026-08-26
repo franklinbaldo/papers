@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "experiment": "semantic-atlas-gallery-scale-v1",
+  "source_commit": "7674788808165019772d05631775c0dedde3c96a",
+  "reference_observer": {
+    "model": "Qwen/Qwen3-Embedding-0.6B",
+    "revision": "97b0c61"
+  },
+  "transfer_observer": {
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "1110a24"
+  },
+  "corpus": {
+    "source": "all Markdown files in source_commit",
+    "selection": "sort every .md path by sha256(path); no outcome-dependent exclusions",
+    "excerpt_chars": 1200,
+    "expected_document_count": 382
+  },
+  "gallery": {
+    "sizes": [32, 48, 72, 116, 176, 256, 382],
+    "ks": [3, 5, 10],
+    "subset_replicates": 8,
+    "subset_seed": 20260826,
+    "correspondence_null_permutations": 1024,
+    "correspondence_null_seed": 20260827
+  },
+  "same_observer_stability": {
+    "operator": "markdown_format_view_v1",
+    "view_a": "exact first 1200 characters of each Markdown document",
+    "view_b": "the same already-truncated excerpt with Markdown punctuation elided; lexical link labels, targets, headings and code content retained",
+    "interpretation": "same-observer format-perturbation stability ceiling, not seed variability or a mathematical upper bound",
+    "conservative_joint_ceiling": "minimum of the two observers' calibrated same-observer stability curves"
+  },
+  "gate": {
+    "primary_k": 5,
+    "anchor_gallery_n": 116,
+    "full_gallery_n": 382,
+    "minimum_full_calibrated_mknn": 0.20,
+    "minimum_retention_vs_anchor": 0.75,
+    "minimum_same_observer_ceiling": 0.50,
+    "minimum_same_observer_gap": 0.10,
+    "observer_gap_final_points": 3,
+    "small_gallery_artifact": "full calibrated mKNN < 0.20 or retention from N=116 to N=382 < 0.75; stop the static paper",
+    "invalid_same_observer_stability_control": "the conservative same-observer formatting reference falls below 0.50 at any of the final three N values; the control is invalid and no static claim is promoted",
+    "static_shared_but_observer_specific_structure": "material scale-retained alignment and a >=0.10 calibrated gap below both same-observer stability references at each of the final three N values",
+    "scale_stable_but_not_separated_from_stability_ceiling": "alignment survives scale but the observer-specific gap gate fails; do not claim discrete observer-specific structure"
+  }
+}
