@@ -3,7 +3,7 @@ type: "Technical Paper"
 title: "Semantic Parallax: Realization Invariance and Observer-Specific Residuals in Learned Representation Spaces"
 description: "Position paper proposing realization-invariance profiles and alignment-robust semantic parallax as testable properties of embedding observers, while formally recording why several natural observer-ordering constructions collapse or remain benchmark-relative."
 tags: [semantic-observers, semantic-parallax, embeddings, representation-alignment, invariance, paraphrase-robustness, probing, formal-verification]
-timestamp: 2026-08-26T02:05:00Z
+timestamp: 2026-08-26T02:12:00Z
 ---
 
 # Semantic Parallax: Realization Invariance and Observer-Specific Residuals in Learned Representation Spaces
