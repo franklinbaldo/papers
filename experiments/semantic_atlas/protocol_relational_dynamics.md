@@ -1,3 +1,11 @@
+---
+type: "Protocol"
+title: "Semantic Atlas — Relational Dynamics Experiment v1"
+description: "Pre-registered test of corpus-induced kNN churn under frozen embedding observers, with an exchangeable-insertion null and explicit hubness controls."
+tags: [semantic-atlas, preregistration, embeddings, knn, hubness, nonstationarity]
+timestamp: 2026-08-26T02:55:00Z
+---
+
 # Semantic Atlas — Relational Dynamics Experiment v1
 
 ## Question
