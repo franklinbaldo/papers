@@ -26,11 +26,26 @@
       "rmst_to_tau": 48.833333333333336,
       "tau_added_docs": 92,
       "curve": [
-        {"added_docs": 0, "survival": 1.0},
-        {"added_docs": 4, "survival": 0.75},
-        {"added_docs": 12, "survival": 0.5416666666666666},
-        {"added_docs": 24, "survival": 0.5},
-        {"added_docs": 72, "survival": 0.4166666666666667}
+        {
+          "added_docs": 0,
+          "survival": 1.0
+        },
+        {
+          "added_docs": 4,
+          "survival": 0.75
+        },
+        {
+          "added_docs": 12,
+          "survival": 0.5416666666666666
+        },
+        {
+          "added_docs": 24,
+          "survival": 0.5
+        },
+        {
+          "added_docs": 72,
+          "survival": 0.4166666666666667
+        }
       ]
     },
     "transfer": {
@@ -42,11 +57,26 @@
       "rmst_to_tau": 5.833333333333334,
       "tau_added_docs": 92,
       "curve": [
-        {"added_docs": 0, "survival": 1.0},
-        {"added_docs": 4, "survival": 0.25},
-        {"added_docs": 8, "survival": 0.16666666666666669},
-        {"added_docs": 12, "survival": 0.04166666666666667},
-        {"added_docs": 16, "survival": 0.0}
+        {
+          "added_docs": 0,
+          "survival": 1.0
+        },
+        {
+          "added_docs": 4,
+          "survival": 0.25
+        },
+        {
+          "added_docs": 8,
+          "survival": 0.16666666666666669
+        },
+        {
+          "added_docs": 12,
+          "survival": 0.04166666666666667
+        },
+        {
+          "added_docs": 16,
+          "survival": 0.0
+        }
       ]
     },
     "paired_curve_test": {
@@ -93,10 +123,22 @@
           "rmst_to_tau": 44.0,
           "tau_added_docs": 92,
           "curve": [
-            {"added_docs": 0, "survival": 1.0},
-            {"added_docs": 4, "survival": 0.625},
-            {"added_docs": 12, "survival": 0.5},
-            {"added_docs": 72, "survival": 0.25}
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.625
+            },
+            {
+              "added_docs": 12,
+              "survival": 0.5
+            },
+            {
+              "added_docs": 72,
+              "survival": 0.25
+            }
           ]
         },
         "transfer": {
@@ -108,10 +150,22 @@
           "rmst_to_tau": 6.5,
           "tau_added_docs": 92,
           "curve": [
-            {"added_docs": 0, "survival": 1.0},
-            {"added_docs": 4, "survival": 0.25},
-            {"added_docs": 12, "survival": 0.125},
-            {"added_docs": 16, "survival": 0.0}
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.25
+            },
+            {
+              "added_docs": 12,
+              "survival": 0.125
+            },
+            {
+              "added_docs": 16,
+              "survival": 0.0
+            }
           ]
         }
       },
@@ -125,9 +179,18 @@
           "rmst_to_tau": 61.5,
           "tau_added_docs": 92,
           "curve": [
-            {"added_docs": 0, "survival": 1.0},
-            {"added_docs": 4, "survival": 0.75},
-            {"added_docs": 24, "survival": 0.625}
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.75
+            },
+            {
+              "added_docs": 24,
+              "survival": 0.625
+            }
           ]
         },
         "transfer": {
@@ -139,8 +202,14 @@
           "rmst_to_tau": 4.0,
           "tau_added_docs": 92,
           "curve": [
-            {"added_docs": 0, "survival": 1.0},
-            {"added_docs": 4, "survival": 0.0}
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.0
+            }
           ]
         }
       },
@@ -154,9 +223,18 @@
           "rmst_to_tau": 41.0,
           "tau_added_docs": 92,
           "curve": [
-            {"added_docs": 0, "survival": 1.0},
-            {"added_docs": 4, "survival": 0.875},
-            {"added_docs": 12, "survival": 0.375}
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.875
+            },
+            {
+              "added_docs": 12,
+              "survival": 0.375
+            }
           ]
         },
         "transfer": {
@@ -168,10 +246,22 @@
           "rmst_to_tau": 7.0,
           "tau_added_docs": 92,
           "curve": [
-            {"added_docs": 0, "survival": 1.0},
-            {"added_docs": 4, "survival": 0.5},
-            {"added_docs": 8, "survival": 0.25},
-            {"added_docs": 12, "survival": 0.0}
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.5
+            },
+            {
+              "added_docs": 8,
+              "survival": 0.25
+            },
+            {
+              "added_docs": 12,
+              "survival": 0.0
+            }
           ]
         }
       }
