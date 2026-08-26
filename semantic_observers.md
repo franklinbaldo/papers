@@ -1,12 +1,12 @@
 ---
 type: "Technical Paper"
-title: "Semantic Parallax: Realization Invariance and Observer-Specific Residuals in Learned Representation Spaces"
-description: "Position paper proposing realization-invariance profiles and alignment-robust semantic parallax as testable properties of embedding observers, while formally recording why several natural observer-ordering constructions collapse or remain benchmark-relative."
-tags: [semantic-observers, semantic-parallax, embeddings, representation-alignment, invariance, paraphrase-robustness, probing, formal-verification]
-timestamp: 2026-08-26T02:12:00Z
+title: "Beyond Query Performance Prediction: Does Cross-Model Embedding Geometry Transfer to Unseen Retrievers?"
+description: "Falsification-driven position paper asking whether cross-model aligned residual geometry adds target-behavior-free predictive value for query-level retrieval failure on a completely held-out dense retriever, beyond modern QPP baselines."
+tags: [dense-retrieval, query-performance-prediction, embeddings, representation-alignment, semantic-parallax, cold-start, formal-verification]
+timestamp: 2026-08-26T02:55:00Z
 ---
 
-# Semantic Parallax: Realization Invariance and Observer-Specific Residuals in Learned Representation Spaces
+# Beyond Query Performance Prediction: Does Cross-Model Embedding Geometry Transfer to Unseen Retrievers?
 
 **Franklin Baldo**  
 Independent Researcher  
@@ -14,74 +14,78 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Position paper and experimental programme after three adversarial revisions.** The original manuscript asked whether stronger embedding models could be ordered as progressively clearer observers of a shared semantic structure. Three natural formalizations of that intuition either collapse, become benchmark-relative, or depend on the allowed probe class. This revision treats those failures as results, not inconveniences. The positive programme is narrower: measure how representations behave under independently specified families of meaning-preserving realizations, and test whether observer-specific residuals after cross-model alignment contain reproducible item-level information that predicts each model's behavior. Blackwell, Le Cam, restricted decision orders, and the Lean companion are retained primarily to explain why the obvious ranking route does not identify an intrinsic semantic-resolution order.
+> **Position paper and preregisterable experimental proposal after four adversarial revisions.** The original manuscript proposed that embedding models might be ordered as progressively clearer observers of a shared semantic structure. That claim did not survive scrutiny. A Lean companion records why several natural formalizations of “sees more” are vacuous or protocol-relative. Subsequent literature review also showed that paraphrase robustness, query-level error prediction, unsupervised dense-retriever selection, geometric query-performance prediction, cold-start model routing, and model–item interaction modeling are all established research areas. The surviving question is narrower: **does explicitly cross-model, post-alignment residual geometry provide incremental query-level predictive information for a completely held-out dense retriever, beyond the strongest target-behavior-free Query Performance Prediction (QPP) signals?** The proposed unit of practical value is the number of labeled target queries required for a behavior-trained predictor to match that zero-target-behavior advantage.
 
 ## Abstract
 
-Independently trained neural representations often share substantial structure, and modern alignment methods can translate or align embeddings across architectures and modalities. It is therefore tempting to treat embedding models as observers of a common semantic world and to ask whether stronger models simply see that world at higher resolution. We argue that this intuition is not well-defined without additional structure.
+Dense retrieval provides a clean setting for testing whether cross-model representation geometry contains transferable information about model-specific failure. Query Performance Prediction (QPP) already estimates retrieval effectiveness without relevance judgments at prediction time. Recent dense-QPP methods perturb query embeddings or exploit the geometry of query and pseudo-relevant document embeddings; unsupervised retriever-selection methods choose among dense retrievers on unlabeled target corpora; mixture-of-retriever systems estimate per-query retriever trustworthiness; and supervised QPP methods explicitly study generalization under retriever shift. Therefore neither “geometry predicts retrieval difficulty,” “a new retriever can be evaluated without labels,” nor “per-query model selection” is a defensible novelty claim.
 
-First, for a finite benchmark indexed directly by input item, deterministic encoders are almost always injective. In that regime an unrestricted simulator can memorize the mapping from one embedding to another, so any two injective observers are exactly mutually simulable on the benchmark. Second, dominance over a restricted family of decisions can reverse on another family and therefore does not define an observer-level order. Third, invariance to an invertible reparameterization holds for unrestricted decision rules but can fail for restricted probe classes unless those classes transform equivariantly. A Lean 4 companion machine-checks these elementary but load-bearing negative results.
+We isolate a stricter experiment. Given retrievers \(M_1,\ldots,M_n\), hold out one retriever \(M_*\) from all performance-supervised training. Using only an unlabeled shared calibration corpus, align its query/document representation space to a common cross-model frame. For each query, compute features describing how \(M_*\)'s aligned representation, local neighborhood, and ranking geometry depart from the consensus of source retrievers. A predictor relating those **cross-model residuals** to retrieval failure is trained only on source retrievers and then applied to \(M_*\), without observing any relevance judgment or task outcome from \(M_*\). The primary estimand is the incremental predictive value of these residuals over the best target-free QPP baseline under leave-one-retriever-out evaluation.
 
-The positive proposal starts by making the source of stochasticity explicit. Let a registered semantic index \(\theta\in\Theta\) admit multiple surface realizations generated by an experimenter-specified protocol \(\nu\): paraphrases, context swaps, register changes, equivalent programs, controlled renderings, or other transformations intended to preserve the registered semantic state. An observer is then studied through a **realization-invariance profile**: how task-relevant distinctions and local structural relations survive as the realization family and perturbation scale vary. The realization protocol is not treated as a property of the observer; it is part of the measurement environment and must be generated independently of all tested models and replicated across structurally different protocols.
+The experiment is deliberately easy to falsify. If modern within-retriever QPP, cross-retriever supervised QPP, or zero-shot retriever-selection signals explain all predictable variation, the proposed “semantic parallax” construct adds no scientific value and should be retired in this domain. If cross-model residuals provide reproducible incremental value, we quantify that value by a **label-equivalent crossover** \(k^*\): the smallest number of labeled queries from the held-out retriever required for a behavior-trained adaptation method to match the zero-target-behavior predictor. Cross-realization robustness is treated as a secondary stress test, not a novelty claim.
 
-The central positive hypothesis is **semantic parallax**. After several observers are aligned into a common comparison frame, each stimulus leaves an observer-specific residual. Such residuals are not interesting merely because they are nonzero. They count as parallax only if they predict, on untouched items, which cases a particular observer succeeds or fails on beyond observer identity, global capability, item difficulty, marginal embedding statistics, and other nuisance variables; the effect must also survive a registered curve over alignment capacity and transfer across realization protocols. This extends recent stimulus-level representational-dispersion work from measuring disagreement to testing whether model-specific residual content has behavioral value.
+The paper's contribution is therefore not a new information order, a new QPP task, or a claim of universal semantic geometry. It is a sharp test of whether **cross-model aligned geometry contains behaviorally useful information about an unseen retriever that is not already available from target-local QPP signals**.
 
-The programme therefore asks two empirical questions. **Primary:** does alignment-robust, item-specific semantic parallax predict observer behavior across independently generated realization protocols? **Secondary:** do observer invariance profiles and pairwise decision orders transfer across increasingly distant task families after controlling for global capability and seed-level variation? A negative answer to the second question is compatible with a positive answer to the first and would support a plural, complementary-observer view rather than a semantic-resolution hierarchy.
-
-**Keywords:** semantic embeddings, representation alignment, semantic parallax, paraphrase robustness, invariance, multi-view representations, probing, representational convergence, Lean 4
+**Keywords:** dense retrieval, query performance prediction, embedding geometry, representation alignment, cold-start model evaluation, semantic parallax, label efficiency, model selection
 
 ---
 
-## 1. The observer intuition and what survived criticism
+## 1. The claim that survived
 
-The motivating intuition is simple. Different embedding models often appear to preserve related semantic neighborhoods despite different architectures, training data, dimensions, and coordinate systems. Huh et al. (2024) frame this broad phenomenon as the **Platonic Representation Hypothesis**. Jha et al. (2025) make the alignment story constructive for text embeddings with `vec2vec`, learning translations through a shared latent representation without paired examples. Achara et al. (2026) extend the interoperability problem to several models in one shared reference. Gröger, Wen, and Brbić (2026), however, show that common global similarity statistics can be inflated by architecture scale and that, after null calibration, local neighborhood agreement survives more robustly than global metric convergence.
+The motivating observer intuition was:
 
-These results justify asking whether several models are measuring related semantic structure. They do **not** justify a scalar statement that model \(A\) "sees more" than model \(B\).
+> Different embedding models may be different observations of partially shared semantic structure.
 
-The first versions of this paper tried three ways to make that phrase precise:
+The first manuscript tried to turn this into an order: perhaps a stronger model “sees more” or resolves finer semantic structure. Four rounds of adversarial review removed progressively stronger versions of that claim.
 
-1. directional reconstruction between embedding spaces;
-2. Blackwell/Le Cam-style information ordering;
-3. dominance over registered decision suites.
+The present paper does **not** ask which observer is globally better. It asks a narrower transfer question:
 
-All three remain useful, but none supports the original hierarchy claim without additional assumptions.
+\[
+\boxed{
+\text{Does cross-model geometric disagreement predict the failures of an unseen retriever?}
+}
+\]
 
-The surviving positive idea is different:
+More specifically, let \(M_*\) be a dense retriever whose relevance judgments and per-query outcomes are unavailable during fitting. We permit access to:
 
-> Models may share a common component while retaining structured, behaviorally meaningful observer-specific residuals, and they may differ systematically in which semantic distinctions survive controlled changes of surface realization.
+- the frozen retriever itself or its embedding API;
+- an unlabeled target corpus;
+- target queries without relevance judgments;
+- a shared unlabeled alignment/calibration corpus;
+- a population of source retrievers for which training-time retrieval outcomes are available.
 
-This paper calls the first phenomenon **semantic parallax** and the second a **realization-invariance profile**.
+We forbid, in the strict condition:
+
+- relevance judgments from \(M_*\)'s evaluation queries;
+- aggregate target-benchmark scores for \(M_*\);
+- anchor-query correctness/performance labels from \(M_*\);
+- any fitting of the residual-to-performance map using outcomes from \(M_*\).
+
+This is **zero target-behavior supervision**, not merely “zero-shot” in the looser routing sense.
+
+The candidate signal is cross-model geometry after alignment. Its value is measured only after all strong target-free QPP baselines have been given the same unlabeled target data.
 
 ---
 
-## 2. A formal ledger of routes that do not identify intrinsic observer resolution
+## 2. Why the original observer order failed
 
-The repository contains a Lean 4 companion at `formalizations/semantic_observers/SemanticObservers.lean`. Its role is deliberately modest. The theorems are elementary. The value of formalization is that it prevents the paper from quietly reintroducing an intuitively attractive but vacuous definition of "sees more."
+A machine-checked Lean 4 companion lives at:
 
-### 2.1 Deterministic point-indexed experiments collapse under injectivity
+`formalizations/semantic_observers/SemanticObservers.lean`.
 
-Let
+Its purpose is a negative-result ledger, not a badge of formal sophistication.
+
+### 2.1 Point-indexed deterministic Blackwell comparison generically collapses
+
+For deterministic observers
 
 \[
 A:\Theta\to Z_A,
 \qquad
-B:\Theta\to Z_B
+B:\Theta\to Z_B,
 \]
 
-be deterministic observers. An exact deterministic garbling from \(A\) to \(B\) is a function
-
-\[
-g:Z_A\to Z_B
-\]
-
-such that
-
-\[
-g(A(\theta))=B(\theta)
-\qquad\forall\theta\in\Theta.
-\]
-
-The Lean theorem `deterministicGarbling_iff_fiberRefines` verifies
+an exact deterministic garbling \(A\to B\) exists iff every fiber of \(A\) refines a fiber of \(B\):
 
 \[
 \exists g,\;g\circ A=B
@@ -89,852 +93,775 @@ The Lean theorem `deterministicGarbling_iff_fiberRefines` verifies
 A(x)=A(y)\Rightarrow B(x)=B(y).
 \]
 
-Thus \(A\) can simulate \(B\) exactly whenever every collision of \(A\) is also a collision of \(B\).
+The Lean theorem is `deterministicGarbling_iff_fiberRefines`.
 
-A direct corollary is
+Therefore, if \(A\) is injective on a finite benchmark, an unrestricted simulator can reproduce any \(B\) by memorizing the correspondence. If both observers are injective, exact garblings exist in both directions.
 
-\[
-A\text{ injective}\Rightarrow
-\forall B,\;A\text{ exactly simulates }B.
-\]
-
-If both \(A\) and \(B\) are injective on the registered finite benchmark, exact garblings exist in both directions.
-
-For real floating-point embeddings on a finite benchmark, exact collisions are atypical. Therefore the choice
+For high-dimensional floating-point embeddings on a finite benchmark, exact collisions are atypical. Thus choosing
 
 \[
 \Theta=\{\text{individual input items}\}
 \]
 
-makes unrestricted observer comparison scientifically uninformative in the generic case: a simulator can simply memorize the finite correspondence.
+makes unrestricted point-indexed comparison generically uninformative.
 
-This is not an estimator failure. It is a population-level identifiability failure caused by choosing the wrong state index.
+### 2.2 Restricted observer orders are task-relative
 
-### 2.2 Restricted decision dominance is benchmark-relative
-
-Suppose a risk functional is evaluated only over a family \(\mathcal D\) of decisions. Define
+The Lean companion also gives a finite counterexample where
 
 \[
-A\succeq_{\mathcal D}B
-\iff
-R_A(d)\le R_B(d)
-\quad\forall d\in\mathcal D.
-\]
-
-The Lean companion contains a finite counterexample in which
-
-\[
-A\succeq_{\mathcal D_1}B
-\]
-
-while
-
-\[
-B\succeq_{\mathcal D_2}A
-\]
-
-for disjoint decision families.
-
-Therefore one registered benchmark can support a task-relative order but not an observer-level semantic hierarchy.
-
-### 2.3 Reparameterization invariance depends on the rule class
-
-Unrestricted decision information is invariant to bijective coordinate changes. Restricted extractability need not be.
-
-If
-
-\[
-\phi:Z\simeq W
-\]
-
-is invertible, a rule on \(W\) can be pulled back to \(Z\), and vice versa. The Lean theorem `optimal_values_invariant_under_corresponding_probe_classes` shows that restricted optimum values are preserved only if the admissible rule classes themselves correspond under pullback and pushforward.
-
-A second finite theorem shows that a bijection can preserve all unrestricted information while changing the score of a fixed probe class.
-
-Thus the empirical object is never simply "information in the embedding." It is information **accessible under a declared measurement protocol**.
-
-### 2.4 What the Lean file does and does not establish
-
-The companion is best read as a ledger of negative constraints:
-
-- point-indexed deterministic Blackwell comparison generically collapses under injectivity;
-- a restricted task order need not transfer;
-- extractability is relative to the allowed rule class.
-
-The file does not prove a new theorem about statistical experiments, does not formalize Le Cam deficiency, and is not evidence that the remaining positive hypotheses are true.
-
----
-
-## 3. The protocol index
-
-Any empirical observer claim in this paper is indexed by
-
-\[
-\Pi=(\Theta,\nu,\mathcal D,\mathcal H,\mathcal A).
-\]
-
-The five components play different scientific roles.
-
-| Index | Meaning | Status in the claim |
-|---|---|---|
-| \(\Theta\) | registered semantic states or distinctions | **defining**; declared before evaluation |
-| \(\nu\) | realization protocol generating surface variants conditional on \(\theta\) | **defining**; independently generated and varied for robustness |
-| \(\mathcal D\) | family of downstream semantic decisions | **axis across which transfer/invariance is tested** |
-| \(\mathcal H\) | allowed probe/decision-rule class | **nuisance**; swept over capacity and reported as a curve |
-| \(\mathcal A\) | alignment class used for cross-observer residuals | **nuisance**; swept over capacity and reported as a curve |
-
-This table is load-bearing. The framework is not allowed to rescue a failed result by silently changing one of these indices.
-
-### 3.1 \(\Theta\) is an index set, not a hidden Euclidean universe
-
-The common state variable need not be a vector space. It may be a finite set of generated scene graphs, logical relations, semantic-factor tuples, legal-rule configurations, taxonomic nodes, equivalent programs, or human-validated semantic intents.
-
-The paper therefore remains agnostic about whether one observer-independent Euclidean semantic geometry exists.
-
-### 3.2 Why \(\nu\) is unavoidable
-
-Because \(\Theta=x\) collapses under injectivity, one needs multiple surface realizations per registered state:
-
-\[
-X\sim\nu(\cdot\mid\theta).
-\]
-
-For text, these may include:
-
-- lexical paraphrases;
-- syntactic paraphrases;
-- discourse-context substitutions;
-- register changes;
-- controlled insertion or deletion of semantically irrelevant material;
-- translation/back-translation families;
-- domain-preserving rewrites.
-
-For code, they may include semantics-preserving refactorings. For vision, viewpoint, illumination, background, or style interventions may play the same role when the registered state is known.
-
-The stochastic experiment is then induced by
-
-\[
-Z_m=O_m(X),
-\qquad
-X\sim\nu(\cdot\mid\theta).
-\]
-
-But the resulting distribution is a property of **observer plus realization protocol**, not observer alone.
-
----
-
-## 4. What makes a realization protocol \(\nu\) principled?
-
-This is the central design problem created by abandoning \(\Theta=x\).
-
-### 4.1 Generator independence
-
-The process that generates realizations must be independent of every model under evaluation.
-
-If model \(M\) generates the paraphrases used to evaluate \(M\), or a close family member generates them, apparent invariance can reflect generator-observer affinity rather than semantic stability.
-
-Preferred designs, in decreasing order of control, are:
-
-1. programmatic transformations with known semantics;
-2. human-authored or human-validated realization sets;
-3. realizations generated by a held-out model family excluded from all observer analyses;
-4. mixtures of independent generators with generator identity retained as a nuisance variable.
-
-### 4.2 Structural diversity across realization families
-
-One \(\nu\) is insufficient. A model can be robust to lexical paraphrase yet sensitive to context or register.
-
-At least two structurally different protocols should be used for confirmatory claims, for example
-
-\[
-\nu_{lexical},\quad
-\nu_{context},\quad
-\nu_{register}.
-\]
-
-The main result must report whether the same qualitative observer profile appears across these families.
-
-### 4.3 Semantic preservation must be audited independently
-
-A realization protocol is useful only if the registered state is actually preserved. This requires either generative ground truth or external validation.
-
-For natural language, semantic-preservation checks should not reuse the tested observers. Human judgments, symbolic constraints, or an independent adjudication process are preferable.
-
-### 4.4 Scale belongs to the realization protocol
-
-The scale variable is defined as a property of the intervention, not as a raw radius inside an embedding space.
-
-Write
-
-\[
-\nu_{j,s}(\cdot\mid\theta)
-\]
-
-for realization family \(j\) at intervention scale \(s\).
-
-Examples include paraphrase edit severity, context distance, amount of irrelevant insertion, transformation strength, hierarchy depth, or controlled latent displacement in a synthetic world.
-
-This avoids pretending that Euclidean radii are comparable across embedding spaces.
-
----
-
-## 5. Realization-invariance profiles
-
-The phrase "semantic resolution" is retained only as an informal interpretation. The directly measured object is an **invariance profile under registered realizations**.
-
-### 5.1 Invariance without discriminability is meaningless
-
-A constant encoder is perfectly invariant to every transformation and semantically useless. Therefore invariance must always be paired with baseline discriminability or task competence.
-
-For decision problem \(d\), rule class \(\mathcal H\), observer \(m\), and realization protocol \(\nu_{j,s}\), let
-
-\[
-R_{m,d,\mathcal H}(\nu_{j,s})
-\]
-
-be held-out risk using realizations sampled from \(\nu_{j,s}\).
-
-Let \(\nu_{j,0}\) denote the canonical or least perturbed condition. Define the realization sensitivity
-
-\[
-\Delta R_{m,d,\mathcal H}(j,s)
-=
-R_{m,d,\mathcal H}(\nu_{j,s})
--
-R_{m,d,\mathcal H}(\nu_{j,0}).
-\]
-
-The useful report is the pair
-
-\[
-\left(
-R_{m,d,\mathcal H}(\nu_{j,0}),
-\Delta R_{m,d,\mathcal H}(j,s)
-\right),
-\]
-
-not \(\Delta R\) alone.
-
-A model that is bad in both conditions has not demonstrated useful invariance.
-
-### 5.2 The observer invariance fingerprint
-
-For a registered set of decisions, realization families, scales, and probe classes, define
-
-\[
-\mathcal I_m
-=
-\left\{
-R_{m,d,\mathcal H}(\nu_{j,0}),
-\Delta R_{m,d,\mathcal H}(j,s)
-\right\}_{d,j,s,\mathcal H}.
-\]
-
-This is a profile rather than a scalar.
-
-The profile may reveal that an observer is stable to lexical rewrites but fragile to context shifts, or that a domain-specialized model preserves a legal distinction under register changes that a generic model loses.
-
-### 5.3 Relation to existing robustness and augmentation work
-
-This territory has substantial prior art.
-
-In vision, augmentation methods explicitly induce invariances, and prior work shows that different augmentations create different task consequences; excessive invariance can erase fine-grained information. Hounie et al. (2023) formulate augmentation through invariance-constrained learning. Zhang and Ma (2022) show that augmentation-specific invariances can help or harm different downstream tasks.
-
-In NLP, paraphrase robustness is also established. Burdick et al. (2022) use paraphrases to study contextual embeddings. Verma et al. (2023) measure paraphrastic robustness in entailment. Hagen et al. (2024) study query-variation robustness across retrieval models. Most importantly for this paper, Frank and Afli's **PTEB** (EACL 2026) evaluates text embeddings using stochastic, meaning-preserving paraphrases at evaluation time and shows that encoder performance changes under token-space variation even when semantics are held fixed.
-
-Therefore this paper does **not** claim to invent stochastic paraphrase evaluation or transformation invariance.
-
-The proposed extension is narrower:
-
-1. require several structurally different, observer-independent realization protocols;
-2. treat the full cross-protocol sensitivity profile as the observer descriptor;
-3. connect that profile to alignment residuals and item-level behavior across multiple observers;
-4. test whether profile relations transfer across decision families after capability and seed controls.
-
----
-
-## 6. Semantic parallax
-
-Suppose \(M\) observers embed the same registered realization \(x_i\):
-
-\[
-z_{mi}=O_m(x_i).
-\]
-
-Let \(T_{m,a}\) be an alignment map for observer \(m\) under alignment class/capacity \(a\in\mathcal A\). A common representation can be constructed by a registered aggregation rule:
-
-\[
-c_i^{(a)}
-=
-\operatorname{Agg}_{m=1}^M T_{m,a}(z_{mi}).
-\]
-
-Define the model-specific residual
-
-\[
-r_{mi}^{(a)}
-=
-T_{m,a}(z_{mi})-c_i^{(a)}.
-\]
-
-A nonzero residual is not evidence of parallax. It can arise from alignment error, dimension mismatch, model identity, source artifacts, or finite-sample noise.
-
-### 6.1 Closest prior art: stimulus-level dispersion
-
-Hosseini, Cheung, Fedorenko, and Williams (2026) use Generalized Procrustes Analysis to align populations of vision models and define a **single-stimulus dispersion** from each model's Procrustes residual to the joint representation. They show that stimuli with low intra-modal dispersion exhibit greater vision-language alignment. Their paper explicitly notes that stimulus-level residuals are a classical by-product of GPA and applies them to neural-representation convergence.
-
-This occupies a large part of the naive parallax idea. Merely computing residuals, ranking stimuli by disagreement, or showing that dispersion predicts cross-modal alignment is not novel here.
-
-Recent LLM work also shows that cross-model disagreement itself can be useful. Gorbett and Jana (2026) use cross-model disagreement as a label-free correctness signal, while Hamidieh et al. (2026) combine self-consistency with cross-model semantic disagreement for uncertainty quantification.
-
-Therefore the positive claim must be stronger than "models disagree more on hard examples."
-
-### 6.2 Behavioral semantic parallax
-
-Let \(Y_{mi}\) be an item-level behavioral outcome for observer \(m\) on item \(i\): retrieval success, rank loss, classification error, sensitivity to a registered semantic contrast, or another external outcome.
-
-Let \(B_{mi}\) be a nuisance model containing at least:
-
-- observer identity;
-- independently measured global capability;
-- item identity or item difficulty;
-- domain/source;
-- sequence length or modality-specific size variables;
-- embedding norm and anisotropy summaries;
-- realization-family identity and scale;
-- generator identity when relevant.
-
-We call \(r_{mi}^{(a)}\) **behavioral semantic parallax** only if residual features improve prediction of \(Y_{mi}\) on untouched data:
-
-\[
-\operatorname{Risk}(B+r^{(a)})
-<
-\operatorname{Risk}(B),
-\]
-
-with uncertainty excluding the preregistered null.
-
-This is a within-observer, item-level statement. A residual that merely identifies which model produced it does not count.
-
-### 6.3 Alignment-capacity curve
-
-Residuals depend on the alignment class. Report
-
-\[
-\mathcal P(a)
-=
-\text{held-out incremental behavioral value of }r^{(a)}
-\]
-
-across a registered ladder such as
-
-\[
-\text{orthogonal}
-\to
-\text{linear}
-\to
-\text{shallow nonlinear}
-\to
-\text{richer nonlinear}.
-\]
-
-Alignment is trained only on correspondence objectives, never on \(Y\).
-
-If predictive value vanishes as alignment improves on held-out correspondences, the residual was primarily alignment error.
-
-### 6.4 Cross-realization transfer is the hard test
-
-The strongest parallax result is not same-protocol prediction.
-
-Fit the residual-behavior relationship under one realization family \(\nu_j\) and test under another structurally different family \(\nu_k\):
-
-\[
-\mathcal P_{j\to k}(a).
-\]
-
-For example, residual features discovered under lexical paraphrases should predict observer-specific failures under context changes or register shifts.
-
-A stable cross-realization effect is harder to explain as generator affinity or local tokenization noise.
-
-### 6.5 Seed-null floor
-
-Every cross-observer parallax effect must be compared with a same-recipe seed null.
-
-Train or obtain independent runs with the same architecture, data, objective, and recipe. Apply the full alignment and residual pipeline between these runs.
-
-The cross-model effect is scientifically interesting only if it exceeds variation caused by seed-level non-identifiability.
-
----
-
-## 7. A secondary test: observer-order stability across decision families
-
-The original paper made observer refinement central. It is now a secondary diagnostic.
-
-### 7.1 Capability confounding
-
-A larger or generally stronger model can outperform another across unrelated tasks simply because of global capability. That does not establish semantic observer resolution.
-
-Therefore order-stability analyses must either:
-
-1. compare observers matched on an independently defined global capability index; or
-2. residualize task risk against that index before constructing pairwise orders.
-
-The capability index must be frozen before the task families used in the stability test are inspected.
-
-### 7.2 Decision-family distance
-
-Formal disjointness is insufficient. Two task sets may use different labels while depending on the same topical or lexical signal.
-
-Let each decision family \(\mathcal D_j\) induce a risk signature over a fixed reference panel of models and items. After removing the global capability component, define family similarity by a preregistered association measure \(\rho\), and distance
-
-\[
-d_{fam}(\mathcal D_j,\mathcal D_k)
-=
-1-\rho(\mathcal D_j,\mathcal D_k).
-\]
-
-Alternative distances may be used, but they must be frozen before evaluating observer-order transfer.
-
-The interesting object is then a decay curve:
-
-\[
-\operatorname{OrderAgreement}
-=
-f(d_{fam}).
-\]
-
-A long-range positive tail would support observer-level structure beyond benchmark affinity. Rapid decay to the permutation null would support task-relative extractability instead.
-
-### 7.3 Comparing partial orders
-
-Because observer pairs can be incomparable, Kendall's \(\tau\) alone is insufficient.
-
-Report at least two quantities:
-
-1. **directional concordance among jointly comparable pairs** — among observer pairs ordered in both families, how often is the direction the same?
-2. **comparability concordance** — how often do the two families agree on whether a pair is comparable at all?
-
-Both are evaluated against permutation nulls that preserve the number of comparable pairs and the marginal observer frequencies.
-
-A third useful quantity is coverage: the fraction of all observer pairs that are comparable in each family. High directional concordance on a tiny set of pairs should not be overinterpreted.
-
-### 7.4 Observer Order Stability hypothesis
-
-After capability adjustment and above the seed-null floor:
-
-> Pairwise partial-order relations induced by one decision family predict pairwise relations in other families at rates that decay systematically with registered family distance.
-
-This hypothesis can fail without invalidating semantic parallax.
-
----
-
-## 8. Multiscale structure, edges, curves, and topology
-
-The original motivating language spoke of better observers seeing edges, curves, bridges, and objects more clearly. This remains useful only as a measurement layer attached to \(\nu\), not as a universal hierarchy.
-
-### 8.1 Structural predicates
-
-In controlled semantic worlds, register predicates such as:
-
-- neighborhood membership;
-- side of a known semantic boundary;
-- bridge membership or graph connectivity;
-- factor identity;
-- tangent direction;
-- local intrinsic dimension;
-- monotonic position along a generated semantic path;
-- persistence of a known topological feature.
-
-Then vary the realization protocol and scale and ask whether those externally specified relations remain recoverable.
-
-### 8.2 Nulls
-
-Every structural statistic must be calibrated against controls matched on quantities that mechanically influence the estimator:
-
-- sample size;
-- ambient dimension;
-- intrinsic dimension;
-- anisotropy;
-- local density;
-- graph degree distribution;
-- cluster imbalance;
-- layer or hyperparameter search multiplicity.
-
-### 8.3 Persistent topology
-
-Persistent homology is especially fragile in finite high-dimensional data. Confirmatory claims require preregistered filtrations, matched point-cloud nulls, bootstrap uncertainty, independent stimulus replication, and no post-hoc selection of the favorable homology dimension.
-
-This component is deliberately downstream. A positive parallax result does not require a positive topological result.
-
----
-
-## 9. Experimental programme
-
-The programme is ordered so that the strongest claims are tested last.
-
-### Stage 0 — Formal and synthetic sanity checks
-
-Retain the Lean companion as a constraint ledger.
-
-Synthetic tests must include:
-
-- injective deterministic observers showing point-indexed mutual simulation;
-- known coarse-grainings with planted collisions;
-- order reversal across decision families;
-- invertible reparameterizations under both equivariant and non-equivariant probe classes.
-
-The purpose is to prevent the empirical pipeline from rediscovering a known definitional artifact.
-
-### Stage 1 — Build independent realization protocols
-
-For each semantic state family, construct at least two structurally different \(\nu_j\).
-
-For text, a strong initial suite is:
-
-1. human-validated lexical/syntactic paraphrase;
-2. context-preserving rewrite with changed surrounding discourse;
-3. register/style transformation that preserves the target proposition.
-
-Generator families and validation procedures are frozen before observer evaluation.
-
-### Stage 2 — Establish baseline competence and invariance profiles
-
-For each observer and decision family, estimate
-
-\[
-R_{m,d,\mathcal H}(\nu_{j,0})
-\]
-
-and the scale-dependent sensitivity
-
-\[
-\Delta R_{m,d,\mathcal H}(j,s).
-\]
-
-Sweep \(\mathcal H\) rather than reporting one favored probe.
-
-Primary output: observer-by-realization-family invariance fingerprints with seed uncertainty.
-
-### Stage 3 — Align observers and compute residuals
-
-Use several alignment families:
-
-- orthogonal Procrustes;
-- GPA/GCPA for multi-way alignment;
-- a regularized linear map;
-- `vec2vec` where data and compute permit;
-- at least one held-out nonlinear correspondence model.
-
-All alignment hyperparameters are selected without behavioral labels.
-
-### Stage 4 — Test behavioral parallax
-
-For each alignment capacity, compare a nuisance-only predictor \(B\) with \(B+r\) on held-out items.
-
-Required analyses:
-
-- within-observer item prediction;
-- leave-one-observer-out or held-out observer-family transfer where feasible;
-- seed-null comparison;
-- calibration across domains;
-- cross-realization transfer \(\nu_j\to\nu_k\).
-
-The main result is the parallax curve over alignment capacity, not one residual score.
-
-### Stage 5 — Order-stability decay
-
-Construct several decision families, estimate their registered distances, adjust for global capability, and compare induced partial orders.
-
-Report:
-
-- jointly comparable directional concordance;
-- comparability concordance;
-- comparable-pair coverage;
-- permutation nulls;
-- agreement as a function of family distance;
-- same-recipe seed floor.
-
-### Stage 6 — Multi-observer fusion
-
-Only after parallax has predictive value should it be used for fusion or routing.
-
-Compare against:
-
-- best single observer chosen on validation data;
-- same-family ensembles;
-- equal-weight aligned averaging;
-- GPA/GCPA consensus;
-- `vec2vec` shared latent where applicable;
-- a nuisance-only routing model.
-
-A parallax-aware method is useful only if it improves untouched decision risk beyond these baselines.
-
----
-
-## 10. Core hypotheses
-
-### H1 — Cross-realization behavioral parallax
-
-**Hypothesis.** Observer-specific alignment residuals contain item-level information that predicts each observer's held-out behavior beyond observer identity, global capability, item difficulty, realization metadata, and marginal embedding statistics; a nonzero component survives increasing non-destructive alignment capacity and transfers across structurally different realization protocols.
-
-**Falsified if.** Incremental predictive value disappears under nuisance controls, seed nulls, richer held-out alignment, or cross-realization transfer.
-
-This is the primary positive claim.
-
-### H2 — Structured realization-invariance profiles
-
-**Hypothesis.** Observers exhibit reproducible differences in which registered semantic distinctions survive independently generated realization families and perturbation scales, after controlling for baseline competence and probe capacity.
-
-**Falsified if.** Profiles are unstable across generators, collapse under independent semantic-preservation validation, or reduce to baseline capability.
-
-### H3 — Observer-order stability decays with family distance
-
-**Hypothesis.** After capability adjustment, partial observer orders transfer above seed and permutation nulls across decision families, with a measurable decay as family distance increases.
-
-**Falsified if.** Order agreement is fully explained by global capability, disappears above the seed floor, or falls immediately to the permutation null outside near-duplicate task families.
-
-This is secondary. Its failure supports task-relative extractability rather than invalidating H1 or H2.
-
-### H4 — Multi-observer complementarity
-
-**Hypothesis.** Parallax-aware fusion or routing improves held-out decision risk beyond the best single observer, same-family ensembles, and shared-space baselines.
-
-**Falsified if.** Gains vanish under strong baseline selection or independent test sets.
-
----
-
-## 11. Prior art and novelty boundary
-
-### 11.1 Universal and shared representations
-
-Huh et al. (2024), Jha et al. (2025), Yacobi et al. (2025), Achara et al. (2026), and a large alignment literature already establish substantial common representational structure and practical cross-model interoperability.
-
-**Not claimed:** discovery of a universal embedding space or the first cross-model alignment method.
-
-### 11.2 Local convergence and stimulus-level dispersion
-
-Gröger, Wen, and Brbić (2026) show that calibrated local neighborhood agreement is more robust than broad global convergence claims. Hosseini et al. (2026) already define per-stimulus Procrustes residuals/dispersion across model populations and show that stimulus-level dispersion modulates cross-modal convergence.
-
-**Not claimed:** invention of stimulus-level representational residuals or discovery that model agreement varies by item.
-
-### 11.3 Robustness and invariance under transformations
-
-Transformation invariance is foundational in representation learning. Vision work explicitly studies augmentation-induced invariance and its trade-offs. NLP work studies paraphrase robustness, context sensitivity, and dynamic stochastic evaluation. PTEB (Frank & Afli, 2026) is especially close: it generates stochastic meaning-preserving paraphrases at evaluation time and demonstrates text-embedding sensitivity to token-level realization changes.
-
-**Not claimed:** first paraphrase-robustness benchmark or first invariance measurement.
-
-### 11.4 Probing and extractability
-
-Hewitt and Liang (2019), Pimentel et al. (2020), Voita and Titov (2020), and later work establish that what is extractable from a representation depends on probe capacity and sample efficiency.
-
-**Not claimed:** a new general notion of extractability.
-
-### 11.5 Blackwell, Le Cam, and restricted comparisons
-
-Blackwell's comparison of experiments, Le Cam deficiency, and Torgersen's treatment of statistical experiments provide the correct classical language for unrestricted and restricted comparison.
-
-**Not claimed:** a new information order.
-
-The Lean companion certifies only the elementary consequences needed to stop the paper from misusing these theories on finite deterministic embeddings.
-
-### 11.6 Cross-model disagreement and uncertainty
-
-Recent work uses cross-model disagreement to detect confident errors and improve uncertainty estimation.
-
-**Not claimed:** first use of model disagreement as a correctness signal.
-
-### 11.7 Candidate contribution
-
-After these concessions, the candidate contribution is the following combination:
-
-1. a formal negative ledger showing why point-indexed deterministic observer ordering and single-family dominance do not identify intrinsic semantic resolution;
-2. a requirement that realization protocols be observer-independent and replicated across structurally distinct \(\nu_j\);
-3. realization-invariance fingerprints that pair baseline competence with sensitivity across intervention scale;
-4. **behavioral semantic parallax** defined by observer-specific alignment residuals that predict item-level behavior beyond strong nuisance controls;
-5. parallax reported as a curve over alignment capacity and tested for cross-realization transfer;
-6. observer-order stability treated as a secondary decay curve over decision-family distance, with global-capability and seed nulls.
-
-The originality claim should be rejected if prior work is found that already operationalizes this same combination.
-
----
-
-## 12. Relation to Semantic Atlas, Pontifex, and Perquire
-
-### 12.1 Semantic Atlas
-
-The Semantic Atlas should not assume that one embedding model supplies a privileged map. A region can instead carry an observer-by-realization reliability profile and parallax uncertainty.
-
-The Atlas's stronger claim remains dynamic: even when static representations align, transition structure, reachability, and control cost may remain model-specific.
-
-### 12.2 Pontifex
-
-Pontifex is the most direct beneficiary of the parallax formulation. Its use of several independent embedding spaces need not be justified by the impossibility of alignment. The scientific question becomes whether observer-specific perturbation responses contain item-level predictive information after the alignable/common component is removed.
-
-A strong Pontifex experiment would compare:
-
-\[
-\text{consensus perturbation signal}
-\quad+\quad
-\text{observer-specific residual signal}
-\]
-
-and require the residual component to predict which items or spans change each observer's behavior across realization families.
-
-### 12.3 Perquire
-
-Perquire can use observer profiles operationally without assuming a global hierarchy. Different embedding models may be useful for different local decisions or transformation regimes.
-
-A future routing policy could select an observer based on validated local risk or parallax-derived complementarity rather than one global embedding leaderboard.
-
-This is an engineering implication, not evidence for the scientific claims above.
-
----
-
-## 13. Limitations
-
-### 13.1 \(\nu\) is experimenter-made
-
-Once point-indexed comparison is rejected, the measurement environment depends on the realization protocol. No amount of notation turns \(\nu\) into an observer-independent law of nature.
-
-The defence is transparency, independence, structural diversity, and replication across several \(\nu_j\), not pretending the dependence disappears.
-
-### 13.2 Semantic preservation is contestable
-
-Natural-language paraphrases can alter implicature, register, presupposition, or pragmatic content. Controlled synthetic worlds provide stronger ground truth but weaker ecological validity.
-
-Both are needed.
-
-### 13.3 Alignment capacity has no canonical endpoint
-
-A flexible map can memorize finite correspondences. Alignment curves therefore require held-out correspondence evaluation, capacity regularization, and no access to behavioral outcomes.
-
-### 13.4 Global capability is difficult to define
-
-Any residualization against a capability index inherits the limitations of that index. Several independent capability summaries should be tested, and results that depend on one convenient index should be treated as fragile.
-
-### 13.5 Observer populations share ancestry
-
-Models are not independent scientific instruments. They may share data, architectures, distillation teachers, objectives, and benchmark contamination. Agreement and parallax can reflect common ancestry.
-
-### 13.6 Parallax may be useful without being ontological
-
-Even if residuals predict behavior, that does not prove that each model occupies a literal viewing angle on one semantic object. "Parallax" is justified operationally by reproducible observer-specific residual information, not by metaphysics.
-
----
-
-## 14. What positive and negative outcomes would mean
-
-### 14.1 Strong positive result
-
-Suppose:
-
-1. observer-independent realization protocols pass semantic-preservation audits;
-2. invariance fingerprints replicate across structurally different \(\nu_j\);
-3. alignment residuals predict item-level observer behavior beyond nuisance models;
-4. predictive residual content survives richer held-out alignment and exceeds seed nulls;
-5. residual-behavior relationships transfer across realization families;
-6. parallax-aware fusion improves downstream risk.
-
-Then a defensible conclusion is:
-
-> Independently trained embedding systems share an alignable component while retaining reproducible observer-specific residual structure that predicts how semantic distinctions survive changes of realization and how individual models behave.
-
-This is weaker than a universal semantic geometry and stronger than generic model disagreement.
-
-### 14.2 Negative parallax, positive invariance profiles
-
-If residuals lose all behavioral value after alignment but invariance fingerprints remain reproducible, then the useful object is transformation robustness rather than semantic parallax.
-
-### 14.3 Positive parallax, no order stability
-
-If residuals are predictive but observer orders fail to transfer across distant decision families, then the data support complementary specialized observers rather than a resolution hierarchy.
-
-This is an important and plausible outcome.
-
-### 14.4 Everything collapses to capability or seed
-
-If invariance profiles, parallax, and order transfer are explained by global capability, generator choice, or same-recipe seed variation, then the observer metaphor adds no scientific content and should be retired.
-
----
-
-## 15. Conclusion
-
-The phrase "better model sees semantic space more clearly" is attractive because it compresses several intuitions into one image. Formalization shows why that compression is dangerous.
-
-On finite point-indexed benchmarks, deterministic injective embeddings are mutually simulable under unrestricted garbling. Restricted decision orders can reverse across task families. Restricted extractability can change under invertible coordinates when probe classes do not transform with them. None of these routes yields an intrinsic observer hierarchy.
-
-A more defensible programme begins with controlled variation in the input realization itself:
-
-\[
-X\sim\nu_{j,s}(\cdot\mid\theta).
-\]
-
-The observer is asked to preserve registered semantic distinctions through declared, independently generated perturbations. This produces realization-invariance fingerprints rather than a universal scalar resolution.
-
-The stronger positive hypothesis lies in what remains after observers are aligned. If an observer-specific residual predicts **which items that observer will succeed or fail on**, beyond capability, identity, difficulty, and marginal statistics, and if that signal survives increasing alignment capacity and transfers across structurally distinct realization protocols, then disagreement is not merely noise around a universal representation. It contains behaviorally meaningful observer-specific structure.
-
-The central question is therefore no longer
-
-\[
-\boxed{\text{Which model sees more?}}
+A\succeq_{\mathcal D_1} B
 \]
 
 but
 
 \[
-\boxed{\text{What observer-specific information survives alignment and controlled changes of realization?}}
+B\succeq_{\mathcal D_2} A.
 \]
 
-That question can produce a positive result without requiring a universal hierarchy of semantic observers.
+Dominance on one decision family does not imply an intrinsic observer order.
+
+### 2.3 Extractability depends on the rule class
+
+Invertible coordinate changes preserve unrestricted information but need not preserve performance for a fixed restricted probe class. The formal companion proves invariance only when admissible rule classes correspond under pushforward/pullback and gives a finite counterexample otherwise.
+
+These three results eliminate “semantic resolution order” as the primary thesis. They motivate an empirical question where the predictor is judged only by held-out behavior and where the target model is genuinely unseen behaviorally.
+
+---
+
+## 3. The prior-art boundary is much tighter than it first appears
+
+The surviving experiment sits at the intersection of several mature literatures. A useful paper must state explicitly what is already occupied.
+
+### 3.1 Query Performance Prediction already predicts per-query retrieval failure
+
+QPP asks whether retrieval effectiveness for a query can be predicted without access to its relevance judgments at prediction time. This is a mature IR problem, not a new task introduced here.
+
+For dense retrievers specifically, Arabzadeh et al. (2023) propose **Noisy Perturbations for Estimating Query Difficulty in Dense Retrievers**. They perturb a contextualized query representation and use ranking instability as an unsupervised performance signal.
+
+Datta et al. (2025/2026) propose **Projection-Displacement-Based Query Performance Prediction for Embedded Space of Dense Retrievers (PDQPP)**. PDQPP explicitly exploits dense embedding geometry, projecting queries and pseudo-relevant documents into local subspaces and using projection displacement as a proxy for coherence and retrieval quality.
+
+Thus:
+
+> **Not novel:** using embedding geometry to predict per-query dense-retrieval performance without query relevance labels.
+
+### 3.2 Zero-label dense-retriever selection is established
+
+Khramtsova et al. (2023) formulate the problem of selecting which dense retriever to use on an unlabeled target collection. Their candidate signals include representation- and distribution-based measures; they also show that many intuitive unsupervised selection criteria perform poorly.
+
+Khramtsova et al. (2024) introduce **LARMOR**, using an LLM to generate pseudo-queries, pseudo-relevance judgments, and reference rankings from the target corpus to rank dense retrievers without human target labels.
+
+Thus:
+
+> **Not novel:** deciding which dense retriever is likely to work on a target corpus without human relevance labels.
+
+### 3.3 Per-query retriever mixing is established
+
+Kalra et al. (2025) introduce **Mixture of Retrievers (MoR)**. It computes per-query, per-retriever trustworthiness signals before and after retrieval and uses them to weight heterogeneous retrievers in a zero-shot mixture.
+
+Thus:
+
+> **Not novel:** estimating per-query retriever suitability and using it to route or fuse retrieval systems.
+
+### 3.4 Retriever-shift QPP is already a direct neighbor
+
+Jung and Jeon (2025) explicitly study **QPP under retriever and concept shifts**. Their QPP-MLC predicts top-\(k\) document relevance and aggregates those predictions to query-level effectiveness.
+
+This is particularly important prior art because it attacks the same generalization problem from the QPP side.
+
+Thus:
+
+> **Not novel:** training a performance predictor in one retrieval regime and asking it to generalize under a change of retriever.
+
+### 3.5 Routing and psychometrics already model model–item interactions
+
+EmbedLLM (Zhuang et al., 2025) learns compact model representations from a model-by-question correctness matrix and uses them for correctness forecasting and routing. Modern routers likewise estimate query–model compatibility and onboard new models using behavioral profiles, anchors, public model metadata, or interaction histories.
+
+ZeroRouter (Yan et al., 2026) reduces model lock-in using a model-agnostic query space but still charts a newly introduced model with a small set of anchor queries. RouteProfile (Xu et al., 2026) studies cold-start routing from structured public model profiles, including descriptions, family information, and reported benchmark signals.
+
+Psychometric approaches such as IRT and recent option-level LLM response models explicitly decompose ability, item difficulty, discrimination, and model–item interaction structure.
+
+Thus:
+
+> **Not novel:** predicting which model will fail on which item, nor learning compact behavioral profiles of models.
+
+### 3.6 Representation similarity does not guarantee behavioral similarity
+
+Friedman et al. (2023) show directly that common representation-similarity measures are not reliably aligned with functional/behavioral similarity in small Transformer models, and that conclusions depend on which representation is examined.
+
+This is not merely background. It supplies a strong null expectation for the present proposal:
+
+> cross-model geometry may simply fail to carry transferable behavior information.
+
+### 3.7 Candidate novelty after these concessions
+
+The literature review above leaves one deliberately narrow candidate contribution:
+
+> **Cross-model aligned residual geometry as an incremental, target-behavior-free feature for per-query QPP on a completely held-out dense retriever, evaluated against modern target-local and cross-retriever QPP baselines.**
+
+We have not identified prior work that makes this exact leave-one-retriever-out residual-transfer test the primary object. That absence is a literature-search result, not proof of novelty; the empirical programme is designed so that close prior methods are strong baselines rather than rhetorical foils.
+
+---
+
+## 4. Experimental object: behavior-free held-out retriever
+
+Let
+
+\[
+\mathcal M=\{M_1,\ldots,M_n\}
+\]
+
+be a population of dense retrievers. Each retriever maps query text and document text to vectors in its own representation space.
+
+Choose one target retriever
+
+\[
+M_*\in\mathcal M
+\]
+
+and remove **all target-retriever performance labels** from model fitting.
+
+The remaining source set is
+
+\[
+\mathcal M_{- *}=\mathcal M\setminus\{M_*\}.
+\]
+
+### 4.1 Allowed unlabeled data
+
+Let \(C_{align}\) be a corpus of texts shared across retrievers and containing no relevance judgments used in the evaluation target. Each retriever embeds the same texts:
+
+\[
+z_m(x)=E_m(x).
+\]
+
+An alignment
+
+\[
+T_m:Z_m\to Z_c
+\]
+
+is fit using only representation correspondence or geometry objectives.
+
+For the held-out retriever \(M_*\), fitting \(T_*\) may use its embeddings on \(C_{align}\), but may not use any query-level retrieval effectiveness label.
+
+This distinction is critical: **the retriever is held out behaviorally, not observationally**. We need its unlabeled representations in order to test whether those representations reveal useful information before behavior is observed.
+
+### 4.2 Consensus and residual
+
+For query \(q_i\), define a source-model consensus representation
+
+\[
+c_i
+=
+\operatorname{Agg}_{m\ne *} T_m(z_m(q_i)).
+\]
+
+The held-out model's aligned query residual is
+
+\[
+r_{*i}^{(q)}
+=
+T_*(z_*(q_i))-c_i.
+\]
+
+A richer cross-model residual feature family may include, subject to preregistration:
+
+1. residual norm and low-dimensional residual coordinates learned only from source models;
+2. disagreement of local query neighborhoods after alignment;
+3. disagreement between the held-out retriever's query-to-document similarity profile and the source consensus;
+4. rank-overlap and rank-displacement relative to source retrievers;
+5. residual statistics over the top-\(k\) documents retrieved by \(M_*\);
+6. query/document subspace-angle differences in the aligned frame.
+
+Call the resulting feature vector
+
+\[
+p_{*i}=P(M_*,q_i,C_{align},C_{target}).
+\]
+
+We use “parallax” only as shorthand for this **cross-model residual feature family**. It is not assumed to be a new primitive of representation theory.
+
+---
+
+## 5. Outcome: what counts as an item-level error for an embedding retriever?
+
+An embedding model does not itself answer a multiple-choice question. The natural behavioral unit is therefore retrieval performance per query.
+
+For query \(q_i\), let
+
+\[
+y_{mi}
+\]
+
+be a held-out effectiveness measure for retriever \(M_m\), computed from relevance judgments that are unavailable to all predictors during target fitting.
+
+Candidate continuous outcomes include:
+
+- Reciprocal Rank at cutoff;
+- nDCG@10;
+- Recall@\(k\);
+- Average Precision where judgments support it.
+
+The primary analysis should select **one continuous metric in advance**, preferably nDCG@10 for graded relevance collections or RR@10 when first-hit success is operationally central.
+
+A secondary binary endpoint may define
+
+\[
+Y_{mi}^{(\tau)}
+=
+\mathbf 1[y_{mi}\ge\tau]
+\]
+
+for a preregistered usefulness threshold \(\tau\). This permits calibrated probabilities and proper scoring rules, but it must not replace the continuous primary result merely because it gives a cleaner effect.
+
+The target qrels are used **only for final evaluation and for the controlled \(k\)-label adaptation curve**.
+
+---
+
+## 6. The primary estimand: incremental value beyond QPP
+
+Let
+
+\[
+Q_{*i}
+\]
+
+contain the strongest target-free QPP features available to the held-out retriever. Depending on the benchmark, these should include conventional score-distribution signals and modern dense-QPP methods.
+
+Let \(f_Q\) be a predictor trained without target-retriever outcomes using \(Q\), and let \(f_{Q+P}\) additionally use cross-model residual features \(P\).
+
+For a preregistered loss \(L\), define
+
+\[
+\boxed{
+\Delta_P
+=
+L(f_Q)-L(f_{Q+P}).
+}
+\]
+
+The primary hypothesis is
+
+\[
+H_1:\Delta_P>0
+\]
+
+under leave-one-retriever-out evaluation and independent test queries.
+
+The null is
+
+\[
+H_0:\Delta_P\le0.
+\]
+
+This is the central scientific test. If \(H_0\) cannot be rejected with practically meaningful effect size, semantic parallax adds no useful information beyond QPP in this domain.
+
+### 6.1 Do not compare against a weak QPP baseline
+
+At minimum, the QPP baseline family must include:
+
+- score-distribution QPP such as NQC or comparable classical baselines;
+- Arabzadeh et al.'s noisy-perturbation dense-QPP signal;
+- PDQPP or a faithful geometric dense-QPP implementation;
+- a supervised source-trained QPP predictor;
+- QPP-MLC or the closest reproducible retriever-shift QPP baseline;
+- a MoR-style per-query retriever-trustworthiness signal when applicable.
+
+The relevant baseline is the **best preregistered target-free system selected without target test labels**, not an arbitrary historical method.
+
+### 6.2 Why this differs from ordinary within-model QPP
+
+Within-model QPP asks whether properties of \(M_*\)'s query, scores, embeddings, and retrieved documents predict \(M_*\)'s effectiveness.
+
+The present signal asks whether
+
+\[
+\text{how }M_*\text{ differs from other models on the same query}
+\]
+
+contains incremental predictive information after those target-local signals are already present.
+
+If not, the observer metaphor has no empirical payoff here.
+
+---
+
+## 7. Leave-one-retriever-out protocol
+
+For each target retriever \(M_*\):
+
+1. **Remove target behavior.** Hide all relevance-derived outcomes for \(M_*\) from fitting, feature selection, hyperparameter choice, and alignment selection.
+2. **Fit the common frame.** Fit \(T_m\) using only an unlabeled shared calibration corpus.
+3. **Construct source residuals.** For each source model, define its residual relative to a consensus that excludes that model, preventing trivial self-inclusion.
+4. **Train source predictor.** Fit the residual-to-performance relationship using source retrievers only.
+5. **Freeze everything.** Alignment family, residual featurization, QPP baseline choice, and prediction model are frozen before target qrels are exposed.
+6. **Apply to \(M_*\).** Produce per-query performance predictions using only target unlabeled embeddings, rankings, and corpus statistics.
+7. **Evaluate once.** Reveal held-out qrels and compute predictive loss, ranking correlation, calibration, and downstream selection utility.
+8. **Repeat for every retriever.** Each retriever becomes the behaviorally unseen target in turn.
+
+Hyperparameter tuning must be nested inside the source-model folds. Otherwise the leave-one-model-out claim is illusory.
+
+### 7.1 Architecture-family holdout
+
+A stronger test leaves out an entire retriever family rather than one checkpoint:
+
+\[
+\mathcal F_*\cap\mathcal F_{train}=\varnothing.
+\]
+
+This distinguishes transfer to a genuinely new observer family from interpolation among nearly identical encoders.
+
+### 7.2 Corpus/task holdout
+
+A second orthogonal axis holds out the target retrieval collection. The strongest generalization cell is therefore:
+
+\[
+\text{new retriever family}
+\times
+\text{new target collection}.
+\]
+
+This cell is expected to be difficult. A negative result there should not be rescued by reporting only easier in-family cells.
+
+---
+
+## 8. The label-equivalent crossover \(k^*\)
+
+Even a statistically significant \(\Delta_P\) may be operationally trivial. A few labeled target queries may allow an ordinary behavioral method to outperform it.
+
+Let \(B_k\) be the best preregistered behavior-trained adaptation baseline given exactly \(k\) labeled queries from \(M_*\). Candidate methods include:
+
+- a simple calibrated target-specific regression update;
+- matrix-factorization/model-embedding methods in the spirit of EmbedLLM;
+- IRT/Rasch-style model–item adaptation;
+- anchor-query profiling analogous to cold-start routing;
+- hierarchical shrinkage combining source population structure with \(k\) target labels.
+
+Let
+
+\[
+L_0=L(f_{Q+P})
+\]
+
+be the zero-target-behavior loss of the best QPP-plus-parallax system.
+
+For equivalence margin \(\epsilon\), define
+
+\[
+\boxed{
+k^*
+=
+\min\left\{
+k:
+\mathbb E[L(B_k)]
+\le
+L_0+\epsilon
+\right\}.}
+\]
+
+Expectation is taken over repeated stratified draws of the \(k\) labeled queries.
+
+This number has a direct interpretation:
+
+> \(k^*\) is the approximate number of target behavior labels that the target-free system is worth against a strong behavioral adaptation method.
+
+It is an **operational value metric**, not the novelty claim.
+
+### 8.1 Crossover must be reported as a curve
+
+Report
+
+\[
+k\mapsto L(B_k)
+\]
+
+for a logarithmic or otherwise preregistered grid such as
+
+\[
+k\in\{0,5,10,20,50,100,200,500,1000\}.
+\]
+
+A single interpolated \(k^*\) hides variance and can be unstable near crossing points.
+
+### 8.2 Practical interpretation
+
+If a behavioral baseline with \(k=20\) labels already dominates the geometry-based predictor, the scientific finding may still be interesting, but the deployment case is weak.
+
+If hundreds of target labels are needed before a behavior-trained method catches up, cross-model geometry has demonstrated a meaningful cold-start value.
+
+---
+
+## 9. Mandatory baselines and controls
+
+### 9.1 Target-local QPP
+
+These are the most important baselines because they have access to the same unlabeled target queries and rankings without needing any cross-model theory.
+
+### 9.2 Cross-retriever QPP
+
+QPP-MLC and comparable transfer-capable QPP systems test whether performance relationships learned elsewhere already generalize to the held-out retriever.
+
+### 9.3 Unsupervised retriever selection
+
+Khramtsova et al. (2023) and LARMOR provide aggregate model-selection baselines. Although they are not per-query predictors, they test whether the same operational decision can be solved without parallax.
+
+### 9.4 Mixture/routing signals
+
+MoR-style per-query retriever weights test whether standard pre/post-retrieval trust signals already capture the useful heterogeneity.
+
+### 9.5 Behavioral model profiles
+
+EmbedLLM-style factorization and IRT-style adaptation are required on the \(k\)-label curve because they convert observed model behavior into compact capability profiles.
+
+### 9.6 Model identity and global capability
+
+For source-model training, include model identity or hierarchical random effects, global source performance, model family, dimension, parameter count where meaningful, and public metadata as nuisance covariates.
+
+However, the strict held-out condition may **not** use target-benchmark aggregate accuracy/effectiveness for \(M_*\), because that is target behavior supervision in compressed form.
+
+### 9.7 Same-recipe seed null
+
+When multiple training seeds/checkpoints are available for the same retriever recipe, estimate the variability of residual and QPP effects among nominally equivalent observers. Cross-model effects smaller than this floor are not interpreted as meaningful observer specificity.
+
+---
+
+## 10. What exactly is “parallax” here?
+
+The term should carry no metaphysical weight.
+
+For this paper, **cross-model retrieval parallax** means only:
+
+> a feature of a held-out retriever's representation or ranking that is defined relative to a common frame or source-model consensus, and whose predictive value is evaluated incrementally beyond target-local QPP signals.
+
+A residual is not parallax merely because it is nonzero.
+
+A valid feature must satisfy all of the following:
+
+1. alignment uses no target relevance labels;
+2. feature construction uses no target behavior labels;
+3. residual-to-performance mapping is trained only on source retrievers;
+4. predictive value is tested on untouched target queries;
+5. incremental gain is measured over strong target-local QPP baselines;
+6. the effect survives reasonable changes in alignment capacity;
+7. the effect replicates across several held-out retrievers.
+
+If condition 5 fails, the special name is unnecessary: the residual is simply another geometric quantity already subsumed by QPP.
+
+---
+
+## 11. Alignment is a nuisance axis, not a hidden tuning knob
+
+Cross-model residuals depend on how spaces are aligned. Therefore the paper must report an alignment-capacity curve rather than choose one favorable map.
+
+Candidate ladder:
+
+\[
+\text{orthogonal Procrustes}
+\rightarrow
+\text{linear map}
+\rightarrow
+\text{multi-way shared frame}
+\rightarrow
+\text{small nonlinear map}
+\rightarrow
+\text{unpaired/shared-latent method where justified}.
+\]
+
+For each class \(a\), report
+
+\[
+\Delta_P(a).
+\]
+
+Three outcomes have different meanings:
+
+- **stable positive \(\Delta_P(a)\):** residual behavior is not an artifact of one alignment capacity;
+- **vanishing \(\Delta_P(a)\) with stronger alignment:** the apparent parallax was mostly alignment error;
+- **increasing gain only with highly flexible aligners:** likely overfitting unless correspondence evaluation independently supports the aligner.
+
+All alignment choices are made without target qrels.
+
+---
+
+## 12. Cross-realization robustness is secondary
+
+Earlier versions of this paper centered realization protocols
+
+\[
+X\sim\nu(\cdot\mid\theta)
+\]
+
+such as lexical paraphrase, context change, and register shift.
+
+That remains useful, but robustness transfer across perturbation families has extensive prior art and often fails. It is therefore a **stress test**, not a novelty claim.
+
+If two independently generated semantic-preserving realization families \(\nu_j\) and \(\nu_k\) are available, evaluate:
+
+\[
+\Delta_P^{\nu_j\to\nu_k}.
+\]
+
+A positive cross-realization effect would strengthen the interpretation that residuals capture more than generator-specific artifacts. A negative result is expected enough that it should not invalidate an otherwise positive within-distribution leave-one-retriever-out result.
+
+Realization generators must remain independent of tested retrievers, and semantic preservation must be audited independently.
+
+---
+
+## 13. Evaluation metrics
+
+QPP has traditionally used correlation with true query effectiveness. Correlation alone is insufficient for this paper because \(k^*\) requires a loss with operational meaning.
+
+Report at least:
+
+1. **MAE or RMSE** for continuous per-query effectiveness prediction;
+2. **Spearman correlation** with true per-query effectiveness, for comparability with QPP literature;
+3. **calibration/proper scoring loss** for any binary success endpoint;
+4. **routing/selection regret** if predictions are used to choose among retrievers;
+5. **paired bootstrap confidence intervals** for \(\Delta_P\);
+6. **effect heterogeneity** across target retrievers and collections.
+
+No result is considered confirmatory if the gain is driven by one target retriever or one dataset after model selection.
+
+---
+
+## 14. Suggested benchmark design
+
+A practical first study can use public dense retrievers and BEIR/MTEB retrieval collections because they provide a diverse retriever population, shared text inputs, and query-level relevance judgments for final evaluation.
+
+### 14.1 Retriever population
+
+Include retrievers spanning:
+
+- different training objectives;
+- different architecture families;
+- general versus domain-specialized models;
+- multiple embedding dimensions;
+- at least one family with several related checkpoints or seeds when possible.
+
+Avoid a population dominated by near-duplicates, which would make leave-one-model-out artificially easy.
+
+### 14.2 Alignment corpus
+
+Use a frozen corpus disjoint from target qrels and, preferably, disjoint from final target collections. The same text identities may be embedded by every retriever to support paired alignment; an unpaired alignment baseline can be added but is not necessary for the first test.
+
+### 14.3 Retrieval collections
+
+Use several collections with materially different domains and query styles. Report both:
+
+- retriever-held-out / collection-seen-among-sources;
+- retriever-held-out / collection-held-out.
+
+### 14.4 Pre-registration
+
+Freeze before revealing target outcomes:
+
+- retriever population;
+- target folds;
+- alignment corpus;
+- residual feature family;
+- QPP baseline family;
+- primary outcome;
+- predictive loss;
+- alignment-capacity ladder;
+- \(k\) grid;
+- equivalence margin \(\epsilon\).
+
+---
+
+## 15. Hypotheses and falsifiers
+
+### H1 — Incremental cross-model geometric value
+
+**Hypothesis.** Cross-model aligned residual features improve prediction of per-query effectiveness for a behaviorally held-out retriever beyond the strongest preregistered target-free QPP baseline:
+
+\[
+\Delta_P>0.
+\]
+
+**Falsified if.** The gain is non-positive, inside the same-seed/null floor, or fails across held-out retrievers.
+
+This is the paper's primary hypothesis.
+
+### H2 — Family-level generalization
+
+**Hypothesis.** The incremental value survives when an entire retriever architecture/training family is held out.
+
+**Falsified if.** Gains exist only when the target is a near-neighbor of source retrievers.
+
+### H3 — Operational label value
+
+**Hypothesis.** The target-free predictor has nontrivial label-equivalent value \(k^*\) against strong behavioral adaptation baselines.
+
+**Falsified as a deployment claim if.** Very small \(k\) values consistently dominate the target-free system.
+
+A small \(k^*\) does not falsify H1; it says the geometric signal is cheap to replace.
+
+### H4 — Alignment robustness
+
+**Hypothesis.** \(\Delta_P\) remains positive across a preregistered range of non-destructive alignment classes.
+
+**Falsified if.** Predictive value disappears once alignment quality improves or exists only under one tuned alignment.
+
+### H5 — Cross-realization robustness
+
+**Hypothesis.** Some predictive value transfers across structurally distinct semantic-preserving realization protocols.
+
+**Status.** Secondary replication/stress test, with a strong prior that transfer may be weak.
+
+---
+
+## 16. What would count as a positive paper?
+
+A convincing positive result would look like this:
+
+1. PDQPP, noisy-perturbation QPP, QPP-MLC, and other preregistered target-free baselines establish a strong floor.
+2. Adding cross-model aligned residual features reduces held-out prediction loss by a reproducible amount across multiple target retrievers.
+3. The gain survives architecture-family holdout and at least one collection shift.
+4. The effect is not explained by retriever identity, model family, dimension, global source capability, or alignment error.
+5. The \(k\)-curve shows that the gain is not immediately replaced by a trivial handful of target qrels.
+
+Only then is it reasonable to say:
+
+> cross-model representation geometry contains transferable information about retriever-specific failure that is not captured by ordinary target-local QPP.
+
+Even this result would **not** establish a universal semantic geometry or a hierarchy of semantic observers.
+
+---
+
+## 17. A negative result is arguably the cleaner result
+
+Several negative outcomes are scientifically useful.
+
+### 17.1 QPP subsumes parallax
+
+If
+
+\[
+\Delta_P\approx0,
+\]
+
+then target-local geometric/ranking signals already contain everything useful that cross-model residuals reveal. The special parallax construct should be retired for retrieval.
+
+### 17.2 Residuals interpolate but do not transfer
+
+If gains vanish on architecture-family holdout, the predictor has learned family identity rather than a transferable relation between geometry and failure.
+
+### 17.3 Geometry is behaviorally weak
+
+This would align with Friedman et al.'s broader warning that representational similarity need not track functional similarity.
+
+### 17.4 Geometry has signal but little economic value
+
+If \(\Delta_P>0\) but \(k^*\) is tiny, the scientific effect is real but operationally cheap to replace with direct behavior measurement.
+
+### 17.5 Cross-realization transfer fails
+
+This would reproduce a common robustness pattern: robustness or predictability under one perturbation family need not transfer to another.
+
+A negative paper can therefore make a precise statement about the boundary between representational analysis and performance prediction.
+
+---
+
+## 18. Relation to the original Semantic Observer programme
+
+The original observer metaphor can survive only in a weak, operational sense.
+
+The Lean ledger rules out easy claims that one injective embedding “contains more” than another on a finite item-indexed benchmark. QPP prior art rules out the claim that local geometry predicting failure is itself novel. Routing and psychometrics rule out the claim that item-specific model failure prediction is novel.
+
+What remains testable is whether **relations among observers** contribute information unavailable from each observer considered locally.
+
+In this paper, that question becomes:
+
+\[
+\boxed{
+I(\text{cross-model residual};\text{target retrieval failure}\mid\text{best target-local QPP})>0?
+}
+\]
+
+The notation is conceptual rather than an instruction to estimate conditional mutual information directly. The empirical estimand is the held-out predictive improvement \(\Delta_P\).
+
+If the answer is no, the observer programme should not invoke semantic parallax to explain retrieval behavior. If the answer is yes, the result motivates a later investigation of *why* cross-model residuals carry the extra signal.
+
+---
+
+## 19. Relation to Semantic Atlas, Pontifex, and Perquire
+
+This narrower paper should not borrow novelty from adjacent projects.
+
+For the **Semantic Atlas**, a positive result would suggest that uncertainty about a region can depend on disagreement among multiple embedding observers rather than one geometry alone. It would not establish navigational dynamics.
+
+For **Pontifex**, cross-observer residuals remain a candidate interpretability signal, but the retrieval experiment supplies a much harder prerequisite: residual information must first predict behavior beyond strong local baselines.
+
+For **Perquire**, the most direct implication is retriever selection or confidence estimation. Again, this is downstream engineering value, not part of the present novelty claim.
+
+---
+
+## 20. Conclusion
+
+Four adversarial revisions progressively removed the attractive but weak claims from the Semantic Observer idea.
+
+- deterministic point-indexed information orders collapse under injectivity;
+- restricted task orders are benchmark-relative;
+- extractability depends on the probe class;
+- paraphrase robustness is established prior art;
+- per-item model failure prediction is established in routing and psychometrics;
+- dense-retriever failure prediction without qrels is the mature QPP problem;
+- embedding geometry is already used by dense-QPP methods;
+- unsupervised dense-retriever selection and per-query retriever weighting already exist;
+- retriever-shift QPP is already an explicit research topic.
+
+The surviving question is therefore intentionally small:
+
+\[
+\boxed{
+\text{Does cross-model aligned geometry add anything beyond the best target-free QPP for an unseen retriever?}
+}
+\]
+
+The primary number is \(\Delta_P\), the incremental held-out predictive value. The operational number is \(k^*\), the number of target behavior labels required to replace that zero-target-behavior advantage.
+
+If \(\Delta_P\le0\), semantic parallax adds nothing in this domain and should be retired. If \(\Delta_P>0\) but \(k^*\) is tiny, it is scientifically interesting but practically weak. Only a reproducible positive \(\Delta_P\) with nontrivial \(k^*\), surviving retriever-family and dataset holdout, would justify a stronger positive claim.
+
+That is a much smaller paper than the original “semantic observers” proposal. It is also the first version whose central experiment is not obviously already contained in the surrounding literature.
 
 ---
 
 ## References
 
-Achara, N., Gaintseva, T., Mahaut, M., Chakraborty, P., Stenby Johansson, V., Barsbey, M., Rodolà, E., & Crisostomi, D. (2026). **Multi-Way Representation Alignment.** ICML 2026. arXiv:2602.06205.
+Achara, N., et al. (2026). **Multi-Way Representation Alignment.** arXiv:2602.06205.
 
-Blackwell, D. (1951). **Comparison of Experiments.** *Proceedings of the Second Berkeley Symposium on Mathematical Statistics and Probability*, 93–102.
+Arabzadeh, N., Hamidi Rad, R., Khodabakhsh, M., & Bagheri, E. (2023). **Noisy Perturbations for Estimating Query Difficulty in Dense Retrievers.** CIKM 2023. https://doi.org/10.1145/3583780.3615270
 
-Blackwell, D. (1953). **Equivalent Comparisons of Experiments.** *The Annals of Mathematical Statistics*, 24(2), 265–272.
+Blackwell, D. (1951). **Comparison of Experiments.** Proceedings of the Second Berkeley Symposium on Mathematical Statistics and Probability, 93–102.
 
-Burdick, L., Kummerfeld, J. K., & Mihalcea, R. (2022). **Using Paraphrases to Study Properties of Contextual Embeddings.** NAACL 2022.
+Blackwell, D. (1953). **Equivalent Comparisons of Experiments.** Annals of Mathematical Statistics, 24(2), 265–272.
 
-Chazal, F., Fasy, B. T., Lecci, F., Rinaldo, A., Singh, A., & Wasserman, L. (2014). **On the Bootstrap for Persistence Diagrams and Landscapes.** arXiv:1311.0376.
+Datta, S., Faggioli, G., Ferro, N., Ganguly, D., Muntean, C. I., Perego, R., & Tonellotto, N. (2025/2026). **Projection-Displacement-Based Query Performance Prediction for Embedded Space of Dense Retrievers.** ACM Transactions on Information Systems, 44(1). https://doi.org/10.1145/3765617
 
-Fasy, B. T., Lecci, F., Rinaldo, A., Wasserman, L., Balakrishnan, S., & Singh, A. (2014). **Confidence Sets for Persistence Diagrams.** *The Annals of Statistics*, 42(6), 2301–2339.
+Friedman, D., Lampinen, A. K., Dixon, L., Chen, D., & Ghandeharioun, A. (2023). **Comparing Representational and Functional Similarity in Small Transformer Language Models.** UniReps, NeurIPS Workshop 2023.
 
-Frank, M., & Afli, H. (2026). **PTEB: Towards Robust Text Embedding Evaluation via Stochastic Paraphrasing at Evaluation Time with LLMs.** EACL 2026, 2832–2851.
-
-Gorbett, M., & Jana, S. (2026). **Cross-Model Disagreement as a Label-Free Correctness Signal.** arXiv:2603.25450.
+Geirhos, R., Meding, K., & Wichmann, F. A. (2020). **Beyond Accuracy: Quantifying Trial-by-Trial Behaviour of CNNs and Humans by Measuring Error Consistency.** NeurIPS 2020.
 
 Gröger, F., Wen, S., & Brbić, M. (2026). **Revisiting the Platonic Representation Hypothesis: An Aristotelian View.** ICML 2026. arXiv:2602.14486.
-
-Hagen, T., Scells, H., & Potthast, M. (2024). **Revisiting Query Variation Robustness of Transformer Models.** Findings of EMNLP 2024.
-
-Hamidieh, K., Thost, V., Gerych, W., Yurochkin, M., & Ghassemi, M. (2026). **Complementing Self-Consistency with Cross-Model Disagreement for Uncertainty Quantification.** arXiv:2604.17112.
-
-Hewitt, J., & Liang, P. (2019). **Designing and Interpreting Probes with Control Tasks.** EMNLP-IJCNLP 2019.
-
-Hosseini, E. A., Cheung, B., Fedorenko, E., & Williams, A. H. (2026). **Modulating Cross-Modal Convergence with Single-Stimulus, Intra-Modal Dispersion.** ICLR 2026 Re-Align Workshop. arXiv:2604.21836.
-
-Hounie, I., Chamon, L. F. O., & Ribeiro, A. (2023). **Automatic Data Augmentation via Invariance-Constrained Learning.** ICML 2023, PMLR 202.
 
 Huh, M., Cheung, B., Wang, T., & Isola, P. (2024). **Position: The Platonic Representation Hypothesis.** ICML 2024, PMLR 235.
 
 Jha, R., Zhang, C., Shmatikov, V., & Morris, J. X. (2025). **Harnessing the Universal Geometry of Embeddings.** NeurIPS 2025. arXiv:2505.12540.
 
-Le Cam, L. (1964). **Sufficiency and Approximate Sufficiency.** *The Annals of Mathematical Statistics*, 35(4), 1419–1455.
+Jung, J., & Jeon, J. J. (2025). **Generalizing Query Performance Prediction under Retriever and Concept Shifts via Data-driven Correction.** CIKM 2025, 1261–1271. https://doi.org/10.1145/3746252.3761404
 
-Le Cam, L. (1986). **Asymptotic Methods in Statistical Decision Theory.** Springer.
+Kalra, J. S., Zhao, X., Kim, T. E., Cai, F., Diaz, F., & Wu, T. (2025). **MoR: Better Handling Diverse Queries with a Mixture of Sparse, Dense, and Human Retrievers.** EMNLP 2025, 11971–11990. arXiv:2506.15862.
 
-Pimentel, T., Valvoda, J., Maudslay, R. H., Zmigrod, R., Williams, A., & Cotterell, R. (2020). **Information-Theoretic Probing for Linguistic Structure.** ACL 2020.
+Khramtsova, E., Zhuang, S., Baktashmotlagh, M., Wang, X., & Zuccon, G. (2023). **Selecting which Dense Retriever to use for Zero-Shot Search.** SIGIR-AP 2023. arXiv:2309.09403.
+
+Khramtsova, E., Zhuang, S., Baktashmotlagh, M., & Zuccon, G. (2024). **Leveraging LLMs for Unsupervised Dense Retriever Ranking.** SIGIR 2024. arXiv:2402.04853.
+
+Le Cam, L. (1964). **Sufficiency and Approximate Sufficiency.** Annals of Mathematical Statistics, 35(4), 1419–1455.
 
 Torgersen, E. (1991). **Comparison of Statistical Experiments.** Cambridge University Press.
 
-Verma, D., Lal, Y. K., Sinha, S., Van Durme, B., & Poliak, A. (2023). **Evaluating Paraphrastic Robustness in Textual Entailment Models.** ACL 2023.
+Xu, J., Pu, H., Feng, T., Zhang, H., You, J., & Liu, G. (2026). **RouteProfile: Elucidating the Design Space of LLM Profiles for Routing.** arXiv:2605.00180.
 
-Voita, E., & Titov, I. (2020). **Information-Theoretic Probing with Minimum Description Length.** EMNLP 2020.
+Yan, C., Zhang, W., Ning, Z., Xu, F., Tao, Z., Zhang, L., et al. (2026). **Breaking Model Lock-in: Cost-Efficient Zero-Shot LLM Routing via a Universal Latent Space.** AAAI 2026, 40(43), 36483–36490.
 
-Yacobi, A., Ben-Ari, N., Talmon, R., & Shaham, U. (2025). **Learning Shared Representations from Unpaired Data.** NeurIPS 2025. arXiv:2505.21524.
-
-Zhang, J., & Ma, K. (2022). **Rethinking the Augmentation Module in Contrastive Learning: Learning Hierarchical Augmentation Invariance With Expanded Views.** CVPR 2022, 16650–16659.
+Zhuang, R., Wu, T., Wen, Z., Li, A., Jiao, J., & Ramchandran, K. (2025). **EmbedLLM: Learning Compact Representations of Large Language Models.** ICLR 2025.
