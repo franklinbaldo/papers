@@ -1,0 +1,68 @@
+name: Semantic Atlas relational dynamics
+
+on:
+  pull_request:
+    paths:
+      - "experiments/semantic_atlas/relational_dynamics_v1.json"
+      - "experiments/semantic_atlas/model_backed_a_v1.json"
+      - "experiments/semantic_atlas/src/semantic_atlas/relational_dynamics.py"
+      - "experiments/semantic_atlas/src/semantic_atlas/embedding_cache.py"
+      - "experiments/semantic_atlas/src/semantic_atlas/frame.py"
+      - "experiments/semantic_atlas/scripts/run_relational_dynamics.py"
+      - "experiments/semantic_atlas/tests/test_relational_dynamics.py"
+      - ".github/workflows/semantic-atlas-relational-dynamics.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  preserve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Detect versioned primary data
+        id: primary_data
+        run: |
+          if [ -f experiments/semantic_atlas/artifacts/relational_dynamics_v1.json ] \
+             && [ -d experiments/semantic_atlas/artifacts/embedding_cache_relational_v1/reference_observer ] \
+             && [ -d experiments/semantic_atlas/artifacts/embedding_cache_relational_v1/transfer_observer ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Import exact primary artifact from frozen run 32924747442
+        if: steps.primary_data.outputs.exists != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p experiments/semantic_atlas/artifacts
+          curl --fail --location \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/9591158168/zip" \
+            -o /tmp/semantic-atlas-relational-dynamics-v1.zip
+          unzip -q /tmp/semantic-atlas-relational-dynamics-v1.zip \
+            -d experiments/semantic_atlas/artifacts
+      - name: Verify frozen primary data hashes
+        run: |
+          cd experiments/semantic_atlas/artifacts
+          echo "8791af54c7eaf2d77b104bd5e35a65825ce577a56b7c7f626c6f69814616a8e5  relational_dynamics_v1.json" | sha256sum -c -
+          echo "f332a137e854cbe38f6616d964ee34264aadf4ce80e89f1a64b0836ec63e72c2  embedding_cache_relational_v1/reference_observer/embeddings-f332a137e854cbe38f6616d964ee34264aadf4ce80e89f1a64b0836ec63e72c2.npz" | sha256sum -c -
+          echo "22ba2cdca5fb223bd30dab0d06556c9596c441a118046011ecd5cba1dcbba54a  embedding_cache_relational_v1/transfer_observer/embeddings-22ba2cdca5fb223bd30dab0d06556c9596c441a118046011ecd5cba1dcbba54a.npz" | sha256sum -c -
+          echo "8de798d3d3c023019de70acb378bc38ecd78560733f440480e100ff1fb30fe7d  embedding_cache_relational_v1/reference_observer/embeddings-f332a137e854cbe38f6616d964ee34264aadf4ce80e89f1a64b0836ec63e72c2.json" | sha256sum -c -
+          echo "209b1107b41a9a1751bfe51271ef3be077a5e3dbd571e6a4f566c9c0b385079f  embedding_cache_relational_v1/transfer_observer/embeddings-22ba2cdca5fb223bd30dab0d06556c9596c441a118046011ecd5cba1dcbba54a.json" | sha256sum -c -
+      - name: Persist primary data on same-repository PR
+        if: steps.primary_data.outputs.exists != 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add experiments/semantic_atlas/artifacts/relational_dynamics_v1.json
+          git add experiments/semantic_atlas/artifacts/embedding_cache_relational_v1
+          git commit -m "data: persist relational dynamics v1 primary data"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
