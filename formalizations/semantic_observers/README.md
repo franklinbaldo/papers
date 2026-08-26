@@ -3,7 +3,7 @@ type: "Companion Note"
 title: "Lean 4 Companion — Semantic Observers"
 description: "Machine-checked negative-result ledger for deterministic garbling, restricted observer orders, cross-task reversal, and probe-relative reparameterization invariance."
 tags: [lean4, semantic-observers, decision-theory, formal-verification]
-timestamp: 2026-08-26T02:08:00Z
+timestamp: 2026-08-26T02:15:00Z
 ---
 
 # Lean 4 Companion — Semantic Observers
@@ -50,15 +50,19 @@ Together these certify three negative constraints on the empirical paper:
 - **dominance on one decision family does not imply an observer-level order**;
 - **restricted extractability is relative to the allowed probe/rule class**.
 
-The positive hypotheses in the paper — realization-invariance profiles and behavioral semantic parallax — are empirical and are not proved by Lean.
+The positive hypotheses in the revised paper — realization-invariance profiles and behavioral semantic parallax — are empirical and are not proved by Lean.
 
 ## Connection to the revised empirical protocol
 
-The paper now indexes empirical claims by
+The paper indexes empirical claims by
 
 `Π = (Θ, ν, D, H, A)`
 
-where `ν` is a registered realization protocol generating multiple surface realizations of one semantic index `θ`.
+with deliberately different roles:
+
+- `Θ` and `ν` define the measurement environment;
+- `D` is the axis across which transfer claims are tested;
+- `H` and `A` are nuisance/capacity classes that must be swept rather than fixed opportunistically.
 
 The Lean result explains why `ν` is not optional if one wants a nontrivial stochastic experiment from deterministic embedding APIs: setting `Θ` equal to individual benchmark items generically produces injective maps and therefore trivial mutual simulation under unrestricted garblings.
 
