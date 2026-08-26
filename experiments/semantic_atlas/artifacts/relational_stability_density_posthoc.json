@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "kind": "posthoc-relational-stability-confound-check",
+  "parent_experiment": "semantic-atlas-relational-dynamics-v1",
+  "parent_robustness_artifact": "relational_dynamics_v1_reanalysis.json",
+  "claim_boundary": "Post-hoc analysis after the v1 outcome and power correction were known. It can refine interpretation and motivate the large-corpus design; it is not confirmatory evidence for a new mechanism.",
+  "order_invariant_signal": {
+    "chronology_cross_model_D": 0.3570063292698568,
+    "arbitrary_order_cross_model_D_mean": 0.3338447116459822,
+    "chronology_specific_excess_D": 0.023161617623874642,
+    "chronology_specific_excess_fraction_of_null": 0.06937841701813698,
+    "same_observer_arbitrary_order_D_mean": {
+      "reference": 0.23165247260046007,
+      "transfer": 0.2292524139590687
+    },
+    "interpretation": "Most measured cross-observer churn divergence is already present under arbitrary shared insertion orders. The data therefore motivate an order-invariant susceptibility question: which static local properties of an observer geometry predict expected churn per unit corpus mass, averaged over arrival orders? Chronology-specific arrival effects are not the next primary mechanism."
+  },
+  "first_churn_survival": {
+    "k": 5,
+    "reference": {
+      "n": 24,
+      "events": 14,
+      "censored": 10,
+      "censored_fraction": 0.41666666666666663,
+      "km_median_added_docs": 24,
+      "rmst_to_tau": 48.833333333333336,
+      "tau_added_docs": 92,
+      "curve": [
+        {
+          "added_docs": 0,
+          "survival": 1.0
+        },
+        {
+          "added_docs": 4,
+          "survival": 0.75
+        },
+        {
+          "added_docs": 12,
+          "survival": 0.5416666666666666
+        },
+        {
+          "added_docs": 24,
+          "survival": 0.5
+        },
+        {
+          "added_docs": 72,
+          "survival": 0.4166666666666667
+        }
+      ]
+    },
+    "transfer": {
+      "n": 24,
+      "events": 24,
+      "censored": 0,
+      "censored_fraction": 0.0,
+      "km_median_added_docs": 4,
+      "rmst_to_tau": 5.833333333333334,
+      "tau_added_docs": 92,
+      "curve": [
+        {
+          "added_docs": 0,
+          "survival": 1.0
+        },
+        {
+          "added_docs": 4,
+          "survival": 0.25
+        },
+        {
+          "added_docs": 8,
+          "survival": 0.16666666666666669
+        },
+        {
+          "added_docs": 12,
+          "survival": 0.04166666666666667
+        },
+        {
+          "added_docs": 16,
+          "survival": 0.0
+        }
+      ]
+    },
+    "paired_curve_test": {
+      "method": "Paired within-document permutation of observer labels; statistic is the difference in Kaplan-Meier restricted mean survival time (RMST) through the full 92-added-document horizon. This tests the whole first-churn survival curve while respecting that both observers encode the same anchors.",
+      "permutations": 100000,
+      "seed": 20260826,
+      "tau_added_docs": 92,
+      "reference_rmst": 48.833333333333336,
+      "transfer_rmst": 5.833333333333334,
+      "observed_difference": 43.0,
+      "null_sd": 11.978586509230304,
+      "null_q025": -22.999999999999993,
+      "null_q975": 22.666666666666664,
+      "p_two_sided_plus1": 1.999980000199998e-05,
+      "p_one_sided_plus1": 9.99990000099999e-06
+    }
+  },
+  "baseline_density_check": {
+    "metric": "Baseline local density proxy = cosine similarity to the 5th nearest neighbor among the 24 initial documents, measured separately inside each observer's L2-normalized embedding geometry. Higher is denser.",
+    "pooled_tercile_cuts": [
+      0.6201160472851036,
+      0.6822062577402045
+    ],
+    "reference": {
+      "mean": 0.6259931364433439,
+      "median": 0.6492178455744123,
+      "q25": 0.5806575968074874,
+      "q75": 0.690031503027351
+    },
+    "transfer": {
+      "mean": 0.6154761261243034,
+      "median": 0.6650342135088879,
+      "q25": 0.5795524998712901,
+      "q75": 0.7036946698455543
+    },
+    "strata": {
+      "low": {
+        "reference": {
+          "n": 8,
+          "events": 6,
+          "censored": 2,
+          "censored_fraction": 0.25,
+          "km_median_added_docs": 12,
+          "rmst_to_tau": 44.0,
+          "tau_added_docs": 92,
+          "curve": [
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.625
+            },
+            {
+              "added_docs": 12,
+              "survival": 0.5
+            },
+            {
+              "added_docs": 72,
+              "survival": 0.25
+            }
+          ]
+        },
+        "transfer": {
+          "n": 8,
+          "events": 8,
+          "censored": 0,
+          "censored_fraction": 0.0,
+          "km_median_added_docs": 4,
+          "rmst_to_tau": 6.5,
+          "tau_added_docs": 92,
+          "curve": [
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.25
+            },
+            {
+              "added_docs": 12,
+              "survival": 0.125
+            },
+            {
+              "added_docs": 16,
+              "survival": 0.0
+            }
+          ]
+        }
+      },
+      "middle": {
+        "reference": {
+          "n": 8,
+          "events": 3,
+          "censored": 5,
+          "censored_fraction": 0.625,
+          "km_median_added_docs": null,
+          "rmst_to_tau": 61.5,
+          "tau_added_docs": 92,
+          "curve": [
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.75
+            },
+            {
+              "added_docs": 24,
+              "survival": 0.625
+            }
+          ]
+        },
+        "transfer": {
+          "n": 8,
+          "events": 8,
+          "censored": 0,
+          "censored_fraction": 0.0,
+          "km_median_added_docs": 4,
+          "rmst_to_tau": 4.0,
+          "tau_added_docs": 92,
+          "curve": [
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.0
+            }
+          ]
+        }
+      },
+      "high": {
+        "reference": {
+          "n": 8,
+          "events": 5,
+          "censored": 3,
+          "censored_fraction": 0.375,
+          "km_median_added_docs": 12,
+          "rmst_to_tau": 41.0,
+          "tau_added_docs": 92,
+          "curve": [
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.875
+            },
+            {
+              "added_docs": 12,
+              "survival": 0.375
+            }
+          ]
+        },
+        "transfer": {
+          "n": 8,
+          "events": 8,
+          "censored": 0,
+          "censored_fraction": 0.0,
+          "km_median_added_docs": 4,
+          "rmst_to_tau": 7.0,
+          "tau_added_docs": 92,
+          "curve": [
+            {
+              "added_docs": 0,
+              "survival": 1.0
+            },
+            {
+              "added_docs": 4,
+              "survival": 0.5
+            },
+            {
+              "added_docs": 8,
+              "survival": 0.25
+            },
+            {
+              "added_docs": 12,
+              "survival": 0.0
+            }
+          ]
+        }
+      }
+    },
+    "interpretation_boundary": "Post-hoc confound check only. L2 normalization removes vector-norm scale from cosine neighborhoods. The survival separation persists in every pooled density tercile, so a simple local-density explanation is not supported in this pilot. Embedding dimensionality remains inseparable from observer identity with only two models."
+  },
+  "baseline_gap_descriptive": {
+    "metric": "cosine similarity gap between the 5th and 6th nearest neighbors among the 24 initial documents",
+    "reference": {
+      "mean": 0.021066451913176257,
+      "median": 0.0170286841446583
+    },
+    "transfer": {
+      "mean": 0.014078412167933351,
+      "median": 0.013592726297675994
+    },
+    "claim_boundary": "Descriptive only. Gap was already inspected in v1 and had unstable sign across observers; no post-hoc gap mechanism is inferred here."
+  },
+  "large_corpus_measurement_contract": {
+    "mknn_panels": [
+      "raw mKNN(N,k)",
+      "permutation-calibrated mKNN(N,k)"
+    ],
+    "same_observer_control": "Report a separately specified same-observer bootstrap/stability ceiling as a function of N. Because the encoders are deterministic, exact same-model same-gallery mKNN is identically 1 and must not be mislabeled as a seed-null; the perturbation/bootstrap operator must be frozen before the large-corpus run.",
+    "decision": "The static paper proceeds only if calibrated cross-model local alignment is scale-stable enough to interpret and remains materially below the frozen same-observer stability ceiling across relevant N and k."
+  }
+}
