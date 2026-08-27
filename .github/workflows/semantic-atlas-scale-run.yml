@@ -23,7 +23,9 @@ permissions:
 
 concurrency:
   group: semantic-atlas-scale-v1
-  cancel-in-progress: false
+  # A pushed infrastructure-only recovery supersedes an attempt whose shards
+  # hit the hosted-runner six-hour ceiling. Uploaded artifacts remain retained.
+  cancel-in-progress: true
 
 env:
   CORPUS: experiments/semantic_atlas/artifacts/scale_corpus_v1/arxiv_abstracts_120k.jsonl.gz
@@ -85,7 +87,7 @@ jobs:
           compression-level: 0
           retention-days: 7
 
-  embed:
+  embed-qwen:
     needs: prepare-models
     runs-on: ubuntu-latest
     timeout-minutes: 360
@@ -93,8 +95,9 @@ jobs:
       fail-fast: false
       max-parallel: 20
       matrix:
-        observer: [qwen, minilm]
-        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
+        # 1,000 abstracts per Qwen job. The first attempt used 3,000 and some
+        # otherwise healthy CPU jobs reached GitHub's hard six-hour ceiling.
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -104,12 +107,12 @@ jobs:
           cache-dependency-path: experiments/semantic_atlas/pyproject.toml
       - uses: actions/download-artifact@v4
         with:
-          name: scale-model-${{ matrix.observer }}
+          name: scale-model-qwen
           path: ${{ runner.temp }}/model-cache
       - name: Restore pinned model cache
         run: |
           mkdir -p "$HOME/.cache/huggingface"
-          tar -xzf "$RUNNER_TEMP/model-cache/model-${{ matrix.observer }}.tar.gz" -C "$HOME/.cache/huggingface"
+          tar -xzf "$RUNNER_TEMP/model-cache/model-qwen.tar.gz" -C "$HOME/.cache/huggingface"
       - name: Install pinned observer runtime
         working-directory: experiments/semantic_atlas
         run: |
@@ -126,33 +129,98 @@ jobs:
         run: |
           python scripts/embed_scale_shard.py \
             --corpus artifacts/scale_corpus_v1/arxiv_abstracts_120k.jsonl.gz \
-            --observer "${{ matrix.observer }}" \
+            --observer qwen \
             --shard-index "${{ matrix.shard }}" \
-            --shard-count 40 \
+            --shard-count 120 \
             --output-dir artifacts/scale_embedding_shards_v1
       - name: Upload raw shard
         uses: actions/upload-artifact@v4
         with:
-          name: scale-raw-${{ matrix.observer }}-${{ matrix.shard }}
+          name: scale-raw-qwen-${{ matrix.shard }}
           path: |
-            ${{ env.SHARD_DIR }}/${{ matrix.observer }}-shard-*-raw.npy
-            ${{ env.SHARD_DIR }}/${{ matrix.observer }}-shard-*.json
+            ${{ env.SHARD_DIR }}/qwen-shard-*-raw.npy
+            ${{ env.SHARD_DIR }}/qwen-shard-*.json
           if-no-files-found: error
           compression-level: 1
           retention-days: 90
       - name: Upload normalized shard
         uses: actions/upload-artifact@v4
         with:
-          name: scale-normalized-${{ matrix.observer }}-${{ matrix.shard }}
+          name: scale-normalized-qwen-${{ matrix.shard }}
           path: |
-            ${{ env.SHARD_DIR }}/${{ matrix.observer }}-shard-*-normalized.npy
-            ${{ env.SHARD_DIR }}/${{ matrix.observer }}-shard-*.json
+            ${{ env.SHARD_DIR }}/qwen-shard-*-normalized.npy
+            ${{ env.SHARD_DIR }}/qwen-shard-*.json
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 90
+
+  embed-minilm:
+    needs: prepare-models
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: experiments/semantic_atlas/pyproject.toml
+      - uses: actions/download-artifact@v4
+        with:
+          name: scale-model-minilm
+          path: ${{ runner.temp }}/model-cache
+      - name: Restore pinned model cache
+        run: |
+          mkdir -p "$HOME/.cache/huggingface"
+          tar -xzf "$RUNNER_TEMP/model-cache/model-minilm.tar.gz" -C "$HOME/.cache/huggingface"
+      - name: Install pinned observer runtime
+        working-directory: experiments/semantic_atlas
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.5"
+          python -m pip install -e '.[models]'
+      - name: Embed exact shared-content shard
+        working-directory: experiments/semantic_atlas
+        env:
+          TOKENIZERS_PARALLELISM: "false"
+          HF_HUB_OFFLINE: "1"
+          TRANSFORMERS_OFFLINE: "1"
+          OMP_NUM_THREADS: "4"
+          MKL_NUM_THREADS: "4"
+        run: |
+          python scripts/embed_scale_shard.py \
+            --corpus artifacts/scale_corpus_v1/arxiv_abstracts_120k.jsonl.gz \
+            --observer minilm \
+            --shard-index "${{ matrix.shard }}" \
+            --shard-count 40 \
+            --output-dir artifacts/scale_embedding_shards_v1
+      - name: Upload raw shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: scale-raw-minilm-${{ matrix.shard }}
+          path: |
+            ${{ env.SHARD_DIR }}/minilm-shard-*-raw.npy
+            ${{ env.SHARD_DIR }}/minilm-shard-*.json
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 90
+      - name: Upload normalized shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: scale-normalized-minilm-${{ matrix.shard }}
+          path: |
+            ${{ env.SHARD_DIR }}/minilm-shard-*-normalized.npy
+            ${{ env.SHARD_DIR }}/minilm-shard-*.json
           if-no-files-found: error
           compression-level: 1
           retention-days: 90
 
   release-embeddings:
-    needs: embed
+    needs: [embed-qwen, embed-minilm]
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
