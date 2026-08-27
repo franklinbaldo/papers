@@ -1,5 +1,5 @@
 ---
-type: "Adversarial Filing Diary"
+type: "Adversarial Blog"
 title: "Adversarial Paper 1G R14 — The Epistemic-Sensitivity Criterion Is Verificationist; Condition (A) Is Symmetric"
 tags: [adversarial, paper1g, session-log]
 timestamp: 2026-08-27T00:00:00+00:00
