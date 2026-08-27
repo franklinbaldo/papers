@@ -1,0 +1,302 @@
+name: Semantic Atlas 100k exact scale gate
+
+on:
+  push:
+    branches:
+      - experiment/semantic-atlas-scale-run
+    paths:
+      - ".github/workflows/semantic-atlas-scale-run.yml"
+      - "experiments/semantic_atlas/scale_mknn_v1.json"
+      - "experiments/semantic_atlas/protocol_scale_mknn.md"
+      - "experiments/semantic_atlas/artifacts/scale_corpus_v1/**"
+      - "experiments/semantic_atlas/scripts/embed_scale_shard.py"
+      - "experiments/semantic_atlas/scripts/run_scale_draw.py"
+      - "experiments/semantic_atlas/scripts/aggregate_scale_results.py"
+      - "experiments/semantic_atlas/src/semantic_atlas/scale_embeddings.py"
+      - "experiments/semantic_atlas/src/semantic_atlas/scale_mknn.py"
+      - "experiments/semantic_atlas/src/semantic_atlas/scale_results.py"
+      - "experiments/semantic_atlas/pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: semantic-atlas-scale-v1
+  cancel-in-progress: false
+
+env:
+  CORPUS: experiments/semantic_atlas/artifacts/scale_corpus_v1/arxiv_abstracts_120k.jsonl.gz
+  SHARD_DIR: experiments/semantic_atlas/artifacts/scale_embedding_shards_v1
+  RELEASE_TAG: semantic-atlas-scale-v1-data
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: experiments/semantic_atlas/pyproject.toml
+      - working-directory: experiments/semantic_atlas
+        run: |
+          python -m pip install -e '.[dev]'
+          pytest -q
+
+  prepare-models:
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        observer: [qwen, minilm]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: experiments/semantic_atlas/pyproject.toml
+      - name: Install CPU observer runtime
+        working-directory: experiments/semantic_atlas
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.5"
+          python -m pip install -e '.[models]'
+      - name: Materialize the pinned model once
+        working-directory: experiments/semantic_atlas
+        run: |
+          OBSERVER="${{ matrix.observer }}" python - <<'PY'
+          import os
+          from sentence_transformers import SentenceTransformer
+          from semantic_atlas.scale_embeddings import OBSERVER_SPECS
+          spec=OBSERVER_SPECS[os.environ['OBSERVER']]
+          SentenceTransformer(spec['model'],revision=spec['revision'],trust_remote_code=True,device='cpu')
+          PY
+          tar -czf "$RUNNER_TEMP/model-${{ matrix.observer }}.tar.gz" -C "$HOME/.cache/huggingface" .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scale-model-${{ matrix.observer }}
+          path: ${{ runner.temp }}/model-${{ matrix.observer }}.tar.gz
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+
+  embed:
+    needs: prepare-models
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        observer: [qwen, minilm]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: experiments/semantic_atlas/pyproject.toml
+      - uses: actions/download-artifact@v4
+        with:
+          name: scale-model-${{ matrix.observer }}
+          path: ${{ runner.temp }}/model-cache
+      - name: Restore pinned model cache
+        run: |
+          mkdir -p "$HOME/.cache/huggingface"
+          tar -xzf "$RUNNER_TEMP/model-cache/model-${{ matrix.observer }}.tar.gz" -C "$HOME/.cache/huggingface"
+      - name: Install pinned observer runtime
+        working-directory: experiments/semantic_atlas
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.5"
+          python -m pip install -e '.[models]'
+      - name: Embed exact shared-content shard
+        working-directory: experiments/semantic_atlas
+        env:
+          TOKENIZERS_PARALLELISM: "false"
+          HF_HUB_OFFLINE: "1"
+          TRANSFORMERS_OFFLINE: "1"
+          OMP_NUM_THREADS: "4"
+          MKL_NUM_THREADS: "4"
+        run: |
+          python scripts/embed_scale_shard.py \
+            --corpus artifacts/scale_corpus_v1/arxiv_abstracts_120k.jsonl.gz \
+            --observer "${{ matrix.observer }}" \
+            --shard-index "${{ matrix.shard }}" \
+            --shard-count 40 \
+            --output-dir artifacts/scale_embedding_shards_v1
+      - name: Upload raw shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: scale-raw-${{ matrix.observer }}-${{ matrix.shard }}
+          path: |
+            ${{ env.SHARD_DIR }}/${{ matrix.observer }}-shard-*-raw.npy
+            ${{ env.SHARD_DIR }}/${{ matrix.observer }}-shard-*.json
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 90
+      - name: Upload normalized shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: scale-normalized-${{ matrix.observer }}-${{ matrix.shard }}
+          path: |
+            ${{ env.SHARD_DIR }}/${{ matrix.observer }}-shard-*-normalized.npy
+            ${{ env.SHARD_DIR }}/${{ matrix.observer }}-shard-*.json
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 90
+
+  release-embeddings:
+    needs: embed
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download raw embedding shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: scale-raw-*
+          path: ${{ env.SHARD_DIR }}
+          merge-multiple: true
+      - name: Download normalized embedding shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: scale-normalized-*
+          path: ${{ env.SHARD_DIR }}
+          merge-multiple: true
+      - name: Verify, package and hash preserved matrices
+        run: |
+          mkdir -p release-assets
+          tar -czf release-assets/qwen-raw.tar.gz -C "$SHARD_DIR" $(find "$SHARD_DIR" -maxdepth 1 -name 'qwen-*-raw.npy' -printf '%f ')
+          tar -czf release-assets/qwen-normalized.tar.gz -C "$SHARD_DIR" $(find "$SHARD_DIR" -maxdepth 1 -name 'qwen-*-normalized.npy' -printf '%f ')
+          tar -czf release-assets/minilm-raw.tar.gz -C "$SHARD_DIR" $(find "$SHARD_DIR" -maxdepth 1 -name 'minilm-*-raw.npy' -printf '%f ')
+          tar -czf release-assets/minilm-normalized.tar.gz -C "$SHARD_DIR" $(find "$SHARD_DIR" -maxdepth 1 -name 'minilm-*-normalized.npy' -printf '%f ')
+          tar -czf release-assets/shard-manifests.tar.gz -C "$SHARD_DIR" $(find "$SHARD_DIR" -maxdepth 1 -name '*.json' -printf '%f ')
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          assets=[]
+          for path in sorted(Path('release-assets').glob('*')):
+              digest=hashlib.sha256()
+              with path.open('rb') as stream:
+                  for chunk in iter(lambda:stream.read(1024*1024),b''):
+                      digest.update(chunk)
+              assets.append({'name':path.name,'bytes':path.stat().st_size,'sha256':digest.hexdigest()})
+          Path('release-assets/release_manifest.json').write_text(json.dumps({'schema_version':1,'tag':'semantic-atlas-scale-v1-data','assets':assets},indent=2)+'\n')
+          PY
+      - name: Preserve matrices as durable release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$RELEASE_TAG" >/dev/null 2>&1 || \
+            gh release create "$RELEASE_TAG" --prerelease --target "$GITHUB_SHA" \
+              --title "Semantic Atlas scale v1 data" \
+              --notes "Frozen raw and normalized primary-observer embeddings for the preregistered 120k arXiv scale experiment."
+          gh release upload "$RELEASE_TAG" release-assets/* --clobber
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scale-release-manifest
+          path: release-assets/release_manifest.json
+          if-no-files-found: error
+          retention-days: 90
+
+  exact-draw:
+    needs: release-embeddings
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        draw: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, chronological]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: experiments/semantic_atlas/pyproject.toml
+      - name: Download normalized observer matrices
+        uses: actions/download-artifact@v4
+        with:
+          pattern: scale-normalized-*
+          path: ${{ env.SHARD_DIR }}
+          merge-multiple: true
+      - name: Install exact-analysis runtime
+        working-directory: experiments/semantic_atlas
+        run: python -m pip install -e '.[analysis]'
+      - name: Run one preregistered exact gallery draw
+        working-directory: experiments/semantic_atlas
+        env:
+          OMP_NUM_THREADS: "4"
+          MKL_NUM_THREADS: "4"
+          OPENBLAS_NUM_THREADS: "4"
+        run: |
+          python scripts/run_scale_draw.py \
+            --corpus artifacts/scale_corpus_v1/arxiv_abstracts_120k.jsonl.gz \
+            --embedding-dir artifacts/scale_embedding_shards_v1 \
+            --manifest scale_mknn_v1.json \
+            --draw "${{ matrix.draw }}" \
+            --output "artifacts/scale_draws_v1/draw-${{ matrix.draw }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scale-draw-${{ matrix.draw }}
+          path: experiments/semantic_atlas/artifacts/scale_draws_v1/draw-${{ matrix.draw }}.json
+          if-no-files-found: error
+          retention-days: 90
+
+  findings:
+    needs: exact-draw
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: experiment/semantic-atlas-scale-run
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: scale-draw-*
+          path: experiments/semantic_atlas/artifacts/scale_draws_v1
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: scale-release-manifest
+          path: experiments/semantic_atlas/artifacts/scale_embeddings_v1
+      - name: Apply the frozen gate
+        working-directory: experiments/semantic_atlas
+        run: |
+          python -m pip install -e '.[analysis]'
+          python scripts/aggregate_scale_results.py \
+            --input-dir artifacts/scale_draws_v1 \
+            --manifest scale_mknn_v1.json \
+            --output artifacts/scale_mknn_v1.json \
+            --findings SCALE_MKNN_RESULTS.md \
+            --figure artifacts/scale_mknn_v1.png
+      - name: Preserve results in the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "$RELEASE_TAG" \
+            experiments/semantic_atlas/artifacts/scale_mknn_v1.json \
+            experiments/semantic_atlas/artifacts/scale_mknn_v1.png \
+            --clobber
+      - name: Commit the terminal record and compact artifacts
+        run: |
+          git config user.name "semantic-atlas-bot"
+          git config user.email "semantic-atlas-bot@users.noreply.github.com"
+          git add experiments/semantic_atlas/SCALE_MKNN_RESULTS.md
+          git add experiments/semantic_atlas/artifacts/scale_mknn_v1.json
+          git add experiments/semantic_atlas/artifacts/scale_mknn_v1.png
+          git add experiments/semantic_atlas/artifacts/scale_embeddings_v1/release_manifest.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data: record Semantic Atlas 100k scale gate"
+            git push origin HEAD:experiment/semantic-atlas-scale-run
+          fi

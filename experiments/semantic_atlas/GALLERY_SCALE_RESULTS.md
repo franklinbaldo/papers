@@ -1,18 +1,26 @@
 ---
 type: "Findings Record"
-title: "Semantic Atlas — Gallery-Scale Gate v1 Results"
-description: "Terminal result of the preregistered static gallery-size gate on 382 documents."
+title: "Semantic Atlas — Gallery-Scale Pilot Extension Results"
+description: "Preserved result of the N=382 same-repository pilot extension; not the preregistered large-scale gate."
 tags: [semantic-atlas, observation, embeddings, mknn, gallery-size]
 timestamp: 2026-08-26T16:17:22-04:00
 ---
 
-# Semantic Atlas — Gallery-Scale Gate v1 Results
+# Semantic Atlas — Gallery-Scale Pilot Extension Results
 
-## Terminal decision
+## Corrected disposition
 
-**`static_shared_but_observer_specific_structure`**
+**`pilot_extension_direction_preserved`**
 
-The frozen static gate cleared. This result authorizes the narrow static Atlas paper; it does not authorize causal, chronological, dynamical, routing, steering, density, gap, hubness, or susceptibility claims.
+The N=382 run did not execute the preregistered large-scale gate, which requires a post-release arXiv corpus and galleries reaching N=50,000–100,000. It therefore does not authorize the narrow static Atlas paper. PR #379 remains blocked.
+
+The machine result originally emitted `static_shared_but_observer_specific_structure` under the N=382 manifest. That value remains preserved in the immutable JSON artifact as the literal output of that runner, but it is not the program-level gate decision. Its valid scope is: the N=116 pilot direction persisted through a same-repository extension to N=382.
+
+## Input-unit limitation
+
+Both observers received the same first 1,200 Unicode characters. The run did **not** enforce a common no-truncation token window, however. MiniLM can truncate an excerpt that Qwen reads in full. The resulting content-window confound applies to the cross-model estimates and to the gaps against the same-observer formatting controls.
+
+The large-scale protocol removes this confound: its unit is the full normalized arXiv abstract, eligible only when the pinned MiniLM tokenizer reports at most 256 tokens including special tokens, and runtime truncation is forbidden for both observers.
 
 ## Frozen run
 
@@ -43,7 +51,7 @@ Values below are replicate medians; N=382 is the single full-corpus value.
 
 Every cross-model permutation test attained the minimum possible plus-one p-value, `1/1025 = 0.0009756`.
 
-## Gate accounting
+## Within-run manifest accounting
 
 | Registered condition | Threshold | Observed | Result |
 | --- | ---: | ---: | :---: |
@@ -56,7 +64,7 @@ Every cross-model permutation test attained the minimum possible plus-one p-valu
 | Gap below stability reference, N=256 | >= 0.10 | 0.2054 | pass |
 | Gap below stability reference, N=382 | >= 0.10 | 0.1909 | pass |
 
-The calibrated score increased from 0.4235 at the preregistered N=116 anchor to 0.4528 on the full gallery. The small-gallery-artifact kill condition did not fire. The same-observer control remained valid and the cross-model curve remained separated from both observer-specific format-stability curves at every registered tail point.
+The calibrated score increased from 0.4235 at the N=116 anchor to 0.4528 on the N=382 gallery. The within-run thresholds passed. This is evidence about the pilot extension only; a collapse between 10,000 and 100,000 remains compatible with these observations.
 
 ## Sensitivity at full gallery
 
@@ -72,6 +80,6 @@ The qualitative result is unchanged across the two registered sensitivity neighb
 
 The supported claim is:
 
-> Across these two frozen embedding observers and this 382-document corpus, local semantic neighborhoods show substantial permutation-calibrated agreement that is stable over gallery size and remains materially below same-observer robustness to the frozen formatting perturbation.
+> Across these two frozen embedding observers and this 382-document same-repository corpus, local semantic neighborhoods show substantial permutation-calibrated agreement from N=116 through N=382 and remain below same-observer robustness to the frozen formatting perturbation.
 
-The result does not establish a universal semantic geometry, identify a causal mechanism, validate chronology, or show that the observer-specific remainder forms discrete ontologies. Those are separate claims and require separately frozen experiments.
+The result does not establish scale robustness, release a static paper, establish a universal semantic geometry, identify a causal mechanism, validate chronology, or show that the observer-specific remainder forms discrete ontologies. Those are separate claims and require the frozen large-corpus experiment.
