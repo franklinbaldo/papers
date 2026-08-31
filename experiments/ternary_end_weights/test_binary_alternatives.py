@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import itertools
+import math
 import unittest
 
 import numpy as np
@@ -9,6 +11,8 @@ from binary_alternatives import (
     _enumerative_plane_cost_table,
     huffman_weighted_bits,
     quantize_groups,
+    rank_combination,
+    unrank_combination,
 )
 
 
@@ -37,6 +41,17 @@ class BinaryAlternativeTests(unittest.TestCase):
         table = _enumerative_plane_cost_table(128)
         self.assertEqual(int(table[0]), 2)
         self.assertEqual(int(table[128]), 2)
+
+    def test_enumerative_rank_round_trip(self) -> None:
+        for n in range(1, 8):
+            for k in range(n + 1):
+                seen = set()
+                for positions in itertools.combinations(range(n), k):
+                    rank = rank_combination(positions)
+                    self.assertNotIn(rank, seen)
+                    seen.add(rank)
+                    self.assertEqual(unrank_combination(rank, n, k), list(positions))
+                self.assertEqual(seen, set(range(math.comb(n, k))))
 
     def test_quantizer_is_groupwise_and_bounded(self) -> None:
         groups = np.array([[0.0, 1.0, -1.0, 0.5], [0.0, 0.0, 0.0, 0.0]])
