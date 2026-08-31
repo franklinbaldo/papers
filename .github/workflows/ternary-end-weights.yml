@@ -1,0 +1,61 @@
+name: Ternary END weight experiment
+
+on:
+  pull_request:
+    paths:
+      - "experiments/ternary_end_weights/**"
+      - ".github/workflows/ternary-end-weights.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Run round-trip and synthetic controls
+        working-directory: experiments/ternary_end_weights
+        run: |
+          python -m unittest -v test_experiment.py
+          python experiment.py --output synthetic_results.ci.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ternary-end-synthetic-results
+          path: experiments/ternary_end_weights/synthetic_results.ci.json
+
+  smollm2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install pinned numeric dependency
+        run: python -m pip install numpy==2.5.2
+      - name: Download pinned SmolLM2 checkpoint
+        working-directory: experiments/ternary_end_weights
+        run: |
+          curl --fail --location --retry 3 \
+            "https://huggingface.co/HuggingFaceTB/SmolLM2-135M/resolve/d6a5589c239236d22370e2126bbe23d4843c47d9/model.safetensors?download=true" \
+            --output model.safetensors
+          echo "80521b40281d6ce74e35c9282c22539e75aa0ac8578892b2a59955ef78d55da1  model.safetensors" | sha256sum --check -
+      - name: Run registered model-backed experiment
+        working-directory: experiments/ternary_end_weights
+        run: |
+          python experiment.py \
+            --safetensors model.safetensors \
+            --model-id HuggingFaceTB/SmolLM2-135M \
+            --revision d6a5589c239236d22370e2126bbe23d4843c47d9 \
+            --expected-sha256 80521b40281d6ce74e35c9282c22539e75aa0ac8578892b2a59955ef78d55da1 \
+            --group-size 128 \
+            --output model_results.json
+          cat model_results.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ternary-end-smollm2-results
+          path: experiments/ternary_end_weights/model_results.json
