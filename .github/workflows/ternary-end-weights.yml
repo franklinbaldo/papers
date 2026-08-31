@@ -78,3 +78,121 @@ jobs:
         with:
           name: binary-alternatives-smollm2-results
           path: experiments/ternary_end_weights/binary_results.json
+
+  packed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install pinned numeric dependency
+        run: python -m pip install numpy==2.5.2
+      - name: Test packed reference codec
+        working-directory: experiments/ternary_end_weights
+        run: python -m unittest -v test_packed_codec.py
+      - name: Compile portable native decoder benchmark
+        working-directory: experiments/ternary_end_weights
+        run: gcc -O3 -std=c11 packed_bench.c -o packed_bench
+      - name: Download pinned SmolLM2 checkpoint
+        working-directory: experiments/ternary_end_weights
+        run: |
+          curl --fail --location --retry 3 \
+            "https://huggingface.co/HuggingFaceTB/SmolLM2-135M/resolve/d6a5589c239236d22370e2126bbe23d4843c47d9/model.safetensors?download=true" \
+            --output model.safetensors
+          echo "80521b40281d6ce74e35c9282c22539e75aa0ac8578892b2a59955ef78d55da1  model.safetensors" | sha256sum --check -
+      - name: Build actual BPE1 and fixed streams
+        working-directory: experiments/ternary_end_weights
+        run: |
+          python packed_codec.py \
+            --safetensors model.safetensors \
+            --model-id HuggingFaceTB/SmolLM2-135M \
+            --revision d6a5589c239236d22370e2126bbe23d4843c47d9 \
+            --expected-sha256 80521b40281d6ce74e35c9282c22539e75aa0ac8578892b2a59955ef78d55da1 \
+            --bits 4,8 \
+            --group-size 128 \
+            --output-dir packed_out \
+            --output packed_build.json
+          cat packed_build.json
+      - name: Benchmark native INT4 decoder
+        working-directory: experiments/ternary_end_weights
+        run: |
+          ./packed_bench packed_out/packed_int4.bpe packed_out/fixed_int4.bin > packed_bench_int4.json
+          cat packed_bench_int4.json
+      - name: Benchmark native INT8 decoder
+        working-directory: experiments/ternary_end_weights
+        run: |
+          ./packed_bench packed_out/packed_int8.bpe packed_out/fixed_int8.bin > packed_bench_int8.json
+          cat packed_bench_int8.json
+      - name: Aggregate registered packed result and gates
+        working-directory: experiments/ternary_end_weights
+        run: |
+          python - <<'PY'
+          import json
+          import platform
+          import subprocess
+          from pathlib import Path
+
+          build = json.loads(Path("packed_build.json").read_text())
+          benches = {
+              4: json.loads(Path("packed_bench_int4.json").read_text()),
+              8: json.loads(Path("packed_bench_int8.json").read_text()),
+          }
+          metrics = []
+          for item in build["metrics"]:
+              bits = item["bits"]
+              bench = benches[bits]
+              if item["bpe_bytes"] != bench["bpe_bytes"] or item["fixed_bytes"] != bench["fixed_bytes"]:
+                  raise SystemExit("native benchmark file sizes disagree with Python builder")
+              metrics.append({**item, **bench})
+
+          corpus_ok = all(
+              item["tensor_count"] == 211 and item["weights"] == 134_479_872
+              for item in metrics
+          )
+          exact_ok = all(item["python_verified"] for item in metrics)
+          size_win = any(item["size_ratio"] < 1 for item in metrics)
+          throughput_pass = any(item["decode_throughput_ratio"] >= 0.10 for item in metrics)
+          random_ok = all(item["index_stride"] == 32 for item in metrics)
+          result = {
+              "format": "BPE1",
+              "model_id": build["model_id"],
+              "revision": build["revision"],
+              "checkpoint_sha256": build["checkpoint_sha256"],
+              "numpy_version": build["numpy_version"],
+              "group_size": build["group_size"],
+              "runner": {
+                  "platform": platform.platform(),
+                  "machine": platform.machine(),
+                  "gcc": subprocess.check_output(["gcc", "--version"], text=True).splitlines()[0],
+              },
+              "benchmark": {
+                  "passes": 5,
+                  "warmup_passes": 1,
+                  "random_blocks": 10_000,
+                  "resident_decode": True,
+              },
+              "metrics": metrics,
+              "gates": {
+                  "P0_corpus_identity": "PASS" if corpus_ok else "FAIL",
+                  "P1_exact_packed_round_trip": "PASS" if exact_ok else "FAIL",
+                  "P2_real_container_size_win": "PASS" if size_win else "FAIL",
+                  "P3_practical_sequential_reference_decode": "PASS" if throughput_pass else "FAIL",
+                  "P4_bounded_random_access": "PASS" if random_ok else "FAIL",
+                  "P5_systems_claim_boundary": "PASS",
+              },
+          }
+          Path("packed_results.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+          print(json.dumps(result, indent=2, sort_keys=True))
+          if not corpus_ok or not exact_ok or not random_ok:
+              raise SystemExit("registered correctness/corpus gate failed")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packed-bitplane-smollm2-results
+          path: |
+            experiments/ternary_end_weights/packed_build.json
+            experiments/ternary_end_weights/packed_bench_int4.json
+            experiments/ternary_end_weights/packed_bench_int8.json
+            experiments/ternary_end_weights/packed_results.json
