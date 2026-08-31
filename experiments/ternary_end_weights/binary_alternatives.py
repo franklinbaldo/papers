@@ -107,6 +107,37 @@ def _enumerative_plane_cost_table(n: int) -> np.ndarray:
     return table
 
 
+def rank_combination(positions: Sequence[int]) -> int:
+    """Rank a sorted subset in the combinatorial number system (colex order)."""
+    positions = [int(position) for position in positions]
+    if positions != sorted(set(positions)) or any(position < 0 for position in positions):
+        raise ValueError("positions must be sorted unique non-negative integers")
+    return sum(math.comb(position, index + 1) for index, position in enumerate(positions))
+
+
+def unrank_combination(rank: int, n: int, k: int) -> list[int]:
+    """Inverse of rank_combination for k-subsets of range(n)."""
+    if not 0 <= k <= n:
+        raise ValueError("k must satisfy 0 <= k <= n")
+    limit = math.comb(n, k)
+    if not 0 <= rank < limit:
+        raise ValueError("rank outside subset range")
+    if k == 0:
+        return []
+
+    result = [0] * k
+    remaining = rank
+    upper = n - 1
+    for choose in range(k, 0, -1):
+        candidate = upper
+        while math.comb(candidate, choose) > remaining:
+            candidate -= 1
+        result[choose - 1] = candidate
+        remaining -= math.comb(candidate, choose)
+        upper = candidate - 1
+    return result
+
+
 @dataclass
 class Accumulator:
     bits: int
