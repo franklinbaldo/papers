@@ -57,6 +57,7 @@ Position papers and working drafts.
 ## Eixo interpretabilidade
 
 - `pontifex.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
+- `synergy_geometry.md` — Gauge-Controlled Interaction Geometry: hipótese experimental kill-first sobre interação purificada, generalização composicional, causalidade, estabilidade cross-model e acoplamento com PID synergy
 - `o3-originality-assessment.md` — esboço exploratório (saída de sessão de IA) de checagem de prior art para o Pontifex; não é avaliação independente — ver nota editorial no início do arquivo
 
 ## Eixo empírico
