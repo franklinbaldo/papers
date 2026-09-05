@@ -1,0 +1,39 @@
+{
+  "original": {
+    "qwen_dim": 1024,
+    "qwen_rmst": 48.833333333333336,
+    "qwen_km_median": 24,
+    "minilm_dim": 384,
+    "minilm_rmst": 5.833333333333334,
+    "minilm_km_median": 4,
+    "rmst_difference": 43.0
+  },
+  "qwen_prefix384_mrl_style": {
+    "method": "first 384 dimensions of cached Qwen vector, then L2 renormalize; diagnostic only",
+    "qwen_rmst": 39.66666666666666,
+    "qwen_km_median": 12,
+    "events": 17,
+    "censored": 7,
+    "paired_vs_minilm": {
+      "q_rmst": 39.66666666666666,
+      "m_rmst": 5.833333333333334,
+      "diff": 33.83333333333332,
+      "p2": 9.99990000099999e-05,
+      "p1": 6.999930000699993e-05
+    }
+  },
+  "random_projection_1024_to_384": {
+    "method": "2000 independent Gaussian JL projections, seed 20260826+s, L2 renormalize",
+    "n": 2000,
+    "rmst_mean": 41.845166666666664,
+    "rmst_sd": 6.089700957900651,
+    "rmst_q025": 30.5,
+    "rmst_median": 41.83333333333334,
+    "rmst_q975": 54.33333333333334,
+    "rmst_min": 24.000000000000004,
+    "rmst_max": 61.83333333333333,
+    "fraction_rmst_ge_40": 0.6115,
+    "fraction_rmst_ge_minilm_plus20": 0.998
+  },
+  "interpretation": "Raw output dimensionality alone is not a plausible explanation of the Qwen/MiniLM survival gap in this 116-document pilot: reducing Qwen from 1024 to 384 dimensions leaves a large RMST separation under both a prefix/MRL-style diagnostic and 2000 random projections. This is post-hoc and does not separate other architecture/training differences."
+}
