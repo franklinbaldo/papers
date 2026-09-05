@@ -1,0 +1,34 @@
+name: Semantic Observers Lean proofs
+
+on:
+  pull_request:
+    paths:
+      - 'semantic_observers.md'
+      - 'formalizations/semantic_observers/**'
+      - '.github/workflows/semantic-observers-lean.yml'
+  push:
+    branches:
+      - 'fix/semantic-observers-decision-theory'
+    paths:
+      - 'semantic_observers.md'
+      - 'formalizations/semantic_observers/**'
+      - '.github/workflows/semantic-observers-lean.yml'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+
+      - name: Install Lean 4.22.0
+        run: |
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.22.0
+
+      - name: Check Semantic Observers proofs
+        run: |
+          "$HOME/.elan/bin/elan" run leanprover/lean4:v4.22.0 \
+            lean formalizations/semantic_observers/SemanticObservers.lean
