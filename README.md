@@ -29,6 +29,13 @@ Position papers and working drafts.
 - `semantic_tokenization_transformers.md` — STT (position paper)
 - `structural_identification_from_restricted_truths.md` — teoria matemática de identificação estrutural relativa a classe de hipóteses, equivalência, família de verdades e custo, com núcleo formalizado em Lean 4
 
+## Eixo memória semântica / reutilização de computação
+
+- `semantic_computation_reuse.md` — position paper sobre amortização de reasoning por composição aberta de checkpoints textuais de computações passadas, com claim estreito de substituição causal de fresh inference
+- `semantic_computation_reuse_internal_lineage.md` — linhagem interna: Semantic Atlas, Inverse Atlas, RL Relay, ASP, Informational Time e demais antecedentes do próprio programa
+- `semantic_computation_reuse_frontier_scan_2026-08-21.md` — frontier scan externo que delimita o prior art até 2026-08-21 e fixa o núcleo de novidade ainda aberto
+- `semantic_computation_reuse_experiment1.md` — pré-registro do Stage 1: teste-oráculo de existência de caminhos textuais substitutivos antes de construir navegação sofisticada
+
 ## Eixo aprendizagem algorítmica / machine teaching
 
 - `generative_machine_teaching.md` — previsão do próximo bit como tarefa primitiva; tokenização endógena, adaptativa ao contexto, com provas de montagem e currículos procedurais binários
