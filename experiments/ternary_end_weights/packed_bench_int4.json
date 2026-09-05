@@ -1,0 +1,19 @@
+{
+  "bits": 4,
+  "weights": 134479872,
+  "blocks": 1050624,
+  "index_stride": 32,
+  "bpe_bytes": 62616026,
+  "fixed_bytes": 67239936,
+  "bpe_bits_per_weight": 3.724930732,
+  "fixed_bits_per_weight": 4.0,
+  "size_ratio": 0.931232683,
+  "bpe_decode_mweights_s": 37.626816,
+  "fixed_decode_mweights_s": 240.390636,
+  "decode_throughput_ratio": 0.156523635,
+  "bpe_random_us_per_block": 3.670364,
+  "fixed_random_us_per_block": 0.691044,
+  "random_latency_ratio": 5.3113291,
+  "checksum": "8965039141c5464e",
+  "random_checksum": "7da405c46dcefe76"
+}
