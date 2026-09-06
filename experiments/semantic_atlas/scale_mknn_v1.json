@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "experiment": "semantic-atlas-large-scale-relational-geometry-v1",
+  "frozen_at": "2026-08-26T19:45:00Z",
+  "corpus": {
+    "source": "arXiv official OAI",
+    "created_start": "2025-07-01",
+    "created_end": "2026-06-30",
+    "unit": "full normalized abstract only",
+    "length_guard": {
+      "tokenizer": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a24",
+      "max_tokens_including_special": 256,
+      "truncation": false
+    },
+    "master_size": 120000,
+    "selection": "ascending sha256(base_arxiv_id)",
+    "primary_category": "first OAI category"
+  },
+  "primary_observers": [
+    {
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "revision": "97b0c61",
+      "dimension": 1024,
+      "normalize": true,
+      "instruction": null
+    },
+    {
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a24",
+      "dimension": 384,
+      "normalize": true,
+      "instruction": null
+    }
+  ],
+  "qwen_dimension_controls": [384, 768, 1024],
+  "secondary_observers": [
+    {
+      "model": "intfloat/e5-small-v2",
+      "revision_policy": "resolve immutable SHA before any secondary embedding",
+      "dimension": 384
+    },
+    {
+      "model": "BAAI/bge-base-en-v1.5",
+      "revision_policy": "resolve immutable SHA before any secondary embedding",
+      "dimension": 768
+    },
+    {
+      "model": "Alibaba-NLP/gte-base-en-v1.5",
+      "revision_policy": "resolve immutable SHA before any secondary embedding",
+      "dimension": 768
+    }
+  ],
+  "knn": {
+    "exact": true,
+    "approximate_indices_forbidden": true,
+    "metric": "cosine",
+    "ks": [5, 10, 20]
+  },
+  "gallery": {
+    "Ns": [1000, 2500, 5000, 10000, 25000, 50000, 100000],
+    "random_draws_per_N": 32,
+    "stratify_by_primary_category": true,
+    "seed_base": 20260826,
+    "chronological_prefix": "descriptive_only"
+  },
+  "same_observer_ceiling": {
+    "method": "95% gallery jackknife",
+    "anchor_fraction": 0.2,
+    "nonanchor_retention": 0.95,
+    "calibrated": true
+  },
+  "primary_gate": {
+    "k": 5,
+    "S": "median calibrated cross-model mKNN over random galleries",
+    "retention": "S(100000)/S(1000)",
+    "scale_stable": {"retention_gte": 0.75, "S100k_gte": 0.2},
+    "collapse": {"retention_lte": 0.5, "S100k_lte": 0.1},
+    "otherwise": "unresolved"
+  },
+  "observer_specific_gate": {
+    "Q": "cross-model calibrated mKNN / lower same-observer calibrated ceiling at N=100000,k=5",
+    "survives_if_Q_lte": 0.8,
+    "near_ceiling_if_Q_gte": 0.9,
+    "otherwise": "unresolved"
+  },
+  "static_paper_requires": ["scale_stable", "observer_specific_gap_survives"]
+}
