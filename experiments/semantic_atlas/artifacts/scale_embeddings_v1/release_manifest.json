@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "tag": "semantic-atlas-scale-v1-data",
+  "assets": [
+    {
+      "name": "minilm-normalized.tar.gz",
+      "bytes": 170748179,
+      "sha256": "458261f20e4d74820f16b1831dff7ac7e25574521d1f2735c5e7cd4fd84463d5"
+    },
+    {
+      "name": "minilm-raw.tar.gz",
+      "bytes": 170748091,
+      "sha256": "96e37ab4a2a65b26fcd3b9904ce65c278e23dbd5588366cb33f5afbd5836d64a"
+    },
+    {
+      "name": "qwen-normalized.tar.gz",
+      "bytes": 301405284,
+      "sha256": "fee784240b1be6d53e168e84c9de679a33fd145059de63581d5630cef6a3eccf"
+    },
+    {
+      "name": "qwen-raw.tar.gz",
+      "bytes": 229745342,
+      "sha256": "54b353594352a8a195e85e27201d31db0e7746e7a93e66b92733a128372160f7"
+    },
+    {
+      "name": "shard-manifests.tar.gz",
+      "bytes": 29320,
+      "sha256": "4825ebfd0379e6c9bfdaa835e80c44b5099213934452135de37fc945be43c71f"
+    }
+  ]
+}
