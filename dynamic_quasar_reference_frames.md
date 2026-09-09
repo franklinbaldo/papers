@@ -1,9 +1,9 @@
 ---
 type: "Technical Paper"
 title: "Dynamic Quasar Reference Frames: Vortical Gauges for the Semantic Atlas"
-description: "Follow-up Semantic Atlas position paper proposing dynamic quasar reference frames in which artificial quasars anchor not only positions but canonical multiscale vector fields, enabling trajectory-relative coordinates, flow-aware reachability, and matched tests against the static simplex SRF."
-tags: [semantic-atlas, quasar, dynamic-reference-frame, vector-fields, vortices, dynamical-systems, steering, reachability, control, embeddings]
-timestamp: 2026-09-08T20:40:00-04:00
+description: "Follow-up Semantic Atlas position paper proposing frozen dynamic gauges whose primary test is whether they compress, compare, and transfer model dynamics more simply than isolated model-specific transition fields; vortices are one candidate family and Navier--Stokes-inspired scaling is a terminal hypothesis, not a privileged destination."
+tags: [semantic-atlas, quasar, dynamic-reference-frame, vector-fields, vortices, dynamical-systems, steering, reachability, control, embeddings, compression, mdl]
+timestamp: 2026-09-08T21:28:00-04:00
 ---
 
 # Dynamic Quasar Reference Frames: Vortical Gauges for the Semantic Atlas
@@ -14,23 +14,33 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Follow-up position paper and experimental proposal.** This manuscript does not replace the static Semantic Reference Frame (SRF) proposed in *Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models*. It asks whether the reference frame itself should contain a canonical dynamics in addition to canonical landmarks. The proposal is deliberately stronger than a visualization metaphor and weaker than a claim that semantic dynamics obey fluid mechanics. Unless explicitly stated otherwise, all performance claims are hypotheses to be tested against the existing static-SRF baseline.
+> **Follow-up position paper and experimental proposal.** This manuscript does not replace the static Semantic Reference Frame (SRF) proposed in *Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models*. It asks whether a frozen external dynamics can make model-specific semantic dynamics simpler to represent, compare, and transfer. The proposal is a metrological hypothesis, not a claim that language obeys fluid mechanics. Unless explicitly marked otherwise, all performance claims are hypotheses to be tested against matched static, random-field, gradient-field, and learned-field baselines.
 
 ## Abstract
 
-The Semantic Atlas programme represents language-model behavior as trajectories in a calibrated semantic state space. Its current Semantic Reference Frame uses artificial **semantic quasars** arranged as a regular simplex to define an external geometry, while paired calibration data and orthogonal Procrustes determine semantic orientation across models. This cleanly separates artificial metrology from empirical semantics, but leaves one structural asymmetry: the atlas is explicitly dynamic, whereas the reference geometry is static. Position, velocity, curvature, reachability, transition dynamics, and control cost are estimated in a coordinate system whose landmarks provide no preferred local motion.
+The Semantic Atlas programme represents language-model behavior as trajectories in a calibrated semantic state space. Its existing Semantic Reference Frame (SRF) uses artificial semantic quasars to define a fixed external geometry while paired calibration and orthogonal Procrustes determine cross-model semantic orientation. The Atlas then estimates model-specific transition dynamics, reachability, intervention cost, and trajectory structure. This paper asks whether an external reference frame can do for **dynamics** what the SRF already attempts to do for **position**.
 
-This paper proposes a **Dynamic Quasar Reference Frame (DQRF)**. Each quasar is augmented by a canonical vector field, and the collection of quasars defines a smooth, externally specified flow over the calibrated semantic space. The first candidate family is vortical: not because language is assumed to satisfy Navier--Stokes, but because vortices provide mathematically controlled notions of radial motion, circulation, phase, chirality, shear, separatrices, scale, and multiscale self-similarity. A semantic trajectory can then be described relative to both landmark position and local reference flow. Instead of asking only *where is the state relative to the quasars?*, the DQRF also asks *how is the observed semantic motion aligned with, opposed to, crossing, or orbiting the reference flow?*
+We propose **Dynamic Quasar Reference Frames (DQRFs)**: frozen canonical vector fields attached to or constructed from the quasar geometry. The primary claim is not that flow-relative features contain information unavailable in position and velocity. A deterministic coordinate change cannot create information. The claim is instead representational:
 
-The proposal preserves the original calibration contract. A vortical field cannot determine semantic identity: rotating the entire field leaves its artificial dynamics intact. Paired calibration remains responsible for semantic orientation; the DQRF adds **dynamic metrology**, not semantics by fiat. We define dynamic quasar coordinates, flow-relative navigation cost, corridor and barrier observables, multiscale reference fields, and compatibility with the manifold-aware Semantic Atlas. We distinguish the proposal from Steering Vector Fields and energy-landscape steering: those methods learn or apply state-dependent control policies, whereas the DQRF is a canonical observation and navigation gauge in which learned dynamics and controls can be compared.
+> **A frozen external dynamic gauge may allow the transition fields of multiple language models to be represented, compared, and transferred with lower descriptive complexity and better out-of-distribution generalization than estimating each model-specific field in isolation.**
 
-The paper pre-registers a sequence of matched experiments comparing the existing simplex SRF against smooth vortical DQRFs at equal canonical dimension and calibration data. The extension survives only if it improves held-out trajectory prediction, reachability prediction, route-cost estimation, cross-model transfer, or steering efficiency beyond complexity-matched static and random-field controls. The strongest version additionally predicts that a Navier--Stokes-inspired self-similar vortical family can provide a useful **multiscale reference flow**, but the proposal does not depend on singularities: smooth truncated vortices are the first scientific baseline.
+For model \(M\), let \(F_M(q)\) denote its empirical semantic transition field in the calibrated SRF. Given a frozen candidate gauge \(\mathcal V_Q(q)\), we study decompositions
 
-**Keywords:** semantic atlas, semantic quasars, dynamic reference frames, vector fields, vortices, representation geometry, semantic trajectories, reachability, activation steering, dynamical systems, multiscale representations
+\[
+F_M(q)=a_M(q)\mathcal V_Q(q)+r_M(q),
+\]
+
+where \(a_M\) belongs to a preregistered low-capacity function class and \(r_M\) is the residual. A useful gauge should not merely increase predictive \(R^2\). It should make \(r_M\) measurably simpler: lower residual energy, lower effective rank, lower sample complexity at fixed prediction error, greater local/OOD stability, and stronger cross-model residual concordance on held-out paired states. We call this the **Dynamic Gauge Compression Test (DGCT)** and make it the foundational experiment of the proposal.
+
+Vortical fields are one candidate family because they provide phase, chirality, radial/tangential decomposition, shear, separatrices, and natural multiscale structure in a compact object. They receive no a priori privilege. Smooth vortices must beat complexity-matched random divergence-free, gradient, generic antisymmetric, and learned local fields. A Navier--Stokes-inspired self-similar hierarchy is tested only as the last and most extravagant nested hypothesis. If an ordinary vortex already compresses dynamics well, the Navier--Stokes construction is unnecessary; if only the Navier--Stokes-inspired family succeeds, that result becomes independently interesting.
+
+The programme preserves a strict epistemic firewall. Gauge geometry and all field hyperparameters must be frozen without access to evaluation-model transition fields. Paired calibration may place observations into the common SRF, but no information from \(F_M\) may influence gauge selection, planes, scales, chirality, or field family on the evaluation split. Downstream reachability, steering-cost, and control experiments are treated as consequences of a successful compression result rather than the primary justification for DQRF.
+
+**Keywords:** semantic atlas, semantic quasars, dynamic reference frames, vector fields, representation compression, semantic trajectories, reachability, activation steering, vortices, minimum description length, cross-model transfer
 
 ---
 
-## 1. Scope: make the gauge dynamic, not the semantics fluid
+## 1. Scope and central claim
 
 The original Semantic Atlas separates five layers:
 
@@ -48,604 +58,679 @@ language model / embedding model
        lexical generation
 ```
 
-The SRF supplies a calibrated global coordinate system. Artificial quasars define a fixed reference geometry; shared row-paired calibration data determine how each observer is oriented inside that geometry. The Atlas then estimates model-relative density, competence, transition dynamics, reachability, intervention cost, uncertainty, and a potential-like escape quantity called semantic gravity.
+The SRF supplies a calibrated global coordinate system. Artificial quasars define external geometry; shared row-paired calibration data determine how each observer is placed in that geometry. The Atlas then estimates model-relative density, competence, transition dynamics, reachability, intervention cost, uncertainty, and semantic gravity.
 
-The proposal in this paper changes only one interface:
+The DQRF changes only the metrological interface:
 
 ```text
 static artificial landmarks
             ↓
-canonical landmarks + canonical reference flow
+canonical landmarks + frozen reference dynamics
 ```
 
-The replacement is intentionally conservative. The DQRF does **not** assert that:
+It does **not** assert that:
 
 1. language-model activations are a physical fluid;
 2. semantic density is mass density;
 3. semantic gravity is gravitational potential;
 4. semantic trajectories satisfy Navier--Stokes;
-5. a finite-time fluid singularity has a semantic analogue;
-6. vortices are intrinsically better than every other vector-field family.
+5. a fluid singularity has a semantic analogue;
+6. vortices are intrinsically superior to other vector fields;
+7. a coordinate transform creates new information.
 
-It proposes a narrower hypothesis:
+The central claim is deliberately colder:
 
-> **A canonical dynamic field may be a better metrological object for semantic trajectories than canonical points alone.**
+> **A field of reference that is external, frozen, and shared across observers can be scientifically useful if it redistributes dynamical complexity: model-specific transition fields should become simpler residuals in the common gauge, and those residuals should generalize or transfer better than the un-gauged dynamics.**
 
-The scientific question is therefore comparative. If a DQRF provides no held-out advantage over the existing static SRF after matching dimension, calibration information, parameter count, and downstream model capacity, it should be rejected without weakening the broader Semantic Atlas programme.
+This is analogous to using polar rather than Cartesian coordinates for rotationally structured motion. The information is equivalent in principle, but one representation can expose regularity that is expensive to describe in another.
 
-## 2. The static-frame asymmetry
+Let \(\Phi_Q\) denote the deterministic transformation induced by a DQRF. The scientific target is therefore not
 
-### 2.1 The Atlas already treats semantic state as dynamic
+\[
+I(\Phi_Q(q,v);Y)>I((q,v);Y),
+\]
 
-The original paper explicitly argues that position is not a complete state. A minimal dynamic state has the schematic form
+which would be impossible for a deterministic lossless transformation without additional information. Instead we ask whether, under matched model classes and finite data,
+
+\[
+\mathcal C(F_M\mid \Phi_Q) < \mathcal C(F_M),
+\]
+
+for operational measures \(\mathcal C\) defined before evaluation.
+
+### 1.1 Why this matters for the Semantic Atlas
+
+The broader Semantic Atlas already depends on a compression hypothesis: semantic dynamics useful for planning should admit a lower-resolution description than complete token-level or hidden-state dynamics. If no such compression exists, an atlas eventually approaches a map at 1:1 scale.
+
+DQRF therefore becomes a direct test of that programme-level assumption. A successful gauge would demonstrate that at least part of model dynamics can be factored into
+
+\[
+\text{shared reference structure} + \text{simpler model-specific residual}.
+\]
+
+The most important positive result would be stronger than a small improvement in next-step prediction. It would be evidence that
+
+\[
+F_A(q)=a_A(q)\mathcal V_Q(q)+r_A(q),
+\]
+
+\[
+F_B(q)=a_B(q)\mathcal V_Q(q)+r_B(q),
+\]
+
+\[
+F_C(q)=a_C(q)\mathcal V_Q(q)+r_C(q),
+\]
+
+with residuals that are both simpler than the original fields and structurally more alike across independently calibrated models.
+
+### 1.2 Coordinate utility without information creation
+
+A coordinate system can be useful even when it is invertible and therefore information-neutral. The right question is whether relevant regularities become cheaper to describe or learn.
+
+A DQRF earns scientific value only if at least one of the following improves under strictly matched conditions:
+
+- description length;
+- effective dimensionality;
+- number of samples required to achieve a fixed prediction error;
+- stability under perturbation or distribution shift;
+- cross-model transfer;
+- planner or controller complexity needed for a fixed outcome.
+
+Raw predictive accuracy remains useful, but it is downstream evidence rather than the core claim.
+
+## 2. Static-frame asymmetry and the gauge distinction
+
+### 2.1 Semantic state is already dynamic
+
+The original paper argues that position alone is not a complete state. A minimal semantic state can be written schematically as
 
 \[
 z_t=(q_t,v_t,\kappa_t,\sigma_t),
 \]
 
-where \(q_t\) is canonical position, \(v_t\) semantic velocity, \(\kappa_t\) curvature or turning information, and \(\sigma_t\) scale and uncertainty. Reachability is likewise dynamical:
+where \(q_t\) is canonical position, \(v_t\) semantic velocity, \(\kappa_t\) curvature, and \(\sigma_t\) scale and uncertainty.
+
+The Atlas also defines model-relative reachability and navigation cost:
 
 \[
-R_M(q,H,B)=\{y:\exists\Gamma:q\rightarrow y,\ C_M(\Gamma)\le B\}.
+R_M(q,H,B)=\{y:\exists\Gamma:q\rightarrow y,\ C_M(\Gamma)\le B\},
 \]
-
-The navigation distance
 
 \[
-d_M^{nav}(a,b)=\min_{\Gamma:a\rightarrow b} C_M(\Gamma)
+d_M^{nav}(a,b)=\min_{\Gamma:a\rightarrow b} C_M(\Gamma).
 \]
 
-is generally directed and model-relative. Corridors and barriers are defined through trajectories and costs, not Euclidean proximity alone.
+The atlas is therefore dynamic even when its reference landmarks are not.
 
-Yet the quasars against which those dynamics are expressed are static points. For a canonical semantic state \(q\), the basic quasar observation is a family of similarities or distances to landmarks. That is sufficient to locate the state but says nothing about preferred local motion.
+### 2.2 Why not simply learn \(F_M\)?
 
-### 2.2 Equal distance need not mean equal dynamic relation
-
-Suppose two semantic states \(q_a\) and \(q_b\) are at the same distance from a quasar \(Q_i\):
-
-\[
-\|q_a-Q_i\|=\|q_b-Q_i\|.
-\]
-
-Under a static radial description, they can be equivalent up to angle. But two trajectories crossing those points may have very different dynamic relations:
-
-- one moves toward the quasar;
-- one moves away;
-- one circles clockwise;
-- one circles counterclockwise;
-- one follows a local corridor;
-- one crosses the corridor transversely;
-- one enters a high-shear transition zone;
-- one remains on a slowly varying streamline.
-
-These differences can be estimated from empirical trajectory history. The DQRF asks whether they become easier to express, compare, and transfer if the reference system itself contains a canonical field.
-
-### 2.3 Why not simply learn the field from data?
-
-The Atlas already estimates model-specific transition dynamics \(F_M(q)\). A natural objection is therefore: why introduce an artificial vector field at all?
-
-For the same reason the original paper introduced artificial quasars instead of treating one model's native coordinates as universal. A **reference field** and an **empirical field** serve different roles.
+Because an empirical transition field and a reference field answer different questions.
 
 Let
-
-\[
-\mathcal V_Q(q)
-\]
-
-be the canonical reference field and
 
 \[
 F_M(q)
 \]
 
-be the model's measured transition field. Then quantities such as
+be measured from model \(M\), while
 
 \[
-\langle F_M(q),\mathcal V_Q(q)\rangle
+\mathcal V_Q(q)
 \]
 
-become model observations expressed against a fixed external gauge. Multiple models can be compared by asking how their measured flows relate to the same reference dynamics, just as their positions are compared in the same calibrated SRF.
+is fixed independently of the evaluation-model dynamics. The empirical field describes the object; the canonical field supplies a ruler for motion.
 
-The artificial field must therefore remain frozen when evaluating observers. Learning \(\mathcal V_Q\) separately for each model would collapse the distinction between ruler and object being measured.
+The decomposition
+
+\[
+F_M(q)=a_M(q)\mathcal V_Q(q)+r_M(q)
+\]
+
+is interesting only if the frozen ruler exposes common structure. If a separate \(\mathcal V_M\) is learned for every model, then the central shared-gauge hypothesis has disappeared. Learned fields remain important baselines, but they test a different proposition: whether local dynamics are useful, not whether a common external dynamics is useful.
 
 ## 3. Dynamic quasars
 
-### 3.1 From a landmark to a landmark-plus-field
-
-A static quasar is a canonical point
+A static quasar is a point
 
 \[
 Q_i=q_i.
 \]
 
-A dynamic quasar is instead
+A dynamic quasar is
 
 \[
 Q_i=(q_i,\mathcal V_i,\Theta_i),
 \]
 
-where:
+where \(\mathcal V_i\) is a smooth field and \(\Theta_i\) contains fully frozen construction parameters.
 
-- \(q_i\in\mathbb R^k\) is the canonical landmark;
-- \(\mathcal V_i:\mathbb R^k\rightarrow\mathbb R^k\) is a smooth reference vector field associated with it;
-- \(\Theta_i\) contains frozen field parameters such as orientation plane, chirality, radial scale, decay, and multiscale schedule.
-
-The global reference field may be a weighted superposition
+The global field can be a smooth superposition
 
 \[
 \mathcal V_Q(q)=\sum_i w_i(q)\mathcal V_i(q)
 \]
 
-with smooth partition weights \(w_i(q)\), or a separately constructed field constrained by the quasar geometry.
+or another deterministic construction tied to the quasar geometry.
 
-The first implementation should avoid singularities and discontinuous patch boundaries. Smoothness is a property of the measuring instrument, not a metaphysical claim about semantics.
+### 3.1 Simple vortical baseline
 
-### 3.2 A simple vortical baseline
-
-In a two-dimensional canonical plane associated with quasar \(i\), let
+In a two-dimensional canonical plane associated with quasar \(i\), define \(r=q-q_i\), an antisymmetric generator \(J_i\), and smooth radial envelope \(g_i\). A minimal vortex is
 
 \[
-r=q-q_i.
+\mathcal V_i(q)=\omega_i g_i(\|r\|)J_i r,
 \]
 
-Choose an antisymmetric generator \(J_i\) on that plane and a smooth radial envelope \(g_i(\|r\|)\). A minimal vortical field is
+with, for example,
 
 \[
-\mathcal V_i(q)=\omega_i g_i(\|r\|)J_i r.
+g_i(r)=\exp(-r^2/2s_i^2).
 \]
 
-For example,
+This yields phase, chirality, tangential direction, radial/tangential decomposition, and a local circulation scale without singular behavior.
 
-\[
-g_i(r)=\exp(-r^2/2s_i^2)
-\]
+### 3.2 Higher-dimensional fields
 
-gives a smooth localized swirl. The sign of \(\omega_i\) determines chirality and \(s_i\) the characteristic scale.
-
-This field already adds information unavailable from the landmark alone:
-
-- orbital phase;
-- clockwise/counterclockwise orientation;
-- tangent direction;
-- local circulation scale;
-- radial versus tangential decomposition of observed motion.
-
-It is also deliberately boring. If a simple smooth vortex cannot improve any measured Atlas objective, there is little reason to begin with a complicated Navier--Stokes construction.
-
-### 3.3 Higher-dimensional construction
-
-A canonical dimension \(k>2\) does not admit one unique notion of rotation. We therefore define a frozen set of orthogonal two-planes or antisymmetric generators
+For canonical dimension \(k>2\), use frozen two-planes or antisymmetric generators
 
 \[
 J_{i,1},\ldots,J_{i,m},
 \]
 
-and compose them:
+and
 
 \[
-\mathcal V_i(q)=\sum_{a=1}^m \omega_{i,a}g_{i,a}(\|P_{i,a}r\|)J_{i,a}P_{i,a}r,
+\mathcal V_i(q)=\sum_{a=1}^m \omega_{i,a}g_{i,a}(\|P_{i,a}r\|)J_{i,a}P_{i,a}r.
 \]
 
-where \(P_{i,a}\) projects into the chosen plane.
+The plane assignments, scales, signs, envelopes, and combination rule must be derived deterministically from public preregistered seeds and quasar geometry. They must never be tuned against evaluation-model trajectory data.
 
-The plane assignments are part of the external gauge. They must be deterministic from the quasar configuration or frozen once from the reference observer; they must not be refit to maximize each evaluation model's score.
+## 4. Dynamic coordinates
 
-A redundant quasar code can provide more planes than a minimal simplex. This yields a family of dynamic reference channels while preserving the original idea that the external geometry is known exactly.
-
-## 4. Dynamic quasar coordinates
-
-Let \(q_t\) be canonical position and \(v_t=q_{t+1}-q_t\) observed semantic displacement. For quasar \(i\), define the local radial unit direction
-
-\[
-\hat r_i=\frac{q_t-q_i}{\|q_t-q_i\|},
-\]
-
-and, where defined, the normalized reference-flow direction
-
-\[
-\hat f_i=\frac{\mathcal V_i(q_t)}{\|\mathcal V_i(q_t)\|}.
-\]
-
-A dynamic coordinate block can contain
+Given canonical position \(q_t\) and semantic displacement \(v_t=q_{t+1}-q_t\), a dynamic quasar coordinate block may include
 
 \[
 C_i(q_t,v_t)=
-\left[
- d_i,
- c_i,
- v_t\cdot\hat r_i,
- v_t\cdot\hat f_i,
- \|v_t\|,
- \alpha_i,
- s_i,
- \chi_i
-\right],
+[d_i,c_i,v_t\cdot\hat r_i,v_t\cdot\hat f_i,\|v_t\|,\alpha_i,s_i,\chi_i],
 \]
 
-where:
+where \(d_i\) is distance, \(c_i\) static similarity, \(\hat r_i\) radial direction, \(\hat f_i\) normalized reference-flow direction, \(\alpha_i\) phase, \(s_i\) scale, and \(\chi_i\) chirality-sensitive alignment.
 
-- \(d_i=\|q_t-q_i\|\) is distance;
-- \(c_i\) is the original static quasar similarity;
-- \(v_t\cdot\hat r_i\) is radial semantic velocity;
-- \(v_t\cdot\hat f_i\) is flow alignment;
-- \(\alpha_i\) is a local phase or angle in the active vortex plane;
-- \(s_i\) records the reference scale with strongest response;
-- \(\chi_i\) records chirality-sensitive alignment.
-
-Additional candidate observables include:
+Candidate derived observables include cross-flow ratio,
 
 \[
-\text{cross-flow ratio}
-=
+X(q_t,v_t)=
 \frac{\|v_t-(v_t\cdot\hat f_i)\hat f_i\|}{\|v_t\|+\epsilon},
 \]
 
-local reference shear
+reference strain,
 
 \[
-S_Q(q)=\frac12\left(\nabla\mathcal V_Q+\nabla\mathcal V_Q^T\right),
+S_Q(q)=\frac12(\nabla\mathcal V_Q+\nabla\mathcal V_Q^T),
 \]
 
-and vorticity-like antisymmetric part
+and antisymmetric rotation,
 
 \[
-W_Q(q)=\frac12\left(\nabla\mathcal V_Q-\nabla\mathcal V_Q^T\right).
+W_Q(q)=\frac12(\nabla\mathcal V_Q-\nabla\mathcal V_Q^T).
 \]
 
-These are features of the artificial field, not measurements of literal fluid shear or vorticity in the model.
+These are properties of the measuring field. They are not claims of literal fluid shear or vorticity in the model.
 
-## 5. Flow-aware reachability and semantic navigation
+## 5. Dynamic Gauge Compression Test
 
-### 5.1 Separate drift from intervention
+The **Dynamic Gauge Compression Test (DGCT)** is the foundational experiment. Downstream steering and reachability experiments are secondary until a gauge shows evidence of compression.
 
-Suppose observed semantic dynamics under a controller can be approximated locally as
+### 5.1 Candidate fields
+
+Let the preregistered candidate set be
+
+\[
+\mathfrak V=
+\{0,\mathcal V_{rand-div},\mathcal V_{grad},\mathcal V_{anti},\mathcal V_{vortex},\mathcal V_{multi},\mathcal V_{NS}\}.
+\]
+
+Here \(0\) is the no-field baseline; the other members denote random divergence-free, gradient, generic antisymmetric, smooth vortex, generic multiscale vortex, and finally truncated Navier--Stokes-inspired fields.
+
+A learned local field \(\widehat F_M\) is included as a non-canonical upper baseline, but it is not eligible to establish the shared-gauge claim because it is model-specific.
+
+### 5.2 Fit only a low-capacity amplitude
+
+For each model \(M\) and frozen field \(\mathcal V^{(k)}\), fit
+
+\[
+a_M^{(k)}=\arg\min_{a\in\mathcal A}
+\mathbb E_{q\sim D_{train}}
+\|F_M(q)-a(q)\mathcal V^{(k)}(q)\|^2,
+\]
+
+where \(\mathcal A\) is a preregistered low-capacity function family shared across all candidate fields. The first experiment should use a scalar constant and a small linear/RBF alternative as separate preregistered conditions, not an unrestricted neural network.
+
+Define
+
+\[
+r_M^{(k)}(q)=F_M(q)-a_M^{(k)}(q)\mathcal V^{(k)}(q).
+\]
+
+The gauge itself remains frozen. Only the amplitude function \(a_M^{(k)}\) is fitted to model data.
+
+### 5.3 Complexity is a vector, not a convenient scalar
+
+There is no unique representation-independent scalar called "complexity." The primary DGCT therefore reports a preregistered vector of operational quantities rather than collapsing them into a tunable weighted score.
+
+#### Residual energy
+
+\[
+E_r^{(k)}=
+\frac{\mathbb E\|r_M^{(k)}(q)\|^2}
+{\mathbb E\|F_M(q)\|^2}.
+\]
+
+Lower is better. The reciprocal
+
+\[
+G_E^{(k)}=1/E_r^{(k)}
+\]
+
+is an energy-compression factor, but it is not by itself sufficient evidence.
+
+#### Effective residual rank
+
+Let \(\lambda_j\) be eigenvalues of the held-out residual covariance and
+
+\[
+p_j=\frac{\lambda_j}{\sum_l\lambda_l}.
+\]
+
+Define entropy effective rank
+
+\[
+r_{eff}=\exp\left(-\sum_j p_j\log p_j\right).
+\]
+
+A useful gauge should reduce \(r_{eff}\) relative to the no-field and matched random-field baselines.
+
+#### Predictive sample complexity
+
+For a frozen predictor family \(\mathcal H\), define
+
+\[
+N_\varepsilon(r)=
+\min\{n:\mathbb E[L(\hat r_n(q),r(q))]\le\varepsilon\},
+\]
+
+estimated from preregistered learning curves. Lower \(N_\varepsilon\) means the residual is easier to learn at a fixed target error.
+
+#### Local and OOD stability
+
+For perturbations \(\delta\) drawn from preregistered in-support and OOD perturbation distributions, estimate
+
+\[
+S_\delta(r)=
+\mathbb E
+\frac{\|r(q+\delta)-r(q)\|^2}{\|\delta\|^2+\epsilon}.
+\]
+
+This is an operational local-sensitivity measure, not a proof of a Lipschitz constant. A useful gauge should reduce sensitivity or improve held-out prediction under controlled distribution shifts.
+
+#### Cross-model residual concordance
+
+For independently calibrated models \(A\) and \(B\), fit residual Procrustes only on a training correspondence set and evaluate held-out paired states. Report residual cosine agreement, Procrustes RMSE, neighborhood preservation, and optionally linear CKA.
+
+The strongest result is not merely small \(r_M\), but
+
+\[
+r_A^{(k)}\approx r_B^{(k)}\approx r_C^{(k)}
+\]
+
+on held-out correspondences under a fixed gauge.
+
+### 5.4 Optional MDL summary
+
+A two-part minimum-description-length score may be reported only after fixing the coder and model class before looking at results:
+
+\[
+L_k = L(a_M^{(k)}) + L(r_M^{(k)}\mid \mathcal H).
+\]
+
+Because MDL values depend on coding choices, this is a secondary synthesis measure. It must not replace the primary complexity vector or be tuned post hoc.
+
+### 5.5 Decision rule
+
+A candidate dynamic gauge earns support only if it beats the no-field/static-derivative baseline and complexity-matched artificial-field controls on preregistered primary metrics across multiple models.
+
+A vortex-specific claim requires
+
+\[
+\mathcal V_{vortex}
+\]
+
+to outperform random divergence-free and generic antisymmetric fields.
+
+A Navier--Stokes-specific claim requires
+
+\[
+\mathcal V_{NS}
+\]
+
+to outperform ordinary smooth and generic multiscale vortices. Otherwise the Navier--Stokes structure has no evidence-bearing role.
+
+## 6. Auditably frozen gauge construction
+
+The shared-gauge claim is invalid if evaluation-model dynamics leak into gauge construction. The protocol should therefore be intentionally strict.
+
+### 6.1 Freeze order
+
+The complete `FrozenFieldSpec` must be committed or content-addressed **before** evaluation trajectories are exposed to the experiment that tests that field.
+
+It includes:
+
+- field family;
+- canonical dimension;
+- quasar configuration;
+- plane assignments;
+- chirality/sign choices;
+- scale bank;
+- radial envelopes;
+- random seeds;
+- superposition weights;
+- truncation parameters;
+- normalization rules.
+
+### 6.2 Allowed and forbidden information
+
+Allowed before freeze:
+
+- canonical dimension chosen by the parent Semantic Atlas protocol;
+- quasar geometry;
+- public deterministic seeds;
+- synthetic sanity-check data generated independently of evaluation models;
+- calibration *procedure*.
+
+Forbidden before or during gauge selection:
+
+- evaluation-model \(F_M\);
+- evaluation trajectory directions;
+- held-out reachability or steering outcomes;
+- model-specific local PCA planes chosen to improve gauge alignment;
+- scale or chirality choices optimized against evaluation performance.
+
+Paired semantic calibration is performed after the gauge is frozen to place each observer into the shared SRF. Calibration rows can orient the observer in the gauge; they cannot redesign the gauge.
+
+### 6.3 Artifact requirement
+
+Every DGCT result must preserve:
+
+```text
+field_spec_hash
+field_family
+all field parameters
+seed
+calibration split ids
+trajectory train/validation/test ids
+amplitude-model specification
+residual-predictor specification
+metric definitions
+```
+
+A result without a reproducible frozen field specification does not count as evidence for the shared-gauge claim.
+
+## 7. Why test vortices?
+
+A generic dynamic field is sufficient for the general DQRF hypothesis. Vortices are merely an economical candidate basis.
+
+They provide:
+
+- chirality;
+- phase;
+- radial/tangential decomposition;
+- circulation;
+- shear and local deformation;
+- separatrix-like structure;
+- natural scale parameters.
+
+These properties could make some semantic dynamics easier to describe. They could also be decorative. Gradient fields, Hamiltonian-like or antisymmetric fields, radial bases, and random divergence-free fields are mandatory controls.
+
+The hierarchy of claims is therefore
+
+\[
+\boxed{
+\text{dynamic gauge}
+\supset
+\text{vortical gauge}
+\supset
+\text{self-similar vortical gauge}
+\supset
+\text{Navier--Stokes-inspired gauge}
+}.
+\]
+
+Failure of a stronger member does not falsify weaker members. Success of a weaker member does not license claims about stronger members.
+
+## 8. Navier--Stokes as terminal hypothesis
+
+The September 2026 OpenAI finite-time Navier--Stokes construction supplies one mathematically explicit anisotropic, multiscale vortical hierarchy. That is enough to make it a candidate field family. It does not make it a privileged one.
+
+A truncated candidate may borrow scale laws such as
+
+\[
+\ell_r(\tau)\propto\tau^{1/2},
+\qquad
+\ell_z(\tau)\propto\tau^{1/2-h},
+\]
+
+with
+
+\[
+\tau\ge\tau_{min}>0.
+\]
+
+No semantic coordinate diverges; no singular endpoint is required.
+
+The test order is intentionally hostile to narrative seduction:
+
+1. no field / static derivatives;
+2. random and generic smooth fields;
+3. smooth vortex;
+4. generic multiscale vortex;
+5. only then Navier--Stokes-inspired truncated scaling.
+
+If the smooth vortex already achieves the same compression, the Navier--Stokes construction is historically interesting but scientifically unnecessary here. If only the Navier--Stokes-inspired field produces a robust, cross-model compression advantage, then its specific hierarchy becomes evidence-bearing and merits deeper investigation.
+
+## 9. Reachability and navigation as downstream consequences
+
+Only after a candidate field passes a meaningful DGCT should it be promoted into route planning.
+
+Suppose controlled dynamics are approximated as
 
 \[
 \dot q=F_M(q)+G_M(q)u.
 \]
 
-The static Atlas measures the cost of choosing \(u\) to reach a target. The DQRF introduces a reference decomposition
-
-\[
-F_M(q)=a_M(q)\mathcal V_Q(q)+r_M(q),
-\]
-
-where \(a_M(q)\) is local alignment and \(r_M(q)\) the residual relative to the reference flow.
-
-This permits questions such as:
-
-- does successful generation preferentially follow the reference flow?
-- are low-cost routes more aligned with it than failed routes?
-- does the residual \(r_M\) transfer better across models than raw native velocity?
-- do high-cost transitions coincide with strong cross-flow motion?
-
-The field is useful only if these questions predict held-out behavior better than matched static or random-field features.
-
-### 5.2 Corridors, barriers, and separatrices
-
-The existing Atlas uses corridor and barrier language operationally. A DQRF gives those concepts additional dynamic observables.
-
-A **flow-aligned corridor candidate** is a region \(B\) where observed successful trajectories satisfy
-
-\[
-\mathbb E[\cos(v_t,\mathcal V_Q(q_t))\mid q_t\in B]\gg0.
-\]
-
-A **cross-flow barrier candidate** is a boundary across which successful transitions require unusually large residual motion or intervention.
-
-A **separatrix candidate** is a surface of the reference field whose sides predict different empirical destination basins.
-
-None of these definitions is accepted merely because the field has the corresponding mathematical structure. The reference separatrix matters only if it aligns with reproducible differences in the model's measured dynamics.
-
-### 5.3 Navigation distance in a moving frame
-
-A flow-relative cost can be written schematically as
+A flow-aware route cost can distinguish along-flow, cross-flow, and intervention components:
 
 \[
 C_Q(\Gamma)=
 \int_\Gamma
-\left[
-\lambda_\parallel c_\parallel(q,\dot q)
-+
-\lambda_\perp c_\perp(q,\dot q)
-+
-\lambda_u\|u\|^2
-\right]dt,
+[\lambda_\parallel c_\parallel+
+\lambda_\perp c_\perp+
+\lambda_u\|u\|^2]dt.
 \]
 
-where the first two terms distinguish movement along and across the canonical field.
+The empirical question is whether this predicts measured intervention cost, rollout count, latency, task success, or token count better than static and empirical-graph baselines.
 
-The important scientific test is not whether this cost looks physically elegant. It is whether
+Corridors, barriers, and separatrices remain operational concepts. A reference-field separatrix matters only when its sides predict reproducible differences in empirical destination or control cost.
 
-\[
-d_{M,Q}^{nav}(a,b)=\min_\Gamma C_Q(\Gamma)
-\]
+## 10. Relation to Steering Vector Fields and energy-landscape steering
 
-better predicts empirical intervention cost, latency, rollout count, or task success than the original cost model.
+Recent work already supports state-dependent control.
 
-## 6. Why vortices are an interesting reference family
+Li, Li, and Huang (2026) propose **Steering Vector Fields (SVF)**, where local steering direction depends on current activation. Jiang et al. (2026) propose **Energy Landscape Steering (ELS)**, in which inference-time gradients move activations through a learned energy landscape.
 
-A generic vector field would satisfy the formal proposal. Vortices are interesting because they contribute several structures at once.
+The distinction is:
 
-### 6.1 Chirality
-
-A static simplex has no intrinsic clockwise/counterclockwise distinction. A vortex does. Chirality can break otherwise equivalent directional descriptions without assigning semantic labels to axes.
-
-### 6.2 Phase
-
-Two states at equal radius can have different orbital phase. Phase offers a compact coordinate for cyclic or recurrent semantic dynamics.
-
-### 6.3 Radial/tangential decomposition
-
-Observed motion can be decomposed into attraction/escape and circulation. This may be useful for distinguishing transitions that approach a conceptual basin from transitions that elaborate within it.
-
-### 6.4 Shear and local deformation
-
-A non-uniform vortex contains regions in which neighboring reference trajectories separate or rotate at different rates. These regions provide fixed probes for asking whether empirical semantic trajectories also display predictable changes in curvature, branching, or control cost.
-
-### 6.5 Natural multiscale families
-
-Vortices admit radial scale parameters and self-similar rescalings. This makes them natural candidates for the multiresolution constraint already present in the Atlas.
-
-These are reasons to test vortices, not reasons to privilege them in advance. Gradient fields, Hamiltonian flows, learned normal forms, and random divergence-free fields are required comparison families.
-
-## 7. Navier--Stokes as inspiration, not ontology
-
-### 7.1 What the 2026 blow-up result contributes
-
-The September 2026 OpenAI construction of finite-time Navier--Stokes blow-up provides a newly explicit family of anisotropic, multiscale vortical dynamics with characteristic shrinking spatial scales and increasing local velocity/gradient scales. The accompanying Lean repository formalizes the existence claims for forced three-dimensional Navier--Stokes and unforced Euler.
-
-The Semantic Atlas proposal does **not** require the full singular construction. Its relevance is methodological: it demonstrates that a compactly specified vortical architecture can organize motion across a hierarchy of scales in a mathematically exact way.
-
-A DQRF can borrow a truncated self-similar schedule such as
-
-\[
-\ell_r(\tau)\propto \tau^{1/2},
-\qquad
-\ell_z(\tau)\propto \tau^{1/2-h},
-\]
-
-while stopping at a finite minimum scale
-
-\[
-\tau\ge \tau_{min}>0.
-\]
-
-No semantic coordinate is allowed to diverge. The singular endpoint is neither needed nor desirable as a reference instrument.
-
-### 7.2 A scale-indexed reference flow
-
-Let \(s\in\{s_0,\ldots,s_L\}\) index reference scales. Define
-
-\[
-\mathcal V_Q(q;s)
-\]
-
-as a family of geometrically related fields. A trajectory can then be represented by the scale at which its local displacement is most coherent with the reference dynamics:
-
-\[
-s^*(q_t,v_t)=
-\arg\max_s
-\cos\left(v_t,\mathcal V_Q(q_t;s)\right).
-\]
-
-This supplies a dynamic analogue of the Atlas's multiresolution charts. The question becomes not merely *where is the state?* but *at what scale does its motion admit the simplest local description?*
-
-### 7.3 The stronger hypothesis
-
-The strongest DQRF claim is:
-
-> A self-similar vortical reference family yields a compact scale coordinate that improves semantic trajectory prediction and cross-model transfer beyond independently parameterized multiscale static features.
-
-This is highly falsifiable. If a bank of ordinary radial basis functions, random smooth fields, or learned local PCA directions performs equally well with the same degrees of freedom, the Navier--Stokes-inspired structure adds no evidence-bearing value.
-
-## 8. Relation to Steering Vector Fields and energy-landscape steering
-
-Recent steering work makes the distinction between **static direction** and **state-dependent field** empirically important.
-
-Li, Li, and Huang (2026) propose **Steering Vector Fields (SVF)**. A differentiable concept-scoring function produces a local gradient, so the steering direction depends on the current activation rather than applying one global vector everywhere. Their results support the proposition that context-dependent local directions can outperform fixed vectors.
-
-Jiang et al. (2026) propose **Energy Landscape Steering (ELS)**. An external energy-based model assigns high energy to undesirable activation states and low energy to desired states; inference-time gradients steer the hidden state toward lower-energy regions.
-
-These are neighboring but distinct objects from the DQRF:
-
-| Object | Learned from behavior? | Primary role | Model-specific? |
+| Object | Learned from model behavior? | Primary role | Shared across models? |
 |---|---:|---|---:|
-| Static quasar SRF | calibration only | position metrology | calibration map yes, geometry no |
-| DQRF | calibration only for placement | dynamic metrology / navigation gauge | calibration map yes, field no |
-| SVF | yes | state-dependent control direction | yes |
-| ELS | yes | objective landscape + control gradient | yes |
-| Atlas transition field \(F_M\) | yes | empirical model dynamics | yes |
+| Static SRF | calibration only | position metrology | geometry yes |
+| DQRF | no, after preregistered construction | dynamic metrology / compression gauge | field yes |
+| SVF | yes | state-dependent control | generally no |
+| ELS | yes | learned objective + control gradient | generally no |
+| \(F_M\) | yes | empirical model dynamics | no |
 
-The DQRF should therefore be tested as a **common coordinate system for comparing** SVF, ELS, natural model dynamics, and Semantic Servo interventions. A positive result would not show that the DQRF controls the model by itself. It would show that flow-relative coordinates make those controls easier to predict, compare, or transfer.
+DQRF should therefore be judged primarily by whether it makes those model-specific objects easier to describe or transfer, not by pretending to replace them.
 
-## 9. Compatibility with concept manifolds
+## 11. Compatibility with concept manifolds
 
-The manifold-aware Semantic Atlas argues that local semantic objects may be low-dimensional manifolds rather than points. The DQRF is compatible with that extension.
-
-Let \(\mathcal M_g\) be a local concept manifold with tangent space \(T_q\mathcal M_g\). Project the canonical field into the tangent space:
+Let \(\mathcal M_g\) be a recovered local concept manifold with tangent space \(T_q\mathcal M_g\). Project the field:
 
 \[
 \mathcal V_{Q,g}(q)=P_{T_q\mathcal M_g}\mathcal V_Q(q).
 \]
 
-This yields two new observables:
-
-1. **tangent alignment** -- whether a reference flow follows locally supported semantic variation;
-2. **normal pressure** -- the size of the component that points away from the manifold.
-
-Define
+Define tangent and normal fractions
 
 \[
 A_{tan}(q)=
 \frac{\|P_T\mathcal V_Q(q)\|}{\|\mathcal V_Q(q)\|+\epsilon},
 \]
 
-and
-
 \[
 A_{norm}(q)=
 \frac{\|(I-P_T)\mathcal V_Q(q)\|}{\|\mathcal V_Q(q)\|+\epsilon}.
 \]
 
-If low-cost semantic trajectories preferentially occur where the canonical field is tangent to recovered concept manifolds, DQRF structure may be useful for route planning. If tangent alignment is no better than random-field controls, the apparent geometric correspondence is decorative.
+A useful gauge may make residual dynamics simpler particularly where the field lies near the semantic support. This must be tested against random-field tangent alignment. Visual correspondence alone is not evidence.
 
-A more ambitious future formulation could treat the DQRF as a vector field defined on the atlas manifold itself rather than in the ambient SRF. That requires reliable manifold recovery first and is therefore not part of the initial experiment.
+## 12. Experimental programme
 
-## 10. Experimental programme
+### 12.1 DQRF-0A: synthetic calibration sanity check
 
-### 10.1 Experiment DQRF-0: synthetic sanity check
+Generate trajectories from known fields, apply unknown rotations/reflections and anisotropic observation transforms, calibrate observers into the SRF, and verify recovery of flow-relative observables on held-out synthetic states.
 
-Construct synthetic trajectories in known vector fields and pass them through unknown orthogonal transformations and anisotropic observation maps. Compare:
+This is an implementation test, not evidence about language models.
 
-1. raw coordinates;
-2. static simplex SRF;
-3. DQRF after the same paired calibration.
+### 12.2 DQRF-0B: Dynamic Gauge Compression Test
 
-Success requires recovery of held-out flow-relative observables after calibration. This is primarily an implementation test.
+This is the first model-backed scientific experiment.
 
-### 10.2 Experiment DQRF-1: observational prediction
+For each observer model and each frozen field family:
 
-Reuse the frozen corpora and observer models from Semantic Atlas Experiment A where possible.
+1. estimate \(F_M\) using the same trajectory estimator;
+2. fit the same low-capacity amplitude family \(a_M^{(k)}\);
+3. compute held-out residuals \(r_M^{(k)}\);
+4. report residual energy, effective rank, learning curves, OOD sensitivity, and cross-model concordance;
+5. compare against no-field, static-derivative, random-field, gradient, generic antisymmetric, and learned-field baselines.
 
-For each trajectory step, build features under:
-
-- **S0:** existing static SRF coordinates;
-- **S1:** S0 + finite differences \((v,\kappa)\);
-- **V0:** S1 + one smooth vortical DQRF;
-- **V1:** S1 + multiscale vortical DQRF;
-- **R0:** S1 + complexity-matched random smooth divergence-free fields;
-- **G0:** S1 + complexity-matched gradient fields.
-
-Fit the same downstream predictor class and evaluate held-out:
-
-- next canonical displacement;
-- turning angle;
-- destination cell/manifold;
-- transition probability;
-- trajectory continuation error.
-
-The primary result is not raw performance but **incremental predictive value** of V0/V1 over S1, R0, and G0.
-
-### 10.3 Experiment DQRF-2: reachability prediction
-
-Sample source-target pairs \((a,b)\), horizon \(H\), and steering budget \(B\). Empirically estimate whether \(b\) is reachable from \(a\) under a frozen intervention family.
-
-Compare models predicting reachability from:
-
-- static atlas observables;
-- static + empirical local velocity;
-- static + DQRF observables;
-- static + random-field observables.
-
-Primary metrics:
-
-- AUROC / AUPRC for reachability;
-- calibration error;
-- rank correlation with measured minimal intervention cost;
-- cross-model transfer degradation.
-
-### 10.4 Experiment DQRF-3: steering cost
-
-Use rollout selection or activation steering to reach predefined semantic targets. Do not let the DQRF controller have more intervention budget than baselines.
-
-Compare planners using:
-
-- Euclidean/SRF shortest routes;
-- empirical graph shortest routes;
-- flow-relative DQRF routes;
-- random-field routes;
-- learned local field routes.
-
-Measure:
+The primary question is:
 
 \[
-\text{success},\quad
-\text{intervention norm},\quad
-\text{rollouts},\quad
-\text{tokens},\quad
-\text{off-support distance},\quad
-\text{semantic path length}.
+\boxed{
+\text{Does one frozen shared gauge make multiple }F_M
+\text{ materially simpler and more mutually comparable?}
+}
 \]
 
-A DQRF win must survive normalization for planner complexity and route-search compute.
+### 12.3 DQRF-1: observational prediction
 
-### 10.5 Experiment DQRF-4: cross-model dynamic transfer
+Only after DQRF-0B, compare matched predictors using:
 
-Fit all semantic calibration maps independently using the same paired calibration rows, as in the existing SRF contract. Freeze the DQRF itself globally.
+- **S0:** static SRF;
+- **S1:** S0 + velocity/curvature;
+- **D0:** S1 + best preregistered general dynamic gauge;
+- **V0:** S1 + smooth vortex;
+- **V1:** S1 + generic multiscale vortex;
+- **NS0:** S1 + truncated NS-inspired field;
+- **R0/G0:** complexity-matched random/gradient controls.
 
-Ask whether a route description expressed in flow-relative coordinates transfers better across observers than a route expressed only in static canonical positions.
+Evaluate next displacement, turning angle, destination region, and trajectory continuation error. Prediction is secondary to compression: a larger predictor must not be allowed to masquerade as a better gauge.
 
-For models \(M_1,M_2\), compare the disagreement of corresponding held-out trajectories in:
+### 12.4 DQRF-2: cross-model transfer
 
-\[
-(q_t,v_t)
-\]
+Freeze the gauge globally and fit semantic calibration maps independently. Ask whether a residual predictor or route description trained on one observer requires less adaptation on another when expressed in the DQRF than in static coordinates.
 
-versus
+Report zero-shot and few-shot transfer curves, not only within-model accuracy.
 
-\[
-C_Q(q_t,v_t).
-\]
+### 12.5 DQRF-3: reachability
 
-A positive result requires improvement on held-out paired items and trajectories, not just training correspondences.
+Estimate empirical reachability for source-target pairs under a frozen intervention family and compare whether DQRF residual/cost observables improve AUROC/AUPRC, calibration, and rank correlation with measured minimal intervention cost.
 
-## 11. Negative controls and falsifiers
+### 12.6 DQRF-4: steering cost
 
-The DQRF proposal should be considered unsupported if any of the following survive adequate statistical power.
+Compare Euclidean/SRF, empirical-graph, DQRF, random-field, and learned-field planners under matched intervention and route-search budgets. Measure success, intervention norm, rollouts, tokens, off-support distance, and path length.
 
-### F1 -- static sufficiency
+## 13. Falsifiers
 
-Static SRF + ordinary velocity/curvature features matches or beats DQRF on all held-out dynamic tasks.
+The proposal is structured as nested hypotheses rather than one all-or-nothing claim.
+
+### F1 -- no compression
+
+No frozen dynamic gauge materially reduces residual energy, effective rank, sample complexity, OOD sensitivity, or description length relative to static derivatives.
+
+**Consequence:** reject the general DQRF claim.
 
 ### F2 -- random-field equivalence
 
-Random smooth fields of matched dimension and spectral complexity perform as well as the vortical field.
+Random smooth fields of matched dimension and spectral complexity compress just as well.
 
-### F3 -- parameter-count explanation
+**Consequence:** a generic feature-map effect may exist, but there is no evidence for the proposed field structure.
 
-Any advantage disappears after matching downstream feature count, predictor capacity, and hyperparameter search budget.
+### F3 -- capacity explanation
 
-### F4 -- calibration leakage
+Advantages disappear after matching amplitude-model, predictor, feature count, hyperparameter budget, and training data.
 
-The advantage appears only on calibration items and collapses on held-out paired states.
+**Consequence:** reject the claimed representational gain.
 
-### F5 -- no transfer
+### F4 -- gauge leakage
 
-DQRF coordinates improve one observer but do not preserve corresponding dynamics across independently calibrated models.
+Performance depends on choosing field planes, scales, chirality, or seeds after inspecting evaluation-model dynamics.
 
-### F6 -- learned field dominates trivially
+**Consequence:** result does not count as evidence for an external gauge.
 
-A small learned local vector field strongly outperforms the frozen DQRF with no transfer or regularization advantage for the latter. In that case the correct Atlas primitive may simply be empirical local dynamics.
+### F5 -- no cross-model simplification
+
+Residuals become smaller within each observer but are not more concordant or transferable across observers.
+
+**Consequence:** at most a within-model coordinate convenience is supported, not a shared dynamic reference frame.
+
+### F6 -- learned field dominates without regularization/transfer benefit
+
+A small model-specific learned field achieves substantially better compression and generalization, while the frozen gauge has no transfer or sample-efficiency advantage.
+
+**Consequence:** prefer empirical local dynamics.
 
 ### F7 -- vortex specificity fails
 
-Gradient, Hamiltonian, radial-basis, or random divergence-free fields match vortical DQRF performance. Then the general dynamic-gauge hypothesis may survive while the vortex hypothesis fails.
+Gradient, random divergence-free, or generic antisymmetric fields match the vortex.
 
-### F8 -- self-similar scale adds nothing
+**Consequence:** the general dynamic-gauge hypothesis may survive; the vortex hypothesis does not.
 
-The Navier--Stokes-inspired multiscale schedule does not outperform an independently tuned scale bank.
+### F8 -- multiscale specificity fails
 
-### F9 -- control metric mismatch
+A generic multiscale bank matches the self-similar vortex.
 
-Flow-relative route cost does not correlate with measured intervention cost or success.
+**Consequence:** no evidence for self-similar structure.
 
-### F10 -- manifold incompatibility
+### F9 -- Navier--Stokes specificity fails
 
-On recovered concept manifolds, DQRF tangent/normal observables do not predict natural transitions, steering quality, or off-support risk.
+The NS-inspired schedule matches but does not exceed ordinary smooth or generic multiscale vortices.
 
-The strongest scientific outcome may therefore be a partial rejection: for example, dynamic fields may help but vortices may not; vortices may help but self-similar scaling may not; or the entire DQRF may reduce to redundant features already captured by the Atlas.
+**Consequence:** NS is a historical inspiration only.
 
-## 12. Implementation sketch
+### F10 -- downstream mismatch
 
-The current experimental code contains a `QuasarFrame` with:
+Compression improves but reachability, transfer, or steering cost do not.
 
-- `quasars` -- regular-simplex landmarks;
-- `WhiteningTransform`;
-- orthogonal calibration rotation;
-- canonical-vector and quasar-coordinate methods.
+**Consequence:** DQRF may remain a descriptive representation, but navigation claims must be narrowed.
 
-A minimal extension should preserve that class and add a sibling object rather than mutate the existing baseline:
+### F11 -- manifold incompatibility
+
+Tangent/normal DQRF observables do not predict natural transitions or residual simplification better than random controls.
+
+**Consequence:** do not integrate DQRF with manifold routing.
+
+## 14. Implementation sketch
+
+Preserve the existing `QuasarFrame` baseline and add a sibling object:
 
 ```python
 @dataclass(frozen=True)
@@ -656,71 +741,80 @@ class DynamicQuasarFrame:
     def canonical_vectors(self, embeddings): ...
     def field(self, canonical_vectors, scale=None): ...
     def dynamic_coordinates(self, embeddings_t, embeddings_t1): ...
+    def decompose(self, q, empirical_velocity, amplitude_model): ...
 ```
 
-`FrozenFieldSpec` should contain only deterministic or pre-registered artificial parameters. It must serialize into experiment artifacts so that every reported trajectory can be reproduced against exactly the same field.
-
-The first implementation should include four field families:
+The first implementation should support:
 
 ```text
+zero
 vortex_smooth
 random_divergence_free
 radial_gradient
 generic_antisymmetric
+vortex_multiscale_generic
 ```
 
-and only later add:
+Only after those results are frozen should it add:
 
 ```text
-vortex_self_similar_truncated
+vortex_self_similar_ns_truncated
 ```
 
-This ordering prevents the 2026 Navier--Stokes result from becoming an aesthetic commitment before the simpler dynamic-gauge claim is tested.
+`FrozenFieldSpec` must serialize all parameters and expose a content hash included in every experiment artifact.
 
-## 13. What would a successful result mean?
+## 15. What would count as success?
 
-A positive DQRF result would **not** mean that language has been shown to be fluid-like. It would establish something more modest and potentially more useful:
+A positive result would **not** show that semantic dynamics are fluid dynamics. It would show that a frozen artificial dynamic gauge exposes reusable regularity.
 
-1. a fixed artificial dynamic gauge contains reusable information for describing model trajectories;
-2. flow-relative coordinates compress or predict semantic motion better than static coordinates alone;
-3. some dynamic observables transfer across independently calibrated models;
-4. route cost measured relative to that gauge predicts intervention cost or reachability;
-5. a vortical or multiscale structure is a useful engineering basis for this metrology.
+The strongest evidence would have the following shape:
 
-The conceptual payoff would be that the semantic quasar becomes more than a star-like landmark. It becomes a **dynamic beacon**: a reference object with a known local flow against which an unknown model's motion can be measured.
+\[
+\mathcal C(F_M) > \mathcal C(r_M\mid\mathcal V_Q)
+\]
 
-The original SRF asks:
+for several operational complexity measures and multiple independently calibrated models, while simultaneously
+
+\[
+r_A\approx r_B\approx r_C
+\]
+
+on held-out paired states more strongly than the corresponding raw transition fields.
+
+In that case the quasar is no longer useful merely as a fixed landmark. It becomes a **dynamic beacon**: a known external flow against which unknown model dynamics become simpler to describe.
+
+The original SRF asks
 
 \[
 \boxed{\text{Where is the semantic state?}}
 \]
 
-The DQRF adds:
+The DQRF adds
 
 \[
-\boxed{\text{How is it moving relative to a common dynamical gauge?}}
+\boxed{\text{In what common dynamic gauge is its motion simplest?}}
 \]
 
-The Atlas can then keep its model-specific empirical dynamics while gaining a canonical language for comparing those dynamics.
+That is the scientific claim this paper asks the experiments to earn.
 
-## 14. Conclusion
+## 16. Conclusion
 
-The Semantic Atlas already treats text generation as navigation through a dynamic semantic state space. Its current quasars solve a metrological problem for position: artificial landmarks define an external geometry and paired calibration determines semantic orientation. This paper proposes extending the same philosophy from **points to flows**.
+The Semantic Atlas assumes that useful semantic dynamics admit a compressed navigational description. Dynamic Quasar Reference Frames turn that assumption into a direct metrological test.
 
-A Dynamic Quasar Reference Frame augments canonical landmarks with frozen vector fields. Vortices are the first candidate because they supply phase, chirality, radial/tangential decomposition, shear, separatrices, and multiscale structure in one compact mathematical object. The recent Navier--Stokes blow-up construction motivates a stronger self-similar multiscale family, but the experimental programme begins with smooth bounded vortices and does not require singular behavior.
+The proposal does not need vortices, self-similarity, or Navier--Stokes to survive. It needs one thing: a field frozen independently of evaluation-model dynamics that makes several model-specific transition fields cheaper to describe, easier to learn, more stable out of distribution, or more transferable across observers than the appropriate matched baselines.
 
-The proposal preserves the most important epistemic boundary of the Semantic Atlas: artificial geometry does not create semantic identity. Calibration still performs semantic anchoring. The field provides a ruler for motion, not a theory of meaning.
+Vortices are one compact family worth testing. Navier--Stokes-inspired self-similarity is the final nested hypothesis and receives no aesthetic exemption from comparison.
 
-The central falsifiable question is therefore simple:
+The central falsifiable question is therefore:
 
 \[
 \boxed{
-\text{Does a frozen dynamic quasar gauge improve our ability to predict,}\
-\text{compare, navigate, or control semantic trajectories?}
+\text{Can a shared frozen dynamic gauge turn complex model-specific semantic}\
+\text{dynamics into simpler, transferable residuals?}
 }
 \]
 
-If not, the static SRF remains the cleaner design. If yes, semantic quasars should no longer be treated merely as fixed stars in an artificial sky. They can become the sources of a common navigational flow.
+If not, the static SRF remains the cleaner design. If yes, the DQRF would provide something the Semantic Atlas currently lacks: not new semantic information, but a common coordinate system in which the dynamics already present become compressible.
 
 ---
 
