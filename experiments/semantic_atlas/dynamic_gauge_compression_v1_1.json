@@ -1,0 +1,77 @@
+{
+  "schema_version": 2,
+  "experiment": "semantic-atlas-dynamic-gauge-compression-v1.1",
+  "base_manifest": "model_backed_a_v1.json",
+  "freeze_order": "DGCT v1.1 is frozen after v1 was invalidated by transfer-observer truncation and before any v1.1 model-backed outcome is generated or inspected. No field, generation, split, amplitude, or complexity parameter is changed from v1.",
+  "amendment": {
+    "supersedes_for_cross_model_inference": "semantic-atlas-dynamic-gauge-compression-v1",
+    "reason": "DGCT v1 produced exactly zero transfer-observer transition energy because cumulative states preserved a long invariant prefix and all-MiniLM-L6-v2 truncated before the changing continuation. v1 remains archived as an invalid/inconclusive measurement.",
+    "scope": "observation-only amendment; generated continuations and all scientific field/compression parameters are unchanged"
+  },
+  "observation": {
+    "mode": "tail_chars",
+    "max_chars": 512,
+    "applies_to": ["calibration_texts", "trajectory_step_texts"],
+    "rationale": "Use one identical frozen suffix window for both observers so the newest continuation is visible even to the shortest-context observer. The generator still receives the original unmodified prompt.",
+    "minimum_mean_squared_step_energy": 1e-12,
+    "validity_gate": "Both observers must have train and held-out raw transition energy strictly above the frozen minimum; otherwise the run fails and no scientific comparison is interpreted."
+  },
+  "trajectory_split": {
+    "seed": 7301,
+    "train_fraction": 0.67,
+    "unit": "whole generated trajectory keyed by prompt_index and generation seed"
+  },
+  "amplitude": {
+    "basis": "constant",
+    "ridge": 1e-08,
+    "notes": "Unchanged from DGCT v1: one scalar amplitude per observer and frozen field."
+  },
+  "complexity": {
+    "predictor_ridge": 1e-06,
+    "sample_fractions": [0.25, 0.5, 0.75, 1.0],
+    "target_relative_mse": 0.8,
+    "primary_vector": [
+      "test_energy",
+      "test_effective_rank",
+      "sample_complexity",
+      "test_local_sensitivity",
+      "cross_model_residual_concordance"
+    ],
+    "notes": "Unchanged from DGCT v1. No weighted scalar complexity score is primary."
+  },
+  "fields": [
+    {
+      "family": "zero",
+      "dim": 64,
+      "seed": 0,
+      "scale": 1.0,
+      "strength": 0.0
+    },
+    {
+      "family": "radial_gradient",
+      "dim": 64,
+      "seed": 101,
+      "scale": 1.0,
+      "strength": 1.0
+    },
+    {
+      "family": "vortex_smooth",
+      "dim": 64,
+      "seed": 137,
+      "scale": 1.0,
+      "strength": 1.0
+    },
+    {
+      "family": "random_divergence_free",
+      "dim": 64,
+      "seed": 211,
+      "scale": 1.0,
+      "strength": 1.0
+    }
+  ],
+  "claim_boundary": {
+    "general_dynamic_gauge": "Supported only by simpler, better-generalizing and/or more cross-model-concordant residuals under a shared frozen field; a small next-step R2 increase is insufficient.",
+    "vortex_specific": "Requires vortex_smooth to beat complexity-matched non-vortical controls; otherwise only a generic dynamic-gauge claim may survive.",
+    "navier_stokes": "Not tested in DGCT v1.1. A self-similar or Navier-Stokes-inspired field remains deferred until simpler fields earn it."
+  }
+}
