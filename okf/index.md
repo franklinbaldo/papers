@@ -14,6 +14,7 @@ every pull request.
 
 * [Dogmatic Paper](types/dogmatic-paper.md) - CPC 2015 doctrinal thesis papers (the 1A-1G series plus the umbrella paper).
 * [Technical Paper](types/technical-paper.md) - English methodology/tooling papers (pipeline, provenance, ESHTR, STT).
+* [Scientific Position Paper](types/scientific-position-paper.md) - research-grounded natural-science hypotheses, syntheses, and falsifiable research agendas.
 * [Empirical Paper](types/empirical-paper.md) - pre-registered empirical evaluation design.
 * [Synthesis Paper](types/synthesis-paper.md) - capstone paper summarizing programme coherence.
 * [Alignment Paper](types/alignment-paper.md) - general AI alignment position paper.
