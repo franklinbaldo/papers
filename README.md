@@ -2,7 +2,7 @@
 type: "Index"
 title: "papers"
 description: "Catalogo e guia de leitura dos papers deste repositorio e do aparato de debate que os acompanha."
-timestamp: 2026-09-08T20:18:00-04:00
+timestamp: 2026-09-08T20:48:00-04:00
 okf_version: "0.1"
 ---
 
@@ -28,6 +28,12 @@ Position papers and working drafts.
 - `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
 - `semantic_tokenization_transformers.md` — STT (position paper)
 - `structural_identification_from_restricted_truths.md` — teoria matemática de identificação estrutural relativa a classe de hipóteses, equivalência, família de verdades e custo, com núcleo formalizado em Lean 4
+
+## Eixo Semantic Atlas / navegação semântica
+
+- `semantic_atlas.md` — Semantic Reference Frame com quasars artificiais, atlas multiescala, reachability, semantic gravity e controle closed-loop
+- `semantic_atlas_manifolds.md` — extensão manifold-aware: charts locais, geometria espectral, bottlenecks e steering tangente ao suporte semântico
+- `dynamic_quasar_reference_frames.md` — propõe Dynamic Quasar Reference Frames (DQRF): quasars que ancoram campos vetoriais canônicos, inicialmente vorticais, para medir trajetória, fluxo, reachability e custo de controle em um gauge dinâmico comum; inclui extensão multiescala inspirada em Navier–Stokes e experimentos contra o SRF estático
 
 ## Eixo aprendizagem algorítmica / machine teaching
 
