@@ -2,7 +2,7 @@
 type: "Index"
 title: "papers"
 description: "Catalogo e guia de leitura dos papers deste repositorio e do aparato de debate que os acompanha."
-timestamp: 2026-07-09T12:12:59+00:00
+timestamp: 2026-09-08T20:18:00-04:00
 okf_version: "0.1"
 ---
 
@@ -62,6 +62,10 @@ Position papers and working drafts.
 ## Eixo empírico
 
 - `empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
+
+## Eixo física matemática / fusão
+
+- `vortex_cumulation_fusion.md` — agenda falsificável que testa se a cumulação anisotrópica de vórtice do blow-up de Navier–Stokes pode sobreviver, em regime pré-singular, à passagem para MHD compressível e produzir thermalização útil em hotspots de MTF/MagLIF; inclui a derivação negativa de que a energia do núcleo incompressível tende a zero
 
 ## Síntese
 
