@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "experiment": "semantic-atlas-dynamic-gauge-compression-v1",
+  "base_manifest": "model_backed_a_v1.json",
+  "freeze_order": "All field families and parameters below are frozen before model-backed transition fields are generated or inspected.",
+  "trajectory_split": {
+    "seed": 7301,
+    "train_fraction": 0.67,
+    "unit": "whole generated trajectory keyed by prompt_index and generation seed"
+  },
+  "amplitude": {
+    "basis": "constant",
+    "ridge": 1e-08,
+    "notes": "DGCT v1 fits one scalar amplitude per observer and frozen field. Affine a(q) is implemented but not enabled in this preregistration."
+  },
+  "complexity": {
+    "predictor_ridge": 1e-06,
+    "sample_fractions": [0.25, 0.5, 0.75, 1.0],
+    "target_relative_mse": 0.8,
+    "primary_vector": [
+      "test_energy",
+      "test_effective_rank",
+      "sample_complexity",
+      "test_local_sensitivity",
+      "cross_model_residual_concordance"
+    ],
+    "notes": "No weighted scalar complexity score is primary. MDL is not computed in v1."
+  },
+  "fields": [
+    {
+      "family": "zero",
+      "dim": 64,
+      "seed": 0,
+      "scale": 1.0,
+      "strength": 0.0
+    },
+    {
+      "family": "radial_gradient",
+      "dim": 64,
+      "seed": 101,
+      "scale": 1.0,
+      "strength": 1.0
+    },
+    {
+      "family": "vortex_smooth",
+      "dim": 64,
+      "seed": 137,
+      "scale": 1.0,
+      "strength": 1.0
+    },
+    {
+      "family": "random_divergence_free",
+      "dim": 64,
+      "seed": 211,
+      "scale": 1.0,
+      "strength": 1.0
+    }
+  ],
+  "claim_boundary": {
+    "general_dynamic_gauge": "Supported only by simpler, better-generalizing and/or more cross-model-concordant residuals under a shared frozen field; a small next-step R2 increase is insufficient.",
+    "vortex_specific": "Requires vortex_smooth to beat complexity-matched non-vortical controls; otherwise only a generic dynamic-gauge claim may survive.",
+    "navier_stokes": "Not tested in DGCT v1. A self-similar or Navier-Stokes-inspired field is intentionally deferred until simpler fields earn it."
+  }
+}
