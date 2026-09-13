@@ -1,0 +1,337 @@
+---
+type: "Technical Paper"
+title: "MaleCNS as a Frozen Reservoir for Byte-Level Legal Sequence Tagging: Paired Controls and Training-Regime Diagnostics"
+description: "Living empirical paper testing whether a frozen recurrent reservoir constrained by the Drosophila MaleCNS connectome adds useful sequence-tagging signal beyond byte-only and degree-preserving shuffled controls."
+tags: [malecns, drosophila, connectome, reservoir-computing, sequence-tagging, legal-nlp, kaggle]
+timestamp: 2026-09-13T13:07:00-04:00
+---
+
+# MaleCNS as a Frozen Reservoir for Byte-Level Legal Sequence Tagging
+
+**Franklin Baldo**  
+Independent Researcher  
+franklinbaldo@gmail.com
+
+---
+
+> **Status.** Living empirical paper. The first five-seed experiment is complete and reported below. A preregistered training-regime diagnostic is running separately and will be incorporated without rewriting the baseline result. The untouched test split remains reserved for a later confirmatory run.
+
+## Abstract
+
+Animal connectomes provide a rare source of large, structured recurrent graphs whose topology was not optimized for conventional machine-learning benchmarks. Recent work has shown that a Drosophila connectome can be used as a computational reservoir for time-series prediction. We ask a different question: can a frozen recurrent reservoir constrained by the newly released MaleCNS v1.0 connectome provide useful contextual signal for byte-level sequence tagging of legal text?
+
+We construct a 512-neuron subgraph selected deterministically by weighted synaptic degree from MaleCNS v1.0, preserve all internal directed edges, normalize recurrent weights by postsynaptic incoming contact mass, and freeze the recurrent operator. UTF-8 bytes are mapped through a trainable 64-dimensional embedding and projected into 64 reservoir neurons; a linear readout predicts `resultado` versus `O` at each byte. We compare the biological wiring against (i) a directed degree-preserving shuffled reservoir with the same node count, edge count, per-node in/out degree, edge-weight multiset, trainable architecture, initialization seed, and data windows, and (ii) a byte-only embedding/readout baseline.
+
+Across five paired seeds under the initial three-epoch protocol, MaleCNS achieved mean validation F1 `0.2753 ± 0.0682`, compared with `0.2782 ± 0.0610` for the degree-preserving shuffled reservoir and `0.2727 ± 0.0562` for the byte-only baseline. The paired MaleCNS-minus-shuffled difference was `-0.0029 ± 0.0284` F1, with MaleCNS winning three of five seeds; MaleCNS-minus-byte-only was `+0.0026 ± 0.0140`, with MaleCNS winning two of five. These results establish a reproducible connectome-constrained tagging pipeline but provide no evidence, at this stage, that the higher-order MaleCNS topology improves tagging relative to a matched recurrent null.
+
+The first seed's training loss continued to fall sharply through epoch three, motivating a frozen follow-up that changes only model selection and training duration: up to 30 epochs, best-validation-F1 checkpoint restoration, learning-rate reduction on plateaus, and early stopping. This diagnostic is explicitly not confirmatory because validation is used for checkpoint selection. A later frozen experiment will evaluate selected configurations on the untouched test split and include stronger sequential baselines.
+
+**Keywords:** connectome, Drosophila, MaleCNS, reservoir computing, sequence tagging, legal NLP, recurrent neural networks
+
+---
+
+## 1. Question
+
+Reservoir computing separates a recurrent dynamical substrate from a comparatively small trainable interface. In the classical formulation, the recurrent graph is usually random and frozen while an input mapping and readout are fitted to a task. This makes reservoir computing a natural setting for asking whether the structure of a biological connectome contains computationally useful inductive bias without requiring end-to-end training of the recurrent network.
+
+The present study asks a deliberately narrow question:
+
+> Given the same input representation, trainable adapter, readout, data windows, and optimization procedure, does a frozen recurrent reservoir constrained by MaleCNS wiring improve byte-level legal sequence tagging relative to simpler or topology-destroying controls?
+
+The experiment is not a claim that the implemented dynamics reproduce Drosophila neurophysiology. MaleCNS supplies recurrent topology and contact-count structure. The rate dynamics, input mapping, leak parameter, recurrent gain, loss, and readout are engineered choices.
+
+## 2. Background
+
+MaleCNS v1.0 was released by the Janelia FlyEM project on 8 June 2026 and covers the male fruit fly brain and ventral nerve cord. The project page reports the official publication on 3 September 2026 and licenses the dataset under CC BY. The public release exposes flat connectivity files, annotations, synapses, skeletons, and other representations suitable for programmatic analysis.
+
+The immediate methodological precedent is Costi et al. (2025), who used Drosophila connectome topology and synaptic-weight information to construct computational reservoirs for multivariate chaotic time-series prediction. Their study compared connectome-derived reservoirs with randomized and hybrid controls and reported increased resilience to overfitting in the tested time-series setting. The present work changes both the connectome release and the task: it uses MaleCNS v1.0 and performs byte-level sequence tagging over Portuguese legal decisions.
+
+The purpose of the matched shuffled control here is therefore central rather than cosmetic. If recurrence itself helps, both the MaleCNS and shuffled reservoirs may outperform a non-recurrent byte baseline. Evidence specifically about biological topology requires MaleCNS to beat a null that preserves low-order graph statistics while destroying much of the higher-order wiring organization.
+
+## 3. Data and task
+
+### 3.1 Legal corpus
+
+The experiment reads the CausaGanha segmenter splits from repository commit:
+
+`7c3d6557bb692932553622ae6e00493ba04e534f`
+
+Only `train.jsonl` and `val.jsonl` participate in the current exploratory pipeline. `test.jsonl` is intentionally untouched and reserved for a later confirmatory evaluation.
+
+The completed five-seed run contains:
+
+- 14 training documents;
+- 3 validation documents;
+- 42 training windows;
+- 9 validation windows.
+
+The target is binary byte-level tagging of the `resultado` span versus `O`.
+
+### 3.2 Byte representation
+
+Text is encoded directly as UTF-8 bytes. Character-based source annotations are converted to byte offsets before training, preserving alignment for multibyte characters. Each window contains 192 bytes. The model uses a trainable embedding of dimension 64, avoiding a pretrained language model and deliberately keeping the textual interface small.
+
+The initial pipeline is:
+
+```text
+UTF-8 bytes
+    ↓
+trainable embedding (64d)
+    ↓
+linear projection
+    ↓
+64 reservoir input neurons
+    ↓
+frozen recurrent reservoir
+    ↓
+linear readout per byte
+    ↓
+O | resultado
+```
+
+## 4. MaleCNS reservoir
+
+### 4.1 Source provenance
+
+The implementation downloads the public MaleCNS v1.0 annotation and connectivity files directly from the Janelia-hosted flat-connectome release and verifies file sizes and SHA-256 digests before use.
+
+For the completed baseline run:
+
+- annotations SHA-256: `2177e246113e4cfbf1e7772ec37c6da1955ff22e8063d0b1f833101f99a9a3b2`;
+- connectivity SHA-256: `e35da783d1c686b2b58b3b87cd6a403ae43bfcfba8bff28e08ef752c1a56afc1`.
+
+### 4.2 Subgraph selection
+
+The initial capacity baseline uses 512 MaleCNS neurons. Candidate neurons are ranked by weighted synaptic degree, and the highest-degree retained neurons are selected deterministically. All directed connections between selected neurons are preserved.
+
+The resulting baseline graph contains:
+
+- 512 neurons;
+- 16,726 internal directed edges.
+
+Raw contact counts are normalized by the total incoming contact mass at the postsynaptic neuron. The recurrent matrix is frozen during training.
+
+### 4.3 Engineered dynamics
+
+At each byte step, the reservoir state is updated with a leaky `tanh` recurrence. The v1 defaults are:
+
+- leak: `0.35`;
+- recurrent gain: `0.9`;
+- input gain: `0.5`.
+
+These are computational hyperparameters, not inferred membrane or synaptic physiology.
+
+## 5. Controls
+
+### 5.1 Degree-preserving recurrent null
+
+For every paired seed, a null reservoir is generated from the same MaleCNS subgraph using directed double-edge swaps. The procedure performs ten successful swaps per edge while avoiding self-edges and duplicate directed edges.
+
+The control preserves:
+
+- node count;
+- directed edge count;
+- every neuron's in-degree;
+- every neuron's out-degree;
+- the multiset of recurrent edge weights;
+- the learnable architecture;
+- initialization seed;
+- input windows;
+- optimizer and evaluation procedure.
+
+It destroys much of the higher-order organization of the MaleCNS wiring. This makes MaleCNS-versus-shuffled the primary topology comparison.
+
+### 5.2 Byte-only baseline
+
+The byte-only baseline removes recurrence entirely:
+
+```text
+UTF-8 byte → trainable 64d embedding → linear readout
+```
+
+It measures whether adding a recurrent state provides useful context beyond the local byte embedding.
+
+### 5.3 Trivial baseline
+
+An all-`O` predictor is retained as a task sanity reference. Because positive spans are sparse, accuracy alone is not informative; F1, precision, recall, and confusion counts are tracked.
+
+## 6. Experimental protocol v1
+
+Five seeds are evaluated:
+
+`20260912, 20260913, 20260914, 20260915, 20260916`.
+
+Within each seed, MaleCNS and the shuffled recurrent null use the same window sampling, trainable architecture, initialization seed, optimizer, and validation evaluation. Across seeds, window sampling and initialization vary together so that paired F1 differences capture end-to-end pipeline variability.
+
+The v1 training configuration is:
+
+- 512 recurrent neurons;
+- 64 recurrent input neurons;
+- 64-dimensional byte embedding;
+- 3 epochs;
+- batch size 4.
+
+The run was executed through the repository's Kaggle GPU workflow. Canonical GitHub Actions run: `34767179457`. Artifact: `malecns-tagger-34767179457`; artifact digest: `sha256:fa4d7c058f2ac495897794885344ec9e34b43b9577f8931855718788ad39b656`.
+
+## 7. Results: five-seed baseline
+
+### 7.1 Aggregate validation F1
+
+| Model | Mean F1 | Std. dev. | Interpretation |
+|---|---:|---:|---|
+| MaleCNS reservoir | **0.2753** | 0.0682 | biological wiring condition |
+| Degree-preserving shuffled | **0.2782** | 0.0610 | matched recurrent null |
+| Byte-only | **0.2727** | 0.0562 | no recurrent context |
+
+The three conditions are close relative to seed-to-seed variability.
+
+### 7.2 Paired differences
+
+MaleCNS minus shuffled, by seed:
+
+`[-0.00373, +0.01574, +0.01890, +0.00566, -0.05117]`
+
+Mean paired difference:
+
+`-0.00292 ± 0.02840` F1.
+
+MaleCNS won three of five paired seeds, while shuffled won two. The negative mean and dispersion substantially larger than the mean difference provide no evidence of a stable topology advantage.
+
+MaleCNS minus byte-only, by seed:
+
+`[+0.01033, -0.01124, +0.02309, -0.00269, -0.00654]`
+
+Mean paired difference:
+
+`+0.00259 ± 0.01399` F1.
+
+MaleCNS won two seeds and byte-only won three. Thus the current data also do not support a stable recurrence advantage under the three-epoch protocol.
+
+### 7.3 The first seed and the undertraining question
+
+The first paired seed produced MaleCNS F1 `0.33236`, shuffled F1 `0.33609`, and byte-only F1 `0.32203`. More importantly for experimental design, MaleCNS training loss fell:
+
+`0.61896 → 0.36773 → 0.28081`.
+
+The loss was still decreasing markedly at the fixed endpoint. The v1 implementation also reported the final epoch rather than restoring the epoch with best validation F1. Consequently, the experiment cannot yet distinguish a genuine capacity/representation limit from premature stopping or poor model selection.
+
+## 8. What the baseline establishes
+
+The baseline establishes four useful facts.
+
+First, a MaleCNS-constrained sparse recurrent graph can be integrated into a GPU training pipeline for byte-level legal sequence tagging.
+
+Second, the trainable input adapter and readout can learn through a frozen connectome-derived recurrent state.
+
+Third, a degree-preserving recurrent null can be generated and trained under paired conditions, making future topology claims falsifiable.
+
+Fourth, the initial three-epoch experiment does **not** show that biological MaleCNS wiring improves tagging. The correct scientific result at this stage is indeterminate/negative with respect to topology advantage.
+
+## 9. Registered training-regime diagnostic v2
+
+Before increasing reservoir capacity, the next experiment changes only training duration and checkpoint selection at the same 512-node scale.
+
+Frozen elements:
+
+- same legal data and split;
+- same 192-byte window procedure;
+- same five paired seeds;
+- same MaleCNS 512-node selection;
+- same 64d byte embedding;
+- same 64 input neurons;
+- same recurrent dynamics;
+- same shuffled and byte-only controls.
+
+Changed elements:
+
+- maximum epochs: `3 → 30`;
+- minimum epochs before stopping: `5`;
+- best-validation-F1 checkpoint restoration;
+- early stopping after five epochs without F1 improvement;
+- learning-rate reduction on validation-F1 plateaus;
+- explicit `best_epoch` and `stopped_epoch` logging.
+
+This experiment answers a diagnostic question: was the v1 comparison materially training-limited?
+
+Because validation F1 determines checkpoint selection, v2 remains exploratory/model-selection evidence. It cannot serve as the final held-out performance estimate.
+
+## 10. Planned confirmatory design
+
+A confirmatory run should freeze the selected training regime before touching `test.jsonl`.
+
+At minimum it should compare:
+
+1. true MaleCNS reservoir;
+2. degree-preserving shuffled MaleCNS reservoir;
+3. byte-only baseline;
+4. a small conventional sequential baseline such as a parameter-matched GRU or 1D temporal CNN.
+
+The final claim should distinguish three possibilities:
+
+- **topology advantage:** MaleCNS consistently beats both shuffled recurrence and non-biological sequential baselines;
+- **recurrence advantage only:** MaleCNS and shuffled both beat non-recurrent baselines but remain statistically indistinguishable from one another;
+- **no useful reservoir signal:** recurrence does not improve held-out tagging enough to justify the added compute.
+
+Only the first outcome supports a claim about the specific MaleCNS topology.
+
+## 11. Capacity scaling
+
+Separate branches already prepare 5,000- and 10,000-neuron reservoirs. Capacity scaling is scientifically useful, but it should be interpreted after the training-regime gate. Otherwise an improvement from 512 to 5,000 neurons would be confounded with a baseline that may simply have been stopped too early.
+
+A reasonable progression is:
+
+`512 → 1k/2k diagnostic if needed → 5k → 10k if resource-feasible`.
+
+Input fan-in should also eventually be tested (`64 → 128 → 256` input neurons), because holding the input interface fixed while expanding the reservoir by an order of magnitude may create an artificial bottleneck.
+
+## 12. Limitations
+
+### 12.1 Very small legal dataset
+
+Fourteen training documents and three validation documents are insufficient for a strong generalization claim. The present study is an engineering probe, not a benchmark result.
+
+### 12.2 Sparse window extraction
+
+The v1 sampling strategy produces only 42 train and 9 validation windows. More comprehensive sliding-window coverage may be more consequential than reservoir scaling.
+
+### 12.3 Validation reuse
+
+The current validation split has been inspected repeatedly. It is appropriate for model development but not for a terminal claim. The untouched test split is therefore essential.
+
+### 12.4 Engineered neural dynamics
+
+MaleCNS contributes connectivity constraints, not a complete physiological simulation. Neurotransmitter effects, cell-specific dynamics, neuromodulation, delays, and many other biological properties are absent.
+
+### 12.5 Subgraph selection bias
+
+Selecting the highest weighted-degree neurons is computationally convenient but is not guaranteed to preserve task-relevant biological organization. Other selections—sensory-to-central pathways, cell-class-balanced subsets, random induced subgraphs, or full-connectome execution—may behave differently.
+
+## 13. Reproducibility
+
+The experiment code and workflows live in `franklinbaldo/franklinbaldo.github.io` under `scripts/malecns-tagger/` and `.github/workflows/`.
+
+Key provenance:
+
+- CausaGanha data commit: `7c3d6557bb692932553622ae6e00493ba04e534f`;
+- v1 five-seed workflow run: `34767179457`;
+- v1 artifact digest: `sha256:fa4d7c058f2ac495897794885344ec9e34b43b9577f8931855718788ad39b656`;
+- MaleCNS annotations SHA-256: `2177e246113e4cfbf1e7772ec37c6da1955ff22e8063d0b1f833101f99a9a3b2`;
+- MaleCNS connectivity SHA-256: `e35da783d1c686b2b58b3b87cd6a403ae43bfcfba8bff28e08ef752c1a56afc1`.
+
+The separate `franklinbaldo/papers` MaleCNS runtime experiment compiles the full public MaleCNS graph through an independent pipeline. It is intentionally not substituted into this tagger study while the original pipeline is being characterized, providing an opportunity for later cross-implementation reproducibility checks.
+
+## 14. Conclusion
+
+The first five-seed MaleCNS legal-tagging experiment yields a useful negative/indeterminate result. A frozen MaleCNS-constrained reservoir can participate in byte-level tagging, but under the initial three-epoch protocol its average F1 is essentially indistinguishable from a degree-preserving shuffled recurrent graph and from a much simpler byte-only baseline.
+
+That result is valuable because the matched null prevents a small recurrence gain from being mistaken for evidence about biological wiring. The next question is not whether the experiment can be made larger, but whether its current training regime prematurely truncates the learnable adapter and readout. The registered v2 diagnostic tests exactly that while keeping the graph, data, and paired controls fixed.
+
+If v2 shows that best checkpoints occur well after epoch three, the original baseline was undertrained and the experiment earns a better-trained confirmatory design. If not, attention should shift to window coverage, input mapping, reservoir dynamics, and stronger task baselines before additional biological-topology claims are entertained.
+
+---
+
+## References
+
+1. Male CNS Connectome Project. HHMI Janelia FlyEM. MaleCNS v1.0 release and project resources. https://male-cns.janelia.org/
+2. Male CNS Connectome Downloads. HHMI Janelia FlyEM. https://male-cns.janelia.org/download/
+3. Costi, L.; Hadjiivanov, A.; Dold, D.; Hale, Z. F.; Izzo, D. "The Drosophila Connectome as a Computational Reservoir for Time-Series Prediction." *Biomimetics* 10(5), 341 (2025). https://doi.org/10.3390/biomimetics10050341
