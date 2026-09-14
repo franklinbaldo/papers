@@ -189,3 +189,94 @@ def gustation_conditions(
             - np.sum((oracle - learned) ** 2) / max(float(np.sum((oracle - oracle.mean(0)) ** 2)), 1e-12)
         ),
     }
+
+
+def effective_delay_window(leak: float, steps_per_chunk: int, *, floor: float = 0.05) -> int:
+    """Chunks of history the recurrence can still be carrying.
+
+    A leaky integrator retains ``(1 - leak)^n`` of a past input after ``n`` steps.
+    The window is the number of *chunks* after which that falls below ``floor``,
+    so the delay baseline covers roughly the same temporal reach the operator has
+    rather than a number chosen by taste.
+    """
+    if not 0.0 < leak <= 1.0:
+        raise ValueError("leak must be in (0, 1]")
+    retention = 1.0 - leak
+    if retention <= 0:
+        return 1
+    steps = np.log(floor) / np.log(retention)
+    return max(1, int(np.ceil(steps / max(steps_per_chunk, 1))))
+
+
+def delayed_stack(flavour: np.ndarray, groups: np.ndarray, horizon: int) -> np.ndarray:
+    """``[z_t, z_{t-1}, ..., z_{t-h}]`` within each document.
+
+    The control that keeps "what does the topology do that a readout cannot" an
+    honest question. Without it the direct probe sees ``f(z_t)`` while the
+    operator sees ``f(z_t, z_{t-1}, ...)``, and any win by the fly could simply be
+    memory rather than topology.
+
+    History never crosses a document boundary: a document's first chunk has no
+    past, and borrowing the previous document's would be leakage dressed as
+    context.
+    """
+    values = np.asarray(flavour, dtype=np.float32)
+    stacked = [values]
+    for lag in range(1, horizon + 1):
+        shifted = np.zeros_like(values)
+        for document in np.unique(groups):
+            rows = np.flatnonzero(groups == document)
+            if len(rows) > lag:
+                shifted[rows[lag:]] = values[rows[:-lag]]
+        stacked.append(shifted)
+    return np.hstack(stacked)
+
+
+def flavour_delay_baseline(
+    flavour: np.ndarray,
+    tag_masks: np.ndarray,
+    groups: np.ndarray,
+    *,
+    horizon: int,
+    penalty: float = 1.0,
+) -> dict:
+    """Can plain temporal memory over the taste channels do it, with no operator?"""
+    inside = np.asarray(tag_masks).max(axis=1) > 0
+    stacked = delayed_stack(flavour, groups, horizon)
+    return {
+        "flavour_delay_auprc": float(
+            leave_one_document_out_auprc(stacked, inside, groups, penalty=penalty)
+        ),
+        "horizon_chunks": int(horizon),
+        "dimensions": int(stacked.shape[1]),
+        "random_auprc": float(inside.mean()),
+    }
+
+
+def flavour_expansion_baseline(
+    flavour: np.ndarray,
+    tag_masks: np.ndarray,
+    groups: np.ndarray,
+    *,
+    hidden: int = 16,
+    penalty: float = 1.0,
+    seed: int = 0,
+) -> dict:
+    """Is it just a cheap nonlinear expansion, with no recurrence at all?
+
+    A fixed random ``k -> hidden`` tanh layer read by the same ridge. Deliberately
+    tiny: a large MLP would become the system rather than a baseline for it, which
+    is the mirror image of the mistake the mixer constraint avoids.
+    """
+    rng = np.random.default_rng(seed)
+    values = np.asarray(flavour, dtype=np.float32)
+    projection = rng.normal(scale=1.0 / np.sqrt(values.shape[1]), size=(values.shape[1], hidden))
+    expanded = np.tanh(values @ projection.astype(np.float32))
+    inside = np.asarray(tag_masks).max(axis=1) > 0
+    return {
+        "flavour_expansion_auprc": float(
+            leave_one_document_out_auprc(expanded, inside, groups, penalty=penalty)
+        ),
+        "hidden": int(hidden),
+        "random_auprc": float(inside.mean()),
+    }

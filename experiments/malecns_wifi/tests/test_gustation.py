@@ -107,3 +107,62 @@ def test_oracle_flavour_is_not_reported_as_a_result() -> None:
     oracle = result["streams"]["oracle_flavour"]
     outside = masks.max(axis=1) == 0
     assert np.allclose(oracle[outside], 0.0)
+
+
+def test_delay_window_is_derived_from_the_leak_not_chosen() -> None:
+    from malecns_wifi.gustation import effective_delay_window
+
+    # A leaky integrator retains (1-leak)^n; the window is where that falls below
+    # the floor, expressed in chunks.
+    assert effective_delay_window(0.4, 4) == 2
+    assert effective_delay_window(0.4, 1) == 6
+    assert effective_delay_window(0.2, 4) == 4
+    # A slower leak reaches further back.
+    assert effective_delay_window(0.2, 1) > effective_delay_window(0.6, 1)
+    with pytest.raises(ValueError, match="leak must be"):
+        effective_delay_window(0.0, 4)
+
+
+def test_delayed_history_never_crosses_a_document_boundary() -> None:
+    """Borrowing the previous document's past would be leakage dressed as context."""
+    from malecns_wifi.gustation import delayed_stack
+
+    values = np.arange(12, dtype=np.float32)[:, None]
+    groups = np.repeat([0, 1], 6)
+    stacked = delayed_stack(values, groups, 2)
+
+    assert stacked.shape == (12, 3)
+    # First chunk of each document has no past.
+    assert stacked[0].tolist() == [0.0, 0.0, 0.0]
+    assert stacked[6].tolist() == [6.0, 0.0, 0.0]
+    assert stacked[7].tolist() == [7.0, 6.0, 0.0]
+    # Within a document the history is the document's own.
+    assert stacked[4].tolist() == [4.0, 3.0, 2.0]
+
+
+def test_delay_baseline_gives_the_operator_no_memory_advantage() -> None:
+    """Without this, a fly win could simply be memory rather than topology."""
+    from malecns_wifi.gustation import flavour_delay_baseline
+
+    semantics, masks, embeddings, groups = _corpus()
+    spec = FlavourSpec(channels=4, seed=0)
+    flavour = gustation_conditions(semantics, masks, embeddings, groups, spec)["streams"][
+        "learned_flavour"
+    ]
+    scored = flavour_delay_baseline(flavour, masks, groups, horizon=2)
+    assert scored["horizon_chunks"] == 2
+    assert scored["dimensions"] == 4 * 3  # z_t plus two lags
+    assert 0.0 <= scored["flavour_delay_auprc"] <= 1.0
+
+
+def test_expansion_baseline_stays_small_enough_to_be_a_baseline() -> None:
+    """A large MLP would become the system rather than a control for it."""
+    from malecns_wifi.gustation import flavour_expansion_baseline
+
+    semantics, masks, embeddings, groups = _corpus()
+    flavour = gustation_conditions(
+        semantics, masks, embeddings, groups, FlavourSpec(channels=4)
+    )["streams"]["learned_flavour"]
+    scored = flavour_expansion_baseline(flavour, masks, groups, hidden=16)
+    assert scored["hidden"] == 16
+    assert 0.0 <= scored["flavour_expansion_auprc"] <= 1.0

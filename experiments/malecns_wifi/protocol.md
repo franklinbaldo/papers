@@ -14,6 +14,58 @@ Can the released MaleCNS v1.0 connectome serve as a useful fixed recurrent reser
 
 The experiment does **not** assume a biological advantage. The MaleCNS topology must beat or complement simpler matched baselines before any such claim is made.
 
+## Semantic gustation: the inverse question
+
+Run 1 asked whether MaleCNS **preserves** a rich semantic representation. Measured
+on two encoders, it largely does not: direct probes reach macroAP 0.285–0.621
+while the operator reaches 0.072–0.226, and the degree-preserving null sits at or
+above it. Those results stand and are not revisited here.
+
+This experiment asks the opposite question. Compress the field deliberately to
+`k = 4` shared taste channels, then ask whether the operator can **expand** that
+code into task-useful dynamics:
+
+    text -> 4 flavours -> { direct, delay, expansion, random ESN, degree null, MaleCNS } -> tags
+
+The two questions are near-inverses, and that is the point. Passing 384–4,100
+dimensions through a 165k reservoir read from 1,314 neurons could only lose
+information. Compressing to four channels first makes the comparison fair,
+because the direct probe now sees four channels too — the contest stops being
+"rich representation against bottlenecked representation" and becomes "what can a
+topology do with a sparse sensory code that a linear readout cannot".
+
+The outcome worth wanting: `flavour_only` fails to separate nine tags because
+four deliberately ambiguous channels cannot do it instantaneously, while MaleCNS
+succeeds using trajectory and composition. That would be a concrete function for
+the topology — *a low-dimensional compositional sensory code can be insufficient
+instantaneously and become discriminative after transformation by recurrent
+biological topology* — rather than "the fly classified text".
+
+This is **not** an attempt to rescue F2 or F3. Those remain negative. It is a
+different computational regime, motivated by what their failure revealed.
+
+### Controls, in order of cost
+
+| control | question |
+|---|---|
+| `flavour_only` | do four channels already solve it? |
+| `flavour_delay` | does plain temporal memory solve it? |
+| `flavour_expansion` | is it just a cheap nonlinear expansion? |
+| `random_esn` | does generic recurrence solve it? |
+| `degree_null` | do degree and sign suffice? |
+| `MaleCNS` | does this wiring add anything? |
+
+`flavour_delay` is load-bearing and was nearly missed. Without it the direct
+probe sees `f(z_t)` while the operator sees `f(z_t, z_{t-1}, ...)`, so any fly win
+could be memory rather than topology. Its horizon is *derived*, not chosen: a
+leaky integrator retains `(1-leak)^n`, so the window is where that falls below
+5%, which at leak 0.4 and 4 steps per chunk is 2 chunks. History never crosses a
+document boundary.
+
+`flavour_expansion` is a fixed random `4 -> 16` tanh layer, deliberately tiny. A
+large MLP would become the system rather than a baseline for it — the mirror of
+the mistake the simplex mixer avoids.
+
 ## Registered prediction — descending channel utility
 
 The pyramid hypothesis is now specific enough to be wrong in a stated way.
