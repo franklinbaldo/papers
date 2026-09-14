@@ -22,8 +22,11 @@ import numpy as np
 from malecns_wifi.encoder_gate import (
     build_hierarchy,
     candidate_signals,
+    leave_one_document_out_auprc,
     plan_chunks,
+    relative_position,
     score_signal,
+    sensation_features,
 )
 
 
@@ -109,6 +112,10 @@ def main() -> None:
     pooled: dict[str, list[np.ndarray]] = defaultdict(list)
     pooled_labels: list[np.ndarray] = []
     per_document = []
+    sensation: list[np.ndarray] = []
+    positions: list[np.ndarray] = []
+    absolute: list[np.ndarray] = []
+    groups: list[np.ndarray] = []
 
     for record in documents:
         text = record["text"]
@@ -159,6 +166,12 @@ def main() -> None:
         for name, values in signals.items():
             pooled[name].append(np.asarray(values, dtype=np.float64))
         pooled_labels.append(labels)
+        sensation.append(
+            sensation_features(hierarchy["child_plain"], hierarchy["parents_plain"])
+        )
+        positions.append(relative_position(len(plan.fine_spans)))
+        absolute.append(hierarchy["child_plain"])
+        groups.append(np.full(len(plan.fine_spans), len(per_document) - 1))
         print(f"  {per_document[-1]['doc_id']}: {len(plan.fine_spans)} chunks, "
               f"{int(labels.sum())} positive", flush=True)
 
@@ -185,7 +198,50 @@ def main() -> None:
             np.median([d["best_f1"] for d in per_doc])
         )
         overall[name] = scored
+    # Sensation gate: can a probe on the TAG-FREE relational features find the span
+    # on a document it has not seen? This is the precondition for inference, where
+    # no tag-conditioned channel exists at all.
+    group_index = np.concatenate(groups)
+    position_block = np.concatenate(positions)[:, None]
+    sensation_block = np.vstack(sensation)
+    absolute_block = np.vstack(absolute)
+    ablations = {
+        "position_only": position_block,
+        "absolute_embedding": absolute_block,
+        "sensation_relations": sensation_block,
+        "sensation_plus_position": np.hstack([sensation_block, position_block]),
+        "absolute_plus_position": np.hstack([absolute_block, position_block]),
+    }
+    # Sweep the ridge penalty per ablation and keep the best. The blocks differ by
+    # an order of magnitude in width -- relations carry 2*(1+dim) per scale plus
+    # deltas, absolute embeddings just dim -- and one fixed penalty would compare
+    # regularisation strength as much as representation.
+    penalties = (0.01, 0.1, 1.0, 10.0, 100.0)
+    sensation_scores = {}
+    for name, block in ablations.items():
+        scored = [
+            (leave_one_document_out_auprc(block, labels, group_index, penalty=penalty), penalty)
+            for penalty in penalties
+        ]
+        best, penalty = max(scored, key=lambda item: item[0] if np.isfinite(item[0]) else -1.0)
+        sensation_scores[name] = {
+            "auprc": float(best),
+            "penalty": penalty,
+            "dimensions": int(block.shape[1]),
+            "by_penalty": {str(p): float(v) for v, p in scored},
+        }
+
     report = {
+        "sensation_gate": {
+            "ablations": sensation_scores,
+            "random_auprc": float(labels.mean()),
+            "protocol": "ridge probe, leave-one-document-out, AUPRC on held-out documents",
+            "note": (
+                "The inference channel carries no tag. position_only is the control that "
+                "matters: a dispositivo sits at the end of a decision, so any relational "
+                "feature must beat position to have contributed anything."
+            ),
+        },
         "model": args.model,
         "tag": args.tag,
         "fine_size": args.fine_size,
@@ -204,6 +260,21 @@ def main() -> None:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n")
 
+    # Cache the feature blocks. Encoding is the only expensive step here; the
+    # probes are seconds of numpy. Re-encoding the corpus to re-run a ridge sweep
+    # is what exhausted memory on this machine three times over, and it makes the
+    # probe design impossible to iterate on where the GPU is not.
+    np.savez_compressed(
+        args.output.with_suffix(".features.npz"),
+        labels=labels,
+        groups=group_index,
+        position=position_block,
+        sensation=sensation_block,
+        absolute=absolute_block,
+        signal_names=np.asarray(list(pooled.keys())),
+        signal_values=np.vstack([np.concatenate(values) for values in pooled.values()]),
+    )
+
     baseline = report["positive_rate"]
     print(f"\n{len(per_document)} documents, {labels.size} chunks, "
           f"{baseline:.3f} positive (random AUPRC)")
@@ -216,6 +287,14 @@ def main() -> None:
             f"{row['best_f1_per_document_median']:>8.3f}"
             f"{row['start_error_tokens']:>10.0f}{row['end_error_tokens']:>9.0f}"
         )
+    print("\n--- sensation gate (tag-free, ridge probe, leave-one-document-out) ---")
+    print(f"{'features':<26}{'dims':>6}{'AUPRC':>8}{'lift':>7}{'penalty':>9}")
+    for name, row in sorted(sensation_scores.items(), key=lambda kv: -kv[1]["auprc"]):
+        print(
+            f"{name:<26}{row['dimensions']:>6}{row['auprc']:>8.3f}"
+            f"{row['auprc'] / baseline:>7.1f}{row['penalty']:>9g}"
+        )
+
     print(f"\nwrote {args.output}")
 
 

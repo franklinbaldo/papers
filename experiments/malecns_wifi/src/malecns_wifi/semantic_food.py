@@ -460,3 +460,65 @@ def direct_control_features(trajectory: SemanticTrajectory, contrast: TagContras
     return np.concatenate(
         [trajectory.states, contrast.contrast, trajectory.deltas], axis=1
     ).astype(np.float32)
+
+
+# --- supervised conditioning: the annotation says when, the tag says what ----
+#
+# The reward signal does not have to find the span. During training the span is
+# known -- the annotation is the teacher -- so the mask decides *when* there is
+# food and the tag decides only *which flavour* it is. That removes the whole
+# burden the contrast was failing to carry, and it is also the cleaner biological
+# story: the fly walks through the environment feeling S_t, and the experimenter
+# drops food of a particular flavour when it is in the right place.
+#
+# At test nothing of this exists: no tag, no mask, no food. Only S_t.
+
+
+def conditioned_food(
+    mask: np.ndarray,
+    flavour: np.ndarray,
+    *,
+    amplitude: float = 1.0,
+    normalise_energy: bool = True,
+) -> np.ndarray:
+    """``food_t = M_t * flavour(T)``: the mask gates, the tag colours.
+
+    ``flavour`` is one vector per tag -- the tag embedding, or the contrast
+    ``F = R_tag - R`` projected into the gustatory population. It is constant in
+    time: nothing about *where* the food falls comes from the tag.
+
+    ``normalise_energy`` scales each flavour to unit norm so that every tag
+    delivers the same total energy over its span. Without it a tag whose embedding
+    happens to be larger would simply be fed harder, and a difference in
+    downstream accuracy between tags would be a difference in drive strength
+    wearing a semantic costume.
+    """
+    gate = np.asarray(mask, dtype=np.float32).reshape(-1)
+    taste = np.asarray(flavour, dtype=np.float32).reshape(-1)
+    if normalise_energy:
+        span = float(gate.sum())
+        norm = float(np.linalg.norm(taste))
+        if norm > 0 and span > 0:
+            taste = taste / norm / np.sqrt(span)
+    return (gate[:, None] * taste[None, :] * np.float32(amplitude)).astype(np.float32)
+
+
+def tag_flavour(
+    tag_embedding: np.ndarray, population: int, *, seed: int, contrast: np.ndarray | None = None
+) -> np.ndarray:
+    """Project a tag's semantic identity onto the gustatory population.
+
+    With ``contrast`` given, the flavour is the mean tag-contrast direction rather
+    than the bare tag embedding -- what the tag *does* to this document, averaged,
+    instead of what the tag is in isolation. Both are constant in time either way,
+    so neither can leak the span location.
+    """
+    source = np.asarray(tag_embedding, dtype=np.float32).reshape(-1)
+    if contrast is not None:
+        mean = np.asarray(contrast, dtype=np.float32).mean(axis=0)
+        if mean.size != source.size:
+            raise ValueError("contrast must live in the tag's embedding space")
+        source = mean
+    rng = np.random.default_rng(seed)
+    projection = rng.normal(scale=1.0 / np.sqrt(source.size), size=(source.size, population))
+    return (source @ projection.astype(np.float32)).astype(np.float32)

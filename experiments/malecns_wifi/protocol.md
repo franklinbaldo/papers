@@ -331,6 +331,36 @@ The direct control receives exactly the same amount and flavour, with no fly.
 
 Each is run against MaleCNS, both nulls, and the direct control.
 
+### Two channels, separated: sensation and reward
+
+    sensation (inference + training) :  c_i -> E(c_i);  R_i^s = R(E(c_i), E(p_i^s))
+                                        interpolated R_i -> R_{i+1}.  NO tag anywhere.
+    reward    (training only)        :  the tag-conditioned food signal above.
+
+At inference only the first exists. The fly learns that certain trajectories of
+semantic relation accompany food, and then, with no food at all, marks where the
+region should start and end. That is a stricter and more honest design than
+feeding a tag-conditioned channel at test time, where the tag would be doing work
+the connectome is being credited for.
+
+It also changes what this gate has to establish, in two parts:
+
+* **Reward gate** — are the tag-conditioned signals localised on the gold spans?
+  A teacher that fires in the wrong place teaches the wrong thing. This is the
+  AUPRC table above.
+* **Sensation gate** — can a probe on the **tag-free** relational features find
+  the span in a document it has not seen? This is the precondition for inference:
+  no amount of training on food lets the fly recover information the inference
+  channel never carries. Scored by a ridge probe, leave-one-document-out, because
+  chunks within a document are not independent and a random chunk split would
+  report a number that does not survive a new document.
+
+The sensation gate carries its own mandatory control: **relative position**. A
+dispositivo sits at the end of a decision, so position alone predicts it well, and
+any relational feature that does not beat position has contributed nothing. The
+ablations run are position alone, absolute embeddings, relations, and each
+combined with position.
+
 ### Mandatory control
 
 A classifier receiving `[R_t, F_t, dR_t]` with no fly — the relational states,

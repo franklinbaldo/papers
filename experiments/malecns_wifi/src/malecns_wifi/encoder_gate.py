@@ -271,3 +271,74 @@ def candidate_signals(hierarchy: dict, *, tau: float = 0.5) -> dict[str, np.ndar
     for position in range(differential.shape[1]):
         signals[f"differential_scale_{position}"] = differential[:, position]
     return signals
+
+
+# --- sensation vs reward ----------------------------------------------------
+#
+# Two channels, separated on purpose:
+#
+#   sensation -- the multiscale relation of the text to its own contexts, with NO
+#                tag anywhere. This is what the fly feels walking through the
+#                document, and it is ALL that exists at inference.
+#   reward    -- the tag-conditioned food signal, available only in training,
+#                where the tag of the example is known.
+#
+# The consequence for this gate is not cosmetic. The tag-conditioned signals
+# scored above are the *reward* channel: they say whether the teacher is well
+# placed. Whether the fly can find the region at inference is a different
+# question, asked of the tag-free sensation alone, and it is supervised -- the
+# task fixes one tag, so the fly may simply learn what that region feels like.
+
+
+def sensation_features(child_plain: np.ndarray, parents_plain) -> np.ndarray:
+    """Tag-free multiscale relation plus its local motion: ``[R_i, dR_i]``.
+
+    Exactly what the fly receives at inference. No tag is encoded anywhere in
+    this path.
+    """
+    from .semantic_hierarchy import multiscale_relations
+
+    relations, _ = multiscale_relations(child_plain, parents_plain)
+    deltas = np.zeros_like(relations)
+    if len(relations) > 1:
+        deltas[1:] = relations[1:] - relations[:-1]
+    return np.concatenate([relations, deltas], axis=1).astype(np.float32)
+
+
+def relative_position(count: int) -> np.ndarray:
+    """Position in the document, as a fraction.
+
+    The control that matters most here and would otherwise manufacture a false
+    positive: a dispositivo sits at the end of a decision, so position alone is a
+    strong predictor. Any sensation feature has to beat it to be worth anything.
+    """
+    if count <= 1:
+        return np.zeros(max(count, 0), dtype=np.float32)
+    return (np.arange(count, dtype=np.float32) / (count - 1)).astype(np.float32)
+
+
+def leave_one_document_out_auprc(
+    features: np.ndarray,
+    labels: np.ndarray,
+    groups: np.ndarray,
+    *,
+    penalty: float = 1.0,
+) -> float:
+    """Ridge probe scored on held-out documents.
+
+    Leave-one-document-out rather than a random chunk split: chunks inside one
+    document are not independent, and a random split would let the probe see the
+    same document's neighbours at training time and report a number that does not
+    survive a new document.
+    """
+    design = np.hstack([features.astype(np.float64), np.ones((len(features), 1))])
+    truth = np.asarray(labels, dtype=np.float64)
+    predictions = np.zeros(len(truth))
+    for document in np.unique(groups):
+        held_out = groups == document
+        train_x, train_y = design[~held_out], truth[~held_out]
+        gram = train_x.T @ train_x
+        scale = penalty * float(np.trace(gram)) / gram.shape[0]
+        weights = np.linalg.solve(gram + scale * np.eye(gram.shape[0]), train_x.T @ train_y)
+        predictions[held_out] = design[held_out] @ weights
+    return average_precision(predictions, np.asarray(labels, dtype=bool))
