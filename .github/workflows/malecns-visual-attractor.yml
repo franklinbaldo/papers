@@ -1,0 +1,39 @@
+name: MaleCNS Visual Attractor
+
+on:
+  pull_request:
+    paths:
+      - "experiments/malecns_visual_attractor/**"
+      - "learned_visual_attractors.md"
+      - ".github/workflows/malecns-visual-attractor.yml"
+  push:
+    branches:
+      - experiment/fly-visual-lures
+    paths:
+      - "experiments/malecns_visual_attractor/**"
+      - "learned_visual_attractors.md"
+      - ".github/workflows/malecns-visual-attractor.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: malecns-visual-attractor-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: experiments/malecns_visual_attractor/pyproject.toml
+      - name: Install experiment
+        working-directory: experiments/malecns_visual_attractor
+        run: uv sync --extra dev
+      - name: Run closed-loop invariants
+        working-directory: experiments/malecns_visual_attractor
+        run: uv run pytest -q
