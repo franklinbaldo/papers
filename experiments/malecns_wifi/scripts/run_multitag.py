@@ -19,10 +19,12 @@ import numpy as np
 from malecns_wifi import load_graph
 from malecns_wifi.multitag import (
     MultitagSpec,
+    array_fingerprint,
     build_flavours,
     calibrate_drive,
     evaluate,
     reservoir_states,
+    run_fingerprint,
 )
 from malecns_wifi.tagger import iter_operators, select_populations
 
@@ -113,11 +115,30 @@ def main() -> None:
     # erased fifty minutes of computation once already; every finished cell is
     # now on disk before the next one starts.
     checkpoint = args.output.with_suffix(".partial.json")
+    config_hash = run_fingerprint(
+        gains=list(spec.gain_grid),
+        leak=spec.leak,
+        steps=spec.steps_per_chunk,
+        drive=spec.input_scale,
+        seeds=list(spec.seeds),
+        graph=str(args.graph),
+        features=array_fingerprint(np.hstack(list(blocks.values()))),
+    )
     results = []
     if checkpoint.exists():
-        results = json.loads(checkpoint.read_text())["results"]
+        previous = json.loads(checkpoint.read_text())
+        if previous.get("config_hash") != config_hash:
+            raise SystemExit(
+                f"{checkpoint} was written under a different configuration "
+                f"({previous.get('config_hash')} vs {config_hash}). Resuming would mix "
+                f"runs. Delete it to start fresh."
+            )
+        results = previous["results"]
         print(f"resuming from {checkpoint} with {len(results)} cells already done")
-    done = {(row["reservoir"], row["representation"], row["flavour"]) for row in results}
+    done = {
+        (row["reservoir"], row["representation"], row["flavour"], row.get("gain"))
+        for row in results
+    }
 
     cache_dir = args.state_cache
     if cache_dir:
@@ -176,7 +197,12 @@ def main() -> None:
     if args.readout_size:
         readout = readout[: args.readout_size]
 
-    for operator_name, operator, _ in iter_operators(matrix, seed=spec.seeds[0]):
+    # The null topology is redrawn for every seed. Drawing it once and varying
+    # only the input projection means F3's "10 seeds" are ten readouts of ONE
+    # random graph, which is not what a topology null is for: the quantity that
+    # has to vary across seeds is the rewiring itself.
+    operator_names = ("malecns", "degree_null", "random_esn", "deflated")
+    for operator_name in operator_names:
         for name, block in blocks.items():
             if operator_name != "malecns" and name != "absolute_plus_relations":
                 continue  # nulls run on the full representation only
@@ -193,7 +219,23 @@ def main() -> None:
             for seed in spec.seeds:
                 key = None
                 if cache_dir:
-                    key = cache_dir / f"{operator_name}__{name}__seed{seed}.npy"
+                    key = cache_dir / (
+                        run_fingerprint(
+                            operator=operator_name,
+                            representation=name,
+                            seed=seed,
+                            gain=spec.gain,
+                            leak=spec.leak,
+                            steps_per_chunk=spec.steps_per_chunk,
+                            target_drive_rms=spec.input_scale,
+                            features=array_fingerprint(block),
+                            graph=str(args.graph),
+                            inputs=int(populations.input_indices.size),
+                            readout=int(readout.size),
+                            null_seed=seed,
+                        )
+                        + ".npy"
+                    )
                     if key.exists():
                         states_by_seed[seed] = np.load(key)
                         calibration = calibration or {"mean": float("nan"), "spread": float("nan"),

@@ -37,6 +37,11 @@ class MultitagSpec:
     steps_per_chunk: int = 4
     readouts: tuple[str, ...] = ("descending",)
     step_grid: tuple[int, ...] = (4,)
+    # F3 requires each operator to pick its own gain on validation: rho = 1 does
+    # not put MaleCNS and a random ESN in the same dynamical regime, because the
+    # first has typical gain ~0.295 at unit radius and the second a far flatter
+    # spectrum. Running everyone at 0.95 compares operating points, not wirings.
+    gain_grid: tuple[float, ...] = (0.25, 0.5, 0.95, 1.5, 2.5, 4.0)
     ridge_penalties: tuple[float, ...] = (0.01, 0.1, 1.0, 10.0, 100.0)
     seeds: tuple[int, ...] = (0, 1, 2)
     input_scale: float = 1.0
@@ -280,6 +285,17 @@ def decode(predictions: np.ndarray, flavours: np.ndarray) -> tuple[np.ndarray, n
     return magnitude, np.argmax(unit @ flavours.T, axis=1)
 
 
+def _macro_tag_ap(predictions: np.ndarray, tag_masks: np.ndarray, flavours: np.ndarray) -> float:
+    """Macro one-vs-rest AP over tags, the metric the decision rule is written in."""
+    scores = []
+    for index in range(flavours.shape[0]):
+        target = np.asarray(tag_masks)[:, index] > 0
+        if target.any() and not target.all():
+            scores.append(average_precision(predictions @ flavours[index], target))
+    finite = [value for value in scores if np.isfinite(value)]
+    return float(np.mean(finite)) if finite else float("nan")
+
+
 def evaluate(
     features: np.ndarray,
     tag_masks: np.ndarray,
@@ -317,8 +333,11 @@ def evaluate(
             scored = np.hstack(
                 [features[train_index][inner_valid], np.ones((int(inner_valid.sum()), 1))]
             ) @ weights
-            magnitude, _ = decode(scored, flavours)
-            score = average_precision(magnitude, inside[train_index][inner_valid])
+            # Selected on the metric the decision rule uses. Choosing the penalty
+            # by any-tag AUPRC and then adjudicating F2/F3 on macro per-tag AUPRC
+            # optimises one quantity and reports another, and with prevalences
+            # from 8 to 18 chunks that can reorder operators.
+            score = _macro_tag_ap(scored, tag_masks[train_index][inner_valid], flavours)
             if np.isfinite(score) and score > best:
                 best, best_penalty = score, penalty
         chosen_penalties.append(best_penalty)
@@ -479,3 +498,30 @@ def evaluate_exact_per_fold(
         "random_auprc": float(inside.mean()),
         "calibration_mode": "exact_per_fold",
     }
+
+
+def run_fingerprint(**parts) -> str:
+    """Hash of everything that changes the states or the scores.
+
+    The cache key used to be ``operator__representation__seed``, which omits
+    gain, leak, steps per chunk, the null draw, the populations, the drive
+    calibration and the graph itself. Running a gain grid against that cache
+    would silently load gain-0.95 states and report them as gain-2.5 -- a wrong
+    number with no error, produced by the machinery we had just made central to
+    the workflow. Identity has to cover everything that could differ.
+    """
+    import hashlib
+    import json as _json
+
+    payload = _json.dumps(parts, sort_keys=True, default=str).encode("utf-8")
+    return hashlib.blake2b(payload, digest_size=10).hexdigest()
+
+
+def array_fingerprint(array: np.ndarray) -> str:
+    """Content hash of a feature block, so a changed corpus invalidates a cache."""
+    import hashlib
+
+    values = np.ascontiguousarray(np.asarray(array, dtype=np.float32))
+    digest = hashlib.blake2b(values.tobytes(), digest_size=10)
+    digest.update(str(values.shape).encode())
+    return digest.hexdigest()
