@@ -87,6 +87,12 @@ def main() -> None:
     parser.add_argument("--model", default="Qwen/Qwen3-Embedding-0.6B")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--tag", default="dispositivo: o resultado do julgamento")
+    parser.add_argument(
+        "--tags",
+        nargs="+",
+        default=None,
+        help="span categories to cache masks and flavour embeddings for (multi-tag run)",
+    )
     parser.add_argument("--fine-size", type=int, default=64)
     parser.add_argument("--scales", type=int, nargs="+", default=[256, 1024])
     parser.add_argument("--tau", type=float, default=0.5)
@@ -116,6 +122,7 @@ def main() -> None:
     positions: list[np.ndarray] = []
     absolute: list[np.ndarray] = []
     groups: list[np.ndarray] = []
+    tag_masks: list[np.ndarray] = []
 
     for record in documents:
         text = record["text"]
@@ -148,6 +155,27 @@ def main() -> None:
             )
         if not labels.any():
             continue
+
+        # Multi-tag masks share this document's chunk plan exactly, so the fly sees
+        # one sensation stream and every tag is expressed on the same time axis.
+        if args.tags:
+            per_tag = np.zeros((len(plan.fine_spans), len(args.tags)), dtype=np.float32)
+            for column, category in enumerate(args.tags):
+                category_spans = [
+                    (int(s["start"]), int(s["end"]))
+                    for s in record.get("label", [])
+                    if s.get("category") == category
+                ]
+                for index, (first, last) in enumerate(plan.fine_spans):
+                    if first >= len(offsets):
+                        continue
+                    chunk_start = offsets[first][0]
+                    chunk_end = offsets[min(last, len(offsets)) - 1][1]
+                    per_tag[index, column] = float(
+                        any(chunk_start < end and start < chunk_end
+                            for start, end in category_spans)
+                    )
+            tag_masks.append(per_tag)
 
         hierarchy = build_hierarchy(text_of, plan, encoder, args.tag)
         signals = candidate_signals(hierarchy, tau=args.tau)
@@ -273,6 +301,20 @@ def main() -> None:
         absolute=absolute_block,
         signal_names=np.asarray(list(pooled.keys())),
         signal_values=np.vstack([np.concatenate(values) for values in pooled.values()]),
+        **(
+            {
+                "tag_names": np.asarray(args.tags),
+                "tag_masks": np.vstack(tag_masks),
+                # One embedding per tag, from the category name read as a phrase.
+                # Constant in time by construction, so it can colour food but
+                # never say where the food is.
+                "tag_embeddings": encoder.encode(
+                    [category.replace("_", " ") for category in args.tags]
+                ),
+            }
+            if args.tags
+            else {}
+        ),
     )
 
     baseline = report["positive_rate"]
