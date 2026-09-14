@@ -11,7 +11,7 @@ status: "pre-registered design; no confirmatory results yet"
 
 ## Abstract
 
-We ask whether a visual pattern optimized entirely in simulation can become a reliable, printable lure for flies. The proposed system places multiple fly-like agents at different positions and orientations in a virtual arena containing one flat target surface whose image is generated procedurally. A search algorithm modifies the pattern to maximize preregistered attraction behaviours such as orientation, approach, dwell time and landing across the population. The resulting pattern is then tested under domain randomization and against simple visual controls before any physical transfer is attempted.
+We ask whether a visual pattern optimized entirely in simulation can become a reliable, printable lure for flies. The proposed system places multiple fly-like agents at different positions and orientations in a virtual arena containing one flat target surface whose image is generated procedurally or by a learned adversarial generator. A search algorithm modifies the pattern to maximize preregistered attraction behaviours such as orientation, approach, dwell time and landing across the population. The resulting pattern is then tested under domain randomization and against simple visual controls before any physical transfer is attempted.
 
 The scientific question is not whether flies respond to visual patterns; that is established. The question is whether an optimization loop can discover a compact, printable pattern whose **attraction field** survives changes in viewpoint, pose, illumination and scene statistics and then transfers at least partially from a fly/connectome simulation to real insects. A successful result would provide a non-chemical, visually mediated lure and a benchmark for how much behaviourally relevant structure in a simulated visual system transfers to the animal that inspired it.
 
@@ -63,11 +63,32 @@ A candidate therefore produces both a scalar optimization score and an **attract
 
 Multiple flies in one scene are not treated as fully independent statistical replicates. Scene and pattern are shared, so confirmatory analysis clusters observations by scene/pattern seed and reports both per-fly and per-scene aggregates.
 
-## Optimizer
+## Pattern generators
 
-The first optimizer is population-based rather than a GAN. The simulator itself is already the behavioural critic, so a classical generator/discriminator GAN is not required. A simple evolutionary search over the binary grid gives a transparent first test and makes it easy to preserve an archive of candidate patterns and behavioural traces.
+The experiment compares two complementary search mechanisms rather than assuming one is correct.
 
-A learned generator is a later extension only if direct search establishes a real signal. At that stage a generator may map latent codes to printable images while a learned surrogate predicts behavioural reward to reduce simulation cost. The fly/connectome simulation remains the final evaluator.
+### Evolutionary generator
+
+A direct population-based optimizer mutates binary bitmaps and keeps high-scoring candidates. This is the transparent baseline: it requires no learned image model and gives the simulator direct authority over selection.
+
+### Adversarial neural generator
+
+A neural generator `G(z)` maps a low-dimensional latent code to a printable bitmap. A learned critic/surrogate `C(pattern, scene_summary)` is trained on accumulated simulator evaluations to predict the population attraction score. The generator is optimized against this critic to propose patterns expected to attract the virtual flies strongly.
+
+The adversarial loop is:
+
+```text
+latent z -> generator G -> printable pattern p
+                         -> fly swarm simulator -> true attraction R(p)
+                         -> critic C learns R(p)
+critic gradient -> generator proposes stronger patterns
+```
+
+The critic is not allowed to become the final judge. Simulator evaluations remain the ground truth and a fixed fraction of every generation is evaluated directly. This prevents generator/critic collusion from being mistaken for attraction.
+
+A second optional adversarial term can reward **printability and robustness** rather than attraction: a discriminator distinguishes physically plausible rendered/printed patterns from pathological simulator-only images. This term may regularize the generator but cannot replace the behavioural reward.
+
+The neural arm is therefore GAN-like in optimization structure, but the fly population supplies the behaviour that matters. Its scientific comparison is not “GAN versus no GAN” in isolation; it is whether a learned generator finds stronger and/or more robust attraction basins per unit simulator budget than direct evolutionary search.
 
 ## Controls
 
@@ -79,7 +100,8 @@ Every candidate family is compared against fixed controls under identical arena 
 - checkerboard;
 - vertical stripe;
 - concentric target;
-- the best pattern from an optimizer whose reward labels are shuffled.
+- the best pattern from an optimizer whose reward labels are shuffled;
+- for the adversarial arm, a generator trained against a shuffled or frozen-uninformative critic.
 
 Using paired swarm starts is load-bearing: if candidate and control see different initial fly configurations, spatial sampling noise can masquerade as attraction.
 
@@ -112,6 +134,8 @@ The first experiment is successful only if the selected pattern:
 
 The exact effect-size threshold is frozen when the chosen simulator exposes the natural scale of the behavioural metrics, before the optimizer is run on the decision set.
 
+For the adversarial generator, every frozen candidate is rescored directly by the simulator on held-out scenes; critic predictions never count as evidence.
+
 ## Sim-to-real gate
 
 A physical assay is authorized only after the virtual robustness gate passes. The printed pattern, blank controls and matched random controls are presented in randomized positions in a contained arena. Multiple flies are tracked simultaneously when feasible, mirroring the virtual swarm design. Analysis is blinded to target identity until trajectories are frozen.
@@ -128,7 +152,7 @@ The intended use is benign attraction and redirection of flies using a passive v
 
 This paper does not claim novelty for visual attraction, object fixation, stripe preference, phototaxis, or virtual-reality assays in flies. Relevant literature already shows innate shape/size preferences in walking *Drosophila*, visual fixation on stripes/objects, visually controlled landing and obstacle avoidance, and wavelength preferences mediated by different photoreceptor classes.
 
-The research bet is the conjunction: **closed-loop optimization of a constrained printable pattern against a population of fly-like agents + an explicit attraction-field measurement + held-out robustness + simulator-hack controls + a later blinded sim-to-real transfer test.**
+The research bet is the conjunction: **closed-loop optimization of a constrained printable pattern against a population of fly-like agents + an explicit attraction-field measurement + adversarial or evolutionary pattern generation + held-out robustness + simulator-hack controls + a later blinded sim-to-real transfer test.**
 
 ## References / starting points
 
