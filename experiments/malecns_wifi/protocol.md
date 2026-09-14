@@ -94,7 +94,11 @@ A clean negative here is an acceptable and publishable outcome. A negative with 
 
 ## Operating point — measured, not assumed
 
-Scaling by `0.95 / rho` was the plan and is measurably wrong for this operator.
+**The rule.** Each operator picks its own gain from a shared logarithmic grid, `{0.25, 0.5, 0.95, 1.5, 2.5, 4} x (1/rho)`, selected on validation and scored on held-out data. Matching operators on a single scalar of the spectrum is ill-posed when the spectra have different shapes: MaleCNS is rank-2-plus-bulk, the nulls are flat, and there is no "same operating point" between those objects — only the best of each. This is standard ESN practice (one hyperparameter per model) and it asks the right question: topology at its best against null at its best. As robustness, the same contrast is reported at both fixed points, rho-matched (0.95) and bulk-matched (~3.2), so the reader can see how much the answer depends on the criterion. If MaleCNS wins at only one of them, that goes in the paper as it stands.
+
+**Registered prediction.** At gain >= 1.5/rho the two hemisphere-local modes should saturate — tanh clamping v1 and v2 — and the echo state property should break, which would make the bulk-matched point unreachable for MaleCNS without saturating. If that is what happens, the v1/v2 figure stops being an appendix: the real operator is a slow two-mode global integrator sitting on top of a weak reservoir, and no degree-preserving null reproduces that geometry.
+
+**Why the grid, in numbers.** Scaling by `0.95 / rho` was the original plan and is measurably wrong for this operator.
 
     rho (ARPACK)                 3776.27
     typical ||Wv|| / ||v||        149.86
@@ -121,9 +125,24 @@ why power iteration converges slowly here (as `(lambda_2/lambda_1)^k`), and it
 means that under `rho` normalisation the two slowest modes are "which hemisphere
 is ringing" rather than anything computational.
 
+### Fourth condition: deflation (an ablation, not a null)
+
+`W` with its two leading hemisphere-local modes projected out, applied matrix-free
+since `W` minus a dense 165k-square update is not representable. This is not a null
+model and is not scored against the decision rule — it is a question the nulls
+cannot answer, because no degree-preserving rewiring reproduces that geometry:
+**what does the bulk do on its own?** It separates "slow global integrator" from
+"reservoir".
+
+Only real modes are deflated. A complex pair spans a two-dimensional real invariant
+subspace; removing its real part alone is not a projector and can make the spectral
+radius grow rather than shrink. Skipped modes are counted in the report.
+
 ## Gate 2 — document-level task on the whole brain
 
 After Gates 0 and 1, all conditions receive the **same frozen byte stream**, the same split, and the same fixed random input projection.
+
+**Corpus scope: first-instance merits judgments that have a dispositivo.** Appellate decisions in the current corpus are ementa and header only — 90% of them carry no dispositivo and are dropped by the filter rather than silently mislabelled — so the scale collection filters for first-instance merits judgments at source. This is stated in the first line of the data section, not buried in a limitations paragraph.
 
 Primary task: predict the dispositivo of a judicial decision from its report and reasoning alone (`favourable` / `unfavourable` / `partial`). The reservoir reads the truncated decision byte by byte; the readout pools the descending-neuron state (final step and temporal mean).
 
@@ -140,13 +159,22 @@ Conditions to compare:
 3. degree-preserving rewired MaleCNS control;
 4. true frozen MaleCNS reservoir.
 
-Only the readout is fitted, by ridge regression. The input projection is fixed and random (seeded); recurrent weights are frozen in every reservoir condition. No epochs, no checkpoint selection, no early stopping — there is nothing to select on, which is the point.
+Two training regimes run on the same split, in the same run, and are reported side by side.
+
+**Ridge.** Only the readout is fitted. The input projection is fixed and random (seeded); recurrent weights are frozen. No epochs, no checkpoint selection, no early stopping — there is nothing to select on. Runs on CPU and finishes first.
+
+**Trainable adapter.** A learned interface on both sides of the frozen operator, in the FLM design: a 64-dimensional byte embedding and a linear projection into the sensory populations on the way in, a linear readout over descending-neuron pooling on the way out, about 300k parameters. `W` never moves. Gradients reach the embedding through the frozen sparse recurrence, but not across the whole document: backpropagating through a 10M-edge product for thousands of bytes does not fit in memory, so the graph is cut at each 256–512 byte window while the state carries across detached. The state sees the document; the gradient sees a window. Epochs return — up to 30, checkpoint on best validation macro-F1, early stopping — because the validation split is now tens of documents rather than three. Needs a GPU.
+
+**The control that makes the adapter interpretable.** An adapter of the same size wired straight from input to output with no fly in between — FLM's direct-input control. If it matches the reservoir conditions, the adapter did the task and the topology is decoration. Each null gets its own adapter too.
+
+Also reported: adapter against ridge, per operator. If the adapter gains a lot only on MaleCNS, the signal is in the interface; if it gains equally everywhere, it is capacity.
 
 ### Preregistered decision rule
 
 Fixed before the first full run:
 
-- **Topology advantage** is claimed only if MaleCNS beats **both** nulls on held-out data. Beating the random ESN alone shows recurrence helps, not that this wiring does.
+- **Topology advantage** is claimed only if MaleCNS beats **both** nulls *and* the direct-input control, in the same training regime, on held-out data. Beating the random ESN alone shows recurrence helps, not that this wiring does; beating the nulls but not the direct control shows the adapter did the work.
+- **Gain** is selected per operator on validation from the declared grid, never on held-out data.
 - **Seeds:** at least 10. Seeds vary only the input projection and the null draws; the ridge readout is deterministic, so seeds are cheap and there is no excuse for fewer.
 - **Test:** paired per-seed differences against each null, reported with the per-seed values, not only the means. A bimodal per-seed distribution is reported as instability, not averaged into a headline.
 - **Minimum effect:** a paired mean macro-F1 gain over the degree-preserving null of at least 0.03, with at least 8 of 10 seeds in the same direction. Below that the result is reported as null.
@@ -156,7 +184,7 @@ Fixed before the first full run:
 
 - Split by period or by court, never by randomly mixing documents.
 - The segmenter `test.jsonl` stays untouched; all selection happens on validation.
-- Weak regex labels are measured against the hand-annotated gold documents, and the measured label noise is reported alongside every accuracy number. Where the regex abstains or conflicts with a second labeller, the tie is broken by an LLM reading *only the extracted dispositivo*, never the whole document; a stratified sample is checked by hand so the noise figure has an attribution rather than just a bound.
+- Weak regex labels are measured against the hand-annotated gold documents, and the measured label noise is reported alongside every accuracy number. The regex reading the isolated dispositivo reproduces the hand annotation 17/17, so no LLM enters the labelling pipeline — one fewer noise source to account for. A stratified sample is checked by hand as verification, not as a tie-break.
 - Report macro-F1 plus the per-class confusion, parameter counts and wall-clock inference cost for each condition.
 - Do not call a result a MaleCNS advantage unless the true topology beats both nulls on held-out data.
 
