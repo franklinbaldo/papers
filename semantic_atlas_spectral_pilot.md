@@ -14,7 +14,7 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Empirical companion and negative-result paper.** This manuscript reports a sequence of small, reproducible experiments motivated by the spectral extension of *From Semantic Points to Concept Manifolds*. It does not treat a graph-Laplacian spectral gap as a physical mass gap, and it does not claim that the tested models establish universal semantic manifolds. Its main result is methodological: semantic decodability, graph smoothness, and first-bottleneck topology are empirically distinct properties, and apparently strong spectral-semantic results can disappear under fresh-corpus and cross-model confirmation.
+> **Empirical companion and negative-result paper.** This manuscript reports a sequence of small, reproducible experiments motivated by the spectral extension of *From Semantic Points to Concept Manifolds*. It does not treat a graph-Laplacian spectral gap as a physical mass gap, and it does not claim that the tested models establish universal semantic manifolds. Its main result is methodological: semantic decodability, graph smoothness, and first-bottleneck topology are empirically distinct properties, and apparently strong spectral-semantic results can disappear under fresh-corpus and cross-model confirmation. The individual negatives are not of equal weight: some remove an assumption we were never entitled to (Section 11.0), while one — the instability of the confidence property across checkpoint, layer, and corpus — is a substantive prospective falsification.
 
 ## Abstract
 
@@ -333,6 +333,21 @@ Thus, on these natural teacher-forced trajectories, the final causal representat
 
 The experimental sequence supports several conclusions more strongly than it supports the original spectral-bottleneck idea.
 
+### 11.0 Two kinds of negative: assumed arrows versus tested arrows
+
+Not every failure above has the same epistemic weight, and the paper should not trade on the strongest-sounding reading of each. A distinction must be drawn between two outcomes:
+
+- **"We discovered that this arrow is false"** — an implication the theory gave us reason to believe was broken only by running the experiment;
+- **"We discovered we had no justification for assuming this arrow"** — an implication that was never licensed, whose empirical "failure" mostly audits our own framing.
+
+Classifying the sequence:
+
+1. **Mean pooling failing is observer audit, not semantic geometry.** For an autoregressive model there was never a theoretical reason to expect prefix averaging and the causal endpoint hidden state to share global graph topology. The 56.25%-versus-75% contrast is a sanity check that also validated the controls; its durable content is internal to one observer (the centroid decoded at 0.7500 from the same mean-pooled states where Fiedler sat at chance), plus the demonstration that observer choice is load-bearing.
+2. **Stance/permission ≠ first Fiedler is conceptually expected.** Section 1 already concedes there is no theorem requiring a strongly encoded semantic variable to be the graph's weakest global connection; known failures of spectral clustering under multiscale structure and unequal densities predate this programme. The value of these runs was killing our own M4 shortcut before building theory on it — necessary internal discipline, not an independent discovery about representations.
+3. **Decodable ≠ bottleneck is methodologically useful, scientifically modest.** Same model, same states, same corpus: 100% supervised-centroid accuracy against chance-level Fiedler alignment. This makes the distinction concrete rather than merely conceptual, but the two properties were never mathematically equivalent, so the result confirms a separation we already knew was possible.
+4. **The confidence arc is the genuine empirical payload — and it is an instability result.** A geometric property passed six registered gates on a fresh corpus, transferred at 87.5% to implicit realizations with no explicit certainty vocabulary and behaved negative controls, then failed unchanged replication on SmolLM2-360M *before* the transfer step, and a preregistered relative-depth rule (~56%) derived from an exploratory scan failed on a completely fresh corpus in both models. What was falsified is not "Fiedler does not work" but any corpus-, layer-, and checkpoint-independent reading of the property. Testing proportional depth was reasonable — comparable-depth local geometric similarity is an open empirical question —; what was fragile was promoting agreement across two scans into a mechanistic coordinate rule. The surviving claim: **the property is strongly conditional on realization**, and condition-dependence established prospectively is a real finding.
+5. **The future-entropy negative tests an Atlas-internal question, and answers only that question.** Between \(t\) and \(t+8\) the model consumes eight new tokens; \(z_t \rightarrow H_{t+8}\) is therefore a property of position-conditioned dynamics, not of geometry alone. The result says: a position-only representation graph carries no information about uncertainty eight teacher-forced tokens ahead beyond current entropy. It does **not** bear on manifolds, geodesics, or semantic gravity. But it is not orthogonal to the programme either: `semantic_atlas.md` explicitly poses whether position is a complete dynamic state (§2.2), and the answer here is no under teacher forcing — velocity/history/action augmentation is load-bearing, not optional. Current-entropy smoothness (\(p \approx .002\) in both models) remains instrument validation, exactly as registered.
+
 ### 11.1 Decodability is not topology
 
 A variable can be almost perfectly linearly recoverable while having chance-level alignment with the Fiedler vector. The stance, permission, and fresh-confidence confirmations provide direct examples.
@@ -457,7 +472,9 @@ The correct conclusion is therefore neither "semantic spectral geometry works" n
 
 The graph Laplacian can reveal genuine structure, but semantic meaning, dynamical relevance, and control cost must each be independently earned. In this setting, the first Fiedler bottleneck is too strong and too fragile to serve as a generic semantic primitive.
 
-That negative result improves the Semantic Atlas programme. It replaces an attractive metaphor with a hierarchy of distinct, falsifiable claims and leaves a cleaner target for future work: reproducible local charts and spectral smoothness that predict held-out dynamics or intervention cost without relying on a privileged graph mode.
+Honest bookkeeping also requires saying what kind of negative each experiment was: the mean-pooling failure and the stance/permission results removed assumptions we were never entitled to rather than discovering broken implications (Section 11.0), while the confidence sequence — success, transfer, then prospective cross-model and fresh-corpus collapse — is a substantive falsification of any realization-independent reading of the property. The programme-level lesson is that arrows from representation to manifold, spectral smoothness, bottleneck, dynamics, and control cost are separate hypotheses, each requiring its own license.
+
+That negative result improves the Semantic Atlas programme. It replaces an attractive metaphor with a hierarchy of distinct, falsifiable claims and leaves a cleaner target for future work: not further attempts to rescue the Fiedler shortcut, but a direct test of whether local/manifold geometry earns predictive or control advantage over flat Euclidean geometry — for example, geodesic versus Euclidean distance predicting realized transitions or steering cost. A negative there would be non-trivial, because the advantage is the core of the manifold hypothesis rather than a side consequence of spectral clustering theory.
 
 ---
 
