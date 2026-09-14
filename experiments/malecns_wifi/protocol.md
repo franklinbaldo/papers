@@ -100,7 +100,29 @@ A clean negative here is an acceptable and publishable outcome. A negative with 
 
 **Measured so far, and refined.** MaleCNS *does* reach bulk-matched, and reaches it exactly at the knee where clamping begins: peak |x| is 0.970 at gain 0.95 and 1.000 by gain 4.0, while the saturated fraction stays at 0 until gain 4 (1.4%) and is 11.6% at gain 8. So the prediction's conclusion ("unreachable") is wrong and its mechanism is right: the operator cannot reach bulk-matched *without beginning to clamp*.
 
-That is a refinement, not a partial failure, and it needs the right instrument to close. A global saturated fraction does not test a claim about `v1` and `v2`: the mode-loading sweep projects the state onto each leading eigenvector (`v_k^T x_t`), weights saturation by the mass each mode carries, and checks the echo state property, at gains 2.5, 3.2, 4 and 8. Document length is a confound to remove separately — 384-byte tails may be too short for a slow two-mode integrator to charge.
+That is a refinement, not a partial failure, and it needed the right instrument to close. A global saturated fraction does not test a claim about `v1` and `v2`. The mode-loading sweep projects the state onto the leading eigenvectors, weights saturation by the mass each mode carries, and checks the echo state property. On the row-normalised operator, 400 steps, leak 0.4, dense drive:
+
+| gain | leading-subspace rms | subspace saturation | third-mode rms | ESP | separation |
+|---|---|---|---|---|---|
+| 0.25 | 0.070 | 0.000 | 0.103 | yes | 0 |
+| 0.50 | 0.085 | 0.000 | 0.101 | yes | 0 |
+| 0.95 | 0.155 | 0.000 | 0.109 | yes | 9e-08 |
+| 1.50 | 0.766 | 0.000 | 0.128 | **no** | 2.49 |
+| 2.00 | 1.246 | 0.000 | 0.136 | no | 18.4 |
+| 2.50 | 1.464 | 0.013 | 0.095 | no | 46.2 |
+| 3.20 | 1.596 | **0.859** | 0.041 | no | 85.4 |
+
+Three measured facts, none of which the global fraction could show:
+
+* **The echo state property breaks between gain 0.95 and 1.50** — separation goes from 9e-08 to 2.49. The usable ESP range is gain <= ~1, far below bulk-matched.
+* **Leading-subspace saturation switches on between 2.5 and 3.2**, from 1.3% to 86%, which is exactly the bulk-matched point. At gain 3.2 the global saturated fraction was still near zero; the modes that carry the dynamics were 86% clamped.
+* **The third mode is crowded out as the pair clamps**, dropping from ~0.11 to 0.041. The bulk gets quieter precisely as the slow modes pin.
+
+So bulk-matched is reachable only at a gain where the operator has long since stopped being a reservoir: no echo state property, and most of its leading subspace clamped.
+
+Two caveats attach to the numbers. On the row-normalised operator the leading pair is **exactly** degenerate (`lambda_2/lambda_1 = 1.000`, against 0.9848 raw), so `v1` and `v2` individually are an arbitrary basis of one 2-D invariant subspace and only the subspace total is interpretable — per-mode loadings differed 20-fold purely by basis choice. And this sweep drives all 165k neurons at `input_scale` 1.0, much harder than the task's sensory-only input; ESP and saturation thresholds both depend on drive amplitude, so these characterise the operator, not the tagger's operating point.
+
+Document length remains a separate confound: 384-byte tails may be too short for a slow two-mode integrator to charge.
 
 **Why the grid, in numbers.** Scaling by `0.95 / rho` was the original plan and is measurably wrong for this operator.
 

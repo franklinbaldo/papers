@@ -743,10 +743,20 @@ def mode_loading_sweep(
         loading = measure_mode_loading(
             normalised, unit, gain=gain, leak=leak, steps=steps, seed=seed
         )
+        per_mode = np.sqrt((loading.projections**2).mean(axis=0))
+        # With an exactly degenerate leading pair the individual eigenvectors are an
+        # arbitrary basis of the same 2-D invariant subspace, so per-mode loadings
+        # are not interpretable on their own. The subspace total is.
+        degenerate = abs(unit["eigenvalues"][1]) / max(abs(unit["eigenvalues"][0]), 1e-300) > 0.999
         rows.append(
             {
                 "gain": float(gain),
-                "mode_rms": [float(x) for x in np.sqrt((loading.projections**2).mean(axis=0))],
+                "leading_subspace_rms": float(np.sqrt((per_mode[:2] ** 2).sum())),
+                "leading_pair_degenerate": bool(degenerate),
+                "leading_subspace_saturation": float(
+                    np.mean(loading.mass_weighted_saturation[:2])
+                ),
+                "mode_rms": [float(x) for x in per_mode],
                 "mode_peak": [float(x) for x in loading.mode_saturation],
                 "mass_weighted_saturation": [float(x) for x in loading.mass_weighted_saturation],
                 "echo_state_separation": loading.echo_state_separation,
