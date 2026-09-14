@@ -24,6 +24,13 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--ridge", type=float, default=1e-3)
     parser.add_argument(
+        "--no-row-normalise",
+        action="store_true",
+        help="scale by the spectral radius alone. Measured to leave this operator's bulk damped "
+        "25x and the recurrent drive under 1%% of the input drive, so the topology is not in "
+        "the loop: use only to reproduce that failure.",
+    )
+    parser.add_argument(
         "--max-bytes",
         type=int,
         default=0,
@@ -46,6 +53,7 @@ def main() -> None:
         seeds=tuple(args.seeds),
         ridge=args.ridge,
         target_radius=args.target_radius,
+        normalise_rows=not args.no_row_normalise,
         reservoir=ReservoirSpec(
             leak=args.leak,
             embedding_dim=args.embedding_dim,

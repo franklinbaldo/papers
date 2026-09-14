@@ -260,12 +260,31 @@ def select_populations(
     return Populations(inputs, readout, input_selector, readout_selector)
 
 
+def row_normalise(matrix: sp.csr_matrix) -> sp.csr_matrix:
+    """Divide each row by its own postsynaptic in-strength.
+
+    Not the max-row-sum scalar, which damps the whole operator by its single worst
+    hub. Per-row normalisation flattens hub dominance: on MaleCNS it takes the
+    spectral concentration -- the spectral radius over the bulk scale
+    ``||W||_F / sqrt(n)`` -- from 24.8 down to 3.4. That matters because scaling a
+    concentration-24.8 operator to unit spectral radius leaves the bulk damped 25x,
+    and the recurrent drive at under 1% of the input drive: the topology is then
+    not in the loop at all.
+    """
+    in_strength = np.asarray(np.abs(matrix).sum(axis=1)).ravel()
+    scale = (1.0 / np.maximum(in_strength, 1.0)).astype(np.float32)
+    normalised = matrix.copy()
+    normalised.data *= np.repeat(scale, np.diff(matrix.indptr))
+    return normalised
+
+
 def iter_operators(
     matrix: sp.csr_matrix,
     *,
     seed: int,
     target_radius: float = 0.95,
     radius: float | None = None,
+    normalise_rows: bool = True,
 ):
     """Yield the real operator and both nulls, one at a time, each at ``target_radius``.
 
@@ -275,20 +294,24 @@ def iter_operators(
     one, so that a difference in dynamic range cannot be mistaken for a difference
     in wiring.
     """
-    if radius is None:
-        radius = spectral_radius(matrix, seed=seed)["estimate"]
-
     def make(name: str):
         if name == "malecns":
-            return matrix, radius, {}
+            return matrix, {}
         if name == "degree_null":
-            null, stats = degree_preserving_null(matrix, seed=seed + 101)
-            return null, spectral_radius(null, seed=seed)["estimate"], stats
-        esn, stats = random_esn(matrix, seed=seed + 202)
-        return esn, spectral_radius(esn, seed=seed)["estimate"], stats
+            return degree_preserving_null(matrix, seed=seed + 101)
+        return random_esn(matrix, seed=seed + 202)
 
     for name in ("malecns", "degree_null", "random_esn"):
-        candidate, own, stats = make(name)
+        candidate, stats = make(name)
+        # Rewiring moves which edges land on which row, so in-strength has to be
+        # recomputed per operator; each is then put at the same operating point.
+        if normalise_rows:
+            candidate = row_normalise(candidate)
+        own = (
+            radius
+            if (name == "malecns" and radius is not None and not normalise_rows)
+            else spectral_radius(candidate, seed=seed)["estimate"]
+        )
         scaled = sp.csr_matrix(
             (
                 (candidate.data * np.float32(target_radius / own)).astype(np.float32),
@@ -504,6 +527,7 @@ class TaggerSpec:
     seeds: tuple[int, ...] = tuple(range(10))
     ridge: float = 1e-3
     target_radius: float = 0.95
+    normalise_rows: bool = True
     ngram_orders: tuple[int, ...] = (3, 4, 5)
     reservoir: ReservoirSpec = field(default_factory=ReservoirSpec)
 
@@ -544,7 +568,11 @@ def run_experiment(
         ).astype(np.float32)
 
         for name, operator, operator_stats in iter_operators(
-            matrix, seed=seed, target_radius=spec.target_radius, radius=radius["estimate"]
+            matrix,
+            seed=seed,
+            target_radius=spec.target_radius,
+            radius=radius["estimate"],
+            normalise_rows=spec.normalise_rows,
         ):
             train_features, train_diag = run_operator(
                 operator, usable_train, populations, embedding, projection, reservoir
@@ -575,6 +603,7 @@ def run_experiment(
         "format": "papers/malecns-tagger-v3",
         "graph": str(graph_path),
         "spectral_radius": radius,
+        "row_normalised": spec.normalise_rows,
         "populations": {
             "input_selector": list(populations.input_selector),
             "input_neurons": int(populations.input_indices.size),
