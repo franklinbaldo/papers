@@ -166,10 +166,25 @@ def main() -> None:
         raise SystemExit("no document carried an annotated resultado span")
 
     labels = np.concatenate(pooled_labels)
-    overall = {
-        name: score_signal(name, np.concatenate(values), labels, fine_size=args.fine_size)
-        for name, values in pooled.items()
-    }
+    overall = {}
+    for name, values in pooled.items():
+        # Ranking metrics pool: they are order statistics over all chunks.
+        scored = score_signal(name, np.concatenate(values), labels, fine_size=args.fine_size)
+        # Edge errors do NOT pool. Concatenating documents makes the "longest run
+        # above threshold" cross document boundaries, producing distances larger
+        # than any document is long. They are per-document quantities, summarised
+        # across documents.
+        per_doc = [
+            document["scores"][name] for document in per_document
+        ]
+        for edge in ("start_error_tokens", "end_error_tokens"):
+            finite = [d[edge] for d in per_doc if np.isfinite(d[edge])]
+            scored[edge] = float(np.median(finite)) if finite else float("nan")
+            scored[f"{edge}_mean"] = float(np.mean(finite)) if finite else float("nan")
+        scored["best_f1_per_document_median"] = float(
+            np.median([d["best_f1"] for d in per_doc])
+        )
+        overall[name] = scored
     report = {
         "model": args.model,
         "tag": args.tag,
@@ -192,12 +207,13 @@ def main() -> None:
     baseline = report["positive_rate"]
     print(f"\n{len(per_document)} documents, {labels.size} chunks, "
           f"{baseline:.3f} positive (random AUPRC)")
-    print(f"{'signal':<28}{'AUPRC':>8}{'lift':>7}{'r_pb':>8}{'F1':>7}"
-          f"{'startErr':>10}{'endErr':>9}")
+    print(f"{'signal':<28}{'AUPRC':>8}{'lift':>7}{'r_pb':>8}{'F1':>7}{'F1/doc':>8}"
+          f"{'startErr':>10}{'endErr':>9}   (edge errors: median over documents)")
     for name, row in sorted(overall.items(), key=lambda kv: -(kv[1]["auprc"] or 0)):
         print(
             f"{name:<28}{row['auprc']:>8.3f}{row['auprc']/baseline:>7.1f}"
             f"{row['point_biserial']:>8.3f}{row['best_f1']:>7.3f}"
+            f"{row['best_f1_per_document_median']:>8.3f}"
             f"{row['start_error_tokens']:>10.0f}{row['end_error_tokens']:>9.0f}"
         )
     print(f"\nwrote {args.output}")
