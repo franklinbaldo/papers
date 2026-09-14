@@ -14,6 +14,67 @@ Can the released MaleCNS v1.0 connectome serve as a useful fixed recurrent reser
 
 The experiment does **not** assume a biological advantage. The MaleCNS topology must beat or complement simpler matched baselines before any such claim is made.
 
+## The connectome as a substrate: what a negative result scopes
+
+There is no single question "does the fly work on text". There are several ways
+to couple a text problem to a connectome, and they exercise different properties
+of it. `fly-connectome-lm` couples token -> sensory drive -> dynamics -> next
+token, which demands sequential memory and autoregressive prediction. This
+experiment couples chunk -> semantic embedding -> multiscale relation -> operator
+-> semantic role, which demands state transformation and boundary detection and
+almost no long token memory. A negative in one does not touch the other.
+
+At least four regimes are distinguishable, and they plausibly favour different
+parts of the graph and different timescales:
+
+* **autoregressive language** — predict the next token;
+* **semantic representation** — transform embeddings so categories separate;
+* **transition dynamics** — detect when the semantics changes between chunks;
+* **conditioned learning** — associate trajectories with reward, then recognise
+  them without it.
+
+So the claim a negative Run 1 licenses is not "MaleCNS is not useful for
+language". It is: *in this regime — multiscale semantic interface, frozen
+dynamics, these ports, this operating point, this readout — the connectome adds
+no information over the direct representation.* Every clause is load-bearing and
+each names an axis we can actually move.
+
+### The matrix, and which cells are instrumented
+
+`input encoding x temporalization x ports x plasticity x task`. This is not a
+wish list: most of these axes already have a knob in this repository.
+
+| axis | instrumented | values available |
+|---|---|---|
+| input encoding | yes | absolute embeddings, multiscale relations, both; two encoders |
+| temporalization | yes, unused | 1 / 4 / 8 / 16 interpolation steps per chunk |
+| ports (in) | yes | `cb_sensory` + `ol_sensory`, by cell type |
+| ports (out) | yes, unused | descending, random-matched, whole-state projection, full state |
+| operating point | yes | gain grid, row-normalised, drive energy calibrated |
+| plasticity | partly | frozen ridge now; trainable adapter written, GPU-bound |
+| task | yes | span tagging with tag identity, multi-tag |
+
+Prior art occupies neighbouring cells: `fly-connectome-lm` at
+token/1-step/sensory/frozen-then-BPTT/next-token, `fly-discourse` at
+embedding/1-step/sensory/frozen/classification. Our differentiated cell is the
+multiscale relational input with reward-conditioned, tag-free inference.
+
+### The discipline this framing requires
+
+A regime matrix licenses infinite retreat: every negative becomes "it just was
+not that cell". Two rules keep it honest.
+
+1. **The cells to be tested are named before the result.** Run 1 is frozen,
+   descending readout, 4 steps, gain 0.95, calibrated drive. The temporalization
+   and port ablations are *mechanism diagnostics for after that closes*, they are
+   labelled as such in the code, and a positive found only by moving an axis is
+   reported as an axis effect and not as Run 1 succeeding.
+2. **A falsifying outcome is stated.** If the connectome fails to beat the direct
+   probe and both nulls across the frozen regime, the trained regime, and the
+   port and temporalization ablations, that is the substrate providing no
+   advantage for this task family, and it is written that way rather than
+   deferred to a further cell.
+
 ## Relation to concurrent community work
 
 Several public projects run the full MaleCNS as a recurrent operator. None has published a controlled topology result — positive or cleanly negative — so the contribution here is the control, not the scale. Two policy differences are recorded rather than reconciled: FLM retains ~25.6M connections with no synapse threshold and no sign, whereas this operator retains 10.2M (at least 3 synapses, neuromodulators zeroed). If a result turns out to depend on the sign convention, the unsigned variant is run as an ablation rather than substituted.
