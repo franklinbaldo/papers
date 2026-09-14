@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import atan2, pi, sqrt
+from math import atan2, sqrt
 from pathlib import Path
 from typing import Iterable
 
@@ -40,9 +40,8 @@ class StimulusSpec:
         amp = np.deg2rad(self.path_amplitude_deg)
         if self.path == "sinusoid":
             return float(amp * np.sin(2 * np.pi * self.path_frequency_hz * t + self.phase_rad))
-
-        # Deterministic band-limited random motion: reproducible without hidden
-        # renderer RNG state, while destroying the smooth positive-control path.
+        # Deterministic band-limited "random" motion. This keeps every run
+        # reproducible and avoids hidden RNG state inside the renderer.
         rng = np.random.default_rng(self.random_seed)
         freqs = rng.uniform(0.25, 2.0, size=5)
         phases = rng.uniform(-np.pi, np.pi, size=5)
@@ -73,6 +72,10 @@ class Interface:
     visual_azimuth: np.ndarray
     descending_left: np.ndarray
     descending_right: np.ndarray
+    steer_left: np.ndarray
+    steer_right: np.ndarray
+    forward_left: np.ndarray
+    forward_right: np.ndarray
     courtship_indices: np.ndarray
 
     def __post_init__(self) -> None:
@@ -154,6 +157,10 @@ def load_interface(path: Path) -> Interface:
         visual_azimuth=archive["visual_azimuth"].astype(np.float32),
         descending_left=archive["descending_left"].astype(np.int32),
         descending_right=archive["descending_right"].astype(np.int32),
+        steer_left=archive["steer_left"].astype(np.int32),
+        steer_right=archive["steer_right"].astype(np.int32),
+        forward_left=archive["forward_left"].astype(np.int32),
+        forward_right=archive["forward_right"].astype(np.int32),
         courtship_indices=archive["courtship_indices"].astype(np.int32),
     )
 
@@ -178,11 +185,13 @@ def visual_drive(
     if stimulus.path == "blank":
         return drive
     bearing, angular_size, _ = target_geometry(pose, stimulus, t)
+    # interface azimuth is normalized over the +-pi field of view.
     target_norm = float(np.clip(bearing / arena.target_fov_rad, -1.0, 1.0))
     sigma = max(arena.visual_sigma_floor, angular_size / arena.target_fov_rad / 2.355)
     delta = interface.visual_azimuth - target_norm
     profile = np.exp(-0.5 * (delta / sigma) ** 2).astype(np.float32)
-    drive[interface.visual_indices] = np.float32(stimulus.flicker(t)) * profile
+    amplitude = np.float32(stimulus.flicker(t))
+    drive[interface.visual_indices] = amplitude * profile
     return drive
 
 
@@ -206,19 +215,23 @@ def brain_step(
     ).astype(np.float32)
 
 
-def motor_readout(
-    state: np.ndarray,
-    interface: Interface,
-    arena: ArenaConfig,
-) -> tuple[float, float, float, float]:
-    left = float(np.mean(state[interface.descending_left])) if interface.descending_left.size else 0.0
-    right = float(np.mean(state[interface.descending_right])) if interface.descending_right.size else 0.0
+def motor_readout(state: np.ndarray, interface: Interface, arena: ArenaConfig) -> tuple[float, float, float, float]:
+    # DNa02 is the primary steering readout and DNg100 the primary forward-walk
+    # readout. Broad descending pools stay available as a declared fallback and
+    # diagnostic, not as a result-dependent replacement.
+    steer_l = interface.steer_left if interface.steer_left.size else interface.descending_left
+    steer_r = interface.steer_right if interface.steer_right.size else interface.descending_right
+    left = float(np.mean(state[steer_l])) if steer_l.size else 0.0
+    right = float(np.mean(state[steer_r])) if steer_r.size else 0.0
     turn = float(np.tanh(arena.motor_turn_gain * (right - left)))
 
-    # This is an engineering locomotor decoder, not a biological velocity claim.
-    # Raw descending summaries are retained so alternate decoders can be compared.
-    bilateral = 0.5 * (abs(left) + abs(right))
-    forward = float(max(0.0, arena.base_speed + arena.motor_speed_gain * np.tanh(4.0 * bilateral)))
+    forward_idx = np.concatenate((interface.forward_left, interface.forward_right))
+    if forward_idx.size:
+        forward_drive = float(np.mean(state[forward_idx]))
+        forward = float(max(0.0, arena.base_speed + arena.motor_speed_gain * np.tanh(4.0 * forward_drive)))
+    else:
+        bilateral = 0.5 * (abs(left) + abs(right))
+        forward = float(max(0.0, arena.base_speed + arena.motor_speed_gain * np.tanh(4.0 * bilateral)))
     return forward, turn, left, right
 
 
@@ -238,7 +251,6 @@ def simulate(
     pose = start
     records: list[StepRecord] = []
     previous_distance = float(np.hypot(pose.x, pose.y))
-
     for step in range(steps):
         t = step * arena.dt
         external = visual_drive(graph.shape[0], interface, pose, stimulus, t, arena)
@@ -270,15 +282,10 @@ def simulate(
         )
         pose = new_pose
         previous_distance = distance
-
     return tuple(records)
 
 
-def trajectory_metrics(
-    records: tuple[StepRecord, ...],
-    initial_distance: float,
-    near_radius: float,
-) -> dict[str, float]:
+def trajectory_metrics(records: tuple[StepRecord, ...], initial_distance: float, near_radius: float) -> dict[str, float]:
     if not records:
         raise ValueError("records cannot be empty")
     distances = np.asarray([r.distance for r in records], dtype=float)
@@ -299,13 +306,7 @@ def trajectory_metrics(
     }
 
 
-def radial_swarm(
-    *,
-    flies: int,
-    radius: float,
-    seed: int,
-    radial_jitter: float = 0.05,
-) -> tuple[FlyPose, ...]:
+def radial_swarm(*, flies: int, radius: float, seed: int, radial_jitter: float = 0.05) -> tuple[FlyPose, ...]:
     if flies < 1 or radius <= 0:
         raise ValueError("flies >= 1 and radius > 0 required")
     if radial_jitter < 0:
@@ -315,13 +316,7 @@ def radial_swarm(
     for i in range(flies):
         angle = 2 * np.pi * (i / flies) + rng.uniform(-np.pi / flies, np.pi / flies)
         r = radius * (1.0 + rng.uniform(-radial_jitter, radial_jitter))
-        starts.append(
-            FlyPose(
-                float(r * np.cos(angle)),
-                float(r * np.sin(angle)),
-                float(rng.uniform(-np.pi, np.pi)),
-            )
-        )
+        starts.append(FlyPose(float(r * np.cos(angle)), float(r * np.sin(angle)), float(rng.uniform(-np.pi, np.pi))))
     return tuple(starts)
 
 
@@ -338,9 +333,7 @@ def evaluate_swarm(
     metrics = []
     for start in starts:
         records = simulate(graph, interface, stimulus, start, steps=steps, brain=brain, arena=arena)
-        metrics.append(
-            trajectory_metrics(records, float(np.hypot(start.x, start.y)), arena.near_radius)
-        )
+        metrics.append(trajectory_metrics(records, float(np.hypot(start.x, start.y)), arena.near_radius))
     if not metrics:
         raise ValueError("at least one fly start required")
     keys = metrics[0].keys()
@@ -351,11 +344,5 @@ def evaluate_swarm(
     }
 
 
-def capture_pass(
-    candidate_approach: float,
-    control_approach: float,
-    *,
-    p0: float = 0.60,
-    margin: float = 0.10,
-) -> bool:
+def capture_pass(candidate_approach: float, control_approach: float, *, p0: float = 0.60, margin: float = 0.10) -> bool:
     return candidate_approach >= p0 and candidate_approach - control_approach >= margin
