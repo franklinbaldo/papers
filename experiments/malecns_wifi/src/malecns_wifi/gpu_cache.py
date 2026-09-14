@@ -1,13 +1,13 @@
 """CUDA cache warmer for the frozen confirmatory MaleCNS runner.
 
 This module intentionally does *not* implement scoring, model selection or any
-scientific decision rule.  It computes the same recurrent states as
+scientific decision rule. It computes the same recurrent states as
 ``multitag.reservoir_states`` while evolving several gains in parallel on a
-single sparse-matrix/dense-matrix multiply.  The existing CPU runner remains the
+single sparse-matrix/dense-matrix multiply. The existing CPU runner remains the
 arbiter and consumes the resulting ``.npy`` files through its normal cache keys.
 
 Torch is imported lazily so the default CPU experiment keeps its small NumPy /
-SciPy dependency set.  Kaggle installs the existing ``train`` extra.
+SciPy dependency set. Kaggle installs the existing ``train`` extra.
 """
 
 from __future__ import annotations
@@ -75,7 +75,7 @@ def reservoir_states_multi_gain(
 ) -> dict[float, np.ndarray]:
     """Run one document for every gain with one ``W @ X`` per timestep.
 
-    The columns of ``state`` are independent trajectories.  Sharing the sparse
+    The columns of ``state`` are independent trajectories. Sharing the sparse
     matrix read does not couple them: each column is multiplied by its own gain,
     receives the same sensory drive, and applies tanh independently.
     """
@@ -89,7 +89,11 @@ def reservoir_states_multi_gain(
         np.asarray(input_weights, dtype=np.float32) @ path.T
     ) * np.float32(scale)
 
-    sparse = torch_operator or scipy_csr_to_torch(operator, device=device)
+    sparse = (
+        torch_operator
+        if torch_operator is not None
+        else scipy_csr_to_torch(operator, device=device)
+    )
     neurons = operator.shape[0]
     width = len(gain_values)
     chunks = len(sensation)
@@ -103,7 +107,7 @@ def reservoir_states_multi_gain(
     readout_idx_t = torch.from_numpy(readout_indices).to(device)
     projected_t = torch.from_numpy(projected).to(device)
 
-    # [gain, chunk, readout].  owners can revisit a chunk during interpolation;
+    # [gain, chunk, readout]. owners can revisit a chunk during interpolation;
     # assignment deliberately keeps the last step exactly like reservoir_states.
     collected = torch.zeros(
         (width, chunks, readout_indices.size), dtype=torch.float32, device=device
@@ -115,10 +119,7 @@ def reservoir_states_multi_gain(
             drive[input_idx_t] = projected_t[:, step]
             recurrent = torch.sparse.mm(sparse, state)
             pre = recurrent * gains_t + drive[:, None]
-            state = (
-                np.float32(1.0 - leak) * state
-                + np.float32(leak) * torch.tanh(pre)
-            )
+            state = (1.0 - float(leak)) * state + float(leak) * torch.tanh(pre)
             # state[readout] is [R,G]; transpose to [G,R].
             collected[:, int(owner), :] = state.index_select(0, readout_idx_t).T
 
