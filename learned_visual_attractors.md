@@ -23,7 +23,9 @@ The search begins in a region already known to support male pursuit: a small, hi
 
 Successful stimuli are then distilled rather than assumed printable. The planned sequence is rich dynamic target -> simplified render -> silhouette -> geometric primitives -> low-parameter animation -> static image -> optionally printed paper. A video that survives while every static reduction fails is a scientific result, not a failed paper-lure project.
 
-A transparent evolutionary search is the first optimizer. A later learned generator may propose stimulus parameters or video while a critic predicts expensive simulator reward, but every claimed improvement is rescored by the true MaleCNS loop. Fooling the critic never counts. Heavy graph, trajectory, video, checkpoint, and optimizer-state artefacts live in a versioned private Kaggle Dataset; GitHub stores code, protocol, hashes, seeds, manifests, and small summaries.
+A transparent evolutionary search is the first optimizer. A second generator arm places another frozen MaleCNS on the opposite side of the visual channel: MaleCNS A receives observable state from receiver B through a trainable input adapter, evolves its own recurrent state, and a trainable output adapter turns A's descending activity into a time-varying visual control sequence shown to B. This creates a connectome-to-connectome closed loop while keeping both recurrent graphs frozen. The connectomic generator is compared against direct parametric search, a parameter-matched MLP generator, a random recurrent generator, and a degree-preserving MaleCNS emitter null under identical receiver seeds and true-simulator budgets.
+
+A later learned generator may propose stimulus parameters or video while a critic predicts expensive simulator reward, but every claimed improvement is rescored by the true MaleCNS loop. Fooling the critic never counts. Heavy graph, trajectory, video, checkpoint, and optimizer-state artefacts live in a versioned private Kaggle Dataset; GitHub stores code, protocol, hashes, seeds, manifests, and small summaries.
 
 ## Scientific question
 
@@ -35,27 +37,57 @@ where `p0` is frozen before the corresponding analysis. The central question is 
 
 ## Why movement is the first positive control
 
-Male Drosophila courtship relies strongly on visual tracking of small moving objects. Ribeiro et al. identified LC10 visual projection neurons as a major pathway for directed courtship: silencing disrupted orientation and maintenance of proximity, and LC10 neurons preferentially responded to small moving objects. Hindmarsh Sten et al. then showed that P1-mediated sexual arousal increases LC10a gain and supports high-fidelity tracking of a virtual female. Earlier, Kohatsu and Yamamoto showed that after appropriate state priming, artificial moving light targets can sustain courtship-like following pursuit.
+Male Drosophila courtship relies strongly on visual tracking of small moving objects. LC10/LC10a visual projection neurons are implicated in detecting fly-sized moving targets and in directed pursuit, with their effective gain modulated by courtship arousal. The first virtual assay therefore uses a moving high-contrast target under a fixed courtship-primed condition rather than treating a static photograph as the strongest control.
 
-The first virtual assay therefore uses a moving high-contrast target under a fixed courtship-primed condition rather than treating a static photograph as the strongest control. The priming manipulation is part of the assay and is held constant across candidate and controls. An unprimed condition is retained as a diagnostic, not as a substitute for the primary gate.
+The priming manipulation is part of the assay and is held constant across candidate and controls. An unprimed condition is retained as a diagnostic, not as a substitute for the primary gate.
 
 ## Experimental stages
 
 1. **Interface gate.** Build the minimal visual-to-MaleCNS-to-motion loop and compare moving positive control, static equivalent, blank, and randomized motion on matched swarms.
 2. **Parametric search.** Evolve interpretable stimulus parameters such as angular size, contrast, path, speed, acceleration, jitter, orientation, and flicker.
 3. **Distance curriculum.** Increase initial distance only after the current distance passes the frozen capture criterion; initialize each harder search from the previous winner.
-4. **Learned proposal model.** Compare random search, evolutionary search, and a surrogate-guided generator at matched true-simulator budgets.
-5. **Distillation.** Remove temporal, spatial, and representational complexity while measuring the loss in capture range.
-6. **Sim-to-real.** Only after virtual robustness, test frozen positive control, best synthetic attractor, temporally shuffled attractor, and blank on a physical display; printable/static transfer is a later compression question.
+4. **Connectome generator.** Place a second frozen MaleCNS on the emitter side and train only its input/output adapters so that its recurrent activity invents the visual dynamics presented to the receiver.
+5. **Generator controls.** Compare the connectomic emitter against direct parametric search, a parameter-matched MLP, a frozen random recurrent emitter, and a degree-preserving MaleCNS emitter null at matched true-simulator budgets.
+6. **Learned proposal model.** Compare random search, evolutionary search, connectomic generation, and a surrogate-guided neural generator at matched true-simulator budgets.
+7. **Distillation.** Remove temporal, spatial, and representational complexity while measuring the loss in capture range. For a connectome-generated winner, first compare adaptive closed-loop generation with prerecorded replay of the exact emitted waveform.
+8. **Sim-to-real.** Only after virtual robustness, test frozen positive control, best synthetic attractor, temporally shuffled attractor, and blank on a physical display; printable/static transfer is a later compression question.
+
+## Connectome-to-connectome generator
+
+The connectome-generator arm asks whether a biological wiring prior is useful not only as a receiver but also as a **signal generator**.
+
+```text
+receiver B pose / radial motion
+        -> input adapter
+        -> frozen MaleCNS A
+        -> output adapter
+        -> bearing / size / contrast / temporal gate
+        -> visual renderer
+        -> frozen MaleCNS B
+        -> movement
+        -> updated receiver state
+        -> ...
+```
+
+A does not see B's neural state. Its primary adaptive context is limited to receiver variables that could be measured externally: distance, bearing, heading and radial motion. Both recurrent connectomes remain frozen. Only the boundary adapters of A are trainable in the first arm.
+
+The first emitted signal is deliberately low-dimensional rather than raw video. At every timestep A controls target bearing offset, apparent size, contrast and an intensity gate. This gives the recurrent emitter room to invent temporally structured signals while keeping the search interpretable. Direct video generation is a later extension.
+
+The key comparison is not whether this architecture can be trained at all. The key questions are:
+
+- does a true MaleCNS emitter increase `D*` or robustness over an MLP/direct generator at equal receiver-evaluation budget?;
+- does it beat a frozen random recurrent emitter?;
+- does it beat a degree-preserving MaleCNS emitter null with identical adapters?;
+- does the resulting waveform still work when prerecorded and replayed, or is closed-loop adaptation itself necessary?
+
+Only the last two topology controls can support a claim that the higher-order emitter wiring matters. A connectome generator that merely matches a generic controller is still a functioning two-connectome system, but not evidence for a special biological topology.
+
+If a frozen emitted waveform replays successfully across receivers, the result suggests a reusable synthetic visual signal. If only adaptive generation succeeds, the result instead points to an interactive control policy. Neither outcome is described as natural fly communication without a separate biological experiment.
+
+The governing arm protocol is `experiments/malecns_visual_attractor/connectome-generator-arm.md`.
 
 ## Claim boundary
 
 A virtual winner establishes only a property of the registered MaleCNS simulation and interface. A topology-specific claim requires matched graph controls and pathway ablations. A real-world lure claim requires a separately registered physical assay. No result in the tagging line can rescue this experiment, and no result here retroactively changes the tagging papers.
 
-The governing protocol, frozen Run 1 operating point, and executable scaffold live under `experiments/malecns_visual_attractor/`.
-
-## References
-
-- Ribeiro, I. M. A., Drews, M., Bahl, A., Machacek, C., Borst, A. & Dickson, B. J. **Visual Projection Neurons Mediating Directed Courtship in Drosophila.** *Cell* 174, 607–621.e18 (2018). DOI: `10.1016/j.cell.2018.06.020`.
-- Hindmarsh Sten, T., Li, R., Otopalik, A. et al. **Sexual arousal gates visual processing during Drosophila courtship.** *Nature* 595, 549–553 (2021). DOI: `10.1038/s41586-021-03714-w`.
-- Kohatsu, S. & Yamamoto, D. **Visually induced initiation of Drosophila innate courtship-like following pursuit is mediated by central excitatory state.** *Nature Communications* 6, 6457 (2015). DOI: `10.1038/ncomms7457`.
+The governing protocol and executable scaffold live under `experiments/malecns_visual_attractor/`.
