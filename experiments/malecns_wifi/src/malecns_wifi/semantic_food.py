@@ -1,20 +1,22 @@
-"""Semantic-trajectory supervision through an anatomically grounded food teacher.
+"""Semantic trajectories and counterfactual semantic food for MaleCNS tagging.
 
-The tagging experiment should not ask the frozen MaleCNS to rediscover language
-from bytes. A language encoder first maps cumulative text chunks into a semantic
-space. The connectome receives the *motion* through that space (delta embeddings),
-conditioned on the embedding of the tag being sought.
+The text is encoded by a pretrained semantic model before it reaches the frozen
+connectome. Cumulative text chunks form a semantic trajectory; the connectome sees
+small left-to-right changes in that trajectory rather than raw bytes.
 
-The food circuit is a teacher, not an inference-time label channel. During
-training we may stimulate an explicitly identified appetitive gustatory population
-to measure the internal state that "food" produces. The student pass sees the
-same semantic trajectory with no food pulse and is trained to reproduce the
-teacher response over annotated spans. At evaluation/inference there is never an
-external food pulse.
+A tag can also define a *counterfactual food signal*. At each checkpoint we encode
+exactly the same text twice: once as-is and once conditioned on the tag. The vector
 
-This module deliberately contains only geometry/scheduling primitives. Selecting
-actual sugar-GRN body IDs is a provenance step against the MaleCNS annotations and
-must be recorded explicitly; graph degree is never used as a biological label.
+    food = E(text + tag) - E(text)
+
+is the semantic displacement caused by the tag. Its norm is the amount of food;
+its direction is the semantic flavour. The direction can be distributed across an
+anatomically selected appetitive gustatory population while preserving a
+non-negative total drive equal to the food amount. This does not require a gold
+span at inference time and does not inject the answer into the model.
+
+Gold spans remain useful as evaluation targets and for explicitly supervised
+teacher ablations, but they are no longer the definition of food.
 """
 
 from __future__ import annotations
@@ -26,17 +28,29 @@ import numpy as np
 
 @dataclass(frozen=True)
 class SemanticTrajectory:
-    """Interpolated semantic path and its local motion.
-
-    ``states`` are absolute semantic embeddings after interpolation. ``deltas`` are
-    the local changes that form the primary recurrent input. ``chunk_index`` maps
-    each interpolated step back to the cumulative-text checkpoint that generated
-    it, so gold spans can be projected onto the same time axis without guessing.
-    """
+    """Interpolated semantic path and its local motion."""
 
     states: np.ndarray
     deltas: np.ndarray
     chunk_index: np.ndarray
+
+
+@dataclass(frozen=True)
+class SemanticFoodSignal:
+    """Tag-induced displacement along one semantic text trajectory.
+
+    ``difference[t]`` is ``E(text+tag)[t] - E(text)[t]`` after interpolation.
+    ``intensity`` is its L2 norm and therefore a scalar food amount. ``direction``
+    is the unit vector carrying the semantic flavour; it is zero when intensity is
+    zero. ``deltas`` records how the food vector itself changes over time.
+    """
+
+    base: SemanticTrajectory
+    tagged: SemanticTrajectory
+    difference: np.ndarray
+    deltas: np.ndarray
+    intensity: np.ndarray
+    direction: np.ndarray
 
 
 def interpolate_semantic_chunks(
@@ -45,16 +59,7 @@ def interpolate_semantic_chunks(
     steps_per_transition: int = 8,
     normalise: bool = True,
 ) -> SemanticTrajectory:
-    """Turn cumulative chunk embeddings into a smooth left-to-right trajectory.
-
-    ``embeddings[k]`` is the semantic embedding of text from the beginning through
-    chunk ``k``. Between checkpoints we linearly interpolate several recurrent
-    steps. This keeps expensive encoder calls sparse while exposing the connectome
-    to small semantic changes rather than large chunk jumps.
-
-    The first delta is zero because there is no previous semantic state. Every
-    later delta is ``state[t] - state[t-1]``.
-    """
+    """Turn cumulative chunk embeddings into a smooth left-to-right trajectory."""
     vectors = np.asarray(embeddings, dtype=np.float32)
     if vectors.ndim != 2 or vectors.shape[0] < 1 or vectors.shape[1] < 1:
         raise ValueError("embeddings must have shape [chunks, dimensions]")
@@ -72,8 +77,6 @@ def interpolate_semantic_chunks(
         pieces: list[np.ndarray] = [vectors[:1]]
         mapping: list[np.ndarray] = [np.zeros(1, dtype=np.int32)]
         for index in range(1, len(vectors)):
-            # Exclude alpha=0 because the previous endpoint is already present;
-            # include alpha=1 so every real chunk embedding remains on the path.
             alpha = np.linspace(
                 1.0 / steps_per_transition,
                 1.0,
@@ -93,18 +96,108 @@ def interpolate_semantic_chunks(
     return SemanticTrajectory(states=states, deltas=deltas, chunk_index=chunk_index)
 
 
+def counterfactual_tag_food(
+    base_embeddings: np.ndarray,
+    tagged_embeddings: np.ndarray,
+    *,
+    steps_per_transition: int = 8,
+    normalise: bool = True,
+) -> SemanticFoodSignal:
+    """Compute semantic food as ``E(text+tag) - E(text)`` through time.
+
+    Both arrays must be generated by the same encoder at the same cumulative text
+    checkpoints. The function deliberately keeps the full vector difference rather
+    than collapsing immediately to cosine similarity, because the direction may
+    carry useful information about *which kind* of semantic relevance is present.
+    """
+    base_vectors = np.asarray(base_embeddings, dtype=np.float32)
+    tagged_vectors = np.asarray(tagged_embeddings, dtype=np.float32)
+    if base_vectors.shape != tagged_vectors.shape:
+        raise ValueError("base and tagged embeddings must have identical shape")
+
+    base = interpolate_semantic_chunks(
+        base_vectors,
+        steps_per_transition=steps_per_transition,
+        normalise=normalise,
+    )
+    tagged = interpolate_semantic_chunks(
+        tagged_vectors,
+        steps_per_transition=steps_per_transition,
+        normalise=normalise,
+    )
+    if not np.array_equal(base.chunk_index, tagged.chunk_index):
+        raise AssertionError("counterfactual trajectories lost checkpoint alignment")
+
+    difference = (tagged.states - base.states).astype(np.float32, copy=False)
+    intensity = np.linalg.norm(difference, axis=1).astype(np.float32)
+    direction = np.zeros_like(difference)
+    active = intensity > 1e-12
+    direction[active] = difference[active] / intensity[active, None]
+
+    deltas = np.empty_like(difference)
+    deltas[0] = 0.0
+    if len(difference) > 1:
+        deltas[1:] = difference[1:] - difference[:-1]
+
+    return SemanticFoodSignal(
+        base=base,
+        tagged=tagged,
+        difference=difference,
+        deltas=deltas,
+        intensity=intensity,
+        direction=direction,
+    )
+
+
+def food_population_drive(
+    signal: SemanticFoodSignal,
+    food_indices: np.ndarray,
+    *,
+    seed: int = 0,
+    amplitude: float = 1.0,
+    temperature: float = 1.0,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Encode semantic food as a non-negative distributed appetitive drive.
+
+    A fixed seeded projection maps semantic *direction* to a population pattern.
+    Softmax makes that pattern non-negative and normalised. Multiplying by the
+    displacement norm makes the row sum exactly ``amplitude * intensity[t]``.
+    Thus direction controls flavour, magnitude controls amount, and total injected
+    drive is explicit and easy to match in anatomical/random controls.
+
+    Returns ``(indices, drive)`` where ``drive`` has shape
+    ``[time_steps, len(indices)]``. Full-brain code should scatter these values
+    directly rather than allocate a dense ``time x neurons`` matrix.
+    """
+    food = np.asarray(food_indices, dtype=np.int64).reshape(-1)
+    if food.size == 0:
+        raise ValueError("food population is empty")
+    if temperature <= 0:
+        raise ValueError("temperature must be > 0")
+    if amplitude < 0:
+        raise ValueError("amplitude must be >= 0")
+
+    dimensions = signal.direction.shape[1]
+    rng = np.random.default_rng(seed)
+    projection = rng.normal(size=(food.size, dimensions)).astype(np.float32)
+    projection /= np.sqrt(max(dimensions, 1))
+
+    logits = signal.direction @ projection.T
+    logits = logits / np.float32(temperature)
+    logits -= logits.max(axis=1, keepdims=True)
+    weights = np.exp(logits).astype(np.float32)
+    weights /= np.maximum(weights.sum(axis=1, keepdims=True), 1e-12)
+    drive = weights * (signal.intensity[:, None] * np.float32(amplitude))
+    return food, drive.astype(np.float32, copy=False)
+
+
 def condition_on_tag(
     trajectory: SemanticTrajectory,
     tag_embedding: np.ndarray,
     *,
     include_absolute_state: bool = False,
 ) -> np.ndarray:
-    """Attach the semantic identity of the tag being sought to every time step.
-
-    The default input is ``[delta_semantics, tag_embedding]``. Absolute semantic
-    state can be added as an ablation, producing
-    ``[delta_semantics, absolute_semantics, tag_embedding]``.
-    """
+    """Attach the semantic identity of the tag being sought to every time step."""
     tag = np.asarray(tag_embedding, dtype=np.float32).reshape(-1)
     if tag.size != trajectory.deltas.shape[1]:
         raise ValueError("tag embedding must live in the same semantic space as the text")
@@ -149,11 +242,7 @@ def matched_random_population(
     *,
     seed: int,
 ) -> np.ndarray:
-    """Random sensory control matched exactly to the size of the food population.
-
-    Real food neurons are excluded. Matching count keeps injected energy and the
-    number of directly stimulated cells identical; only anatomical identity moves.
-    """
+    """Random sensory control matched exactly to the size of the food population."""
     sensory = np.asarray(sensory_indices, dtype=np.int64)
     food = np.asarray(food_indices, dtype=np.int64)
     candidates = np.setdiff1d(sensory, food, assume_unique=False)
@@ -173,14 +262,11 @@ def teacher_food_drive(
     *,
     amplitude: float = 1.0,
 ) -> np.ndarray:
-    """Dense toy/reference drive for the teacher pass.
-
-    Full-brain training should scatter the same values directly on device rather
-    than allocating this dense matrix. Keeping the reference implementation here
-    makes scheduling and control tests explicit and reproducible.
-    """
+    """Gold-span food pulse retained only as a supervised teacher ablation."""
     food = np.asarray(food_indices, dtype=np.int64)
     active = np.asarray(mask, dtype=np.float32).reshape(-1)
+    if food.size == 0:
+        raise ValueError("food population is empty")
     if active.size != time_steps:
         raise ValueError("mask length must equal time_steps")
     if np.any(food < 0) or np.any(food >= neurons):
