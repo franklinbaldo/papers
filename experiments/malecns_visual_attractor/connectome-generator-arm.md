@@ -88,6 +88,8 @@ adapter candidate
 
 No surrogate-only or critic-only reward counts as evidence.
 
+The first comparison uses the same total number of true receiver scene evaluations for every generator family. Population size, generations and early-stop rules must be frozen together in the optimizer manifest before any arm is run; unused budget from an early-stopped arm cannot be reassigned to another arm.
+
 ## Receiver diversity
 
 Training against one deterministic receiver risks discovering a private simulator exploit. Therefore each adapter candidate is evaluated against a registered population of B conditions sharing the same candidate/control initial states:
