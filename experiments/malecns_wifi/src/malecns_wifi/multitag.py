@@ -93,6 +93,61 @@ def interpolate(features: np.ndarray, steps: int) -> tuple[np.ndarray, np.ndarra
     return np.vstack(pieces), np.concatenate(owners)
 
 
+def unit_rows(features: np.ndarray) -> np.ndarray:
+    """Scale every sensation vector to unit norm before it is projected.
+
+    Without this the current entering the fly depends on the representation's
+    dimensionality rather than its content. With ``w ~ N(0, s^2/d)`` the drive RMS
+    is ``s * ||x|| / sqrt(d)``, so a 1540-dimensional relation block receives half
+    the drive a 384-dimensional embedding block does, and a 1024-dimensional
+    encoder receives 1.6x less than a 384-dimensional one. Any difference between
+    representations or encoders would then be partly a difference in how hard the
+    fly was driven.
+    """
+    values = np.asarray(features, dtype=np.float32)
+    return values / np.maximum(np.linalg.norm(values, axis=1, keepdims=True), 1e-12)
+
+
+def calibrate_drive(
+    projection: np.ndarray,
+    features: np.ndarray,
+    groups: np.ndarray,
+    *,
+    target_rms: float = 0.05,
+) -> dict:
+    """Scale the input projection so every representation delivers the same energy.
+
+    The scalar is measured as ``RMS(P x)`` over the **training** documents of each
+    fold and applied unchanged to the held-out one, so the calibration never sees
+    held-out statistics.
+
+    Matching on a formula in ``d`` is not enough: ``absolute`` and ``relations``
+    have quite different covariance, so equal width would still not mean equal
+    current. Measuring the realised RMS fixes the volume while leaving each
+    representation's internal structure untouched.
+
+    Returns the per-fold scalars and their spread. On this corpus the spread is
+    about 0.03-0.05%, which moves the reservoir states by 0.014% -- so a single
+    pass at the mean scalar is numerically indistinguishable from recomputing the
+    states seventeen times, and the measurement is reported so that claim is
+    checkable rather than assumed.
+    """
+    unit = unit_rows(features)
+    projected = unit @ np.asarray(projection, dtype=np.float32).T
+    scalars = {}
+    for document in np.unique(groups):
+        train = groups != document
+        rms = float(np.sqrt(np.mean(projected[train] ** 2)))
+        scalars[int(document)] = target_rms / max(rms, 1e-12)
+    values = np.asarray(list(scalars.values()))
+    return {
+        "per_fold": scalars,
+        "mean": float(values.mean()),
+        "spread": float(values.max() / max(values.min(), 1e-12)),
+        "target_rms": target_rms,
+    }
+
+
 def reservoir_states(
     operator,
     sensation: np.ndarray,
@@ -101,28 +156,38 @@ def reservoir_states(
     readout_indices: np.ndarray,
     input_indices: np.ndarray,
     spec: MultitagSpec,
-) -> np.ndarray:
+    scale: float = 1.0,
+) -> tuple[np.ndarray, float]:
     """Drive the frozen operator with the sensation and read the descending neurons.
 
     One chunk's state is the reservoir state at the last interpolated step that
     belongs to that chunk, so the readout is aligned with the annotation without
     the fly ever being told where a chunk boundary is.
+
+    Returns the per-chunk states and the measured drive RMS, so the energy
+    actually delivered is reported rather than assumed.
     """
     neurons = operator.shape[0]
-    path, owners = interpolate(sensation, spec.steps_per_chunk)
+    path, owners = interpolate(unit_rows(sensation), spec.steps_per_chunk)
     state = np.zeros(neurons, dtype=np.float32)
     collected = np.zeros((len(sensation), readout_indices.size), dtype=np.float32)
 
+    # One GEMM for the whole document instead of a small matrix-vector product per
+    # step: the projection is the second largest cost after the sparse product and
+    # BLAS does it an order of magnitude faster in bulk.
+    projected = (np.asarray(input_weights, dtype=np.float32) @ path.T) * np.float32(scale)
     drive = np.zeros(neurons, dtype=np.float32)
+    drive_energy = 0.0
     for step in range(len(path)):
         drive[:] = 0.0
-        drive[input_indices] = input_weights @ path[step]
+        drive[input_indices] = projected[:, step]
+        drive_energy += float(np.mean(projected[:, step] ** 2))
         pre = (operator @ state) * np.float32(spec.gain) + drive
         state = ((1.0 - spec.leak) * state + spec.leak * np.tanh(pre)).astype(
             np.float32, copy=False
         )
         collected[owners[step]] = state[readout_indices]
-    return collected
+    return collected, float(np.sqrt(drive_energy / max(len(path), 1)))
 
 
 def ridge_multioutput(features: np.ndarray, targets: np.ndarray, penalty: float) -> np.ndarray:
@@ -199,10 +264,126 @@ def evaluate(
 
     magnitude, predicted_tag = decode(predictions, flavours)
     correct = predicted_tag[inside] == truth[inside]
+
+    # Three axes, because "any-tag AUPRC" alone conflates them and is not
+    # comparable across corpora with different positive rates. The union of nine
+    # tags covers 24.8% of chunks against a single tag's 5.1%, so a higher any-tag
+    # score is partly just a commoner event. Per-tag AP is one-vs-rest at each
+    # tag's own prevalence, and its macro average is what "does this representation
+    # help identify particular semantic roles" actually means.
+    per_tag = {}
+    for index in range(flavours.shape[0]):
+        target = tag_masks[:, index] > 0
+        if not target.any() or target.all():
+            per_tag[index] = float("nan")
+            continue
+        # Score this tag by how much of the predicted food points its way.
+        affinity = predictions @ flavours[index]
+        per_tag[index] = float(average_precision(affinity, target))
+    finite = [value for value in per_tag.values() if np.isfinite(value)]
+
     return {
         "inside_auprc": float(average_precision(magnitude, inside)),
+        "macro_tag_auprc": float(np.mean(finite)) if finite else float("nan"),
+        "per_tag_auprc": {str(k): v for k, v in per_tag.items()},
+        "per_tag_prevalence": {
+            str(index): float((tag_masks[:, index] > 0).mean())
+            for index in range(flavours.shape[0])
+        },
         "tag_accuracy_on_true_spans": float(correct.mean()) if correct.size else float("nan"),
         "tag_chance": float(1.0 / flavours.shape[0]),
         "random_auprc": float(inside.mean()),
         "penalties": [float(p) for p in chosen_penalties],
+    }
+
+
+def evaluate_exact_per_fold(
+    operator,
+    block: np.ndarray,
+    tag_masks: np.ndarray,
+    flavours: np.ndarray,
+    groups: np.ndarray,
+    *,
+    input_weights: np.ndarray,
+    calibration: dict,
+    readout_indices: np.ndarray,
+    input_indices: np.ndarray,
+    spec: MultitagSpec,
+    penalties,
+) -> dict:
+    """Leave-one-document-out with the drive recalibrated inside every fold.
+
+    The screening path calibrates once at the mean scalar, which on this corpus
+    moves the states by 0.014% against recomputing them per fold -- measured, not
+    assumed. This is the exact version: each fold gets states built with a scalar
+    that saw only that fold's training documents, at seventeen times the cost.
+
+    Use it for the comparisons that reach a paper, not for screening: paying
+    2.7 hours to rank conditions that the cheap pass already shows are far apart
+    buys nothing, while the number that gets published should carry no shadow of
+    leakage at all.
+    """
+    targets = food_targets(tag_masks, flavours)
+    inside = tag_masks.max(axis=1) > 0
+    predictions = np.zeros_like(targets)
+    documents = np.unique(groups)
+
+    for held_out_document in documents:
+        scale = calibration["per_fold"][int(held_out_document)]
+        states = np.vstack([
+            reservoir_states(
+                operator,
+                block[groups == document],
+                input_weights=input_weights,
+                readout_indices=readout_indices,
+                input_indices=input_indices,
+                spec=spec,
+                scale=scale,
+            )[0]
+            for document in documents
+        ])
+        held_out = groups == held_out_document
+        weights = ridge_multioutput(states[~held_out], targets[~held_out], penalties[0])
+        best, best_weights = -np.inf, weights
+        inner = groups[~held_out]
+        validation = np.unique(inner)[: max(1, len(np.unique(inner)) // 5)]
+        inner_valid = np.isin(inner, validation)
+        for penalty in penalties:
+            candidate = ridge_multioutput(
+                states[~held_out][~inner_valid], targets[~held_out][~inner_valid], penalty
+            )
+            scored = np.hstack([
+                states[~held_out][inner_valid], np.ones((int(inner_valid.sum()), 1))
+            ]) @ candidate
+            magnitude, _ = decode(scored, flavours)
+            score = average_precision(magnitude, inside[~held_out][inner_valid])
+            if np.isfinite(score) and score > best:
+                best = score
+                best_weights = ridge_multioutput(
+                    states[~held_out], targets[~held_out], penalty
+                )
+        predictions[held_out] = (
+            np.hstack([states[held_out], np.ones((int(held_out.sum()), 1))]) @ best_weights
+        )
+
+    magnitude, predicted_tag = decode(predictions, flavours)
+    truth = np.argmax(tag_masks, axis=1)
+    correct = predicted_tag[inside] == truth[inside]
+    per_tag = {}
+    for index in range(flavours.shape[0]):
+        target = tag_masks[:, index] > 0
+        per_tag[index] = (
+            float(average_precision(predictions @ flavours[index], target))
+            if target.any() and not target.all()
+            else float("nan")
+        )
+    finite = [value for value in per_tag.values() if np.isfinite(value)]
+    return {
+        "inside_auprc": float(average_precision(magnitude, inside)),
+        "macro_tag_auprc": float(np.mean(finite)) if finite else float("nan"),
+        "per_tag_auprc": {str(k): v for k, v in per_tag.items()},
+        "tag_accuracy_on_true_spans": float(correct.mean()) if correct.size else float("nan"),
+        "tag_chance": float(1.0 / flavours.shape[0]),
+        "random_auprc": float(inside.mean()),
+        "calibration_mode": "exact_per_fold",
     }

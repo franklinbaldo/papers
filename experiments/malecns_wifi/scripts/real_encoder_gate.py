@@ -33,7 +33,13 @@ from malecns_wifi.encoder_gate import (
 class TransformerEncoder:
     """Mean-pooled sentence embeddings from any HuggingFace encoder."""
 
-    def __init__(self, model_name: str, device: str = "cpu", max_length: int | None = None):
+    def __init__(
+        self,
+        model_name: str,
+        device: str = "cpu",
+        max_length: int | None = None,
+        pooling: str = "mean",
+    ):
         import torch
         from transformers import AutoModel, AutoTokenizer
 
@@ -47,6 +53,13 @@ class TransformerEncoder:
             or 512
         )
         self.max_length = min(max_length or self.context_limit, self.context_limit)
+        if pooling not in ("mean", "last_token"):
+            raise ValueError(f"unknown pooling {pooling!r}")
+        # Qwen3-Embedding is trained with last-token pooling; mean-pooling it is
+        # using the model wrongly, and a weak result would be the pooling rather
+        # than the encoder. BERT-family sentence encoders want mean pooling. Each
+        # model is used as designed, and the difference is recorded.
+        self.pooling = pooling
 
     def check_scales(self, scales) -> None:
         """A parent longer than the model's context is not a parent.
@@ -76,7 +89,11 @@ class TransformerEncoder:
                 ).to(self.device)
                 hidden = self.model(**batch).last_hidden_state
                 mask = batch["attention_mask"].unsqueeze(-1).to(hidden.dtype)
-                pooled = (hidden * mask).sum(1) / mask.sum(1).clamp(min=1e-9)
+                if self.pooling == "mean":
+                    pooled = (hidden * mask).sum(1) / mask.sum(1).clamp(min=1e-9)
+                else:
+                    last = batch["attention_mask"].sum(1) - 1
+                    pooled = hidden[self.torch.arange(hidden.shape[0]), last]
                 vectors.append(pooled.float().cpu().numpy())
         return np.vstack(vectors)
 
@@ -86,6 +103,12 @@ def main() -> None:
     parser.add_argument("--corpus", type=Path, nargs="+", required=True)
     parser.add_argument("--model", default="Qwen/Qwen3-Embedding-0.6B")
     parser.add_argument("--device", default="cpu")
+    parser.add_argument(
+        "--pooling",
+        choices=("mean", "last_token"),
+        default="mean",
+        help="last_token for Qwen3-Embedding and other causal embedders; mean for BERT-family",
+    )
     parser.add_argument("--tag", default="dispositivo: o resultado do julgamento")
     parser.add_argument(
         "--tags",
@@ -102,10 +125,11 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    encoder = TransformerEncoder(args.model, device=args.device)
+    encoder = TransformerEncoder(args.model, device=args.device, pooling=args.pooling)
     encoder.check_scales(args.scales)
     tokenizer = encoder.tokenizer
-    print(f"{args.model}: {encoder.context_limit}-token context, scales {args.scales}")
+    print(f"{args.model}: {encoder.context_limit}-token context, {args.pooling} pooling, "
+          f"scales {args.scales}")
 
     documents = []
     for path in args.corpus:

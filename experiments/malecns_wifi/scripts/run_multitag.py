@@ -20,10 +20,18 @@ from malecns_wifi import load_graph
 from malecns_wifi.multitag import (
     MultitagSpec,
     build_flavours,
+    calibrate_drive,
     evaluate,
     reservoir_states,
 )
 from malecns_wifi.tagger import iter_operators, select_populations
+
+
+def collect_states(sink: list, *args, **kwargs) -> np.ndarray:
+    """Run one document and stash the measured drive RMS alongside the states."""
+    states, drive_rms = reservoir_states(*args, **kwargs)
+    sink.append(drive_rms)
+    return states
 
 
 def main() -> None:
@@ -34,6 +42,12 @@ def main() -> None:
     parser.add_argument("--steps-per-chunk", type=int, default=4)
     parser.add_argument("--gain", type=float, default=0.95)
     parser.add_argument("--leak", type=float, default=0.4)
+    parser.add_argument(
+        "--target-drive-rms",
+        type=float,
+        default=0.05,
+        help="every representation and encoder is scaled to deliver this drive RMS",
+    )
     parser.add_argument("--readout-size", type=int, default=0, help="0 = all descending neurons")
     parser.add_argument(
         "--output", type=Path, default=Path("artifacts/runtime-v1/multitag-run1.json")
@@ -57,6 +71,7 @@ def main() -> None:
         steps_per_chunk=args.steps_per_chunk,
         gain=args.gain,
         leak=args.leak,
+        input_scale=args.target_drive_rms,
     )
 
     print(f"{len(np.unique(groups))} documents, {len(tag_masks)} chunks, "
@@ -73,12 +88,12 @@ def main() -> None:
         print(
             f"{row['reservoir']:<14}{row['representation']:<24}{row['flavour']:<16}"
             f"{row['inside_auprc']:>8.3f}{row['inside_auprc']/row['random_auprc']:>7.1f}"
-            f"{row['tag_accuracy_on_true_spans']:>9.3f}",
+            f"{row['macro_tag_auprc']:>9.3f}{row['tag_accuracy_on_true_spans']:>9.3f}",
             flush=True,
         )
 
     print(f"\n{'reservoir':<14}{'representation':<24}{'flavour':<16}"
-          f"{'AUPRC':>8}{'lift':>7}{'tagAcc':>9}  (tag chance "
+          f"{'anyAUPRC':>8}{'lift':>7}{'macroAP':>9}{'tagAcc':>9}  (tag chance "
           f"{1 / len(tag_names):.3f})")
 
     # --- direct probes ------------------------------------------------------
@@ -101,6 +116,7 @@ def main() -> None:
                 "representation": name,
                 "flavour": flavour_source,
                 "inside_auprc": float(np.mean([s["inside_auprc"] for s in scores])),
+                "macro_tag_auprc": float(np.mean([s["macro_tag_auprc"] for s in scores])),
                 "tag_accuracy_on_true_spans": float(
                     np.mean([s["tag_accuracy_on_true_spans"] for s in scores])
                 ),
@@ -124,19 +140,30 @@ def main() -> None:
                 scores = []
                 for seed in spec.seeds:
                     rng = np.random.default_rng(seed)
-                    input_weights = (
-                        rng.normal(size=(populations.input_indices.size, block.shape[1]))
-                        * spec.input_scale
-                        / np.sqrt(block.shape[1])
+                    # No 1/sqrt(d): the sensation is unit-normalised inside
+                    # reservoir_states, so the drive energy is the same whatever
+                    # the representation's width or the encoder's dimension.
+                    input_weights = rng.normal(
+                        size=(populations.input_indices.size, block.shape[1])
                     ).astype(np.float32)
+                    # Calibrated on each fold's training documents only. The
+                    # per-fold spread is reported; where it is negligible one pass
+                    # at the mean is used, which is checked rather than assumed.
+                    calibration = calibrate_drive(
+                        input_weights, block, groups, target_rms=spec.input_scale
+                    )
+                    scale = calibration["mean"]
+                    drive_rms = []
                     states = np.vstack([
-                        reservoir_states(
+                        collect_states(
+                            drive_rms,
                             operator,
                             block[groups == document],
                             input_weights=input_weights,
                             readout_indices=readout,
                             input_indices=populations.input_indices,
                             spec=spec,
+                            scale=scale,
                         )
                         for document in np.unique(groups)
                     ])
@@ -156,10 +183,17 @@ def main() -> None:
                     "representation": name,
                     "flavour": flavour_source,
                     "inside_auprc": float(np.mean([s["inside_auprc"] for s in scores])),
+                    "macro_tag_auprc": float(np.mean([s["macro_tag_auprc"] for s in scores])),
                     "tag_accuracy_on_true_spans": float(
                         np.mean([s["tag_accuracy_on_true_spans"] for s in scores])
                     ),
                     "random_auprc": scores[0]["random_auprc"],
+                    "drive_rms": float(np.mean(drive_rms)),
+                    "calibration": {
+                        "target_rms": calibration["target_rms"],
+                        "mean_scalar": calibration["mean"],
+                        "per_fold_spread": calibration["spread"],
+                    },
                     "per_seed": scores,
                 })
 

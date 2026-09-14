@@ -131,7 +131,7 @@ def test_reservoir_returns_one_state_per_chunk() -> None:
 
     sensation = rng.normal(size=(7, 5)).astype(np.float32)
     inputs, readout = np.arange(0, 10), np.arange(10, 18)
-    states = reservoir_states(
+    states, drive_rms = reservoir_states(
         operator,
         sensation,
         input_weights=rng.normal(size=(inputs.size, 5)).astype(np.float32),
@@ -141,5 +141,44 @@ def test_reservoir_returns_one_state_per_chunk() -> None:
     )
     assert states.shape == (7, readout.size)
     assert np.isfinite(states).all()
+    assert drive_rms > 0
     # The reservoir is driven: different chunks give different states.
     assert not np.allclose(states[0], states[-1])
+
+
+def test_drive_energy_does_not_depend_on_representation_width() -> None:
+    """Otherwise a wider representation is simply driven harder.
+
+    With w ~ N(0, s^2/d) the drive RMS is s*||x||/sqrt(d), so a 1540-dimensional
+    relation block would receive half the current a 384-dimensional embedding
+    block does, and any difference between them would be partly a difference in
+    drive strength.
+    """
+    import scipy.sparse as sp
+
+    rng = np.random.default_rng(0)
+    neurons = 60
+    operator = sp.csr_matrix(np.zeros((neurons, neurons), dtype=np.float32))
+    inputs, readout = np.arange(0, 30), np.arange(30, 40)
+
+    measured = []
+    for width in (16, 128, 512):
+        sensation = rng.normal(size=(6, width)).astype(np.float32)
+        _, drive_rms = reservoir_states(
+            operator,
+            sensation,
+            input_weights=rng.normal(size=(inputs.size, width)).astype(np.float32),
+            readout_indices=readout,
+            input_indices=inputs,
+            spec=MultitagSpec(steps_per_chunk=2),
+        )
+        measured.append(drive_rms)
+    assert max(measured) / min(measured) < 1.2, measured
+
+
+def test_unit_rows_normalises_each_sensation_vector() -> None:
+    from malecns_wifi.multitag import unit_rows
+
+    rng = np.random.default_rng(1)
+    scaled = rng.normal(size=(5, 9)).astype(np.float32) * np.asarray([[0.01], [1], [10], [100], [1]])
+    assert np.allclose(np.linalg.norm(unit_rows(scaled), axis=1), 1.0, atol=1e-5)
