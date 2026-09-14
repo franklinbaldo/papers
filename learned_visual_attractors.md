@@ -35,9 +35,9 @@ where `p0` is frozen before the corresponding analysis. The central question is 
 
 ## Why movement is the first positive control
 
-Male Drosophila courtship relies strongly on visual tracking of small moving objects. LC10/LC10a visual projection neurons are implicated in detecting fly-sized moving targets and in directed pursuit, with their effective gain modulated by courtship arousal. The first virtual assay therefore uses a moving high-contrast target under a fixed courtship-primed condition rather than treating a static photograph as the strongest control.
+Male Drosophila courtship relies strongly on visual tracking of small moving objects. Ribeiro et al. identified LC10 visual projection neurons as a major pathway for directed courtship: silencing disrupted orientation and maintenance of proximity, and LC10 neurons preferentially responded to small moving objects. Hindmarsh Sten et al. then showed that P1-mediated sexual arousal increases LC10a gain and supports high-fidelity tracking of a virtual female. Earlier, Kohatsu and Yamamoto showed that after appropriate state priming, artificial moving light targets can sustain courtship-like following pursuit.
 
-The priming manipulation is part of the assay and is held constant across candidate and controls. An unprimed condition is retained as a diagnostic, not as a substitute for the primary gate.
+The first virtual assay therefore uses a moving high-contrast target under a fixed courtship-primed condition rather than treating a static photograph as the strongest control. The priming manipulation is part of the assay and is held constant across candidate and controls. An unprimed condition is retained as a diagnostic, not as a substitute for the primary gate.
 
 ## Experimental stages
 
@@ -52,4 +52,10 @@ The priming manipulation is part of the assay and is held constant across candid
 
 A virtual winner establishes only a property of the registered MaleCNS simulation and interface. A topology-specific claim requires matched graph controls and pathway ablations. A real-world lure claim requires a separately registered physical assay. No result in the tagging line can rescue this experiment, and no result here retroactively changes the tagging papers.
 
-The governing protocol and executable scaffold live under `experiments/malecns_visual_attractor/`.
+The governing protocol, frozen Run 1 operating point, and executable scaffold live under `experiments/malecns_visual_attractor/`.
+
+## References
+
+- Ribeiro, I. M. A., Drews, M., Bahl, A., Machacek, C., Borst, A. & Dickson, B. J. **Visual Projection Neurons Mediating Directed Courtship in Drosophila.** *Cell* 174, 607–621.e18 (2018). DOI: `10.1016/j.cell.2018.06.020`.
+- Hindmarsh Sten, T., Li, R., Otopalik, A. et al. **Sexual arousal gates visual processing during Drosophila courtship.** *Nature* 595, 549–553 (2021). DOI: `10.1038/s41586-021-03714-w`.
+- Kohatsu, S. & Yamamoto, D. **Visually induced initiation of Drosophila innate courtship-like following pursuit is mediated by central excitatory state.** *Nature Communications* 6, 6457 (2015). DOI: `10.1038/ncomms7457`.
