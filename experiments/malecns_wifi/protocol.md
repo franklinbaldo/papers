@@ -69,11 +69,33 @@ not that cell". Two rules keep it honest.
    and port ablations are *mechanism diagnostics for after that closes*, they are
    labelled as such in the code, and a positive found only by moving an axis is
    reported as an axis effect and not as Run 1 succeeding.
-2. **A falsifying outcome is stated.** If the connectome fails to beat the direct
-   probe and both nulls across the frozen regime, the trained regime, and the
-   port and temporalization ablations, that is the substrate providing no
-   advantage for this task family, and it is written that way rather than
-   deferred to a further cell.
+2. **A falsifying outcome is stated, and scoped.** If MaleCNS does not beat the
+   direct control, the degree-preserving null and the matched random ESN in the
+   frozen regime, in the trainable-adapter regime, and across the predeclared
+   temporalization and readout ablations, then **there is no evidence of a MaleCNS
+   substrate advantage for this family of semantic span-tagging interfaces.**
+
+   The scope is deliberate. It is narrow enough not to contradict a positive
+   `fly-connectome-lm` result on next-token prediction, which exercises different
+   properties of the same graph, and strong enough to be falsifiable rather than
+   a licence to keep looking. It says nothing about MaleCNS as a substrate in
+   general, and nothing about task families we have not run.
+
+3. **The diagnostic space is closed now, before any result.** The only axes that
+   may be moved after the Qwen replication are the ones already written down:
+
+   | axis | permitted values |
+   |---|---|
+   | temporalization | 1 / 4 / 8 / 16 interpolation steps per chunk |
+   | readout | descending / random-matched / whole-state projection / full |
+   | operating point | the declared gain grid, selected on validation |
+   | plasticity | Run 2, trainable adapter with `W` frozen |
+   | food port | anatomical gustatory population vs matched random population |
+
+   No sixth explanation is added after seeing the numbers. If all of these fail,
+   it is finished for this task family. That restriction is what separates a
+   regime matrix from an excuse generator, and it is worth more registered before
+   the result than argued after it.
 
 ## Relation to concurrent community work
 
