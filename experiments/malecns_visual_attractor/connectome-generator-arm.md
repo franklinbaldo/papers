@@ -160,4 +160,4 @@ This separates the value of closed-loop adaptation from the value of the wavefor
 - frozen receiver recurrence and locomotion;
 - complete generated-frame and behavioural traces.
 
-`tests/test_connectome_generator.py` pins the boundary and closed-loop invariants. GPU population batching and the optimizer runner are the next implementation layer; they must preserve numerical parity with this reference path before decision-bearing runs.
+`tests/test_connectome_generator.py` pins the boundary, rendering and closed-loop invariants. `.github/workflows/malecns-visual-attractor.yml` runs the synthetic test suite on the PR. GPU population batching and the optimizer runner are the next implementation layer; they must preserve numerical parity with this reference path before decision-bearing runs.
