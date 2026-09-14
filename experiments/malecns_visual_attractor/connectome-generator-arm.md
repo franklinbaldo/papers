@@ -10,7 +10,7 @@ timestamp: 2026-09-14T19:55:00-04:00
 
 Status: **prospective arm; no positive result claimed**.
 
-This arm belongs to `Learned Visual Attractors for Drosophila` and is evaluated only after the ordinary positive-control assay has established that the receiver loop can express measurable visual tracking. It does not replace that gate.
+This arm belongs to `Learned Visual Attractors for Drosophila` and is evaluated only after the ordinary positive-control assay has established that the receiver loop can express measurable visual tracking. It does not replace that gate. It is inserted after the direct parametric/evolutionary baseline and before the generic neural/surrogate generator.
 
 ## Question
 
