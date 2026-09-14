@@ -1,7 +1,7 @@
 [project]
 name = "malecns-visual-attractor-experiment"
 version = "0.1.0"
-description = "Closed-loop MaleCNS visual-attractor experiments with distance curriculum and matched swarm controls."
+description = "Closed-loop MaleCNS visual-attractor and connectome-to-connectome generator experiments."
 requires-python = ">=3.11"
 dependencies = [
   "numpy>=2",
