@@ -128,3 +128,74 @@ def test_gates_favour_the_informative_channel() -> None:
     alpha = fit_channel_gates(channels, labels, groups, steps=80, seed=1)
     fine = [c.name for c in channels].index("c16")
     assert alpha[fine] == pytest.approx(max(alpha)), alpha
+
+
+def test_pyramid_is_scale_first_and_emits_both_sensor_types() -> None:
+    """A relation is one sensor a scale can provide, not the pyramid's definition.
+
+    Defining the pyramid as child/parent relations silently forbids the
+    comparison that matters: what each *scale* contributes, independent of how it
+    is sensed.
+    """
+    from malecns_wifi.channel_utility import pyramid_channels
+
+    rng = np.random.default_rng(0)
+    levels = {scale: rng.normal(size=(60, 8)).astype(np.float32) for scale in (256, 64, 16)}
+    channels = pyramid_channels(levels, encoder="A", parents={64: 256, 16: 64})
+
+    assert [c.name for c in channels] == [
+        "A:abs256", "A:abs64", "A:rel64|256", "A:abs16", "A:rel16|64",
+    ]
+    # The top level has no parent, so it contributes an absolute sensor only.
+    assert not channels[0].is_relational
+    assert {c.scale for c in channels} == {256, 64, 16}
+    # Both sensor types are available at every level that has a parent.
+    for scale in (64, 16):
+        kinds = {c.is_relational for c in channels if c.scale == scale}
+        assert kinds == {True, False}
+
+    only_absolute = pyramid_channels(
+        levels, encoder="A", parents={64: 256, 16: 64}, include_relational=False
+    )
+    assert all(not c.is_relational for c in only_absolute)
+
+
+def test_specialisation_matrix_is_flat_when_channels_measure_the_same_thing() -> None:
+    """The falsifying shape for the retina claim, made measurable.
+
+    If every channel is equally useful for every tag, the field is one sensor at
+    several volumes rather than several sensors. That should not be reported as a
+    retina even where the bank works.
+    """
+    from malecns_wifi.channel_utility import Channel, per_tag_channel_utility
+
+    rng = np.random.default_rng(0)
+    documents, per_document, tags = 10, 20, 3
+    total = documents * per_document
+    groups = np.repeat(np.arange(documents), per_document)
+    masks = np.zeros((total, tags), dtype=np.float32)
+    for document in range(documents):
+        for tag in range(tags):
+            masks[document * per_document + 3 + tag * 4, tag] = 1.0
+
+    # Specialised: each channel carries exactly one tag.
+    specialised = [
+        Channel(f"s{tag}", np.hstack([masks[:, [tag]] * 3.0, rng.normal(size=(total, 3))]),
+                "A", 16 << tag, None)
+        for tag in range(tags)
+    ]
+    # Flat: every channel carries the union, so none distinguishes the tags.
+    union = masks.max(axis=1, keepdims=True)
+    flat = [
+        Channel(f"f{index}", np.hstack([union * 3.0, rng.normal(size=(total, 3))]),
+                "A", 16 << index, None)
+        for index in range(tags)
+    ]
+
+    names = [f"tag{index}" for index in range(tags)]
+    sharp = per_tag_channel_utility(specialised, masks, names, groups)
+    blunt = per_tag_channel_utility(flat, masks, names, groups)
+
+    sharp_spread = np.nanmean(list(sharp["specialisation_spread"].values()))
+    blunt_spread = np.nanmean(list(blunt["specialisation_spread"].values()))
+    assert sharp_spread > blunt_spread, (sharp_spread, blunt_spread)

@@ -195,3 +195,96 @@ def fit_channel_gates(
         if score > best_score:
             best, best_score, logits = candidate.copy(), score, candidate
     return softmax_simplex(best)
+
+
+def pyramid_channels(
+    levels: dict[int, np.ndarray],
+    *,
+    encoder: str,
+    parents: dict[int, int] | None = None,
+    include_absolute: bool = True,
+    include_relational: bool = True,
+) -> list[Channel]:
+    """Build a scale-first pyramid where each level may emit both sensor types.
+
+    The pyramid is defined by its **scales**, not by a sensor type. A relation is
+    one kind of sensor a level can provide, an absolute embedding is another, and
+    a level may provide both. Defining the pyramid as "child/parent relations"
+    silently forbids the comparison that matters -- what each *scale* contributes,
+    independent of how it is sensed.
+
+    ``levels`` maps scale to that scale's embeddings, already aligned to one row
+    per position. ``parents`` maps a scale to its containing scale; a level with
+    no parent yields only an absolute channel.
+    """
+    from .semantic_hierarchy import parent_relation
+
+    parents = parents or {}
+    channels: list[Channel] = []
+    for scale in sorted(levels, reverse=True):
+        values = levels[scale]
+        if include_absolute:
+            channels.append(Channel(f"{encoder}:abs{scale}", values, encoder, scale, None))
+        parent = parents.get(scale)
+        if include_relational and parent is not None and parent in levels:
+            relation = parent_relation(values, levels[parent]).vector
+            channels.append(
+                Channel(f"{encoder}:rel{scale}|{parent}", relation, encoder, scale, parent)
+            )
+    return channels
+
+
+def per_tag_channel_utility(
+    channels: list[Channel],
+    tag_masks: np.ndarray,
+    tag_names: list[str],
+    groups: np.ndarray,
+    *,
+    penalty: float = 1.0,
+) -> dict:
+    """Channel-by-tag utility matrix: does each sensor measure something different?
+
+    The retina claim is not only that the field carries information, but that its
+    sensors are **specialised** -- rods for luminance, cones for chromaticity. The
+    analogous prediction here is that the channel-by-tag matrix is *structured*:
+    fine channels should help boundary tags (``*_inicio``, ``*_fim``,
+    ``dispositivo_abertura``) more than they help region tags, and coarse channels
+    the reverse.
+
+    A flat matrix would falsify the specialisation claim even if the aggregate
+    bank works, because it would mean every channel measures the same thing at
+    different volumes. That is a different architecture from a retina, and it
+    should not be reported as one.
+    """
+    masks = np.asarray(tag_masks)
+    matrix, specialisation = {}, {}
+    for index, tag in enumerate(tag_names):
+        target = masks[:, index] > 0
+        if not target.any() or target.all():
+            continue
+        singles = {
+            channel.name: leave_one_document_out_auprc(
+                _unit(channel.values), target, groups, penalty=penalty
+            )
+            for channel in channels
+        }
+        prevalence = float(target.mean())
+        matrix[tag] = {
+            name: (value / prevalence if prevalence > 0 else float("nan"))
+            for name, value in singles.items()
+        }
+
+    # How far is the matrix from flat? Zero means every channel is equally useful
+    # for every tag, which is the falsifying shape.
+    for name in (channel.name for channel in channels):
+        lifts = [row[name] for row in matrix.values() if np.isfinite(row.get(name, np.nan))]
+        specialisation[name] = float(np.std(lifts)) if len(lifts) > 1 else float("nan")
+
+    return {
+        "lift_by_tag": matrix,
+        "specialisation_spread": specialisation,
+        "note": (
+            "lift is single-channel AUPRC over that tag's own prevalence. A flat "
+            "matrix falsifies sensor specialisation even where the bank works."
+        ),
+    }
