@@ -86,10 +86,38 @@ N_k(q) = top-k memories by s_i
 Three completion rules are frozen as the initial comparison:
 
 1. **top1** — use the value attached to the nearest key;
-2. **topk_barycenter** — weighted average of the top-k values with weights `softmax(s_i / tau)`;
-3. **confidence_gated** — use retrieval only above a confidence threshold selected inside training folds; otherwise pay for the real channel.
+2. **topk_barycenter** — weighted average of the top-k values with weights `softmax(s_i / temperature)`;
+3. **confidence_gated** — use retrieval only above a confidence threshold `tau`; otherwise pay for the real channel.
+
+`temperature` and the confidence threshold `tau` are distinct. `temperature` controls how top-k values are blended. `tau` decides whether retrieval is trusted at all.
 
 No learned attention over memory is allowed in this experiment. A learned retriever is a later hypothesis because it can become the task model itself.
+
+## Nested selection of retrieval hyperparameters
+
+`tau` is a selected hyperparameter and is subject to the same leakage discipline as gain or ridge. It is never chosen on the outer held-out document.
+
+For each outer held-out document `D`:
+
+```text
+remove D first
+    -> build memory only from the remaining documents
+    -> split those documents into inner-train / inner-validation
+    -> select (k, tau, temperature where applicable) only on inner-validation
+    -> rebuild/refit the chosen rule using all outer-training documents
+    -> predict D once
+```
+
+The primary confidence-gated arm uses a frozen finite candidate grid for `k`, `tau`, and any top-k temperature before outer scoring begins.
+
+Selection is **lexicographic rather than a post-hoc weighted utility**:
+
+1. retain only candidates that, on inner validation, preserve at least 90% of `full_pyramid_real` macroAP and remain within 0.03 absolute macroAP of it;
+2. among qualifying candidates, choose the one avoiding the largest fraction of expensive-channel encoder calls;
+3. ties are broken by higher inner-validation macroAP, then by the more conservative policy (more real fallbacks);
+4. if no candidate meets the quality floor, choose the candidate with highest inner-validation macroAP, breaking ties by lower cost, and record that the economic regime was not reached.
+
+The outer document contributes neither labels nor retrieval-quality outcomes to this choice. Output records `selected_by_fold`, not a single globally selected `tau`.
 
 ## Missing-channel completion
 
@@ -133,6 +161,45 @@ The query for position `t` uses only current/past text. Future text from the hel
 
 A separate exploratory `same_document_prefix_memory` arm may later reuse values genuinely computed earlier in the same document, but only if their source position is `< t` and the value itself did not encode future text relative to its creation point. That arm is never mixed into the confirmatory LODO result.
 
+## Formulaicity is a target-domain property, not an apology
+
+Associative completion is expected to work best where a corpus repeatedly revisits similar semantic states inside similar larger structures. That includes precisely the high-volume domains for which expensive repeated embedding work matters: judicial decisions, contracts, medical records, insurance claims, filings and procurement documents.
+
+The registered mechanism prediction is therefore:
+
+> **The more structurally repetitive a corpus is, the greater the fraction of expensive observations that associative completion can safely avoid at a fixed quality floor.**
+
+The experiment reports formulaicity before interpreting savings. It is measured in two complementary ways.
+
+### F_sem — label-free semantic neighbourability
+
+Using only the cheap key representation and cross-document neighbours, compute for every query its nearest admissible cosine similarity after excluding its own document. Let `m_i` be that maximum similarity. Report:
+
+```text
+F_sem_mean   = mean(m_i)
+F_sem_median = median(m_i)
+F_sem_q10    = 10th percentile(m_i)
+coverage(c)  = fraction(m_i >= c) over a frozen confidence grid
+```
+
+`F_sem` is label-free and requires no expensive target channel. It measures whether the cheap semantic states themselves recur across documents.
+
+### F_struct — annotated structural regularity
+
+Where span/section annotations exist, report a secondary structural statistic from the relative-position distributions of recurring tags. For tag `j`, bin its normalized start position into a frozen number of bins, compute normalized entropy `H_j / log(B)`, and define:
+
+```text
+F_struct = mean_j [1 - H_j / log(B)]
+```
+
+Only tags present in the preregistered minimum number of documents enter the mean. `F_struct = 1` means highly position-regular structure; values near 0 mean diffuse placement. This is diagnostic and corpus-descriptive; it is never fed to the tagger or retrieval rule.
+
+### Cross-domain prediction
+
+For every corpus/genre tested later, report `(F_sem, F_struct where available, avoided-call fraction, quality retention)`. The stronger claim is not "TJRO is cheap to retrieve" but that **formulaicity predicts the economic frontier**.
+
+A future multi-genre test should evaluate whether avoided-call fraction at the frozen quality floor increases with `F_sem`/`F_struct`. If it does not, the proposed mechanism explanation is wrong even if this corpus yields a systems win.
+
 ## Baselines
 
 Every retrieval result is compared against:
@@ -167,7 +234,14 @@ Systems value:
 - fraction of missing channels filled without an encoder call;
 - end-to-end wall-clock and cache/memory bytes.
 
-The systems ledger is part of the result. "Short embeddings are cheap" and "retrieval saves work" are not accepted as assumptions.
+Applicability diagnostics:
+
+- `F_sem_mean`, `F_sem_median`, `F_sem_q10` and frozen-threshold semantic coverage curve;
+- `F_struct` when structural annotations exist;
+- retrieval hit/fallback rate by target scale;
+- savings and quality-retention frontier conditioned on the formulaicity statistics.
+
+The systems ledger is part of the result. "Short embeddings are cheap", "retrieval saves work", and "this corpus is repetitive" are not accepted as assumptions.
 
 ## Registered gates
 
@@ -188,6 +262,12 @@ Both quality conditions are reported; passing one but not the other is not round
 ### A4 — confidence means something
 
 Completion error must be lower in higher-confidence retrieval bins. A confidence gate whose confidence is uncalibrated cannot justify skipping expensive embeddings; if the monotonic trend fails, the adaptive fallback claim fails even if average retrieval is useful.
+
+### A5 — formulaicity explains where the system pays
+
+The primary corpus result reports the formulaicity statistics next to the savings result. A single corpus cannot establish the cross-domain relationship, so no correlation claim is made from TJRO alone. The registered follow-up prediction is that, across independent corpora/genres, higher `F_sem` and (where available) `F_struct` predict a higher avoided-call fraction at the same frozen quality floor.
+
+Failure of that relationship does not erase a local systems win, but it falsifies the proposed general applicability mechanism.
 
 ## Per-scale curve
 
@@ -212,13 +292,14 @@ The experiment does **not** require that every missing embedding be reconstructi
 - **hub memory:** a few generic keys retrieve for everything;
 - **averaging blur:** top-k barycenters wash out information that top1 preserves;
 - **encoder floor:** a tiny key encoder cannot distinguish states needed to predict the coarse channel;
-- **retrieval helps reconstruction but not tagging:** the recovered geometry is accurate in cosine space yet task-irrelevant.
+- **retrieval helps reconstruction but not tagging:** the recovered geometry is accurate in cosine space yet task-irrelevant;
+- **formulaicity proxy fails:** `F_sem`/`F_struct` do not predict the observed savings frontier across corpora.
 
 These are not post-hoc excuses. They are measured failure modes.
 
 ## No rescue by bigger memory or stronger retriever
 
-The confirmatory run freezes the training-memory corpus, key schema, target channel set, `k` candidates, threshold-selection rule and retrieval method before held-out scoring.
+The confirmatory run freezes the training-memory corpus, key schema, target channel set, `k` candidates, `tau` grid, temperature grid, threshold-selection rule and retrieval method before held-out scoring.
 
 If the registered memory fails, adding external corpora, a learned retriever, larger keys, future-aware queries or a different encoder family is a new experiment. The associative-completion claim is not rescued after the result by making the memory arbitrarily powerful.
 
