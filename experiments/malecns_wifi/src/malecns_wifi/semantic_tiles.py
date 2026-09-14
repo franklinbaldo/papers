@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from hashlib import sha256
 from typing import Iterable
 
+ChannelKey = tuple[int, str, str]
+
 
 @dataclass(frozen=True)
 class TileSpec:
@@ -31,6 +33,10 @@ class TileSpec:
         if not self.encoder_id or not self.encoder_revision:
             raise ValueError("encoder_id and encoder_revision are required")
 
+    @property
+    def channel_key(self) -> ChannelKey:
+        return (self.scale, self.encoder_id, self.encoder_revision)
+
 
 @dataclass(frozen=True)
 class Tile:
@@ -47,119 +53,98 @@ class Tile:
 
 @dataclass(frozen=True)
 class PyramidPlan:
-    """A frozen set of token-scale channels.
+    """A frozen set of token-scale/encoder channels.
 
-    Tokenization itself is intentionally external: callers pass a sequence of
-    already-tokenized string units so changing a tokenizer cannot silently change
-    the experiment under the same plan.
+    The same scale may be observed by multiple encoders. That is intentional: Jina
+    and MiniLM can both supply a 64-token channel, but relations are only formed
+    inside one encoder/revision pair.
     """
 
     specs: tuple[TileSpec, ...]
 
     def __post_init__(self) -> None:
+        keys = [item.channel_key for item in self.specs]
+        if len(keys) != len(set(keys)):
+            raise ValueError("duplicate scale/encoder/revision channel")
         scales = [item.scale for item in self.specs]
-        if len(scales) != len(set(scales)):
-            raise ValueError("one TileSpec per scale in a PyramidPlan")
         if tuple(sorted(scales, reverse=True)) != tuple(scales):
             raise ValueError("specs must be ordered largest to smallest")
 
 
 def tile_cache_key(text: str, spec: TileSpec) -> str:
-    """Stable content-addressed identity for one encoder input."""
     payload = "\0".join(
-        [
-            spec.encoder_id,
-            spec.encoder_revision,
-            spec.normalisation_version,
-            text,
-        ]
+        [spec.encoder_id, spec.encoder_revision, spec.normalisation_version, text]
     ).encode("utf-8")
     return sha256(payload).hexdigest()
 
 
 def overlapping_tiles(tokens: list[str], spec: TileSpec) -> list[Tile]:
-    """Generate deterministic overlapping tiles, including the final short tail.
-
-    The span coordinates are in caller-provided token units. Joining uses a single
-    space because the protocol's cache identity must depend on the exact text sent
-    to the encoder; callers needing byte-exact reconstruction should pass units and
-    a normalisation version that encode that policy explicitly.
-    """
     if not tokens:
         return []
     result: list[Tile] = []
-    seen: set[tuple[int, int]] = set()
-    starts = list(range(0, len(tokens), spec.stride))
-    for start in starts:
+    for start in range(0, len(tokens), spec.stride):
         end = min(start + spec.scale, len(tokens))
         if start >= end:
             continue
-        span = (start, end)
-        if span in seen:
-            continue
-        seen.add(span)
         text = " ".join(tokens[start:end])
         result.append(
-            Tile(
-                start=start,
-                end=end,
-                text=text,
-                spec=spec,
-                cache_key=tile_cache_key(text, spec),
-            )
+            Tile(start, end, text, spec, tile_cache_key(text, spec))
         )
         if end == len(tokens):
             break
     return result
 
 
-def build_pyramid(tokens: list[str], plan: PyramidPlan) -> dict[int, list[Tile]]:
-    return {spec.scale: overlapping_tiles(tokens, spec) for spec in plan.specs}
+def build_pyramid(tokens: list[str], plan: PyramidPlan) -> dict[ChannelKey, list[Tile]]:
+    return {spec.channel_key: overlapping_tiles(tokens, spec) for spec in plan.specs}
 
 
 def containing_tiles(child: Tile, parents: Iterable[Tile]) -> list[Tile]:
-    """All larger tiles that fully contain ``child``, nearest parent first."""
     matches = [item for item in parents if item.start <= child.start and item.end >= child.end]
     return sorted(matches, key=lambda item: (item.width, item.start))
 
 
-def relation_pairs(pyramid: dict[int, list[Tile]]) -> list[tuple[Tile, Tile]]:
-    """Enumerate child->ancestor relations across all declared scales.
-
-    This deliberately permits redundant ancestors: a 64-token tile may be related
-    both to its containing 128 and 256 tiles. Each pair remains within the child's
-    encoder family only when the two TileSpecs share encoder id/revision; cross-
-    encoder relations are excluded rather than projected into a fake common space.
-    """
-    scales = sorted(pyramid, reverse=True)
+def relation_pairs(pyramid: dict[ChannelKey, list[Tile]]) -> list[tuple[Tile, Tile]]:
+    """Enumerate child->ancestor relations without ever crossing encoder spaces."""
     pairs: list[tuple[Tile, Tile]] = []
-    for child_scale in reversed(scales):
-        for child in pyramid[child_scale]:
-            for parent_scale in scales:
-                if parent_scale <= child_scale:
+    channels = list(pyramid.items())
+    for _, children in channels:
+        for child in children:
+            for _, parents in channels:
+                if not parents:
                     continue
-                for parent in containing_tiles(child, pyramid[parent_scale]):
-                    if (
-                        parent.spec.encoder_id == child.spec.encoder_id
-                        and parent.spec.encoder_revision == child.spec.encoder_revision
-                    ):
-                        pairs.append((child, parent))
+                parent_spec = parents[0].spec
+                if parent_spec.scale <= child.spec.scale:
+                    continue
+                if (
+                    parent_spec.encoder_id != child.spec.encoder_id
+                    or parent_spec.encoder_revision != child.spec.encoder_revision
+                ):
+                    continue
+                for parent in containing_tiles(child, parents):
+                    pairs.append((child, parent))
     return pairs
 
 
-def cache_ledger(pyramids: Iterable[dict[int, list[Tile]]]) -> dict:
-    """Count total/unique encoder inputs and exact reuse by scale and globally."""
+def cache_ledger(pyramids: Iterable[dict[ChannelKey, list[Tile]]]) -> dict:
     all_tiles: list[Tile] = []
     for pyramid in pyramids:
         for tiles in pyramid.values():
             all_tiles.extend(tiles)
 
-    by_scale: dict[int, dict] = {}
-    for scale in sorted({tile.spec.scale for tile in all_tiles}, reverse=True):
-        rows = [tile for tile in all_tiles if tile.spec.scale == scale]
+    by_channel: dict[str, dict] = {}
+    for channel in sorted(
+        {tile.spec.channel_key for tile in all_tiles}, reverse=True
+    ):
+        rows = [tile for tile in all_tiles if tile.spec.channel_key == channel]
         unique = len({tile.cache_key for tile in rows})
         total = len(rows)
-        by_scale[scale] = {
+        scale, encoder, revision = channel
+        name = f"{scale}:{encoder}@{revision}"
+        by_channel[name] = {
+            "scale": scale,
+            "encoder": encoder,
+            "revision": revision,
             "total": total,
             "unique": unique,
             "reused": total - unique,
@@ -173,12 +158,11 @@ def cache_ledger(pyramids: Iterable[dict[int, list[Tile]]]) -> dict:
         "unique": unique_all,
         "reused": total_all - unique_all,
         "reuse_fraction": (total_all - unique_all) / total_all if total_all else 0.0,
-        "by_scale": by_scale,
+        "by_channel": by_channel,
     }
 
 
 def flavourizer_scales(mode: str, scales: Iterable[int]) -> tuple[int, ...]:
-    """Freeze the four confirmatory flavour-placement arms."""
     ordered = tuple(sorted(set(scales), reverse=True))
     if mode == "none":
         return ()
