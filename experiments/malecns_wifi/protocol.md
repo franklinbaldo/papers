@@ -120,6 +120,26 @@ Three measured facts, none of which the global fraction could show:
 
 So bulk-matched is reachable only at a gain where the operator has long since stopped being a reservoir: no echo state property, and most of its leading subspace clamped.
 
+### Basis-invariant follow-up, two drive regimes
+
+The per-mode reading above was replaced by subspace quantities: loading through the spectral projector `P = V(U^T V)^-1 U^T`, saturation weighted by each neuron's participation `||Q[i,:]||^2`, and the echo state test split into `||P(x-x')||` against `||(I-P)(x-x')||`. Linearised, the leading mode's per-step multiplier is `mu = 1 - leak + leak*gain`, so `0.6 + 0.4*gain` at leak 0.4 and the linear threshold is `gain = 1`.
+
+| gain | mu | isotropic: sub frac / sat / ESP | task-matched: sub frac / sat / ESP |
+|---|---|---|---|
+| 0.95 | 0.98 | 0.011 / 0.000 / yes | 0.062 / 0.000 / yes |
+| 1.00 | 1.00 | 0.012 / 0.000 / yes | 0.077 / 0.000 / yes |
+| 1.10 | 1.04 | 0.020 / 0.000 / yes | 0.122 / 0.000 / **no** |
+| 1.25 | 1.10 | 0.042 / 0.000 / **no** | 0.167 / 0.000 / no |
+| 1.50 | 1.20 | 0.061 / 0.000 / no | 0.250 / 0.000 / no |
+| 2.50 | 1.60 | 0.041 / 0.014 / no | 0.018 / 0.023 / no |
+| 3.20 | 1.88 | 0.029 / 0.880 / no | 0.013 / 0.691 / no |
+
+**It is the bulk that loses the echo state property, not the hemispheric integrator.** Under isotropic drive the subspace component of the perturbation stays at ~1e-10 at every gain past threshold while the bulk component grows to 85: the leading subspace contracts throughout, and the divergence lives entirely outside it. That is the opposite of what "a slow global integrator going unstable" would predict.
+
+The threshold lands where the linearisation says: ESP survives `mu = 1.04` and fails by `mu = 1.10` under isotropic drive, and one grid step earlier under task-matched drive.
+
+**The drive regime changes the answer, which is why both were run.** Under task-matched drive the subspace carries far more of the state (25% at gain 1.5 against 6% isotropic) and, near threshold, participates in the divergence itself (`sep_sub` 1.23 and 1.77 at gains 1.10 and 1.25, against a bulk of 1.83 and 3.13). Characterising the operator with isotropic drive and transferring the conclusion to the task would have been wrong in both directions.
+
 Two caveats attach to the numbers. On the row-normalised operator the leading pair is **exactly** degenerate (`lambda_2/lambda_1 = 1.000`, against 0.9848 raw), so `v1` and `v2` individually are an arbitrary basis of one 2-D invariant subspace and only the subspace total is interpretable — per-mode loadings differed 20-fold purely by basis choice. And this sweep drives all 165k neurons at `input_scale` 1.0, much harder than the task's sensory-only input; ESP and saturation thresholds both depend on drive amplitude, so these characterise the operator, not the tagger's operating point.
 
 Document length remains a separate confound: 384-byte tails may be too short for a slow two-mode integrator to charge.

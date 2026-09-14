@@ -30,7 +30,7 @@ from malecns_wifi.encoder_gate import (
 class TransformerEncoder:
     """Mean-pooled sentence embeddings from any HuggingFace encoder."""
 
-    def __init__(self, model_name: str, device: str = "cpu", max_length: int = 1024):
+    def __init__(self, model_name: str, device: str = "cpu", max_length: int | None = None):
         import torch
         from transformers import AutoModel, AutoTokenizer
 
@@ -38,7 +38,27 @@ class TransformerEncoder:
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModel.from_pretrained(model_name).to(device).eval()
         self.device = device
-        self.max_length = max_length
+        self.context_limit = int(
+            getattr(self.model.config, "max_position_embeddings", 0)
+            or getattr(self.tokenizer, "model_max_length", 0)
+            or 512
+        )
+        self.max_length = min(max_length or self.context_limit, self.context_limit)
+
+    def check_scales(self, scales) -> None:
+        """A parent longer than the model's context is not a parent.
+
+        Silently truncating it would leave a "containing" chunk that does not
+        contain its children, and every relation built on it would be measuring
+        the wrong thing. Better to refuse than to report a corrupted hierarchy.
+        """
+        too_long = [scale for scale in scales if scale > self.context_limit]
+        if too_long:
+            raise SystemExit(
+                f"parent scales {too_long} exceed this model's {self.context_limit}-token "
+                f"context; a truncated parent no longer contains its children. "
+                f"Use --scales within {self.context_limit}, or a longer-context encoder."
+            )
 
     def encode(self, texts):
         vectors = []
@@ -74,7 +94,9 @@ def main() -> None:
     args = parser.parse_args()
 
     encoder = TransformerEncoder(args.model, device=args.device)
+    encoder.check_scales(args.scales)
     tokenizer = encoder.tokenizer
+    print(f"{args.model}: {encoder.context_limit}-token context, scales {args.scales}")
 
     documents = []
     for path in args.corpus:
