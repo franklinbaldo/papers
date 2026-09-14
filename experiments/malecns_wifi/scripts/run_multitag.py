@@ -39,7 +39,16 @@ def main() -> None:
     parser.add_argument("--features", type=Path, required=True)
     parser.add_argument("--graph", type=Path, default=Path("artifacts/runtime-v1/graph.npz"))
     parser.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2])
-    parser.add_argument("--steps-per-chunk", type=int, default=4)
+    parser.add_argument(
+        "--steps-per-chunk",
+        type=int,
+        nargs="+",
+        default=[4],
+        help="interpolation steps per chunk; a grid runs the time ablation. Prior work "
+        "measured the frozen operator retaining only 1-2 characters and suggested "
+        "spreading each token over several timesteps, so the recurrence may need time "
+        "to digest a semantic transition before it can contribute anything.",
+    )
     parser.add_argument("--gain", type=float, default=0.95)
     parser.add_argument("--leak", type=float, default=0.4)
     parser.add_argument(
@@ -50,7 +59,24 @@ def main() -> None:
     )
     parser.add_argument("--readout-size", type=int, default=0, help="0 = all descending neurons")
     parser.add_argument(
+        "--readouts",
+        nargs="+",
+        default=["descending"],
+        choices=["descending", "random", "projected", "full"],
+        help="where the state is read from. If MaleCNS loses to the direct probe on "
+        "descending only, the question is whether the topology computed nothing or we "
+        "are reading the wrong door.",
+    )
+    parser.add_argument(
         "--output", type=Path, default=Path("artifacts/runtime-v1/multitag-run1.json")
+    )
+    parser.add_argument(
+        "--state-cache",
+        type=Path,
+        default=None,
+        help="directory to cache reservoir states by (operator, representation, seed); "
+        "states are the expensive part and do not depend on flavour or scoring, so a "
+        "cached run re-scores in seconds",
     )
     args = parser.parse_args()
 
@@ -68,10 +94,12 @@ def main() -> None:
     }
     spec = MultitagSpec(
         seeds=tuple(args.seeds),
-        steps_per_chunk=args.steps_per_chunk,
+        steps_per_chunk=args.steps_per_chunk[0],
         gain=args.gain,
         leak=args.leak,
         input_scale=args.target_drive_rms,
+        readouts=tuple(args.readouts),
+        step_grid=tuple(args.steps_per_chunk),
     )
 
     print(f"{len(np.unique(groups))} documents, {len(tag_masks)} chunks, "
@@ -81,12 +109,26 @@ def main() -> None:
         f"{name}={int(count)}" for name, count in zip(tag_names, coverage, strict=True)
     ))
 
+    # Incremental checkpoint. Writing the JSON only at the end meant a timeout
+    # erased fifty minutes of computation once already; every finished cell is
+    # now on disk before the next one starts.
+    checkpoint = args.output.with_suffix(".partial.json")
     results = []
+    if checkpoint.exists():
+        results = json.loads(checkpoint.read_text())["results"]
+        print(f"resuming from {checkpoint} with {len(results)} cells already done")
+    done = {(row["reservoir"], row["representation"], row["flavour"]) for row in results}
+
+    cache_dir = args.state_cache
+    if cache_dir:
+        cache_dir.mkdir(parents=True, exist_ok=True)
 
     def record(row: dict) -> None:
         results.append(row)
+        checkpoint.write_text(json.dumps({"results": results}, indent=2) + "\n")
         print(
-            f"{row['reservoir']:<14}{row['representation']:<24}{row['flavour']:<16}"
+            f"{row['reservoir']:<12}{row.get('readout', '-'):<12}{row.get('steps', '-'):>4} "
+            f"{row['representation']:<24}{row['flavour']:<16}"
             f"{row['inside_auprc']:>8.3f}{row['inside_auprc']/row['random_auprc']:>7.1f}"
             f"{row['macro_tag_auprc']:>9.3f}{row['tag_accuracy_on_true_spans']:>9.3f}",
             flush=True,
@@ -99,6 +141,8 @@ def main() -> None:
     # --- direct probes ------------------------------------------------------
     for name, block in blocks.items():
         for flavour_source in spec.flavour_sources:
+            if ("direct", name, flavour_source) in done:
+                continue
             scores = [
                 evaluate(
                     block,
@@ -136,48 +180,62 @@ def main() -> None:
         for name, block in blocks.items():
             if operator_name != "malecns" and name != "absolute_plus_relations":
                 continue  # nulls run on the full representation only
+            # States depend on (operator, representation, seed) but not on flavour,
+            # which only changes the readout target. Computing them once per seed
+            # and scoring both flavours from them halves the reservoir passes.
+            if all(
+                (operator_name, name, flavour) in done for flavour in spec.flavour_sources
+            ):
+                continue
+            states_by_seed = {}
+            calibration = None
+            drive_rms = []
+            for seed in spec.seeds:
+                key = None
+                if cache_dir:
+                    key = cache_dir / f"{operator_name}__{name}__seed{seed}.npy"
+                    if key.exists():
+                        states_by_seed[seed] = np.load(key)
+                        calibration = calibration or {"mean": float("nan"), "spread": float("nan"),
+                                                      "target_rms": spec.input_scale}
+                        continue
+                rng = np.random.default_rng(seed)
+                input_weights = rng.normal(
+                    size=(populations.input_indices.size, block.shape[1])
+                ).astype(np.float32)
+                # Calibrated on each fold's training documents only. The per-fold
+                # spread is reported; where negligible one pass at the mean is
+                # used, which is checked rather than assumed.
+                calibration = calibrate_drive(
+                    input_weights, block, groups, target_rms=spec.input_scale
+                )
+                states = np.vstack([
+                    collect_states(
+                        drive_rms,
+                        operator,
+                        block[groups == document],
+                        input_weights=input_weights,
+                        readout_indices=readout,
+                        input_indices=populations.input_indices,
+                        spec=spec,
+                        scale=calibration["mean"],
+                    )
+                    for document in np.unique(groups)
+                ])
+
             for flavour_source in spec.flavour_sources:
-                scores = []
-                for seed in spec.seeds:
-                    rng = np.random.default_rng(seed)
-                    # No 1/sqrt(d): the sensation is unit-normalised inside
-                    # reservoir_states, so the drive energy is the same whatever
-                    # the representation's width or the encoder's dimension.
-                    input_weights = rng.normal(
-                        size=(populations.input_indices.size, block.shape[1])
-                    ).astype(np.float32)
-                    # Calibrated on each fold's training documents only. The
-                    # per-fold spread is reported; where it is negligible one pass
-                    # at the mean is used, which is checked rather than assumed.
-                    calibration = calibrate_drive(
-                        input_weights, block, groups, target_rms=spec.input_scale
+                scores = [
+                    evaluate(
+                        states_by_seed[seed],
+                        tag_masks,
+                        build_flavours(
+                            stored["tag_embeddings"], spec, seed=seed, source=flavour_source
+                        ),
+                        groups,
+                        penalties=spec.ridge_penalties,
                     )
-                    scale = calibration["mean"]
-                    drive_rms = []
-                    states = np.vstack([
-                        collect_states(
-                            drive_rms,
-                            operator,
-                            block[groups == document],
-                            input_weights=input_weights,
-                            readout_indices=readout,
-                            input_indices=populations.input_indices,
-                            spec=spec,
-                            scale=scale,
-                        )
-                        for document in np.unique(groups)
-                    ])
-                    scores.append(
-                        evaluate(
-                            states,
-                            tag_masks,
-                            build_flavours(
-                                stored["tag_embeddings"], spec, seed=seed, source=flavour_source
-                            ),
-                            groups,
-                            penalties=spec.ridge_penalties,
-                        )
-                    )
+                    for seed in spec.seeds
+                ]
                 record({
                     "reservoir": operator_name,
                     "representation": name,

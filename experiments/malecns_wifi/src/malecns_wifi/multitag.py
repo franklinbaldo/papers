@@ -35,6 +35,8 @@ class MultitagSpec:
     leak: float = 0.4
     gain: float = 0.95
     steps_per_chunk: int = 4
+    readouts: tuple[str, ...] = ("descending",)
+    step_grid: tuple[int, ...] = (4,)
     ridge_penalties: tuple[float, ...] = (0.01, 0.1, 1.0, 10.0, 100.0)
     seeds: tuple[int, ...] = (0, 1, 2)
     input_scale: float = 1.0
@@ -108,6 +110,63 @@ def unit_rows(features: np.ndarray) -> np.ndarray:
     return values / np.maximum(np.linalg.norm(values, axis=1, keepdims=True), 1e-12)
 
 
+def build_readout(
+    kind: str,
+    descending: np.ndarray,
+    neurons: int,
+    *,
+    seed: int,
+    width: int | None = None,
+) -> tuple[np.ndarray, np.ndarray | None]:
+    """Choose where the state is read from, and how.
+
+    A frozen operator losing to the direct probe has two very different
+    explanations: the topology computed nothing, or we are reading the wrong door.
+    The descending neurons are the biologically right output, but they are 1,314
+    of 165,122, and prior work reads the whole state instead. These ablations
+    separate the two explanations.
+
+    Returns ``(indices, projection)``. When ``projection`` is not ``None`` the
+    readout is ``projection @ state[indices]`` rather than ``state[indices]``.
+
+    * ``descending``   -- the anatomical output population.
+    * ``random``       -- the same number of neurons drawn at random. If this
+      matches the descending readout, "descending" was a size, not a place.
+    * ``projected``    -- a fixed random projection of the *whole* state down to
+      the same width. Same readout budget, no anatomical selection, but nothing
+      discarded before the projection.
+    * ``full``         -- the entire state, as an upper bound on what any readout
+      of this operator could recover. Not a condition to claim, a ceiling to
+      measure against.
+    """
+    rng = np.random.default_rng(seed + 4242)
+    size = width or descending.size
+    if kind == "descending":
+        return descending, None
+    if kind == "random":
+        return np.sort(rng.choice(neurons, size=size, replace=False)), None
+    if kind == "projected":
+        # Sparse rather than dense: a dense 1314 x 165122 projection is 868MB and
+        # buys nothing. Achlioptas-style sparse projections preserve distances at
+        # a density of about 1/sqrt(n), which here is ~0.25% and a few hundred
+        # thousand nonzeros.
+        density = 1.0 / np.sqrt(neurons)
+        projection = sp.random(
+            size,
+            neurons,
+            density=density,
+            format="csr",
+            dtype=np.float32,
+            random_state=np.random.default_rng(seed + 4242),
+            data_rvs=lambda count: rng.choice([-1.0, 1.0], size=count).astype(np.float32),
+        )
+        projection = projection * np.float32(1.0 / np.sqrt(density * neurons))
+        return np.arange(neurons), projection
+    if kind == "full":
+        return np.arange(neurons), None
+    raise ValueError(f"unknown readout {kind!r}")
+
+
 def calibrate_drive(
     projection: np.ndarray,
     features: np.ndarray,
@@ -157,6 +216,7 @@ def reservoir_states(
     input_indices: np.ndarray,
     spec: MultitagSpec,
     scale: float = 1.0,
+    readout_projection: np.ndarray | None = None,
 ) -> tuple[np.ndarray, float]:
     """Drive the frozen operator with the sensation and read the descending neurons.
 
@@ -170,7 +230,10 @@ def reservoir_states(
     neurons = operator.shape[0]
     path, owners = interpolate(unit_rows(sensation), spec.steps_per_chunk)
     state = np.zeros(neurons, dtype=np.float32)
-    collected = np.zeros((len(sensation), readout_indices.size), dtype=np.float32)
+    width = (
+        readout_projection.shape[0] if readout_projection is not None else readout_indices.size
+    )
+    collected = np.zeros((len(sensation), width), dtype=np.float32)
 
     # One GEMM for the whole document instead of a small matrix-vector product per
     # step: the projection is the second largest cost after the sparse product and
@@ -186,7 +249,10 @@ def reservoir_states(
         state = ((1.0 - spec.leak) * state + spec.leak * np.tanh(pre)).astype(
             np.float32, copy=False
         )
-        collected[owners[step]] = state[readout_indices]
+        probed = state[readout_indices]
+        collected[owners[step]] = (
+            readout_projection @ probed if readout_projection is not None else probed
+        )
     return collected, float(np.sqrt(drive_energy / max(len(path), 1)))
 
 
@@ -265,6 +331,29 @@ def evaluate(
     magnitude, predicted_tag = decode(predictions, flavours)
     correct = predicted_tag[inside] == truth[inside]
 
+    # Per-document scores, so a mean can be checked against its spread. A gain
+    # carried by two documents out of seventeen looks identical to a broad one in
+    # the average, and with 8-18 positive chunks per tag a single document moving
+    # is enough to do that.
+    per_document = {}
+    for document in np.unique(groups):
+        rows = groups == document
+        local_inside = inside[rows]
+        if not local_inside.any() or local_inside.all():
+            continue
+        local = {}
+        local["inside_auprc"] = float(average_precision(magnitude[rows], local_inside))
+        tag_scores = []
+        for index in range(flavours.shape[0]):
+            target = tag_masks[rows, index] > 0
+            if target.any() and not target.all():
+                tag_scores.append(
+                    float(average_precision(predictions[rows] @ flavours[index], target))
+                )
+        local["macro_tag_auprc"] = float(np.mean(tag_scores)) if tag_scores else float("nan")
+        local["tags_present"] = len(tag_scores)
+        per_document[str(int(document))] = local
+
     # Three axes, because "any-tag AUPRC" alone conflates them and is not
     # comparable across corpora with different positive rates. The union of nine
     # tags covers 24.8% of chunks against a single tag's 5.1%, so a higher any-tag
@@ -293,6 +382,9 @@ def evaluate(
         "tag_accuracy_on_true_spans": float(correct.mean()) if correct.size else float("nan"),
         "tag_chance": float(1.0 / flavours.shape[0]),
         "random_auprc": float(inside.mean()),
+        "macro_prevalence": float(np.mean([(tag_masks[:, i] > 0).mean()
+                                           for i in range(flavours.shape[0])])),
+        "per_document": per_document,
         "penalties": [float(p) for p in chosen_penalties],
     }
 
