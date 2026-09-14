@@ -46,7 +46,9 @@ wish list: most of these axes already have a knob in this repository.
 
 | axis | instrumented | values available |
 |---|---|---|
-| input encoding | yes | absolute embeddings, multiscale relations, both; two encoders |
+| input encoding | yes | absolute embeddings, multiscale relations, both |
+| encoder (replication) | yes | MiniLM-L12 (512 ctx), Qwen3-Embedding-0.6B, jina-embeddings-v3 (8192 ctx) |
+| parent scale | declared, unrun | 256/512 matched across encoders; 256/1024 only as a separate scale ablation |
 | temporalization | yes, unused | 1 / 4 / 8 / 16 interpolation steps per chunk |
 | ports (in) | yes | `cb_sensory` + `ol_sensory`, by cell type |
 | ports (out) | yes, unused | descending, random-matched, whole-state projection, full state |
@@ -91,6 +93,12 @@ not that cell". Two rules keep it honest.
    | operating point | the declared gain grid, selected on validation |
    | plasticity | Run 2, trainable adapter with `W` frozen |
    | food port | anatomical gustatory population vs matched random population |
+
+   The **encoder is not on this list**. Encoder replication belongs to the
+   preregistered test, not to the diagnostic space, and it is held to the same
+   rule as the axes: if a third encoder flips F2 or F3 where the first two did
+   not, that is reported as an *encoder effect*, not as the connectome working.
+   Encoders are replications, never a search for the one that wins.
 
    No sixth explanation is added after seeing the numbers. If all of these fail,
    it is finished for this task family. That restriction is what separates a

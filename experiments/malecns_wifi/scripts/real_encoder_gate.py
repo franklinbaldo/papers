@@ -30,6 +30,91 @@ from malecns_wifi.encoder_gate import (
 )
 
 
+class JinaEncoder:
+    """Embeddings from the Jina AI API.
+
+    Chosen for one property the local encoders do not have: an 8192-token
+    context. MiniLM's 512 forced the coarse parent scale down from the designed
+    1024 to 512, which means the multiscale hypothesis has only ever been tested
+    at half its intended width.
+
+    The model version is pinned and recorded. An API model can change under a
+    experiment in a way a local checkpoint cannot, so the embedding cache beside
+    the report -- not the API -- is what makes a run reproducible.
+    """
+
+    CONTEXT_LIMIT = 8192
+
+    def __init__(
+        self,
+        model_name: str = "jina-embeddings-v3",
+        task: str = "text-matching",
+        dimensions: int = 1024,
+        batch: int = 32,
+    ):
+        import os
+
+        self.key = os.environ.get("JINA_API_KEY")
+        if not self.key:
+            raise SystemExit(
+                "JINA_API_KEY is not set. Put it in papers/.env or the environment; "
+                "it must never reach a tracked file."
+            )
+        self.model_name = model_name
+        # text-matching is the symmetric task: chunk against parent and chunk
+        # against tag are similarity comparisons, not query/passage retrieval.
+        self.task = task
+        self.dimensions = dimensions
+        self.batch = batch
+        self.context_limit = self.CONTEXT_LIMIT
+        self.tokenizer = None  # supplied by the caller; the API does its own
+        self.pooling = f"jina::{task}"
+
+    def check_scales(self, scales) -> None:
+        too_long = [scale for scale in scales if scale > self.context_limit]
+        if too_long:
+            raise SystemExit(
+                f"parent scales {too_long} exceed the {self.context_limit}-token context"
+            )
+
+    def encode(self, texts):
+        import json as _json
+        import time
+        import urllib.error
+        import urllib.request
+
+        vectors = []
+        for start in range(0, len(texts), self.batch):
+            chunk = [text if text.strip() else " " for text in texts[start : start + self.batch]]
+            payload = _json.dumps({
+                "model": self.model_name,
+                "task": self.task,
+                "dimensions": self.dimensions,
+                "input": chunk,
+            }).encode("utf-8")
+            request = urllib.request.Request(
+                "https://api.jina.ai/v1/embeddings",
+                data=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {self.key}",
+                },
+            )
+            for attempt in range(5):
+                try:
+                    with urllib.request.urlopen(request, timeout=120) as response:
+                        body = _json.loads(response.read())
+                    break
+                except urllib.error.HTTPError as error:
+                    if error.code in (429, 500, 502, 503) and attempt < 4:
+                        time.sleep(2**attempt)
+                        continue
+                    raise SystemExit(f"Jina API error {error.code}: {error.read()[:300]}")
+            rows = sorted(body["data"], key=lambda item: item["index"])
+            vectors.append(np.asarray([row["embedding"] for row in rows], dtype=np.float32))
+        return np.vstack(vectors)
+
+
 class TransformerEncoder:
     """Mean-pooled sentence embeddings from any HuggingFace encoder."""
 
@@ -103,6 +188,13 @@ def main() -> None:
     parser.add_argument("--corpus", type=Path, nargs="+", required=True)
     parser.add_argument("--model", default="Qwen/Qwen3-Embedding-0.6B")
     parser.add_argument("--device", default="cpu")
+    parser.add_argument("--jina-dimensions", type=int, default=1024)
+    parser.add_argument(
+        "--chunk-tokenizer",
+        default="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        help="tokenizer that defines chunk boundaries when the encoder is an API. Keeping "
+        "it fixed across encoders means the chunks are the same text either way.",
+    )
     parser.add_argument(
         "--pooling",
         choices=("mean", "last_token"),
@@ -125,11 +217,19 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    encoder = TransformerEncoder(args.model, device=args.device, pooling=args.pooling)
+    if args.model.startswith("jina"):
+        encoder = JinaEncoder(args.model, dimensions=args.jina_dimensions)
+        # The API tokenises internally, but the chunk plan needs offsets, so a
+        # local tokenizer still defines the chunk boundaries. It is only a ruler.
+        from transformers import AutoTokenizer
+
+        encoder.tokenizer = AutoTokenizer.from_pretrained(args.chunk_tokenizer)
+    else:
+        encoder = TransformerEncoder(args.model, device=args.device, pooling=args.pooling)
     encoder.check_scales(args.scales)
     tokenizer = encoder.tokenizer
-    print(f"{args.model}: {encoder.context_limit}-token context, {args.pooling} pooling, "
-          f"scales {args.scales}")
+    print(f"{args.model}: {encoder.context_limit}-token context, "
+          f"{getattr(encoder, 'pooling', args.pooling)} pooling, scales {args.scales}")
 
     documents = []
     for path in args.corpus:
