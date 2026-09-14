@@ -6,12 +6,13 @@ import scipy.sparse as sp
 from connectome_generator import (
     CONTEXT_DIM,
     GeneratorConfig,
+    generated_visual_drive,
     generator_step,
     make_adapter,
     receiver_context,
     simulate_connectome_generator,
 )
-from visual_attractor import ArenaConfig, BrainConfig, FlyPose, Interface
+from visual_attractor import ArenaConfig, BrainConfig, FlyPose, Interface, StimulusSpec
 
 
 def toy_interface() -> Interface:
@@ -29,7 +30,6 @@ def toy_interface() -> Interface:
 
 
 def toy_graph() -> sp.csr_matrix:
-    # Visual cells feed the readout side through a tiny recurrent chain.
     rows = np.asarray([2, 3, 4, 5, 6, 7], dtype=np.int32)
     cols = np.asarray([0, 1, 2, 3, 4, 5], dtype=np.int32)
     values = np.asarray([0.5, 0.5, 0.4, 0.4, 0.3, 0.3], dtype=np.float32)
@@ -81,6 +81,18 @@ def test_generator_step_keeps_emitter_graph_frozen_and_outputs_bounded_controls(
     assert 0.5 <= frame.size_scale <= 2.0
     assert 0.0 <= frame.contrast <= 1.0
     assert 0.0 <= frame.temporal_gate <= 1.0
+
+    visual = generated_visual_drive(
+        graph.shape[0],
+        interface,
+        FlyPose(1.0, 0.0, np.pi),
+        StimulusSpec("base", path="static"),
+        frame,
+        ArenaConfig(),
+    )
+    assert visual.shape == (graph.shape[0],)
+    assert np.isfinite(visual).all()
+    assert np.count_nonzero(visual) <= len(interface.visual_indices)
 
 
 def test_closed_loop_emitter_receiver_rollout_retains_generated_frames_and_behaviour() -> None:
