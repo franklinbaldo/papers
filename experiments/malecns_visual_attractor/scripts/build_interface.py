@@ -93,7 +93,9 @@ def build_interface(
     side = annotation_string(frame, "somaSide", "rootSide")
     side = np.char.upper(side.astype(str))
 
-    graph_index = np.asarray([body_to_index[int(value)] for value in body], dtype=np.int32)
+    graph_index = np.asarray(
+        [body_to_index[int(value)] for value in body], dtype=np.int32
+    )
 
     visual_mask = np.isin(cell_type, ["R1-6", "R7", "R8"])
     visual_indices = graph_index[visual_mask]
@@ -115,7 +117,11 @@ def build_interface(
             continue
         eye_side, h1, _ = location
         frac = (h1 - 1) / max(h1_max - 1, 1)
-        azimuth[i] = -(0.06 + 0.94 * frac) if eye_side == "L" else (0.06 + 0.94 * frac)
+        azimuth[i] = (
+            -(0.06 + 0.94 * frac)
+            if eye_side == "L"
+            else (0.06 + 0.94 * frac)
+        )
         resolved[i] = True
 
     # Unplaced cells are retained at a conservative mid-eye location rather than
@@ -123,7 +129,9 @@ def build_interface(
     missing = ~resolved
     azimuth[missing] = np.where(visual_side[missing] == "L", -0.5, 0.5)
 
-    descending_mask = np.char.find(np.char.lower(superclass.astype(str)), "descending") >= 0
+    descending_mask = (
+        np.char.find(np.char.lower(superclass.astype(str)), "descending") >= 0
+    )
     desc_indices = graph_index[descending_mask]
     desc_side = side[descending_mask]
     descending_left = desc_indices[desc_side == "L"]
@@ -135,7 +143,7 @@ def build_interface(
         mask = (cell_type == type_name) & (side == wanted_side)
         return graph_index[mask].astype(np.int32)
 
-    # Identified descending readouts used as the first locomotor decoder.
+    # Identified descending readouts used as the registered Run 1 decoder.
     steer_left = typed_side_indices("DNa02", "L")
     steer_right = typed_side_indices("DNa02", "R")
     forward_left = typed_side_indices("DNg100", "L")
@@ -144,6 +152,19 @@ def build_interface(
     # MaleCNS uses P1_* names for connectomically defined male pC1/P1 types.
     courtship_mask = np.char.startswith(cell_type.astype(str), "P1_")
     courtship_indices = graph_index[courtship_mask]
+
+    required_run1 = {
+        "DNa02 left": steer_left,
+        "DNa02 right": steer_right,
+        "DNg100 left": forward_left,
+        "DNg100 right": forward_right,
+        "P1_* courtship-prime": courtship_indices,
+    }
+    missing_run1 = [name for name, values in required_run1.items() if values.size == 0]
+    if missing_run1:
+        raise RuntimeError(
+            "registered Run 1 interface groups missing: " + ", ".join(missing_run1)
+        )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
@@ -184,6 +205,7 @@ def build_interface(
             "steering_readout": "DNa02 split by soma/root side",
             "forward_readout": "DNg100 split by soma/root side",
             "courtship_prime": "cell type starts with 'P1_'",
+            "run1_required_groups": sorted(required_run1),
         },
         "counts": {
             "visual": int(visual_indices.size),
@@ -198,7 +220,9 @@ def build_interface(
             "courtship_p1": int(courtship_indices.size),
         },
     }
-    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     return manifest
 
 
