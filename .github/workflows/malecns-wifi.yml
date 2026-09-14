@@ -89,9 +89,36 @@ jobs:
       - name: Run deterministic recurrent smoke
         working-directory: experiments/malecns_wifi
         run: uv run python scripts/smoke_reservoir.py --graph artifacts/runtime-v1/graph.npz --output artifacts/runtime-v1/smoke.json --seed 0
+      - name: Characterise operator against both nulls
+        working-directory: experiments/malecns_wifi
+        run: |
+          uv run python scripts/characterize.py \
+            --graph artifacts/runtime-v1/graph.npz \
+            --output artifacts/runtime-v1/characterization.json \
+            --gains 0.8 1.0 1.2 \
+            --input-seeds 0 \
+            --washout 200 --train-steps 1200 --test-steps 600 \
+            --max-lag 100 --readout-size 256
+      - name: Validate that the characterisation is interpretable
+        working-directory: experiments/malecns_wifi
+        run: |
+          uv run python - <<'PY'
+          import json, math
+          from pathlib import Path
+          report = json.loads(Path('artifacts/runtime-v1/characterization.json').read_text())
+          # The gate is on interpretability, not on the values: a saturated or
+          # non-finite cell means the measurement says nothing about topology.
+          for result in report['results']:
+              for entry in result['sweep']:
+                  label = f"{result['operator']} gain={entry['gain']}"
+                  if not math.isfinite(entry['memory_capacity']):
+                      raise SystemExit(f'{label}: non-finite memory capacity')
+                  if entry['saturated_fraction'] > 0.5:
+                      raise SystemExit(f'{label}: states saturated, measurement uninterpretable')
+          PY
       - name: Hash runtime outputs
         working-directory: experiments/malecns_wifi
-        run: sha256sum artifacts/runtime-v1/graph.npz artifacts/runtime-v1/manifest.json artifacts/runtime-v1/smoke.json | tee artifacts/runtime-v1/SHA256SUMS
+        run: sha256sum artifacts/runtime-v1/graph.npz artifacts/runtime-v1/manifest.json artifacts/runtime-v1/smoke.json artifacts/runtime-v1/characterization.json | tee artifacts/runtime-v1/SHA256SUMS
       - uses: actions/upload-artifact@v4
         with:
           name: malecns-v1-runtime
@@ -99,6 +126,7 @@ jobs:
             experiments/malecns_wifi/artifacts/runtime-v1/graph.npz
             experiments/malecns_wifi/artifacts/runtime-v1/manifest.json
             experiments/malecns_wifi/artifacts/runtime-v1/smoke.json
+            experiments/malecns_wifi/artifacts/runtime-v1/characterization.json
             experiments/malecns_wifi/artifacts/runtime-v1/SHA256SUMS
           if-no-files-found: error
           compression-level: 1

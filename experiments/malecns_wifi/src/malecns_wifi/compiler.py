@@ -88,8 +88,26 @@ def _column(table: pa.Table, *names: str):
 
 def _strings(table: pa.Table, name: str, fallback: str = "") -> np.ndarray:
     if name not in table.column_names:
-        return np.full(table.num_rows, fallback, dtype="U1")
-    return np.asarray([fallback if x is None else str(x) for x in table[name].to_pylist()])
+        return np.full(table.num_rows, fallback, dtype="U32")
+    return np.asarray(
+        [fallback if x is None or str(x) == "" else str(x) for x in table[name].to_pylist()],
+        dtype="U32",
+    )
+
+
+def _neuron_attribute(
+    table: pa.Table,
+    name: str,
+    body_ids: np.ndarray,
+    keep: np.ndarray,
+    bodies: np.ndarray,
+) -> np.ndarray:
+    """Annotation column reduced to one value per retained body, aligned to ``bodies``."""
+    values = _strings(table, name, "unknown")
+    lookup: dict[int, str] = {}
+    for body, value in zip(body_ids[keep], values[keep], strict=True):
+        lookup.setdefault(int(body), str(value))
+    return np.asarray([lookup.get(int(body), "unknown") for body in bodies], dtype="U32")
 
 
 def compile_connectome(
@@ -131,12 +149,17 @@ def compile_connectome(
     nt = np.asarray([nt_lookup.get(int(body), "unknown") for body in bodies], dtype="U24")
     sign = np.asarray([FAST_SIGN.get(value, 0.0) for value in nt], dtype=np.float32)
 
+    superclass = _neuron_attribute(annotations, "superclass", body_ids, keep, bodies)
+    cell_class = _neuron_attribute(annotations, "class", body_ids, keep, bodies)
+
     reader = ipc.RecordBatchFileReader(pa.memory_map(str(files["weights"]), "r"))
     rows: list[np.ndarray] = []
     cols: list[np.ndarray] = []
     values: list[np.ndarray] = []
     raw_pairs = 0
     threshold_pairs = 0
+    resolved_pairs = 0
+    zero_sign_pairs = 0
     retained_signed_pairs = 0
 
     def locate(ids: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -161,11 +184,13 @@ def compile_connectome(
         pre_idx, pre_valid = locate(pre)
         post_idx, post_valid = locate(post)
         valid = pre_valid & post_valid
+        resolved_pairs += int(valid.sum())
         if not valid.any():
             continue
         pre_idx, post_idx, weight = pre_idx[valid], post_idx[valid], weight[valid]
         signed_weight = weight * sign[pre_idx] * np.float32(policy.weight_scale)
         signed = signed_weight != 0.0
+        zero_sign_pairs += int(signed.size - int(signed.sum()))
         if not signed.any():
             continue
         rows.append(post_idx[signed])
@@ -189,6 +214,8 @@ def compile_connectome(
         bodies=bodies,
         sign=sign,
         nt=nt,
+        superclass=superclass,
+        cell_class=cell_class,
     )
 
     manifest = {
@@ -206,13 +233,27 @@ def compile_connectome(
             "edges": int(matrix.nnz),
             "raw_edge_pairs": int(raw_pairs),
             "threshold_edge_pairs": int(threshold_pairs),
+            "resolved_edge_pairs": int(resolved_pairs),
+            "zero_sign_edge_pairs": int(zero_sign_pairs),
             "signed_edge_pairs_before_dedup": int(retained_signed_pairs),
+            "excitatory_edges": int((matrix.data > 0).sum()),
+            "inhibitory_edges": int((matrix.data < 0).sum()),
+            "neurons_by_sign": {
+                "excitatory": int((sign > 0).sum()),
+                "inhibitory": int((sign < 0).sum()),
+                "silent": int((sign == 0).sum()),
+            },
             "orientation": "W[post, pre]",
             "dtype": "float32",
         },
         "modeling": {
             "fast_sign": FAST_SIGN,
             "note": "Computational reservoir artifact; not a biophysical simulation.",
+            "edge_accounting": (
+                "raw -> threshold (weight >= min_synapses) -> resolved (both endpoints retained) "
+                "-> signed (presynaptic fast-transmitter sign != 0). zero_sign_edge_pairs counts "
+                "the edges dropped because FAST_SIGN maps the presynaptic transmitter to 0."
+            ),
         },
     }
     manifest_path = output_dir / "manifest.json"
