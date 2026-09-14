@@ -1,12 +1,12 @@
 ---
 type: "Technical Paper"
-title: "Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models"
-description: "Position paper proposing a multiscale semantic atlas compiled from language models, artificial quasar reference frames, reachability fields, and closed-loop steering for efficient generation."
-tags: [semantic-atlas, embeddings, steering, interpretability, control, efficient-inference]
-timestamp: 2026-08-09T00:15:00Z
+title: "Semantic Atlas: Shared Coordinate Frames, Model-Specific Dynamics, and Closed-Loop Navigation"
+description: "Position paper proposing a model-indexed semantic atlas over a shared operational coordinate frame, with transition dynamics, control cost, reachability, and cross-model transfer as the central empirical objects."
+tags: [semantic-atlas, semantic-dynamics, reachability, control, navigation, embeddings, representation-alignment, efficient-inference]
+timestamp: 2026-08-26T02:45:00Z
 ---
 
-# Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models
+# Semantic Atlas: Shared Coordinate Frames, Model-Specific Dynamics, and Closed-Loop Navigation
 
 **Franklin Baldo**  
 Independent Researcher  
@@ -14,132 +14,159 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Position paper and experimental programme.** This manuscript proposes a mathematical and computational framework and pre-registers a sequence of toy experiments. Unless a section is explicitly marked as reporting a completed experiment, all claims about efficiency, cross-model invariance, controllability, atlas compilation, and token savings are hypotheses or design targets rather than measured results.
+> **Position paper and experimental programme.** This revision deliberately narrows the claim. It does **not** assume that language or embedding models inhabit one observer-independent Euclidean semantic universe, that stronger models see a common map at higher resolution, or that successful representational alignment implies shared behavior. A common coordinate frame is treated as an operational gauge for comparing trajectories. The scientific object of the Atlas is the **model-specific dynamics defined over that gauge**: transitions, control cost, reachability, navigation distance, and uncertainty. Unless a section explicitly reports a completed experiment, all claims are hypotheses and design targets.
 
 ## Abstract
 
-Autoregressive language models generate text one token at a time even when the task appears to require movement through a much lower-dimensional sequence of semantic states. This paper asks whether that semantic dynamics can be made explicit, mapped, and controlled independently of the model's native token coordinates. We propose **Semantic Atlas**, a multiscale representation of language-model dynamics built on four ideas. First, a text is represented not only by embeddings but by a trajectory through semantic state space, with position, velocity, curvature, and scale. Second, model-specific coordinates are aligned to an artificial **Semantic Reference Frame (SRF)** whose geometry is defined by mathematically constructed landmarks, called **semantic quasars**, while its semantic orientation is fixed empirically by a shared, row-paired calibration set. The quasars define the external gauge; paired examples determine how each model is placed into that gauge. Third, repeated model trajectories induce an atlas containing density, local competence, transition dynamics, control cost, reachability, and a potential-like quantity informally called **semantic gravity**. Fourth, a planner chooses low-cost routes through this atlas while a **Semantic Servo** converts desired semantic motion into local generation control through rollout selection or hidden-state feedback.
+Modern representation-alignment work makes it increasingly plausible that embeddings from different models can be placed into interoperable coordinate systems. `vec2vec` can translate between independently trained text-embedding spaces through a learned common latent representation; multi-way alignment can place several observers in one reference space; and calibrated analyses suggest that local neighborhood relations may be more reproducible than one global metric geometry. These developments weaken, rather than strengthen, the need for a Semantic Atlas to claim a new universal semantic coordinate system. **Universal geometry, if it exists, is only the coordinate layer of an Atlas—not the Atlas itself.**
 
-The programme deliberately separates six claims that are easy to conflate: (1) semantic trajectories are geometrically informative; (2) an artificial reference frame can preserve useful structure; (3) an atlas can approximate model dynamics; (4) semantic routes can control generation; (5) such control can reduce token or compute cost; and (6) useful parts of the atlas can be compiled directly from model weights rather than discovered solely by autoregressive exploration. We define falsification criteria for each claim and propose a staged experiment using a small open generator and a related embedding model. The long-term hypothesis is not that the atlas replaces language models everywhere, but that planning can occur at a coarser semantic resolution than lexical generation, with the full model invoked only where linguistic resolution is required.
+This paper therefore defines a Semantic Atlas as a **family of model-indexed dynamical maps expressed in a chosen common frame**. A trajectory is represented by semantic position and history; repeated trajectories estimate a model-specific transition field \(F_M\), intervention cost \(C_M\), reachable set \(R_M\), directed navigation distance \(d_M^{nav}\), uncertainty \(\Omega_M\), and optional density or competence fields. A shared coordinate \(q\) does not imply shared dynamics:
 
-**Keywords:** semantic trajectories, representation geometry, relative representations, activation steering, semantic navigation, model predictive control, Jacobian, reachability, efficient inference, multiscale representation
+\[
+T_A(E_A(x))\approx T_B(E_B(x))
+\quad\not\Rightarrow\quad
+F_A(q)=F_B(q),\; C_A(q,u)=C_B(q,u),\; R_A(q,H,B)=R_B(q,H,B).
+\]
+
+This distinction produces the paper's main empirical question: **how much model-specific semantic dynamics transfers after static coordinate alignment?** We propose leave-one-model-out experiments in which a common frame and dynamical prior are learned from source models, then evaluated on a held-out target model before and after observing \(k\) target trajectories. A sample-equivalence statistic \(k^*_{Atlas}\) measures how many target trajectories a transferred atlas is worth relative to fitting target dynamics from scratch. Static alignment can succeed while dynamical transfer fails; that negative result would itself establish an important boundary on universal-representation claims.
+
+The downstream engineering programme remains control-theoretic. A route planner searches the learned directed cost landscape, semantic Model Predictive Control tests whether planned routes improve goal attainment, and a Semantic Servo attempts closed-loop hidden-state control after causal calibration. Weight-space compilation remains a later efficiency hypothesis, not a foundation. The Atlas succeeds only if its dynamics improve prediction, planning, or sample efficiency beyond static geometry, nearest-neighbor, prompting, and target-only baselines.
+
+**Keywords:** semantic trajectories, representation alignment, dynamical systems, reachability, optimal control, semantic navigation, model predictive control, transfer learning, efficient inference
 
 ---
 
-## 1. Introduction
+## 1. The revised question
 
-A language model exposes a peculiar interface to a large body of learned structure: whatever it knows or can compute must ordinarily be reached through an autoregressive path. Even when the final answer is conceptually close to a known solution, the model proceeds through a sequence of token-level state transitions. Long-form reasoning can therefore contain detours, repetitions, abandoned branches, abrupt changes of topic, and verbalized intermediate work that may be unnecessary for the final result.
+A language model exposes learned structure through an autoregressive interface. Even when a destination is conceptually simple, reaching it can require many token-level transitions. This motivates a coarse-grained question: can long-range semantic motion be represented, predicted, and controlled at a level above individual lexical choices?
 
-Dense embeddings suggest a different view. A sentence, paragraph, argument, or conversation can be represented as a point in a high-dimensional semantic space. But a conversation is not merely a collection of such points. It is ordered. The ordering traces a path. Once text is treated as a trajectory, several questions become natural:
+Earlier versions of the Semantic Atlas mixed this question with a second, much stronger idea: that independently trained models might be progressively clearer observers of one common semantic map. Subsequent analysis makes that hierarchy unnecessary and poorly motivated. Modern alignment results already occupy much of the static-geometry territory, while the strongest calibrated convergence evidence is local rather than globally metric. More importantly, even perfect coordinate interoperability would not imply identical transition dynamics.
 
-1. Can two conversations be compared by the *shape and dynamics* of their paths rather than only by endpoint similarity?
-2. Can multiple embedding models be aligned to a common navigational frame without pretending that their native coordinates are universal?
-3. Can a corpus of trajectories be compiled into a reusable map of corridors, barriers, attractor-like regions, and reachable destinations?
-4. Given a desired semantic route, can a language model be steered to realize it without prescribing the exact words in advance?
-5. Can planning in the map skip semantic distance that would otherwise be explored token by token, reducing inference cost?
-6. Can part of this map be extracted directly from a model's weights, with dynamic sampling used only for calibration and local refinement?
+The revised paper therefore asks:
 
-This paper proposes a framework for asking these questions separately. The central object is a **Semantic Atlas**: a compressed, multiresolution, model-relative map expressed in an externally fixed and empirically calibrated reference frame. The frame is not model-independent by construction: cross-model correspondence is a hypothesis that must be earned on held-out paired examples. The atlas is not assumed to be an exact copy of the model. Indeed, if it preserved every possible lexical distinction at every point, it would collapse into the problem made famous by Borges's *On Exactitude in Science*: a map at 1:1 scale has ceased to be useful as a map. The intended atlas is instead coarse almost everywhere and locally detailed only where the navigation or decoding task requires it.
+1. Can generated discourse be represented as a trajectory whose recent semantic history predicts future semantic motion beyond endpoint similarity?
+2. Can a chosen common frame make trajectories from different models comparable without claiming that the frame is ontologically privileged?
+3. Does each model induce reproducible transition, cost, and reachability structure in that frame?
+4. How much of those **dynamics**, rather than merely the coordinates, transfers to a held-out model?
+5. Can a planner use the estimated dynamics to improve goal attainment under a budget?
+6. Can closed-loop control realize planned motion with lower intervention or rollout cost than open-loop steering?
+7. Can useful parts of the dynamics eventually be compiled from weights or sparse measurements rather than rediscovered by exhaustive rollout?
 
-The proposed architecture separates five layers:
-
-```text
-language model / embedding model
-            ↓
-   Semantic Reference Frame
-            ↓
-       Semantic Atlas
-            ↓
-        route planner
-            ↓
-       Semantic Servo
-            ↓
-       lexical generation
-```
-
-The key research hypothesis is that the semantic dynamics relevant to planning are substantially lower-dimensional and smoother than the raw combinatorics of token sequences. If this is false, the atlas will either lose too much predictive information or grow until it reproduces the original model. If it is true, a model may be able to plan and traverse long conceptual distances using a small number of semantic transitions while delegating local lexical realization to the original generator.
-
-## 2. From contextual meaning to semantic trajectories
-
-### 2.1 Tokens are positions, not semantic atoms
-
-A tokenizer supplies a discrete sequence
+The central object is no longer one universal atlas \(A\). It is a shared coordinate layer plus a family of model-specific atlases:
 
 \[
-x_1,x_2,\ldots,x_n,
+\mathfrak A
+=
+\left(
+\mathcal Q,
+\{A_M\}_{M\in\mathcal M}
+\right),
 \]
 
-but a token's meaning is contextual. We therefore distinguish the token position from the semantic state associated with that position. Let
+where \(\mathcal Q\) is a chosen comparison frame and \(A_M\) describes the dynamics of model \(M\) in that frame.
+
+This reframing is load-bearing. **The map is not the coordinate system.** The coordinate system merely lets us write several maps on comparable paper.
+
+---
+
+## 2. Semantic trajectories as dynamical observations
+
+### 2.1 From text to a path
+
+Let a generated sequence be
 
 \[
-S(i,r)\in\mathbb R^d
+x_1,x_2,\ldots,x_n.
 \]
 
-denote a representation of position \(i\) when interpreted with contextual radius \(r\). The radius may denote a symmetric window in retrospective text analysis. For causal generation we use an explicitly left-context form,
+A semantic observer maps a prefix or contextual unit to a representation. For causal navigation, let
 
 \[
-S^-(i,l)=S(i,l,0),
+e_t=E(x_{\le t})
 \]
 
-so no future token is allowed to influence the navigation state.
-
-For a fixed scale \(r\), the sequence
+or use a registered chunk-level embedding of the text generated up to time \(t\). A frame map \(T_M\) places the representation in a common coordinate system:
 
 \[
-\gamma_r(i)=S(i,r)
+q_t=T_M(e_t)\in\mathcal Q.
 \]
 
-is a discrete semantic trajectory. Varying \(r\) yields a family of trajectories, or equivalently a multiscale surface indexed by textual position and contextual scale.
-
-This distinction matters because a word can move substantially in representation space as context accumulates. A phrase that initially appears financial may later become metaphorical; a sentence in a mystery novel may acquire a different interpretation after a later reveal. The retrospective displacement
+The sequence
 
 \[
-D_i=d(S^-(i,l),S(i,l,r_{future}))
+\gamma_M=(q_0,q_1,\ldots,q_T)
 \]
 
-is itself a measurable property, but it must not be used by a causal controller.
+is a semantic trajectory of model \(M\) under a registered prompting and decoding protocol.
 
-### 2.2 Position is not a complete dynamic state
+This is an observational construction. It does not imply that \(q_t\) is the model's internal computational state or that semantic dynamics are literally Euclidean.
 
-Given one trajectory \(\gamma(t)\), define the local displacement
+### 2.2 Position is not a Markov state by assumption
+
+A point \(q_t\) can be reached with different histories. Define local displacement
 
 \[
-v_t=\gamma(t+1)-\gamma(t),
+v_t=q_t-q_{t-1}
 \]
 
-a discrete acceleration
+and, where useful, a turning or curvature statistic \(\kappa_t\). A compressed state may be
 
 \[
-a_t=v_{t+1}-v_t,
+z_t=(q_t,v_t,\kappa_t,h_t,\sigma_t),
 \]
 
-and a turning angle
+where \(h_t\) is a finite registered history summary and \(\sigma_t\) records scale or uncertainty.
+
+The empirical problem is to find the smallest state summary that predicts future semantic motion adequately. We must compare any proposed compressed state against:
+
+- endpoint-only \(q_t\);
+- fixed recent windows of embeddings;
+- native hidden-state baselines where accessible;
+- simple lexical/context statistics;
+- larger black-box sequence predictors.
+
+If trajectory history adds no held-out predictive value, the dynamical Atlas should not be built on curvature language merely because it is geometrically attractive.
+
+### 2.3 Controlled and uncontrolled dynamics
+
+Write the next-state law schematically as
 
 \[
-\theta_t=\cos^{-1}\frac{v_{t-1}\cdot v_t}{\|v_{t-1}\|\|v_t\|}.
+q_{t+1}\sim F_M(\cdot\mid z_t,u_t),
 \]
 
-The same semantic position can be approached from different directions. Therefore an embedding alone is not a full state description for navigation. A minimal dynamic state may have the form
+where \(u_t\) is an intervention: prompt modification, candidate selection, activation steering, retrieval insertion, or another registered control.
+
+The uncontrolled dynamics are
 
 \[
-z_t=(q_t,v_t,\kappa_t,\sigma_t),
+q_{t+1}\sim F_M^0(\cdot\mid z_t).
 \]
 
-where \(q_t\) is a location in a canonical reference frame, \(v_t\) is semantic velocity, \(\kappa_t\) summarizes curvature, and \(\sigma_t\) records scale and uncertainty.
+The controlled law is the foundation for reachability and planning. We do not assume it is linear, stationary, or globally smooth.
 
-The empirical question is how much of future semantic motion can be predicted from such a compressed state compared with the full transformer state.
+---
 
-## 3. Semantic quasars and a reference frame
+## 3. The coordinate layer is a gauge, not the Atlas
 
-### 3.1 Why native embedding coordinates are insufficient
+### 3.1 Why a common frame remains useful
 
-Embedding spaces are useful because relative geometry can be stable while absolute coordinates are not. Two independently trained models can encode similar relations in spaces that differ by rotations, reflections, rescalings, anisotropy, or more complex transformations. Relative representations address part of this problem by expressing a point through its similarity to a set of anchors rather than by its raw coordinates [Moschella et al., 2022].
+Different embedding models use different native dimensions and coordinate systems. A common frame is useful because it lets us compare paths, transition statistics, and goals. But the frame does not need to be the unique or true semantic geometry.
 
-The present proposal introduces a stricter separation between **reference geometry** and **semantic calibration**. Instead of requiring the reference landmarks themselves to correspond to natural concepts, we define the quasar geometry mathematically. That does **not** identify semantic axes: a regular simplex is symmetric under orthogonal transformations. Semantic orientation enters through a shared calibration set whose rows denote the same texts or states across observers.
+Any frame construction is acceptable if it satisfies the downstream invariance required for navigation. Candidates include:
 
-### 3.2 Artificial quasars
+- paired orthogonal Procrustes;
+- Generalized Procrustes Analysis for several models;
+- relative representations;
+- learned alignment adapters;
+- `vec2vec`-style common latent translations;
+- the artificial quasar/SRF construction retained from the earlier Atlas.
 
-Let the effective canonical dimension be \(k\). The simplest SRF uses the \(k+1\) vertices of a regular simplex,
+These are **coordinate-layer alternatives**, not competing ontologies.
+
+### 3.2 Artificial quasars as one gauge-fixing construction
+
+For canonical dimension \(k\), a simple Semantic Reference Frame uses the \(k+1\) vertices of a regular simplex
 
 \[
 Q=\{q_1,\ldots,q_{k+1}\},
@@ -148,564 +175,930 @@ Q=\{q_1,\ldots,q_{k+1}\},
 with
 
 \[
-\|q_i\|=1,\qquad q_i\cdot q_j=-\frac1k\quad(i\neq j).
+\|q_i\|=1,
+\qquad
+q_i\cdot q_j=-\frac1k
+\quad(i\neq j).
 \]
 
-These points are the first **semantic quasars**. They need not be realizable as natural-language embeddings. Their role is metrological: they define a fixed external geometry. Their labels do not carry semantic identity. Calling one vertex `Q17` does not make the corresponding native direction in two independently trained models the same direction.
+These artificial landmarks define a fixed metrological geometry. They are not natural semantic concepts and do not themselves identify semantic axes.
 
-For a normalized semantic state \(y\), define its quasar coordinates by
+A model-specific embedding \(x\) is first centered/whitened or otherwise normalized, then aligned to a frozen calibration cloud. For paired Procrustes,
 
 \[
-C_Q(y)=[y\cdot q_1,\ldots,y\cdot q_m].
+R_M^*
+=
+\arg\min_{R^TR=I}
+\|X_MR-Y\|_F,
 \]
 
-A redundant frame or spherical code can replace the simplex when robustness is more important than minimal coordinates.
-
-### 3.3 Calibration
-
-A model-specific embedding \(x\) is mapped to the SRF through a calibration function
+and
 
 \[
-T_M:x\mapsto q.
+T_M(x)=W_M(x)R_M^*.
 \]
 
-The v0 calibration uses **shared correspondences**. Let \(c_1,\ldots,c_n\) be calibration items observed by every model. A designated reference observer is centered and whitened to dimension \(k\); its resulting coordinates on those frozen items become a canonical target matrix \(Y\in\mathbb R^{n\times k}\). For another model \(M\), let \(X_M\) be its independently whitened coordinates for the same row-paired items. We then fit
+The semantic identification comes from the paired calibration set, not from the simplex.
+
+### 3.3 Static alignment is not the target result
+
+The coordinate layer passes a minimum gate if held-out matched items are comparable after alignment and the transformation preserves navigation-relevant local relations. But a high static alignment score is only infrastructure.
+
+The key logical separation is
 
 \[
-R_M^*=\arg\min_{R^TR=I}\|X_MR-Y\|_F,
+\text{coordinate compatibility}
+\not\Rightarrow
+\text{dynamic compatibility}.
 \]
 
-using orthogonal Procrustes, and define \(T_M(x)=W_M(x)R_M^*\), where \(W_M\) is that model's fitted centering/whitening transform. The artificial quasars are then evaluated in this shared coordinate system.
+Jha et al. show that text embeddings can be translated across model families through a shared latent representation. Gröger, Wen, and Brbić show that after null calibration, local neighborhood agreement remains more robust than global spectral convergence. Both results motivate treating alignment as a plausible coordinate technology while leaving the dynamics question open.
 
-This calibration resolves the rotational gauge only to the extent that the paired calibration examples span the retained dimension and generalize to unseen items. A second SVD of an already whitened cloud cannot provide this identification: after whitening, equalized variance leaves orthogonal orientation unconstrained. Sign fixing resolves only a \(\pm\) ambiguity and is not a substitute for cross-model anchoring.
+### 3.4 Alignment baselines are mandatory
 
-A learned adapter is a later baseline, not the starting assumption.
+Any cross-model Atlas result must be repeated with at least two alignment classes when feasible. Otherwise an apparent dynamic mismatch may be an alignment artifact.
 
-The paired alignment, not the quasar construction, carries cross-model identification. Orthogonal Procrustes alignment for embedding interoperability is established prior art [Maystre et al., 2025], and shared multi-model reference spaces have been studied with Generalized Procrustes Analysis [Achara et al., 2026]. The SRF contribution under test is therefore not Procrustes or a shared latent universe by itself. It is whether a frozen calibrated frame, combined with explicit trajectory and route observables, supports the downstream navigation experiments better than matched native-space and alignment baselines.
+At minimum, compare:
 
-### 3.4 What would count as success?
+1. a rigid/geometry-preserving frame such as Procrustes;
+2. a stronger modern alignment or common-latent baseline.
 
-An SRF is useful if it preserves the relationships needed for navigation and, when cross-model alignment is claimed, if independently fitted observers produce the **same held-out coordinates** for corresponding items. Relevant tests include:
+If dynamic-transfer conclusions reverse solely because the alignment class changes, report the dependence rather than claiming a model-intrinsic phenomenon.
 
-- held-out canonical-coordinate RMSE and cosine agreement across observers;
-- nearest-quasar agreement on held-out items;
-- degradation under deliberately shuffled calibration correspondences;
-- neighborhood, local distance, angle, and trajectory-shape preservation;
-- synthetic recovery from unknown rotations/reflections and anisotropic scalings;
-- graceful degradation as canonical dimension decreases.
+---
 
-Distance preservation alone cannot validate the shared-frame claim because distances and angles are already invariant under global orthogonal rotations. Cross-model universality is stronger still: success on two observers would establish calibrated interoperability for that pair, not a universal semantic sky.
+## 4. The model-indexed Semantic Atlas
 
-## 4. The Semantic Atlas
-
-### 4.1 The atlas is not the model
-
-Let \(M\) denote a language model and \(A_M\) an atlas compiled or estimated from it. The intended relationship is
+For each model \(M\), define a local atlas entry
 
 \[
-M\longrightarrow A_M,
+A_M(z)
+=
+(\rho_M,K_M,U_M,F_M,C_M,\Omega_M),
 \]
 
-where \(A_M\) deliberately discards most microscopic lexical state while preserving information useful for navigation.
+where these fields are optional components estimated at a registered state scale.
 
-A local atlas entry at semantic state \(q\) may contain
+- \(\rho_M(z)\): empirical density or support of observed trajectories;
+- \(K_M(z)\): measured local task competence/calibration where an external task exists;
+- \(U_M(z)\): potential-like stability or escape difficulty;
+- \(F_M\): transition law;
+- \(C_M\): intervention or route cost;
+- \(\Omega_M\): uncertainty in the Atlas estimate.
+
+The scientific core is \((F_M,C_M,R_M,d_M^{nav},\Omega_M)\). Density, competence, and potential are auxiliary summaries.
+
+### 4.1 Transition dynamics
+
+A coarse transition field estimates
 
 \[
-A_M(q)=(\rho,K,U,F,C,\Omega),
+F_M(z,u)
+\approx
+\mathbb E[q_{t+1}-q_t\mid z_t=z,u_t=u]
 \]
 
-where:
+or, preferably when data allow, a conditional distribution over next semantic states.
 
-- \(\rho(q)\): density of observed trajectories;
-- \(K_M(q)\): local measured competence/calibration on tasks associated with the region;
-- \(U_M(q)\): potential-like stability or escape difficulty;
-- \(F_M(q)\): estimated distribution of natural semantic transitions;
-- \(C_M(q,u)\): cost of applying control \(u\);
-- \(\Omega(q)\): atlas uncertainty.
+The field may be local and nonstationary. The Atlas should not force a global vector field when a graph, mixture model, local operator, or conditional density is better calibrated.
 
-These quantities must remain distinct. A region may be frequently visited yet factually unreliable; it may contain accurate knowledge but be dynamically difficult to enter; a deep attractor can encode a repetitive failure mode rather than useful expertise.
+### 4.2 Control cost
 
-### 4.2 Semantic gravity
-
-The term **semantic gravity** is an intuition for resistance to leaving a region, not a claim that the space obeys Newtonian mechanics. For a region \(B\), define an escape cost
+Let \(u\) denote a registered intervention. Define
 
 \[
-E_{escape}(B)=\min_{\Gamma:B\rightarrow\neg B} C(\Gamma),
+C_M(z,u)
 \]
 
-where \(C(\Gamma)\) is the intervention cost of a path that leaves the region and does not immediately return.
+as a cost combining compute, intervention magnitude, probability distortion, or another declared resource. Route cost is
 
-A practical version can be estimated experimentally by increasing steering magnitude until a chosen proportion of continuations leave a cluster and remain outside it for a fixed horizon. This yields quantities such as \(E_{escape}^{50}\) and \(E_{escape}^{90}\).
+\[
+C_M(\Gamma)
+=
+\sum_t C_M(z_t,u_t)
+\]
 
-Recent work on activation energy and context-dependent steering provides neighboring operational tools: energy-based controllers can assign low energy to desired activation states and steer along local gradients, while Steering Vector Fields replaces one static direction with a position-dependent field [Jiang et al., 2026; Li et al., 2026]. The Semantic Atlas differs by treating such dynamics as properties of a global navigational chart rather than a single behavior objective.
+or a continuous analogue.
+
+Different papers or applications may choose different cost functions. Therefore navigation distance is always relative to a declared cost model.
 
 ### 4.3 Reachability
 
-Given model \(M\), state \(q\), horizon \(H\), and budget \(B\), define a reachable set
+Given current state \(z\), horizon \(H\), and budget \(B\), define
 
 \[
-R_M(q,H,B)=\{y:\exists\Gamma:q\rightarrow y,\ C_M(\Gamma)\le B\}.
+R_M(z,H,B)
+=
+\{y:\exists\Gamma:z\rightarrow y,\;C_M(\Gamma)\le B\}.
 \]
 
-This reframes model capability. A target can exist in the external semantic map while remaining unreachable by a given model under a resource budget.
+A semantic destination can be present in the shared coordinate frame yet operationally unreachable for one model under a budget.
 
-The induced navigation distance
+This yields a model-relative concept of capability that is different from static nearest-neighbor geometry.
+
+### 4.4 Directed navigation distance
+
+Define
 
 \[
-d_M^{nav}(a,b)=\min_{\Gamma:a\rightarrow b} C_M(\Gamma)
+d_M^{nav}(a,b)
+=
+\inf_{\Gamma:a\rightarrow b} C_M(\Gamma).
 \]
 
-need not be symmetric. Generalization from an example to a principle can have a different cost from constructing an example from a principle. The resulting geometry is therefore better thought of as a directed cost landscape than a Euclidean map.
-
-### 4.4 Corridors, barriers, and bridges
-
-A high-density low-cost set of transitions forms a semantic corridor. A region with high escape cost or low transition probability forms a barrier. A narrow sequence of low-cost intermediate states can connect two otherwise distant basins.
-
-Such bridges are interesting because they provide a testable explanation for why decomposition helps smaller models. A model may fail at a direct transition \(A\rightarrow B\) while succeeding at
+In general,
 
 \[
-A\rightarrow G_1\rightarrow G_2\rightarrow B.
+d_M^{nav}(a,b)\neq d_M^{nav}(b,a).
 \]
 
-The atlas turns decomposition into route planning rather than a manually supplied chain of thought.
+The same two semantic regions can therefore be geometrically close but dynamically far apart, or vice versa.
 
-## 5. Multiresolution and the Borges constraint
+This is the central reason a Semantic Atlas is not merely an embedding index.
 
-A globally exact atlas would be uselessly large. The intended representation is therefore hierarchical. Let
+### 4.5 Semantic gravity as escape cost
+
+The earlier metaphor of **semantic gravity** is retained only as shorthand for a measured dynamical quantity. For region \(B\), define
 
 \[
-\mathcal A_0,\mathcal A_1,\ldots,\mathcal A_L
+E_{escape,M}(B)
+=
+\inf_{\Gamma:B\rightarrow\neg B} C_M(\Gamma),
 \]
 
-be progressively finer partitions or local charts. At coarse levels, cells summarize broad regions and expected transitions. At fine levels, they encode local state distributions and lexical realization.
+with an explicit persistence condition preventing immediate return.
 
-The atlas should refine where uncertainty matters. If \(X\) is the next lexical block and \(C_r\) is the current semantic cell at resolution \(r\), one possible zoom criterion is
+A region with high escape cost is an attractor-like region under the declared dynamics and cost, not evidence of a literal potential field or universal semantic basin.
+
+---
+
+## 5. Shared coordinates, different mechanics
+
+The strongest conceptual prediction of the revised Atlas is that coordinate agreement can coexist with dynamical disagreement.
+
+For matched semantic state \(x\), suppose
 
 \[
-H(X\mid C_r)>\tau.
+q=T_A(E_A(x))\approx T_B(E_B(x)).
 \]
 
-When predictive entropy is high, refine the local chart or invoke the full model. When it is low, a lightweight decoder may suffice.
-
-This creates an explicit boundary between map and territory:
-
-- **zoom out** to plan long semantic travel;
-- **zoom in** to select a local concept or phrase;
-- invoke the full LLM when local ambiguity exceeds the atlas's calibrated resolution.
-
-The atlas is useful only while the information discarded globally is larger than the information reconstructed locally.
-
-## 6. Navigation as optimal control
-
-### 6.1 Route planning
-
-Suppose the current state is \(q_0\) and the task defines one or more goals \(G=\{g_1,\ldots,g_m\}\). A route planner chooses
+This establishes static coordinate compatibility around \(x\). It does not imply
 
 \[
-\Gamma^*=\arg\min_{\Gamma} J(\Gamma)
+F_A(z,u)\approx F_B(z,u),
 \]
 
-subject to required waypoints or precedence constraints. A generic cost is
+nor
 
 \[
-J(\Gamma)=
-\alpha L(\Gamma)+
-\beta K(\Gamma)+
-\gamma O(\Gamma)+
-\delta U(\Gamma)+
-\epsilon T(\Gamma),
+C_A(z,u)\approx C_B(z,u),
 \]
 
-where:
-
-- \(L\) is path length;
-- \(K\) penalizes abrupt curvature or jerk;
-- \(O\) penalizes off-manifold travel;
-- \(U\) accounts for uncertainty or potential barriers;
-- \(T\) is expected token/compute cost.
-
-The shortest geometric route need not be the best route. The planner seeks a low-cost *admissible* path.
-
-### 6.2 Multiobjective routes
-
-Language tasks often contain multiple destinations rather than one. The planner can decide an order subject to dependencies. If a proof requires lemmas \(g_1\) and \(g_2\) before conclusion \(g_3\), then the route problem includes
+nor
 
 \[
-g_1\prec g_3,\qquad g_2\prec g_3.
+R_A(z,H,B)\approx R_B(z,H,B).
 \]
 
-The atlas can then prefer an ordering that minimizes semantic detour and avoids abrupt topic transitions.
+A useful analogy is a common geographic coordinate system used for vehicles with different mechanics. GPS coordinates can be identical while feasible routes differ for cars, boats, pedestrians, or aircraft. The Atlas studies the mechanics, not merely the GPS layer.
 
-### 6.3 Novelty is not temperature
+### 5.1 Static similarity versus dynamic similarity
 
-A route can be novel even when every token on it is individually ordinary. Let \(\rho(\Gamma)\) denote historical trajectory density. A controlled novelty term can reward low-density but still supported corridors. This differs from increasing decoding temperature, which makes locally unlikely tokens more probable without explicitly seeking a globally new conceptual path.
+For model pair \((A,B)\), report separately:
 
-## 7. From route to tokens: the Semantic Servo
+- static alignment quality \(S_{AB}^{static}\);
+- one-step transition agreement \(S_{AB}^{F}\);
+- control-response agreement \(S_{AB}^{C}\);
+- reachable-set overlap \(S_{AB}^{R}\);
+- route-rank or navigation-distance agreement \(S_{AB}^{nav}\).
 
-The planner operates in a continuous or graph-based semantic space; the language model emits discrete tokens. The missing bridge is an inverse dynamics controller.
+A high \(S^{static}\) with low dynamic agreement is a scientifically meaningful result. It would show that representational interoperability does not license behavioral interchangeability.
 
-### 7.1 Baseline: semantic model predictive control
+### 5.2 Dynamic agreement may be local
 
-The least invasive implementation requires no hidden-state modification. At state \(q_t\), sample short candidate continuations \(c_1,\ldots,c_N\). Embed each continuation and score the resulting semantic path by
+There is no reason to expect one scalar dynamic-similarity score. Two models may transfer well in broad topical motion and poorly near compositional, mathematical, legal, or long-horizon transitions.
+
+Therefore cross-model dynamics should be reported as a profile over states, horizons, controls, and task families.
+
+---
+
+## 6. Cross-model transfer of semantic dynamics
+
+This is the main new experimental axis of the revised paper.
+
+Assume source models
 
 \[
-R(c_i)=
-\lambda_1\,\text{progress}(c_i,g)
--\lambda_2\,\text{curvature}(c_i)
--\lambda_3\,\text{offmanifold}(c_i)
-+\lambda_4\,\log P_M(c_i).
+M_1,\ldots,M_{n-1}
 \]
 
-Choose the best candidate, execute only a short prefix, observe the new state, and replan. This is semantic Model Predictive Control (MPC).
-
-MPC is expected to cost *more* compute than ordinary generation because discarded rollouts are evaluated. Its purpose is to establish **controllability** before making efficiency claims.
-
-### 7.2 Future semantic head
-
-Let \(h_{\ell,t}\) be a hidden state at layer \(\ell\). Train a lightweight predictor
+and a held-out target
 
 \[
-F_H(h_{\ell,t})\approx q_{t+H}-q_t.
+M_*.
 \]
 
-This tests whether the model's current activation contains enough information to predict semantic displacement over horizon \(H\).
-
-For desired displacement \(\Delta q^*\), the control error is
+Fit the coordinate layer and all meta-level modeling choices without using target trajectory outcomes. Source trajectories define a transfer prior or meta-model
 
 \[
-e=\Delta q^*-F_H(h_{\ell,t}).
+\widehat A_{- *}.
 \]
 
-### 7.3 Semantic Jacobian
+The target model may expose embeddings or aligned semantic coordinates, but its trajectory outcomes remain held out for the zero-shot condition.
 
-The trained future head supplies the surrogate sensitivity
+### 6.1 Zero-shot dynamic transfer
+
+Use \(\widehat A_{-*}\) to predict target quantities such as
 
 \[
-\widehat J^{sem}_{\ell,H}=\frac{\partial F_H}{\partial h_{\ell,t}}.
+q_{t+H},
+\qquad
+\Pr[g\in R_{M_*}(z,H,B)],
+\qquad
+C_{M_*}(\Gamma),
+\qquad
+\operatorname{rank}_{M_*}(\Gamma_1,\Gamma_2).
 \]
 
-This answers a limited question: how does a small change in the head's input change the head's **predicted** semantic motion over horizon \(H\)? Because \(F_H\) is fitted on observational hidden states, its derivative is not automatically the causal derivative of the transformer's generated trajectory under intervention. Before it is used as a controller, registered small perturbations must be injected at the frozen layer and token position; the measured change in future SRF state must then be compared with \(\widehat J^{sem}\delta h\), against matched random directions and across an error-versus-norm curve.
+The transfer model may condition on target-side **static** descriptors available without rollout labels: aligned coordinate geometry, model metadata when allowed, or frozen representation statistics. It may not use target trajectory results in the zero-shot condition.
 
-Subject to that perturb-and-measure calibration, a regularized local intervention can solve
+### 6.2 Few-shot calibration curve
+
+Then reveal \(k\) target trajectories and update the transferred Atlas. Let
 
 \[
-\widehat J^{sem}\delta h\approx e.
+E_{transfer}(k)
+\]
+
+be held-out target error after transfer plus \(k\) target trajectories, and
+
+\[
+E_{scratch}(k)
+\]
+
+be the error of an otherwise matched target-only Atlas trained from those \(k\) trajectories without source-model transfer.
+
+Report the full sample-efficiency curves, not one cherry-picked \(k\).
+
+### 6.3 The Atlas-equivalent trajectory count
+
+Define
+
+\[
+k^*_{Atlas}
+=
+\min\{k:E_{scratch}(k)\le E_{transfer}(0)\}.
+\]
+
+This measures how many target trajectories a zero-shot transferred Atlas is worth relative to learning target dynamics from scratch.
+
+If no \(k\) in the registered range matches the transferred model, report a lower bound. If the scratch model wins with the first few samples, \(k^*_{Atlas}\) is correspondingly small.
+
+A complementary statistic compares sample complexity at a fixed target error \(\epsilon\):
+
+\[
+\Delta k(\epsilon)
+=
+ k_{scratch}(\epsilon)-k_{transfer}(\epsilon).
+\]
+
+These quantities make transfer value operational rather than metaphorical.
+
+### 6.4 Negative results are informative
+
+Three outcomes matter:
+
+1. **Static and dynamic transfer both succeed.** Shared coordinates capture part of reusable mechanics.
+2. **Static succeeds, dynamic transfer fails.** Universal/interoperable geometry does not imply universal dynamics.
+3. **Both fail.** The chosen frame is not useful for this target population.
+
+The second outcome is especially important because it draws a sharp boundary around what representational-alignment results permit us to infer.
+
+---
+
+## 7. Multiresolution is computational, not an observer hierarchy
+
+The Atlas remains multiresolution, but the meaning changes. Resolution is a property of the **map representation and planner**, not a ranking of models as clearer or blurrier observers.
+
+Let
+
+\[
+\mathcal A_{M,0},\mathcal A_{M,1},\ldots,\mathcal A_{M,L}
+\]
+
+be progressively finer dynamic summaries.
+
+A coarse cell may store transition probabilities and route costs among broad regions. A fine chart may store local state distributions, control responses, or lexical realization information.
+
+The Borges constraint remains:
+
+> a map at 1:1 scale has stopped being useful as a map.
+
+Refinement should therefore be driven by predictive or control uncertainty. For example, refine a cell when
+
+\[
+\Omega_M(z,H)>\tau
+\]
+
+or when a coarse policy cannot distinguish candidate routes with sufficient confidence.
+
+The central compression question is:
+
+\[
+\text{How coarse can the Atlas remain while preserving useful prediction and control?}
+\]
+
+---
+
+## 8. Navigation as optimal control
+
+Suppose the current state is \(z_0\) and the task defines goal set \(G\). A planner chooses route/control sequence
+
+\[
+\Gamma^*
+=
+\arg\min_{\Gamma} J_M(\Gamma)
+\]
+
+subject to reachability, budget, and task constraints.
+
+A generic objective is
+
+\[
+J_M(\Gamma)
+=
+\alpha C_M(\Gamma)
++\beta U_M(\Gamma)
++\gamma O_M(\Gamma)
++\delta T_M(\Gamma),
+\]
+
+where \(U_M\) is predictive uncertainty, \(O_M\) penalizes unsupported/off-manifold motion, and \(T_M\) is expected token or compute cost.
+
+The shortest route in coordinate distance is only a baseline. The Atlas planner is supposed to exploit the **model-specific directed cost landscape**.
+
+### 8.1 Corridors and bridges
+
+If a direct transition \(A\rightarrow B\) has low success probability or high cost, but
+
+\[
+A\rightarrow G_1\rightarrow G_2\rightarrow B
+\]
+
+is reliable, the intermediate states form a useful dynamic bridge.
+
+This gives a falsifiable version of the intuition that decomposition helps: the Atlas predicts in advance which intermediate route has higher success at matched budget.
+
+### 8.2 Perquire as a planner implementation
+
+A search system such as Perquire can be viewed as an implementation layer over the Atlas:
+
+\[
+\text{Atlas}=\text{estimated dynamics/cost/reachability},
+\]
+
+\[
+\text{Perquire}=\text{planner/search over those estimates}.
+\]
+
+This relation is architectural, not evidentiary. Perquire's success would not prove the Atlas formalism unless gains are attributable to the registered dynamic quantities rather than generic search.
+
+---
+
+## 9. From route to generation: Semantic Model Predictive Control
+
+The first controller should remain black-box and expensive on purpose. At semantic state \(z_t\), sample candidate short continuations \(c_1,\ldots,c_N\). Embed their resulting prefixes and score them using the route objective:
+
+\[
+S(c_i)
+=
+-\widehat J_M(\Gamma_i)
++\lambda\log P_M(c_i).
+\]
+
+Execute only a short prefix of the best candidate, observe the new semantic state, and replan.
+
+This is semantic Model Predictive Control (MPC).
+
+MPC may consume **more** compute than ordinary generation because discarded rollouts are evaluated. The first question is controllability:
+
+> Does a model-specific Atlas select continuations that reach registered semantic goals more reliably at matched rollout budget than static geometry or direct prompting?
+
+Only after that result may the programme claim efficiency.
+
+### 9.1 Required baselines
+
+Compare at least:
+
+1. base generation;
+2. explicit goal prompting;
+3. nearest-goal or cosine-progress reranking;
+4. local Q/value predictor without an Atlas;
+5. Atlas MPC using learned dynamics/cost;
+6. oracle dynamics where available in synthetic tasks.
+
+If Atlas MPC does not beat static geometric reranking, the dynamic machinery has not paid for itself.
+
+---
+
+## 10. Semantic Servo and causal local control
+
+MPC establishes whether semantic routes can guide generation, but it wastes rollouts. A later controller can attempt direct hidden-state corrections.
+
+Let \(h_{\ell,t}\) be a model hidden state. Train a future-state head
+
+\[
+G_H(h_{\ell,t})
+\approx
+q_{t+H}-q_t.
+\]
+
+For desired displacement \(\Delta q^*\), define
+
+\[
+e
+=
+\Delta q^*-G_H(h_{\ell,t}).
+\]
+
+A local sensitivity is
+
+\[
+\widehat J^{sem}_{\ell,H}
+=
+\frac{\partial G_H}{\partial h_{\ell,t}}.
+\]
+
+A regularized correction may solve
+
+\[
+\widehat J^{sem}_{\ell,H}\delta h\approx e.
 \]
 
 One minimum-norm form is
 
 \[
-\delta h=(\widehat J^{sem})^\top(\widehat J^{sem}(\widehat J^{sem})^\top+\lambda I)^{-1}e.
+\delta h
+=
+(\widehat J^{sem})^\top
+\left(
+\widehat J^{sem}(\widehat J^{sem})^\top+\lambda I
+\right)^{-1}e.
 \]
 
-The intervention is then
+But the derivative of a fitted head is not automatically a causal derivative of the generated trajectory. Before using it for control, inject registered small perturbations and verify that
 
 \[
-h'_{\ell,t}=h_{\ell,t}+\alpha\delta h.
+\widehat J^{sem}\delta h
 \]
 
-This is a control-theoretic use of a Jacobian; it does **not** imply that the LLM internally computes Jacobians.
+predicts the **measured** change in future aligned semantic state.
 
-### 7.4 Relation to the Jacobian Lens
+The Servo passes only if closed-loop correction reduces route error at acceptable language-quality and intervention cost compared with static steering and matched random directions.
 
-Gurnee et al. (2026) introduced the Jacobian Lens and identified a J-space of verbalizable internal representations that participates in reasoning, report, and future planning. Their experiments show that interventions on future-oriented representations can alter earlier lexical choices used to realize a later target. This is closely related to the control problem here: a semantic destination may constrain intermediate generation without specifying each token.
+---
 
-The proposed Semantic Jacobian differs in its output space. The Jacobian Lens asks, approximately, which verbalizable content an internal state is disposed to produce. We ask how current hidden state perturbations change a *future position in an external semantic reference frame*. The experiments will test whether the two spaces are practically alignable or merely conceptually adjacent.
+## 11. Can dynamics be compiled from weights?
 
-### 7.5 Closed-loop control
+Weight-space compilation is retained as a later hypothesis and is explicitly downstream of the observational Atlas.
 
-A stable controller should intervene minimally. One cost is
+### 11.1 Static reduced coordinates
+
+For final logit map
 
 \[
-\mathcal L=
-\|q_{t+H}-q^*_{t+H}\|^2
-+\beta D_{KL}(P_{steered}\|P_{base})
-+\gamma\|\delta h\|^2
-+\eta D(\Gamma,\Gamma^*).
+\ell=W_Uh,
 \]
 
-When the model is already following the desired route, the optimal control should approach zero. The system therefore behaves as a servo: observe, compute route error, apply a small correction, generate, and observe again.
-
-## 8. Can the atlas be compiled from weights?
-
-### 8.1 Static structure from the output head
-
-The atlas need not be learned solely by walking every possible token sequence. Consider the final linear map
-
-\[
-\ell=W_Uh
-\]
-
-from final hidden state to logits. A truncated singular value decomposition
+a truncated decomposition
 
 \[
 W_U\approx U_k\Sigma_kV_k^\top
 \]
 
-defines a reduced coordinate
+defines reduced coordinate
 
 \[
-z=V_k^\top h
+z=V_k^\top h.
 \]
 
-and approximate logits
+This may expose useful static lexical structure. It does not establish semantic transition dynamics.
+
+### 11.2 Local dynamic operators
+
+Within a registered region \(c\), fit a local approximation
 
 \[
-\ell\approx U_k\Sigma_k z.
+q_{t+1}
+\approx
+A_{M,c}q_t+B_{M,c}u_t+b_{M,c}.
 \]
 
-If the reduced subspace preserves top-k lexical structure, it forms a direct algebraic bridge from compact latent coordinates to token preferences. This does not by itself recover context-dependent transformer dynamics, but it is a concrete test of how much lexical geometry is exposed by the weights before autoregressive exploration.
+The value of such an operator is empirical. It must predict multiple held-out steps better than dimension-matched simple baselines and remain useful long enough for planning.
 
-The same idea can be extended cautiously to MLP and attention matrices, whose singular directions may expose functionally coherent subspaces. The hypothesis is not that one SVD reveals the whole semantic atlas, but that a useful **static base map** can be extracted from weights and corrected by relatively sparse dynamic measurements.
+### 11.3 Transferable operators
 
-### 8.2 Local dynamic operators
+A stronger question follows naturally from the revised paper: after placing two models in the same frame, are any local operators reusable?
 
-Within a sufficiently small semantic cell \(c\), approximate the dynamics by
+For aligned regions, compare
 
 \[
-q_{t+1}\approx A_cq_t+B_cu_t+b_c.
+A_{A,c}
+\quad\text{and}\quad
+A_{B,c}
 \]
 
-If this approximation remains valid over multiple steps within one cell, then coarse planning can use operator composition rather than lexical simulation. For a registered control sequence,
+only after controlling for estimation noise and alignment choice. If operator transfer works, it could reduce the number of target trajectories needed to initialize a new Atlas. If not, weight compilation remains model-specific.
+
+---
+
+## 12. Experimental programme
+
+The programme is staged so that later claims depend on earlier gates.
+
+### 12.1 Model population
+
+A single same-family pair is insufficient for cross-model dynamics. The initial population should contain several open models spanning at least two architecture/training families where compatible embedding/trajectory measurements can be constructed.
+
+A same-family pair such as Qwen3-0.6B plus Qwen3-Embedding-0.6B remains useful for an initial mechanics test, but the transfer experiment requires leave-one-model-out evaluation over a broader population.
+
+### 12.2 Dataset and trajectory protocol
+
+Freeze before fitting:
+
+- prompt/task families;
+- decoding settings;
+- semantic chunking rule;
+- trajectory horizons;
+- coordinate-alignment train/test split;
+- source-model/target-model folds;
+- intervention classes;
+- route-cost definition.
+
+Target-model trajectory outcomes used for final testing must not leak into frame fitting, hyperparameter selection, or zero-shot transfer features.
+
+### 12.3 Experiment A — coordinate interoperability gate
+
+Fit at least two alignment methods. On held-out paired semantic items measure:
+
+- coordinate/cosine agreement;
+- local-neighborhood agreement;
+- trajectory-shape preservation for already observed matched paths;
+- shuffled-correspondence nulls;
+- dimension- and scale-matched native-space baselines.
+
+This experiment establishes only whether a common comparison frame is usable.
+
+### 12.4 Experiment B — within-model dynamic identification
+
+For each model independently, estimate future semantic displacement, transition probabilities, reachability, and route cost.
+
+Compare:
+
+1. static coordinate only;
+2. static local neighborhood features;
+3. short trajectory history;
+4. Atlas state \(z_t\);
+5. stronger sequence baseline.
+
+The Atlas needs to demonstrate that its compact state has predictive value at useful horizons.
+
+### 12.5 Experiment C — static alignment versus dynamic agreement
+
+For every model pair, compare static alignment quality with held-out dynamic agreement.
+
+Primary analysis:
 
 \[
-q_{t+n}\approx A_c^nq_t+
-\sum_{j=0}^{n-1}A_c^j\left(B_cu_{t+n-1-j}+b_c\right).
+S_{AB}^{static}
+\quad\text{vs.}\quad
+S_{AB}^{F},S_{AB}^{R},S_{AB}^{nav}.
 \]
 
-The simpler expression \(A_c^nq_t+\sum_{j=0}^{n-1}A_c^jb_c\) applies only to the explicitly uncontrolled case \(u_t=0\).
+The point is not to force a positive correlation. A weak relation is a valid result and would delimit universal-geometry claims.
 
-This is the strongest efficiency hypothesis in the programme. It would allow the planner to jump across semantic time at coarse resolution and invoke token-level generation only when required. It is also the easiest hypothesis to falsify if local linear models rapidly lose predictive accuracy.
+### 12.6 Experiment D — leave-one-model-out dynamic transfer
 
-## 9. Experimental programme
+Hold model \(M_*\) out. Fit the common frame and transfer prior using the source population, without target trajectory labels.
 
-The experiments are intentionally staged so that failure at one level does not contaminate conclusions at another.
+Evaluate:
 
-### 9.1 Models
+- zero-shot target future-state prediction;
+- zero-shot reachability prediction;
+- zero-shot route ranking;
+- target-only baseline at \(k=0\) where defined;
+- few-shot transfer for registered \(k\) values;
+- target-only-from-scratch curves at the same \(k\).
 
-The initial toy pair is:
-
-- **Qwen3-0.6B** as an open-weight generator;
-- **Qwen3-Embedding-0.6B** as the semantic observer.
-
-The embedding model is built on the same Qwen3 family, has 0.6B parameters, 28 layers, and supports user-selected output dimensionality from 32 to 1024 [Zhang et al., 2025]. The first canonical SRF dimension is \(k=64\).
-
-A same-family pair is a convenience for the toy study, not evidence of generality.
-
-### 9.2 Experiment A: reference frame and observational atlas
-
-Construct a deterministic 64-dimensional simplex SRF with 65 quasars. Freeze a row-paired calibration set across a reference observer and at least one independent transfer observer. Derive canonical calibration targets once from the reference observer, fit each transfer observer by paired Procrustes, and reserve separate held-out texts for the identifiability test. Then embed the frozen trajectory corpus, segment trajectories at multiple horizons, and build a graph of semantic cells and transitions.
-
-Primary questions:
-
-- Do independently fitted observers agree on held-out canonical vectors and quasar coordinates?
-- Does that agreement collapse when calibration correspondences are shuffled?
-- Does the frame preserve useful local geometry?
-- Are trajectory measures stable across reasonable chunk sizes?
-- Do repeated prompts expose consistent corridors and basin-like regions?
-
-### 9.3 Experiment B: MPC navigation
-
-For origin/goal pairs and multi-waypoint tasks, compare:
-
-1. base generation;
-2. explicit goal prompting;
-3. nearest-neighbor semantic reranking;
-4. semantic MPC;
-5. MPC without curvature penalty;
-6. MPC without off-manifold penalty.
-
-The main endpoint is `success@budget`, accompanied by path length, curvature, revisits, language-model likelihood, and total compute including discarded rollouts.
-
-A result in which MPC reaches goals more reliably but consumes substantially more compute supports controllability but **not** efficiency.
-
-### 9.4 Experiment C: Semantic Servo
-
-Collect hidden states and future SRF displacements and train \(F_H\). Before route steering, freeze a layer, token position, horizon, perturbation-norm grid, and held-out prompt-family split; inject registered small perturbations and test whether \(\widehat J^{sem}\delta h\) predicts the **measured** change in future SRF state. Only after that causal local-calibration gate should closed-loop Jacobian steering be tested on the same routes with fewer discarded generations.
-
-Compare against static activation addition and random control vectors with matched norm. Measure semantic route error, KL drift, control energy, output quality, token count, and total runtime.
-
-### 9.5 Experiment D: compiled atlas
-
-Decompose the output head at multiple ranks and measure:
-
-- top-k logit overlap;
-- KL between full and low-rank output distributions;
-- neighborhood preservation in lexical space;
-- correlation between compiled and empirical atlas transitions.
-
-Then add a sparse set of local Jacobians/activations and measure the marginal improvement. Random low-rank bases are required controls.
-
-### 9.6 Reasoning benchmark
-
-A later toy benchmark uses tasks with known decomposable intermediate objectives. An oracle route may be supplied **only** to test route execution. The discovery of the route and the execution of the route are separate problems.
-
-Conditions include:
-
-- base model;
-- natural-language plan;
-- semantic route without textual subgoals;
-- semantic servo.
-
-Evaluate correctness under progressively smaller token budgets. A result where semantic routing preserves accuracy at lower token budgets would support efficiency in *token use*. FLOP or latency savings require separate measurement.
-
-## 10. Metrics
-
-### 10.1 Semantic Path Efficiency
-
-Let \(L^*\) be the estimated minimum admissible route length and \(L\) the realized path length. Define
+Report
 
 \[
-SPE=\frac{L^*}{L}.
+E_{transfer}(k),
+\qquad
+E_{scratch}(k),
+\qquad
+k^*_{Atlas},
+\qquad
+\Delta k(\epsilon).
 \]
 
-The value is meaningful only relative to a declared atlas and path-cost definition; it is not a universal measure of intelligence.
+Repeat over every model as the held-out target.
 
-### 10.2 Tokens per useful semantic progress
+### 12.7 Experiment E — MPC navigation
 
-If \(\Delta^+_t\) is semantic displacement projected onto locally useful route progress, define
+For origin/goal pairs and multi-waypoint tasks compare base generation, direct prompting, static semantic reranking, and Atlas MPC.
+
+Primary endpoint:
 
 \[
-TPSP=\frac{N_{tokens}}{\sum_t \Delta^+_t}.
+\text{success@budget}
 \]
 
-This is intended to detect verbose motion that consumes tokens without approaching required waypoints.
+with compute including discarded rollouts. Secondary endpoints include path cost, revisits, semantic route error, output likelihood, correctness, and naturalness.
 
-### 10.3 Reachable volume
+### 12.8 Experiment F — Semantic Servo
 
-For fixed horizon and budget, estimate the volume or graph coverage of \(R_M(q,H,B)\). Comparing reachable sets with and without steering tests whether the controller expands practical capability or merely changes style.
+After the MPC gate, fit and causally calibrate local future-state sensitivities. Compare Semantic Servo with static activation steering and matched random controls.
 
-### 10.4 Naturalness and safety constraints
+A Servo result is about efficient route execution, not about the existence of universal semantic coordinates.
 
-Route success must be reported alongside:
+### 12.9 Experiment G — compiled dynamics
 
-- perplexity or base-model log-likelihood;
-- KL drift;
-- semantic discontinuity/curvature;
-- grammaticality or independent quality evaluation;
-- factual correctness where applicable;
-- off-manifold diagnostics;
-- intervention norm.
+Compare empirical Atlas dynamics with operators or reduced maps derived from weights. Random subspaces and dimension-matched low-rank controls are mandatory.
 
-A controller that reaches a target by destroying language quality has failed.
+---
 
-## 11. Falsification criteria
+## 13. Metrics
 
-The programme is useful only if its claims can fail independently.
+### 13.1 Future-state prediction
 
-### H1 — Trajectory geometry
+For horizon \(H\), report calibrated error
 
-**Claim:** trajectory features add predictive information beyond endpoint similarity.
+\[
+E_F(H)
+=
+\mathbb E[d(\widehat q_{t+H},q_{t+H})]
+\]
 
-**Fails if:** curvature/history features do not improve future-state prediction or conversation classification over matched embedding baselines.
+plus rank/neighborhood versions where raw metric distances are not comparable.
 
-### H2 — Artificial reference frame
+### 13.2 Reachability calibration
 
-**Claim:** fixed quasar geometry plus paired empirical calibration can resolve enough cross-model gauge freedom to preserve navigation-relevant structure.
+For registered target regions \(g\), evaluate
 
-**Fails if:** independently fitted observers disagree materially on held-out canonical coordinates, if shuffled correspondences perform similarly to correct correspondences, or if the transformation introduces material distortion relative to dimensionality-matched native-space baselines.
+\[
+\widehat p_M(g\in R_M(z,H,B))
+\]
 
-### H3 — Atlas approximation
+using proper scoring rules and calibration curves.
 
-**Claim:** local dynamics can be compressed into reusable cells/operators.
+### 13.3 Route-ranking agreement
 
-**Fails if:** atlas prediction errors grow too quickly for route planning, or the atlas must approach 1:1 lexical resolution almost everywhere.
+Given candidate routes \(\Gamma_i\), compare predicted and empirical cost/success orderings. This can be more robust than requiring exact transition prediction.
 
-### H4 — Navigability
+### 13.4 Dynamic transfer gain
 
-**Claim:** planned routes improve semantic goal attainment while preserving naturalness.
+At each \(k\), define
 
-**Fails if:** gains disappear against equivalent prompting/reranking or depend on unnatural output.
+\[
+\Delta E(k)
+=
+E_{scratch}(k)-E_{transfer}(k).
+\]
 
-### H5 — Efficiency
+Positive \(\Delta E\) means the source population reduces target error at the same number of target trajectories.
 
-**Claim:** atlas-based control can reduce resource use for equal or better outcomes.
+### 13.5 Atlas-equivalent trajectory count
 
-**Fails if:** token reductions are offset by greater total FLOPs/latency, or quality declines at matched compute.
+Report \(k^*_{Atlas}\) and \(\Delta k(\epsilon)\) as defined above. These are the primary sample-efficiency metrics for cross-model Atlas transfer.
 
-### H6 — Weight compilation
+### 13.6 Navigation efficiency
 
-**Claim:** a useful fraction of atlas structure can be extracted from weights before exhaustive exploration.
+If \(J_M^*\) is the best estimated admissible route cost and \(J_M\) the realized cost, define
 
-**Fails if:** low-rank or weight-space structure does not predict empirical transitions better than random baselines after controlling for dimension.
+\[
+NPE
+=
+\frac{J_M^*}{J_M}
+\]
 
-## 12. Related work and boundaries
+only within a declared Atlas/cost definition.
 
-The proposal sits at the intersection of several established research lines and should not be interpreted as claiming invention of their components.
+Token count, FLOPs, latency, and API/model calls must be reported separately. Token savings do not imply compute savings.
 
-**Relative representations.** Moschella et al. (2022) showed that representing samples by similarity to fixed anchors can create invariance to latent-space transformations and enable communication across latent spaces. The SRF adopts the relative-coordinate motivation but separates artificial landmark geometry from semantic anchoring: paired calibration examples align each observer to one frozen target cloud, after which artificial quasars provide a shared metrological basis.
+---
 
-**Text geometry.** Grover et al. (2026) propose a text-native curvature signal derived from left/right contextual beliefs and show practical uses in compression and routing. Semantic Atlas instead treats an entire generated discourse as a trajectory and asks whether trajectory geometry is useful for planning and control.
+## 14. Falsification criteria
 
-**Activation steering.** Static steering vectors, context-dependent Steering Vector Fields [Li et al., 2026], and Energy Landscape Steering [Jiang et al., 2026] demonstrate that hidden-state interventions can alter model behavior. Semantic Atlas makes the desired control signal a route in an external map rather than a single attribute direction.
+### H1 — trajectory-state value
 
-**Jacobian Lens / J-space.** Gurnee et al. (2026) use Jacobian-based interpretability to expose verbalizable internal representations participating in reasoning and future planning. The present Semantic Jacobian proposal uses local sensitivities to convert route error into a hidden-state intervention; whether that controller aligns with J-space is an empirical question.
+**Claim.** A compact trajectory state predicts future semantic motion better than static endpoint geometry at registered horizons.
 
-**Semantic tokenization.** The companion paper *Semantic Tokenization Transformers* in this repository proposes replacing BPE-scale modeling with quantized semantic chunks. Semantic Atlas does not require retraining a transformer on semantic codes. Instead it asks whether an existing model's behavior can be represented and navigated at multiple semantic scales while preserving the original model as a lexical engine.
+**Fails if.** History/trajectory features add no reproducible held-out value over static or simple sequence baselines.
 
-**Reduced-order and predictive-state models.** The atlas shares the broad ambition of representing complex dynamics using compact state variables sufficient for prediction and control. Its distinctive empirical question is whether autoregressive language-model behavior admits such a reduced semantic dynamics at useful horizons.
+### H2 — coordinate interoperability
 
-## 13. Limitations
+**Claim.** At least one chosen frame makes cross-model semantic coordinates sufficiently comparable for downstream dynamic tests.
 
-The proposal has several failure modes that must be taken seriously.
+**Fails if.** Held-out alignment is no better than shuffled or matched nulls, or conclusions are unstable to reasonable alignment choices.
 
-First, embedding geometry may be a poor proxy for reasoning state. A semantic observer can smooth away distinctions that are computationally essential.
+### H3 — model-specific dynamics
 
-Second, trajectories may be highly observer-dependent. A useful atlas for one embedding model may not transfer to another despite calibration.
+**Claim.** Transition, reachability, and navigation quantities are reproducible within a model and not reducible to static distance alone.
 
-Third, high-dimensional spaces can make density and distance estimates unstable. Apparent basins or corridors may be artifacts of projection or sampling.
+**Fails if.** Dynamics are too noisy to predict or static geometry explains equivalent held-out behavior.
 
-Fourth, lexical generation contains syntactic and pragmatic constraints that a coarse semantic route does not represent. A route can be semantically plausible yet linguistically unrealizable from the current context.
+### H4 — cross-model dynamic transfer
 
-Fifth, the atlas itself may be expensive to construct. Offline cost is justified only if amortized over sufficient queries or if weight-space compilation substantially reduces sampling.
+**Claim.** Source-model dynamics provide useful prior information about a held-out target model after static alignment.
 
-Sixth, steering can push hidden states away from the model's trained manifold, increasing hallucination or degrading safety behavior. The minimum-intervention constraint is therefore not optional.
+**Fails if.** Across held-out targets,
 
-Seventh, efficiency must be measured end-to-end. Reducing visible reasoning tokens while adding heavy hidden-state optimization does not constitute computational savings.
+\[
+\Delta E(k)\le0
+\]
 
-Finally, a successful toy experiment on a same-family 0.6B model pair would establish feasibility only. Claims about frontier systems, universal semantic coordinates, or substantial production savings require independent replication.
+at the preregistered sample sizes or \(k^*_{Atlas}\) is operationally negligible.
 
-## 14. Discussion: maps, engines, and semantic computation
+A failure of H4 does **not** invalidate H1-H3; it establishes that the Atlas is model-specific rather than transferable.
 
-The Semantic Atlas framework deliberately assigns different jobs to different representations.
+### H5 — static alignment does not determine dynamics
 
-The language model is the **microscopic engine**: it contains the detailed conditional machinery required to produce grammatical, context-sensitive language.
+This is deliberately two-sided.
 
-The SRF is the **geodetic system**: artificial quasars define the external geometry, while shared calibration correspondences determine how each model is oriented within it. The sky can be invented; making two telescopes agree about where that sky is remains an empirical calibration problem.
+**Question.** How strongly does \(S^{static}\) predict dynamic agreement?
 
-The atlas is the **macroscopic map**: it summarizes which regions exist, how they connect, what costs are associated with movement, and where the map is uncertain.
+A strong relation supports reusable mechanics; a weak relation establishes an important separation between geometry and dynamics. The paper must report whichever occurs rather than treating only one direction as success.
 
-The planner is the **navigator**: it chooses a route among multiple semantic goals.
+### H6 — navigation
 
-The Semantic Servo is the **control loop**: it converts route error into the smallest practical intervention on generation.
+**Claim.** Atlas-aware planning improves goal attainment at matched rollout/compute budget beyond static semantic reranking and prompting.
 
-This separation suggests a potentially useful computational pattern. Long-range planning may not need lexical resolution. If a coarse atlas can predict that a reasoning process should move from region \(A\) through \(B\) and \(C\) to \(D\), then the full transformer need not necessarily spend tokens exploring every alternative path. It can instead be asked to materialize the locally appropriate segment of a route already planned at a coarser scale.
+**Fails if.** Dynamic planning adds no benefit or gains require unacceptable language-quality degradation.
 
-The strongest version of the hypothesis is therefore not that semantic embeddings are a better tokenizer. It is that **semantic planning and lexical realization may operate efficiently at different resolutions**.
+### H7 — Semantic Servo
 
-## 15. Conclusion
+**Claim.** Causally calibrated local control follows Atlas routes with fewer discarded rollouts or lower intervention cost than MPC/static steering.
 
-This paper proposes a research programme for turning language-model semantics into a navigable dynamical object. Artificial quasars provide a fixed external geometry and paired calibration supplies its semantic orientation; multiscale trajectories provide the moving object; the Semantic Atlas records density, potential, transition, control cost, and reachability; route planning chooses admissible low-cost paths; and the Semantic Servo attempts to realize those paths through local generation control.
+**Fails if.** The fitted Jacobian does not predict measured intervention effects or closed-loop gains disappear against matched controls.
 
-The framework is intentionally more ambitious than the evidence currently supports. Its value therefore depends on disciplined decomposition. A useful SRF can exist even if weight compilation fails. Semantic MPC can demonstrate controllability even if it is computationally inefficient. A Semantic Servo can reduce wasted rollouts without proving that hidden reasoning is universally lower-dimensional. A compiled output-head map can preserve lexical geometry without reproducing transformer dynamics.
+### H8 — weight compilation
 
-The next step is a small, reproducible experiment designed to kill weak versions of the idea quickly. If the atlas cannot preserve local trajectory geometry, the programme should stop. If it can, the next question is whether route planning changes generation in a predictable way. Only after those two results should the programme test whether planning can save tokens or compute.
+**Claim.** A useful fraction of dynamic structure can be predicted from weights or sparse measurements.
 
-The intended end state is therefore not a map the size of Borges's empire. It is a map that remains coarse enough to be cheap, becomes detailed enough to act only where needed, and tells a language model not what words to say, but where to go.
+**Fails if.** compiled operators do not beat random/dimension-matched baselines or do not reduce trajectory sample requirements.
+
+---
+
+## 15. Prior art and novelty boundary
+
+The revised Atlas deliberately concedes the static-coordinate territory.
+
+### 15.1 Representation convergence and universal geometry
+
+Huh et al. formulate the Platonic Representation Hypothesis. Jha et al. demonstrate unpaired translation of text embeddings through a learned universal latent representation. Achara et al. provide multi-way representation alignment. Gröger, Wen, and Brbić show that scale confounds inflate common similarity metrics and that calibrated local neighborhood similarity survives more robustly than global spectral convergence.
+
+**Not claimed here:** discovery of a universal embedding geometry, first cross-model alignment, or first common latent representation.
+
+The Atlas uses these results as motivation for treating a common coordinate layer as available infrastructure worth testing.
+
+### 15.2 Relative representations and Procrustes
+
+Relative representations and Procrustes alignment already provide coordinate-invariant or interoperable views across latent spaces.
+
+**Not claimed here:** a new solution to the basic gauge problem.
+
+Artificial quasars remain one metrological implementation whose value is downstream navigational utility, not coordinate novelty.
+
+### 15.3 Reduced-order and predictive-state modeling
+
+Dynamical-systems and control literatures have long studied compact predictive states, local linearizations, reachability, model predictive control, and system identification.
+
+**Not claimed here:** invention of those mathematical objects.
+
+The Atlas question is domain-specific: whether autoregressive language-model behavior admits a useful **semantic** reduced-order dynamics in an external comparison frame, and whether that dynamics transfers across aligned models.
+
+### 15.4 Activation steering and context-dependent control
+
+Static activation steering, Steering Vector Fields, energy-based steering, and Jacobian-based interpretability/control already show that internal interventions can alter model behavior.
+
+**Not claimed here:** first hidden-state controller.
+
+The Servo's narrower question is whether control signals derived from an explicit learned route/reachability model outperform static directions or rollout-only planning.
+
+### 15.5 Candidate contribution
+
+The surviving contribution is the combination of:
+
+1. a strict separation between **coordinate layer** and **model-specific semantic dynamics**;
+2. a model-indexed Atlas \(\mathfrak A=(\mathcal Q,\{A_M\})\);
+3. explicit measurement of transition, control cost, reachability, and directed navigation distance in that frame;
+4. a leave-one-model-out test of **dynamic transfer after static alignment**;
+5. sample-equivalence quantities \(k^*_{Atlas}\) and \(\Delta k(\epsilon)\);
+6. downstream planning/control tests that must beat static-geometry baselines.
+
+The originality claim should be rejected if prior work is found that already performs this same cross-model transfer-of-dynamics experiment over aligned language-model semantic trajectories.
+
+---
+
+## 16. Limitations
+
+### 16.1 The coordinate frame can still distort dynamics
+
+Even excellent static alignment may warp directions or scales relevant to transition estimation. Dynamic conclusions must be checked across multiple reasonable frames.
+
+### 16.2 Semantic embeddings may omit computational state
+
+An external embedding can smooth over distinctions that are essential to reasoning. Failure of the Atlas may reflect an inadequate observer rather than absence of reduced dynamics.
+
+### 16.3 Trajectories depend on prompting and decoding
+
+\(F_M\) is conditional on the registered generation protocol. Temperature, system prompt, retrieval context, tool use, and decoding rules can change the dynamics. The Atlas must declare these conditions rather than treating dynamics as an unconditional property of a model checkpoint.
+
+### 16.4 Transfer can be ancestry rather than universality
+
+Closely related model families may share dynamics because of common training data, architecture, distillation, or fine-tuning. Leave-family-out analysis is therefore stronger than random leave-one-model-out when enough models are available.
+
+### 16.5 Reachability is cost-relative
+
+Changing the allowed control set or budget changes \(R_M\). No reachable-set result is meaningful without the control class and cost definition.
+
+### 16.6 Atlas construction can be expensive
+
+Offline rollout cost must be amortized by repeated use, transfer, or compilation. A beautiful map that costs more to construct than the tasks it accelerates is not an efficiency result.
+
+### 16.7 Hidden-state steering can leave the training manifold
+
+Servo interventions may damage correctness, calibration, or safety. Minimum-intervention and output-quality constraints are mandatory.
+
+---
+
+## 17. Discussion: one coordinate system, many engines
+
+The revised Semantic Atlas assigns different jobs to different layers.
+
+The **language model** is the microscopic engine that produces lexical behavior.
+
+The **coordinate frame** is a gauge. It gives comparable labels to locations but need not be the true geometry of meaning.
+
+The **model-specific Atlas** records the mechanics of motion in that gauge: transition tendencies, barriers, reachable regions, and control costs.
+
+The **planner** searches those mechanics for an admissible route.
+
+The **Semantic Servo** executes route corrections in closed loop.
+
+This changes the main analogy. The Atlas no longer needs multiple models to be telescopes of different resolution looking at the same object. A better analogy is several vehicles using the same coordinate system with different transition laws.
+
+Two models can agree that they are at \(q\) and disagree about what happens next. One may reach target \(g\) directly; another may require intermediate states. One may be easily steered out of a basin; another may have high escape cost. Static geometry tells us where we are writing the coordinates. The Atlas tells us what motion is possible.
+
+This separation also gives a clean interpretation of universal-geometry work:
+
+\[
+\boxed{
+\text{Universal geometry, if it exists, is the coordinate layer—not the Atlas.}
+}
+\]
+
+And it gives a sharper research question:
+
+\[
+\boxed{
+\text{Does geometric alignment transfer any useful semantic dynamics?}
+}
+\]
+
+That question is meaningful whether the answer is yes, no, or only locally.
+
+---
+
+## 18. Conclusion
+
+The Semantic Atlas should not compete with modern representation alignment by claiming another universal semantic coordinate system. Its defensible scientific target is downstream of alignment.
+
+Choose a frame. Represent generated discourse as trajectories. For each model, estimate the transition law, control cost, uncertainty, reachable sets, and directed navigation distances. Then ask whether those mechanics are compressible enough for planning and whether any of them transfer to a held-out model once static coordinates have been aligned.
+
+The strongest positive result would be a transferred Atlas that predicts target dynamics before substantial target rollout and reduces the number of trajectories required for useful planning. The cleanest negative result would be equally informative: high static alignment with little or no dynamic transfer. That would demonstrate that interoperable semantic coordinates do not make language models dynamically interchangeable.
+
+Only after dynamics prediction and route planning survive strong baselines should the programme pursue Semantic Servo control, weight-space compilation, or compute savings.
+
+The intended end state is therefore not a universal semantic map. It is a **common chart carrying several empirically learned systems of motion**—coarse enough to be useful, model-specific enough to be honest, and predictive enough to tell a planner not merely where a destination lies, but whether this model can get there and at what cost.
 
 ---
 
 ## References
 
-- Achara, A., Gaintseva, T., Mahaut, M., et al. (2026). **Multi-Way Representation Alignment.** arXiv:2602.06205. https://arxiv.org/abs/2602.06205
-- Gurnee, W., Sofroniew, N., Pearce, A., et al. (2026). **Verbalizable Representations Form a Global Workspace in Language Models.** Transformer Circuits Thread / arXiv:2607.15495. https://transformer-circuits.pub/2026/workspace/index.html
+- Achara, A., Gaintseva, T., Mahaut, M., et al. (2026). **Multi-Way Representation Alignment.** ICML 2026. arXiv:2602.06205. https://arxiv.org/abs/2602.06205
+- Gröger, F., Wen, S., & Brbić, M. (2026). **Revisiting the Platonic Representation Hypothesis: An Aristotelian View.** ICML 2026. arXiv:2602.14486. https://arxiv.org/abs/2602.14486
 - Grover, K., Zeng, H., Xia, Y., Faloutsos, C., & Gordon, G. J. (2026). **Text Has Curvature.** arXiv:2602.13418. https://arxiv.org/abs/2602.13418
+- Gurnee, W., Sofroniew, N., Pearce, A., et al. (2026). **Verbalizable Representations Form a Global Workspace in Language Models.** arXiv:2607.15495. https://arxiv.org/abs/2607.15495
+- Huh, M., Cheung, B., Wang, T., & Isola, P. (2024). **Position: The Platonic Representation Hypothesis.** ICML 2024, PMLR 235:20617–20642. https://proceedings.mlr.press/v235/huh24a.html
+- Jha, R., Zhang, C., Shmatikov, V., & Morris, J. X. (2025). **Harnessing the Universal Geometry of Embeddings.** NeurIPS 2025. arXiv:2505.12540. https://arxiv.org/abs/2505.12540
 - Jiang, E. H., Ou, W., Liu, R., et al. (2026). **Mitigating Over-Refusal in Aligned Large Language Models via Inference-Time Activation Energy.** ACL 2026. https://aclanthology.org/2026.acl-long.1759/
 - Li, J., Li, Y., & Huang, K.-H. (2026). **Steering Vector Fields for Context-Aware Inference-Time Control in Large Language Models.** arXiv:2602.01654. https://arxiv.org/abs/2602.01654
 - Maystre, L., Ortega Gonzalez, A., Park, C., et al. (2025). **When Embedding Models Meet: Procrustes Bounds and Applications.** arXiv:2510.13406. https://arxiv.org/abs/2510.13406
-- Moschella, L., Maiorca, V., Fumero, M., Norelli, A., Locatello, F., & Rodolà, E. (2022). **Relative representations enable zero-shot latent space communication.** arXiv:2209.15430. https://arxiv.org/abs/2209.15430
+- Moschella, L., Maiorca, V., Fumero, M., Norelli, A., Locatello, F., & Rodolà, E. (2022). **Relative Representations Enable Zero-Shot Latent Space Communication.** arXiv:2209.15430. https://arxiv.org/abs/2209.15430
 - Zhang, Y., Li, M., Long, D., et al. (2025). **Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models.** arXiv:2506.05176. https://arxiv.org/abs/2506.05176
 
 ## Issue map
 
-This paper is developed under #260. Prior-art delimitation is #261; multiscale trajectory formalization is #262; quasar/SRF design is #263; atlas/gravity/reachability is #264; Semantic Servo is #265; the observational atlas implementation is #266; MPC navigation is #267; Jacobian/servo efficiency is #268; weight-space compilation is #269; and final empirical integration is #270.
+This paper remains developed under #260. Existing prior-art, trajectory, SRF, reachability, Servo, observational-atlas, MPC, Jacobian, compilation, and integration issues (#261–#270) remain useful, but the revised synthesis changes their priority: coordinate/SRF work is an enabling layer; **within-model dynamics and cross-model dynamic transfer now precede efficiency and compilation claims**.
