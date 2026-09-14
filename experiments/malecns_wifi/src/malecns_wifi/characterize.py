@@ -773,3 +773,218 @@ def mode_loading_sweep(
         "steps": steps,
         "sweep": rows,
     }
+
+
+@dataclass(frozen=True)
+class LeadingSubspace:
+    """Basis-invariant handle on the leading invariant subspace.
+
+    With an exactly degenerate leading pair, ARPACK's ``v1`` and ``v2`` are an
+    arbitrary basis of one plane and a rerun can rotate within it. Everything here
+    is a property of the *subspace*, so nothing depends on which vector ARPACK
+    happened to call first.
+    """
+
+    right: np.ndarray
+    left_scaled: np.ndarray
+    participation: np.ndarray
+    dimension: int
+    eigenvalues: list
+    degenerate: bool
+
+    def project(self, state: np.ndarray) -> np.ndarray:
+        """``P x`` with ``P = V (U^T V)^-1 U^T``, kept factored."""
+        columns = state[:, None] if state.ndim == 1 else state
+        projected = self.right @ (self.left_scaled.T @ columns)
+        return projected[:, 0] if state.ndim == 1 else projected
+
+
+def _real_invariant_basis(values, vectors, dimension: int) -> np.ndarray:
+    """Real basis of the leading invariant subspace.
+
+    A complex conjugate pair contributes ``real(v)`` and ``imag(v)``, which span
+    the same two real dimensions. Taking the two conjugate columns instead gives
+    the *same* vector twice -- ``real(v) == real(conj(v))`` -- and a rank-deficient
+    block whose projector does not exist.
+    """
+    columns: list[np.ndarray] = []
+    consumed: set[int] = set()
+    for index, value in enumerate(values):
+        if len(columns) >= dimension:
+            break
+        if index in consumed:
+            continue
+        scale = max(abs(value), 1e-300)
+        if abs(value.imag) < 1e-9 * scale:
+            columns.append(np.real(vectors[:, index]))
+            continue
+        columns.append(np.real(vectors[:, index]))
+        if len(columns) < dimension:
+            columns.append(np.imag(vectors[:, index]))
+        for other in range(index + 1, len(values)):
+            if other not in consumed and abs(values[other] - np.conj(value)) < 1e-9 * scale:
+                consumed.add(other)
+                break
+    if len(columns) < dimension:
+        raise ValueError(f"only {len(columns)} independent leading directions available")
+    return np.stack(columns[:dimension], axis=1).astype(np.float64)
+
+
+def leading_subspace(matrix, *, dimension: int = 2, tol: float = 1e-9) -> LeadingSubspace:
+    """Spectral projector onto the leading ``dimension`` modes.
+
+    The right and left leading vectors are taken as blocks rather than paired
+    one-to-one: for a degenerate cluster the pairing is ill-defined but the spans
+    are not, and ``U^T V`` is invertible whenever the subspace is not defective.
+
+    ``participation[i]`` is neuron ``i``'s share of the subspace's spatial support,
+    ``||Q[i, :]||^2`` for an orthonormal basis ``Q`` of the right subspace. It is
+    the weight to use when asking how much of *this subspace* is clamped, rather
+    than how much of the brain is.
+    """
+    pair = leading_eigenpairs(matrix, k=max(dimension + 2, 4), tol=tol)
+    right = _real_invariant_basis(pair["eigenvalues"], pair["right"], dimension)
+    left = _real_invariant_basis(pair["left_eigenvalues"], pair["left"], dimension)
+
+    overlap = left.T @ right
+    if abs(np.linalg.det(overlap)) < 1e-12:
+        raise ValueError("leading subspace is defective or left/right blocks do not overlap")
+    left_scaled = left @ np.linalg.inv(overlap).T
+
+    orthonormal, _ = np.linalg.qr(right)
+    participation = np.sum(orthonormal**2, axis=1)
+
+    values = pair["eigenvalues"]
+    degenerate = (
+        abs(values[1]) / max(abs(values[0]), 1e-300) > 0.999 if len(values) > 1 else False
+    )
+    return LeadingSubspace(
+        right=right.astype(np.float32),
+        left_scaled=left_scaled.astype(np.float32),
+        participation=participation.astype(np.float32),
+        dimension=dimension,
+        eigenvalues=[[complex(v).real, complex(v).imag] for v in values[:dimension]],
+        degenerate=bool(degenerate),
+    )
+
+
+def linear_mode_multiplier(gain: float, leak: float, eigenvalue: float = 1.0) -> float:
+    """``mu = 1 - leak + leak * gain * lambda``: the linearised per-step growth.
+
+    On a unit-spectral-radius operator the leading mode's linearised multiplier is
+    ``0.6 + 0.4 * gain`` at leak 0.4, so the linear stability threshold sits at
+    ``gain = 1`` regardless of how large the spectral radius was before
+    normalisation. Anything measured above that is the nonlinearity deciding how
+    the divergence is bounded, not whether it happens.
+    """
+    return float(1.0 - leak + leak * gain * eigenvalue)
+
+
+def measure_subspace_dynamics(
+    operator,
+    subspace: LeadingSubspace,
+    *,
+    gain: float,
+    leak: float = 0.4,
+    steps: int = 400,
+    input_indices: np.ndarray | None = None,
+    input_scale: float = 1.0,
+    seed: int = 0,
+) -> dict:
+    """Subspace loading, participation-weighted saturation, and a split ESP test.
+
+    The echo state check is reported separately inside and outside the subspace,
+    which answers a question a single distance cannot: is it the global integrator
+    that loses the echo state property, or the bulk?
+    """
+    rng = np.random.default_rng(seed)
+    n = operator.shape[0]
+    if input_indices is None:
+        input_indices = np.arange(n)
+    weights = np.zeros(n, dtype=np.float32)
+    weights[input_indices] = rng.normal(size=len(input_indices)).astype(np.float32) * input_scale
+
+    state = np.zeros((n, 2), dtype=np.float32)
+    state[:, 1] = rng.uniform(-0.5, 0.5, size=n).astype(np.float32)
+    initial = float(np.linalg.norm(state[:, 1]))
+
+    participation = subspace.participation
+    total_participation = float(participation.sum())
+    loading, fraction, saturation = [], [], []
+
+    for _ in range(steps):
+        drive = weights[:, None] * np.float32(rng.uniform(-1.0, 1.0))
+        pre = (operator @ state) * np.float32(gain) + drive
+        state = ((1.0 - leak) * state + leak * np.tanh(pre)).astype(np.float32, copy=False)
+
+        primary = state[:, 0]
+        inside = float(np.linalg.norm(subspace.project(primary)))
+        magnitude = float(np.linalg.norm(primary))
+        loading.append(inside)
+        fraction.append(inside / magnitude if magnitude > 1e-12 else 0.0)
+        clamped = np.abs(primary) > 0.99
+        saturation.append(
+            float(participation[clamped].sum() / total_participation)
+            if total_participation > 0
+            else 0.0
+        )
+
+    difference = state[:, 0] - state[:, 1]
+    inside_difference = subspace.project(difference)
+    return {
+        "gain": float(gain),
+        "linear_multiplier": linear_mode_multiplier(gain, leak),
+        "subspace_loading_rms": float(np.sqrt(np.mean(np.square(loading)))),
+        "subspace_fraction_mean": float(np.mean(fraction)),
+        "subspace_fraction_final": float(fraction[-1]) if fraction else 0.0,
+        "participation_weighted_saturation": float(np.mean(saturation)),
+        "participation_weighted_saturation_final": float(saturation[-1]) if saturation else 0.0,
+        "esp_separation_subspace": float(np.linalg.norm(inside_difference)),
+        "esp_separation_bulk": float(np.linalg.norm(difference - inside_difference)),
+        "esp_separation_total": float(np.linalg.norm(difference)),
+        "echo_state_property": bool(np.linalg.norm(difference) < 1e-3 * max(initial, 1e-12)),
+        "degenerate_leading_pair": subspace.degenerate,
+    }
+
+
+def subspace_sweep(
+    matrix: sp.csr_matrix,
+    gains,
+    *,
+    leak: float = 0.4,
+    steps: int = 400,
+    dimension: int = 2,
+    input_indices: np.ndarray | None = None,
+    input_scale: float = 1.0,
+    seed: int = 0,
+    label: str = "isotropic",
+) -> dict:
+    """Run :func:`measure_subspace_dynamics` across a gain grid on one drive regime."""
+    radius = leading_eigenpairs(matrix, k=3)["estimate"]
+    normalised = normalize_spectral_radius(matrix, radius)
+    subspace = leading_subspace(normalised, dimension=dimension)
+    return {
+        "label": label,
+        "spectral_radius": radius,
+        "leading_eigenvalues": subspace.eigenvalues,
+        "degenerate_leading_pair": subspace.degenerate,
+        "drive": {
+            "neurons": int(len(input_indices) if input_indices is not None else matrix.shape[0]),
+            "input_scale": input_scale,
+        },
+        "leak": leak,
+        "steps": steps,
+        "sweep": [
+            measure_subspace_dynamics(
+                normalised,
+                subspace,
+                gain=gain,
+                leak=leak,
+                steps=steps,
+                input_indices=input_indices,
+                input_scale=input_scale,
+                seed=seed,
+            )
+            for gain in gains
+        ],
+    }

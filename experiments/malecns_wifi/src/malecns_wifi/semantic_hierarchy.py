@@ -371,3 +371,103 @@ def redundancy_differential(
             raise ValueError("parent arrays must be repeated to one row per fine chunk")
         columns.append(parent - child)
     return np.stack(columns, axis=1).astype(np.float32)
+
+
+@dataclass(frozen=True)
+class Meal:
+    """What the fly is fed: one amount, one flavour pattern.
+
+    The split is what makes the construction sign-free. ``amount`` is redundancy,
+    which closes the tap outside the relevant region. ``flavour`` carries the
+    relational contrasts and the signed chunk-against-parent differentials, so
+    inside the region the fly is told whether this passage explains the tag more
+    or less than the context containing it -- without anyone having to decide in
+    advance which direction is "good".
+    """
+
+    amount: np.ndarray
+    flavour: np.ndarray
+    scale_slices: tuple[tuple[int, int], ...]
+    differential_slice: tuple[int, int]
+    tau: float
+
+    @property
+    def contrast(self) -> np.ndarray:
+        """Alias so the gustatory projection takes a Meal unchanged."""
+        return self.flavour
+
+    @property
+    def intensity(self) -> np.ndarray:
+        """Alias so the gustatory projection takes a Meal unchanged."""
+        return self.amount
+
+
+def compose_meal(
+    child_plain: np.ndarray,
+    child_tagged: np.ndarray,
+    parents_plain,
+    parents_tagged,
+    *,
+    tau: float = 0.5,
+    normalise: bool = True,
+    amount_source: str = "chunk",
+) -> Meal:
+    """Build the frozen food signal from a multiscale chunk hierarchy.
+
+    ``amount``  = ``exp(-D_i / tau)``; ``flavour`` = ``[F_i^{s}...] ++ [A_i^{s}...]``.
+
+    ``amount_source`` picks what ``D`` measures, and the two readings are not
+    interchangeable:
+
+    * ``chunk`` (default) -- ``D_i = ||f(c_i + tag) - f(c_i)||``, the passage's own
+      contrast. This is "this passage already makes the tag redundant", which is
+      what the amount is supposed to mean.
+    * ``relational`` -- ``D_i = ||F_i||`` over the concatenated relation. Measures
+      how much the tag changes the chunk's *relation* to its contexts, which is a
+      different quantity and gates differently: on the redundancy corpus it scores
+      +0.12 against the annotated answer where ``chunk`` scores above +0.5, with
+      irrelevant text nearly as high as the answer. Kept because whether that
+      holds for a real encoder is unmeasured, not because it is equivalent.
+
+    ``A`` is appended signed and deliberately unnormalised against ``F``: its two
+    known weaknesses -- an encoder-dependent sign, and being a within-context
+    rather than global discriminator -- are both harmless here, because it never
+    decides how much food there is.
+    """
+    relational = relational_tag_contrast(
+        child_plain,
+        parents_plain,
+        child_tagged,
+        parents_tagged,
+        intensity="redundancy",
+        tau=tau,
+    )
+    differential = redundancy_differential(
+        child_plain, child_tagged, parents_plain, parents_tagged, normalise=normalise
+    )
+    if amount_source == "chunk":
+        distance = contrast_norm(child_plain, child_tagged, normalise=normalise)
+        amount = np.exp(-distance / np.float32(tau)).astype(np.float32)
+    elif amount_source == "relational":
+        amount = relational.intensity
+    else:
+        raise ValueError(f"unknown amount_source {amount_source!r}")
+
+    width = relational.contrast.shape[1]
+    flavour = np.concatenate([relational.contrast, differential], axis=1).astype(np.float32)
+    return Meal(
+        amount=amount,
+        flavour=flavour,
+        scale_slices=relational.scale_slices,
+        differential_slice=(width, width + differential.shape[1]),
+        tau=tau,
+    )
+
+
+def meal_direct_control_features(trajectory, meal: Meal) -> np.ndarray:
+    """Everything the fly is given, with no fly: ``[R_t, amount, flavour, dR_t]``."""
+    if trajectory.states.shape[0] != meal.flavour.shape[0]:
+        raise ValueError("trajectory and meal must share the time axis")
+    return np.concatenate(
+        [trajectory.states, meal.amount[:, None], meal.flavour, trajectory.deltas], axis=1
+    ).astype(np.float32)

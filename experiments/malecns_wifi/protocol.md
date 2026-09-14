@@ -228,8 +228,13 @@ On a synthetic corpus built with the redundancy effect, the point-biserial
 correlation with the annotated region is −0.89 for `norm`, −0.94 for `alignment`
 and +0.89 for `similarity`.
 
-**The relational formulation removes this problem.** Because the tag perturbs
-child and parent together, the redundancy inversion does not carry over. On a
+**The relational formulation weakens this problem; it does not remove it.**
+Because the tag perturbs child and parent together, the redundancy inversion does
+not carry over *in the construction below*. But polarity still depends on the
+encoder's geometry, and `A_i^s` is the proof: its sign flips according to whether
+a longer chunk's embedding concentrates the shared topic more than its
+constituents do, which is an encoder property. No sign is frozen anywhere in this
+protocol. On a
 synthetic hierarchy that places a topic-similar region and a role-changing region
 at different positions, so that no signal can be credited for both:
 
@@ -272,9 +277,28 @@ Two limits, both measured rather than assumed:
 * **`A` is a within-context discriminator, not a global marker.** Outside a
   relevant section both child and parent are equally unrelated to the tag, their
   contrasts cancel, and `A` sits near zero — *above* its value inside the section.
-  It must be read against the section it belongs to, or gated by absolute
-  redundancy. On the synthetic corpus it separates the answer from the rest of its
-  own section by 0.151 against absolute redundancy's 0.095.
+  On the synthetic corpus it separates the answer from the rest of its own section
+  by 0.151 against absolute redundancy's 0.095.
+
+**Both limits dissolve once `A` stops being an amount.** `A` is not used to decide
+how much food there is; it is part of the flavour, carried signed alongside the
+relational contrast. Redundancy closes the tap outside the relevant region, and
+inside it the signed `A` tells the fly whether this passage explains the tag more
+or less than the context containing it. No hypothesis about the sign is needed,
+and nothing has to hold globally.
+
+### Frozen main experiment
+
+    multiscale chunks -> R(c, p) -> F = R_tag - R -> { amount  = redundancy
+                                                       flavour = [F, A] } -> food circuit -> MaleCNS
+
+* **amount** `R_i = exp(-||F_i|| / tau)` — one scalar, "this passage already makes
+  the tag redundant". It gates where there is any food at all.
+* **flavour** `[F_i^{64->256}, F_i^{64->1024}, ..., A_i^{256}, A_i^{1024}, ...]` —
+  the relational contrasts at every scale, plus the signed chunk-against-parent
+  differentials. Projected onto the gustatory population as a pattern.
+
+The direct control receives exactly the same amount and flavour, with no fly.
 
 ### Four signals, each against every control
 
