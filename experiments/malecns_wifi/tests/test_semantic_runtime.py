@@ -32,8 +32,16 @@ def test_zero_food_matches_a_no_food_trajectory() -> None:
 
 
 def test_food_changes_the_readout_and_can_persist_through_recurrence() -> None:
-    semantic = np.zeros((4, 2), dtype=np.float32)
-    food = np.zeros((4, 2), dtype=np.float32)
+    """Food injected at step t reaches the readout at t+1, not at t.
+
+    The update reads the recurrent term from the *previous* state
+    (``matrix @ state`` before the drive is added), which is the convention used
+    throughout this package. A pulse on food neuron 2 is therefore visible on
+    neuron 4 one step later via W[4, 2], and on neuron 5 one step after that via
+    W[5, 4]. Five steps are needed to see the second hop.
+    """
+    semantic = np.zeros((5, 2), dtype=np.float32)
+    food = np.zeros((5, 2), dtype=np.float32)
     food[1, 0] = 1.0
 
     fed = run_semantic_food(
@@ -44,9 +52,10 @@ def test_food_changes_the_readout_and_can_persist_through_recurrence() -> None:
     )
 
     assert not np.allclose(fed.readout_states, unfed.readout_states)
-    assert fed.readout_states[1, 0] != pytest.approx(0.0)
+    assert fed.readout_states[1, 0] == pytest.approx(0.0), "same-step propagation would be a bug"
+    assert fed.readout_states[2, 0] != pytest.approx(0.0)
     # Node 4 feeds node 5, so the one-step food pulse leaves a later recurrent trace.
-    assert fed.readout_states[2, 1] != pytest.approx(0.0)
+    assert fed.readout_states[3, 1] != pytest.approx(0.0)
 
 
 def test_same_food_values_can_be_replayed_at_a_different_location() -> None:

@@ -168,3 +168,153 @@ def multiscale_semantic_trajectory(
         steps_per_transition=steps_per_transition,
         scale_slices=slices,
     )
+
+
+# --- food as a change in hierarchical relation -------------------------------
+#
+# The flat contrast E(text+tag) - E(text) asks "does this passage resemble the
+# tag". Differencing the *relations* instead asks something better posed:
+#
+#     F_i = R_i(text + tag) - R_i(text)
+#
+# "in what way does the presence of this tag change how this chunk sits inside
+# its local and global context". A passage can resemble the tag while playing the
+# same role it always played, and a passage can keep its wording while its role
+# inside the surrounding argument changes completely. Only the second is what a
+# tag boundary actually is.
+#
+# The tag is appended to every scale, child and parents alike, so both sides of
+# the relation are read in the tag's presence and the difference isolates the
+# change in relation rather than a change in what was embedded.
+
+
+@dataclass(frozen=True)
+class RelationalTagContrast:
+    """Change in multiscale relation caused by the tag.
+
+    Attribute names match :class:`TagContrast` on purpose: the gustatory
+    projection and the direct control take either formulation unchanged.
+    """
+
+    contrast: np.ndarray
+    intensity: np.ndarray
+    alignment_shift: np.ndarray
+    residual_shift: np.ndarray
+    scale_slices: tuple[tuple[int, int], ...]
+    intensity_mode: str
+
+    @property
+    def scales(self) -> int:
+        return len(self.scale_slices)
+
+
+def relational_tag_contrast(
+    child_plain: np.ndarray,
+    parents_plain,
+    child_tagged: np.ndarray,
+    parents_tagged,
+    *,
+    intensity: str = "norm",
+    tag_embedding: np.ndarray | None = None,
+) -> RelationalTagContrast:
+    """Difference the multiscale relations read with and without the tag.
+
+    ``parents_plain`` and ``parents_tagged`` are sequences of
+    ``[n_fine_chunks, dimensions]`` arrays, one per containing scale, exactly as
+    :func:`multiscale_relations` takes them.
+
+    Polarity is not assumed here either. The redundancy that makes ``||F||``
+    inverted for the flat contrast -- a passage already about the tag barely moves
+    when the tag is appended -- may or may not survive the relational form, since
+    the relation is a normalised geometric quantity and the tag perturbs child and
+    parent together. Measure it with :func:`intensity_polarity` against gold spans
+    using the real encoder before choosing a mode.
+
+    * ``norm``            -- ``||F_i||`` over the concatenated relation
+    * ``alignment_shift`` -- summed ``|delta a_i|`` across scales, i.e. how much
+      the tag changes the degree to which this chunk follows its contexts
+    * ``similarity``      -- ``<child_hat, tag_hat>``, the polarity-safe reference,
+      which ignores the relation entirely and needs ``tag_embedding``
+    """
+    plain, slices = multiscale_relations(child_plain, parents_plain)
+    tagged, tagged_slices = multiscale_relations(child_tagged, parents_tagged)
+    if slices != tagged_slices or plain.shape != tagged.shape:
+        raise ValueError("plain and tagged hierarchies must have the same scale structure")
+
+    contrast = (tagged - plain).astype(np.float32)
+    # Within each scale the relation vector is [alignment, residual...].
+    alignment_shift = np.stack([contrast[:, start] for start, _ in slices], axis=1)
+    residual_shift = np.stack(
+        [np.linalg.norm(contrast[:, start + 1 : end], axis=1) for start, end in slices], axis=1
+    ).astype(np.float32)
+
+    if intensity == "norm":
+        values = np.linalg.norm(contrast, axis=1)
+    elif intensity == "alignment_shift":
+        values = np.abs(alignment_shift).sum(axis=1)
+    elif intensity == "similarity":
+        if tag_embedding is None:
+            raise ValueError("similarity intensity needs tag_embedding")
+        tag = np.asarray(tag_embedding, dtype=np.float32).reshape(-1)
+        child = _unit(child_plain)
+        if tag.size != child.shape[1]:
+            raise ValueError("tag embedding must live in the same semantic space as the text")
+        values = child @ (tag / max(float(np.linalg.norm(tag)), 1e-12))
+    else:
+        raise ValueError(f"unknown intensity mode {intensity!r}")
+
+    return RelationalTagContrast(
+        contrast=contrast,
+        intensity=values.astype(np.float32),
+        alignment_shift=alignment_shift.astype(np.float32),
+        residual_shift=residual_shift,
+        scale_slices=slices,
+        intensity_mode=intensity,
+    )
+
+
+def per_scale_intensity(contrast: RelationalTagContrast) -> np.ndarray:
+    """``[chunks, scales]`` contrast magnitude, one column per context scale.
+
+    Says which context scale carries the signal: a tag boundary visible only
+    against the 4096-token parent is a different claim from one visible against
+    the 256-token parent, and averaging them hides exactly that.
+    """
+    return np.stack(
+        [np.linalg.norm(contrast.contrast[:, start:end], axis=1) for start, end in
+         contrast.scale_slices],
+        axis=1,
+    ).astype(np.float32)
+
+
+def interpolate_contrast(
+    contrast: RelationalTagContrast, *, steps_per_transition: int = 8
+) -> RelationalTagContrast:
+    """Put the contrast on the same interpolated time axis as the trajectory.
+
+    The relations are interpolated between adjacent chunks, so the food signal has
+    to be too, or the fly would receive a smooth semantic path alongside a
+    step-function taste.
+    """
+    path = interpolate_relations(
+        contrast.contrast,
+        steps_per_transition=steps_per_transition,
+        scale_slices=contrast.scale_slices,
+    )
+    intensity = interpolate_relations(
+        contrast.intensity[:, None], steps_per_transition=steps_per_transition
+    ).states[:, 0]
+    alignment = interpolate_relations(
+        contrast.alignment_shift, steps_per_transition=steps_per_transition
+    ).states
+    residual = interpolate_relations(
+        contrast.residual_shift, steps_per_transition=steps_per_transition
+    ).states
+    return RelationalTagContrast(
+        contrast=path.states,
+        intensity=intensity.astype(np.float32),
+        alignment_shift=alignment.astype(np.float32),
+        residual_shift=residual.astype(np.float32),
+        scale_slices=contrast.scale_slices,
+        intensity_mode=contrast.intensity_mode,
+    )

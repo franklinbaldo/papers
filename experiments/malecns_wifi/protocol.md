@@ -138,11 +138,26 @@ Only real modes are deflated. A complex pair spans a two-dimensional real invari
 subspace; removing its real part alone is not a projector and can make the spectral
 radius grow rather than shrink. Skipped modes are counted in the report.
 
-## Semantic tagging: food derived from the semantic space
+## Semantic tagging: food as a change in hierarchical relation
 
 The food signal is not a supervised pulse over an annotated span. It comes from
-the encoder itself, by asking what the tag *does* to the reading of the text so
-far:
+the encoder itself. The **primary formulation** differences the multiscale
+relations rather than the raw embeddings:
+
+    R_i      = [alignment, residual] of chunk i against each containing parent
+    F_i      = R_i(text + tag) - R_i(text)
+
+`F_i` is *in what way the presence of this tag changes how this chunk sits inside
+its local and global context* — not merely whether the passage resembles the tag.
+A passage can resemble the tag while playing the role it always played, and a
+passage can keep its wording while its role in the surrounding argument changes
+completely. Only the second is what a tag boundary is.
+
+The tag is appended at every scale, child and parents alike, so both sides of the
+relation are read in the tag's presence and the difference isolates the change in
+relation rather than a change in what was embedded.
+
+The flat version below is kept as the reference and the fallback:
 
     E_t     = f(text up to t)
     E_t^tag = f(text up to t + tag)
@@ -175,14 +190,37 @@ over the region being looked for.
 
 On a synthetic corpus built with the redundancy effect, the point-biserial
 correlation with the annotated region is −0.89 for `norm`, −0.94 for `alignment`
-and +0.89 for `similarity`. That construction assumes the effect it demonstrates,
-so it establishes that the failure mode is real, not that a given encoder shows
-it. The definition is chosen by running `intensity_polarity` against the gold
-spans with the actual encoder, before any training.
+and +0.89 for `similarity`.
+
+**The relational formulation removes this problem.** Because the tag perturbs
+child and parent together, the redundancy inversion does not carry over. On a
+synthetic hierarchy that places a topic-similar region and a role-changing region
+at different positions, so that no signal can be credited for both:
+
+| intensity | vs role change | vs topic similarity |
+|---|---|---|
+| `norm` (relational) | **+0.74** | −0.37 |
+| `alignment_shift` | **+0.80** | −0.25 |
+| `similarity` (flat) | −0.06 | **+0.75** |
+
+`norm` on the relation is positively correlated with role change, where `norm` on
+the flat contrast was inverted. `similarity` is blind to role change and tracks
+topic, which is the other question and is why it stays as a reference rather than
+the signal.
+
+Both constructions assume the effect they demonstrate, so they establish that the
+mechanisms are real and separable, not that a given encoder shows them. The
+definition is chosen by running `intensity_polarity` against gold spans with the
+actual encoder, before any training.
+
+Contrast magnitude is also reported **per context scale**: a boundary visible only
+against the 4096-token parent is a different claim from one visible against the
+256-token parent, and averaging the scales hides exactly that.
 
 ### Mandatory control
 
-A classifier receiving `[E_t, F_t, dE_t]` with no fly. If that already delimits
+A classifier receiving `[R_t, F_t, dR_t]` with no fly — the relational states,
+the relational contrast, and the motion, which is everything the fly is given. If that already delimits
 the region cleanly, the encoder solved the tagging and the connectome is
 decoration. The claim worth making is the connectome improving continuity, edge
 placement, or the temporal decision over a noisy signal — and it is only available
