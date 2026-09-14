@@ -1,3 +1,11 @@
+---
+type: "Protocol"
+title: "Fly-assisted standalone semantic tagger with hierarchical channels"
+description: "Parallel exploratory protocol: multi-encoder relational semantic channels feeding a standalone tagger, with MaleCNS present only during training as a decaying auxiliary loss."
+tags: [malecns, semantic-channels, tagging, auxiliary-loss, connectome]
+timestamp: 2026-09-14T20:00:00+00:00
+---
+
 # Alternative experiment: fly-assisted standalone semantic tagger
 
 Status: **parallel exploratory protocol**. This does not replace, reinterpret, or
