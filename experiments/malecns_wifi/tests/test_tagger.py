@@ -17,6 +17,7 @@ from malecns_wifi.tagger import (
     macro_f1,
     run_experiment,
     select_populations,
+    split_at_dispositivo,
 )
 
 # Wording taken from the hand-annotated resultado spans of the segmenter splits.
@@ -50,13 +51,19 @@ def test_weak_labeller_returns_none_when_nothing_matches() -> None:
 def _corpus_file(path: Path) -> Path:
     rows = [
         {
-            "text": "relatorio de um caso qualquer. ao final, JULGO PROCEDENTE o pedido.",
-            "label": [{"category": "resultado", "start": 40, "end": 56}],
+            "text": (
+                "relatorio de um caso qualquer. a parte pede improcedencia da reconvencao. "
+                "Ante o exposto, JULGO PROCEDENTE o pedido, condeno o reu nas custas."
+            ),
+            "label": [{"category": "resultado", "start": 90, "end": 106}],
             "info": {"doc_id": "d0"},
         },
         {
-            "text": "outro caso. dispositivo: JULGO IMPROCEDENTE o pedido inicial.",
-            "label": [{"category": "resultado", "start": 25, "end": 43}],
+            "text": (
+                "outro caso, com fundamentacao longa e citacao de procedencia alheia. "
+                "Diante do exposto, JULGO IMPROCEDENTE o pedido inicial."
+            ),
+            "label": [{"category": "resultado", "start": 87, "end": 105}],
             "info": {"doc_id": "d1"},
         },
     ]
@@ -64,21 +71,59 @@ def _corpus_file(path: Path) -> Path:
     return path
 
 
-def test_masking_removes_the_outcome_phrase_but_keeps_the_gold_label(tmp_path: Path) -> None:
+def test_truncation_removes_the_whole_dispositivo_neighbourhood(tmp_path: Path) -> None:
     source = _corpus_file(tmp_path / "corpus.jsonl")
-    masked = load_corpus(source, mask_resultado=True)
-    unmasked = load_corpus(source, mask_resultado=False)
+    truncated = load_corpus(source, truncate=True)
+    whole = load_corpus(source, truncate=False)
 
-    assert [d.gold for d in masked] == ["favourable", "unfavourable"]
-    assert [d.gold for d in unmasked] == ["favourable", "unfavourable"]
-    # The point of masking: the answer is no longer quoted in the text.
-    assert all(d.weak is None for d in masked)
-    assert [d.weak for d in unmasked] == ["favourable", "unfavourable"]
-    assert len(masked[0].text) == len(unmasked[0].text), "masking must not shift byte offsets"
+    assert [d.gold for d in truncated] == ["favourable", "unfavourable"]
+    # The label still comes from the dispositivo, which the model never sees.
+    assert [d.weak for d in truncated] == ["favourable", "unfavourable"]
+    for document in truncated:
+        lowered = document.text.lower()
+        assert "julgo" not in lowered
+        assert "custas" not in lowered, "cost clauses leak the outcome too"
+    assert all(len(t.text) < len(w.text) for t, w in zip(truncated, whole, strict=True))
+
+
+def test_split_takes_the_last_marker_not_the_first() -> None:
+    text = (
+        "o juizo de origem consignou: ante o exposto, julgo improcedente o pedido. "
+        "a apelante sustenta o contrario. Diante do exposto, dou provimento ao recurso."
+    )
+    body, dispositivo, _ = split_at_dispositivo(text)
+    assert "dou provimento" in dispositivo
+    assert "dou provimento" not in body
+    # The quoted lower-court ruling stays in the body, where it belongs.
+    assert "julgo improcedente" in body
+
+
+def test_split_rejects_a_document_with_no_dispositivo() -> None:
+    assert split_at_dispositivo("intime-se a parte para manifestar-se em 15 dias.") is None
+
+
+def test_documents_without_a_dispositivo_are_dropped_not_labelled(tmp_path: Path) -> None:
+    source = tmp_path / "mixed.jsonl"
+    source.write_text(
+        "\n".join(
+            json.dumps(row, ensure_ascii=False)
+            for row in (
+                {"text": "Intime-se. Cumpra-se. Arquive-se.", "info": {"doc_id": "despacho"}},
+                {
+                    "text": "fundamentacao. Ante o exposto, julgo improcedente o pedido.",
+                    "info": {"doc_id": "sentenca"},
+                },
+            )
+        ),
+        encoding="utf-8",
+    )
+    kept = load_corpus(source, truncate=True)
+    assert [d.doc_id for d in kept] == ["sentenca"]
+    assert kept[0].weak == "unfavourable"
 
 
 def test_label_noise_compares_weak_against_gold(tmp_path: Path) -> None:
-    documents = load_corpus(_corpus_file(tmp_path / "corpus.jsonl"), mask_resultado=False)
+    documents = load_corpus(_corpus_file(tmp_path / "corpus.jsonl"), truncate=True)
     noise = label_noise(documents)
     assert noise["gold_documents"] == 2
     assert noise["weak_accuracy"] == 1.0

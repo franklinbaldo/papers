@@ -32,15 +32,15 @@ def main() -> None:
     parser.add_argument(
         "--keep-resultado",
         action="store_true",
-        help="leave the dispositivo in the text. The outcome phrase is then quoted verbatim in "
-        "the document, so every model reads the answer off the page: use only as a plumbing "
-        "check, never as a result.",
+        help="do not truncate at the dispositivo. The ruling and its cost/sucumbencia clauses "
+        "are then in the text and every model reads the answer off the page: use only as a "
+        "plumbing check, never as a result.",
     )
     args = parser.parse_args()
 
-    mask = not args.keep_resultado
-    train = load_corpus(args.train, mask_resultado=mask)
-    evaluate = load_corpus(args.eval, mask_resultado=mask)
+    truncate = not args.keep_resultado
+    train = load_corpus(args.train, truncate=truncate)
+    evaluate = load_corpus(args.eval, truncate=truncate)
 
     spec = TaggerSpec(
         seeds=tuple(args.seeds),
@@ -55,7 +55,7 @@ def main() -> None:
         ),
     )
     report = run_experiment(args.graph, train, evaluate, spec)
-    report["masked_resultado"] = mask
+    report["truncated_at_dispositivo"] = truncate
     report["label_noise"] = {
         "train": label_noise(train),
         "eval": label_noise(evaluate),
@@ -63,7 +63,8 @@ def main() -> None:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 
-    print(f"masked dispositivo: {mask}   (unmasked runs are plumbing checks, not results)")
+    print(f"truncated at dispositivo: {truncate}   (untruncated runs are plumbing checks)")
+    print(f"documents kept: train {len(train)}, eval {len(evaluate)}")
     print(f"{'operator':<16}{'macro-F1':>10}{'stdev':>9}{'rec/in':>9}")
     for name, stats in report["summary"].items():
         if not name.startswith("malecns_minus_"):

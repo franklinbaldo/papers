@@ -64,6 +64,32 @@ _COMPILED_RULES = tuple((label, re.compile(pattern)) for label, pattern in WEAK_
 
 PAD_BYTE = 0
 
+# Openers of the dispositivo. Everything from here on is the ruling and its
+# consequences, and all of it leaks: "art. 487, I" against "art. 485", "condeno a
+# parte autora nas custas" against "condeno o reu", "sucumbencia reciproca" for a
+# split outcome. Masking only the outcome phrase leaves that whole neighbourhood
+# in place, which a character n-gram reads just as well.
+DISPOSITIVO_MARKERS: tuple[str, ...] = (
+    "ante o exposto",
+    "ante todo o exposto",
+    "ante o acima exposto",
+    "diante do exposto",
+    "diante de todo o exposto",
+    "isso posto",
+    "isto posto",
+    "posto isso",
+    "posto isto",
+    "pelo exposto",
+    "pelo acima exposto",
+    "do exposto",
+    "em face do exposto",
+    "face ao exposto",
+    "em face de todo o exposto",
+    "por todo o exposto",
+    "ex positis",
+    "assim posto",
+)
+
 
 @dataclass
 class Document:
@@ -71,11 +97,40 @@ class Document:
     text: str
     gold: str | None
     weak: str | None
+    dispositivo: str | None = None
+    cut_at: int | None = None
     resultado_spans: tuple[tuple[int, int], ...] = ()
 
     @property
     def label(self) -> str | None:
         return self.gold if self.gold is not None else self.weak
+
+
+def split_at_dispositivo(
+    text: str, *, resultado_spans: tuple[tuple[int, int], ...] = ()
+) -> tuple[str, str, int] | None:
+    """Split a decision into (body, dispositivo, cut index), or ``None`` if it has none.
+
+    The cut is at the *last* dispositivo marker: a decision quotes the wording of
+    the ruling under appeal long before it opens its own dispositivo, so the first
+    marker usually belongs to somebody else.
+
+    Documents with no marker are not truncated -- they are rejected. A text with no
+    dispositivo is not a decision with a hidden outcome; it is a procedural act,
+    and keeping it is how a scheduling order ends up labelled "parcialmente
+    procedente".
+    """
+    lowered = text.lower()
+    cut = -1
+    for marker in DISPOSITIVO_MARKERS:
+        cut = max(cut, lowered.rfind(marker))
+    if cut < 0 and resultado_spans:
+        # Hand-annotated corpora may state the outcome without an opener; the
+        # annotated span start is the same cut, taken from the annotation.
+        cut = min(start for start, _ in resultado_spans)
+    if cut <= 0:
+        return None
+    return text[:cut], text[cut:], cut
 
 
 def classify_text(text: str) -> str | None:
@@ -97,47 +152,70 @@ def classify_text(text: str) -> str | None:
     return None
 
 
-def load_corpus(path: Path, *, mask_resultado: bool = True) -> list[Document]:
-    """Read one segmenter-split JSONL file into documents.
+def build_document(
+    doc_id: str,
+    text: str,
+    *,
+    resultado_spans: tuple[tuple[int, int], ...] = (),
+    truncate: bool = True,
+) -> Document | None:
+    """One document, labelled from its isolated dispositivo and fed only its body.
 
-    When the file carries hand-annotated ``resultado`` spans they become the gold
-    label. ``mask_resultado`` then blanks those spans in the text, because the
-    outcome phrase is quoted verbatim in the document: left in place, every model
-    -- including a character n-gram -- reads the answer off the page and the task
-    measures nothing. Masked, the outcome has to be inferred from the report and
-    the reasoning, which is the task worth running a reservoir on.
+    The label comes from the extracted dispositivo alone, never from the whole
+    document. Labelling the whole text is what produced outcomes like
+    "parcialmente procedente" for an order that merely declined to schedule a
+    hearing: any outcome word anywhere -- in the report of the parties' claims, in
+    a quoted precedent -- could decide the label.
+
+    The model then sees only the body, so predicting the outcome means predicting
+    the dispositivo from the report and the reasoning. Whatever signal survives in
+    the reasoning is legitimate signal, not leakage.
     """
+    split = split_at_dispositivo(text, resultado_spans=resultado_spans)
+    if split is None:
+        return None if truncate else Document(doc_id, text, None, classify_text(text))
+    body, dispositivo, cut = split
+    gold = (
+        classify_text(" ".join(text[start:end] for start, end in resultado_spans))
+        if resultado_spans
+        else None
+    )
+    return Document(
+        doc_id=doc_id,
+        text=body if truncate else text,
+        gold=gold,
+        weak=classify_text(dispositivo),
+        dispositivo=dispositivo,
+        cut_at=cut,
+        resultado_spans=resultado_spans,
+    )
+
+
+def load_corpus(path: Path, *, truncate: bool = True) -> list[Document]:
+    """Read one segmenter-split JSONL file into truncated, dispositivo-labelled documents."""
     documents: list[Document] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for index, line in enumerate(path.read_text(encoding="utf-8").splitlines()):
         if not line.strip():
             continue
         record = json.loads(line)
-        text = record["text"]
         spans = tuple(
             (int(span["start"]), int(span["end"]))
             for span in record.get("label", [])
             if span.get("category") == "resultado"
         )
-        gold = classify_text(" ".join(text[start:end] for start, end in spans)) if spans else None
-        if mask_resultado and spans:
-            characters = list(text)
-            for start, end in spans:
-                characters[start:end] = " " * (end - start)
-            text = "".join(characters)
-        documents.append(
-            Document(
-                doc_id=record.get("info", {}).get("doc_id", f"doc{len(documents)}"),
-                text=text,
-                gold=gold,
-                weak=classify_text(text),
-                resultado_spans=spans,
-            )
+        document = build_document(
+            record.get("info", {}).get("doc_id", f"doc{index}"),
+            record["text"],
+            resultado_spans=spans,
+            truncate=truncate,
         )
+        if document is not None:
+            documents.append(document)
     return documents
 
 
 def label_noise(documents: list[Document]) -> dict:
-    """Agreement between the regex weak label and the hand-annotated gold label."""
+    """Agreement between the dispositivo regex label and the hand-annotated gold label."""
     paired = [d for d in documents if d.gold is not None]
     matched = sum(1 for d in paired if d.weak == d.gold)
     missing = sum(1 for d in paired if d.weak is None)
@@ -146,7 +224,11 @@ def label_noise(documents: list[Document]) -> dict:
         "weak_agrees_with_gold": matched,
         "weak_accuracy": matched / len(paired) if paired else 0.0,
         "weak_label_missing": missing,
-        "note": "measured on masked text, so it reflects the weak labeller without the dispositivo",
+        "note": (
+            "weak label read from the extracted dispositivo only; gold from the "
+            "hand-annotated resultado span. Documents with no dispositivo are dropped, "
+            "not labelled."
+        ),
     }
 
 

@@ -151,6 +151,7 @@ def compile_connectome(
 
     superclass = _neuron_attribute(annotations, "superclass", body_ids, keep, bodies)
     cell_class = _neuron_attribute(annotations, "class", body_ids, keep, bodies)
+    soma_side = _neuron_attribute(annotations, "somaSide", body_ids, keep, bodies)
 
     reader = ipc.RecordBatchFileReader(pa.memory_map(str(files["weights"]), "r"))
     rows: list[np.ndarray] = []
@@ -216,6 +217,7 @@ def compile_connectome(
         nt=nt,
         superclass=superclass,
         cell_class=cell_class,
+        soma_side=soma_side,
     )
 
     manifest = {

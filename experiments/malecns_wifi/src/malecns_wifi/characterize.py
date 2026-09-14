@@ -170,8 +170,10 @@ def random_esn(matrix: sp.csr_matrix, *, seed: int) -> tuple[sp.csr_matrix, dict
     rng = np.random.default_rng(seed)
     n = matrix.shape[0]
     nnz = matrix.nnz
-    rows = rng.integers(0, n, size=nnz, dtype=np.int64)
-    cols = rng.integers(0, n, size=nnz, dtype=np.int64)
+    # int32, not the default int64: at 10M edges each index array is 39MB rather
+    # than 82MB, and the CSR build would downcast them anyway.
+    rows = rng.integers(0, n, size=nnz, dtype=np.int32)
+    cols = rng.integers(0, n, size=nnz, dtype=np.int32)
     data = rng.permutation(matrix.data).astype(np.float32, copy=False)
     esn = sp.csr_matrix((data, (rows, cols)), shape=matrix.shape, dtype=np.float32)
     esn.sum_duplicates()

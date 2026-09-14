@@ -64,7 +64,7 @@ Gate 1 only shows the operator does not explode. This measurement asks a questio
 
     x <- (1 - leak) * x + leak * tanh(gain * W_hat x + w_in u)
 
-with `W_hat = W / rho(W)`, so `gain` *is* the spectral radius of the linear part. `rho` is estimated by the growth rate of the power iteration, `||W^k v||^(1/k)`, which converges to `|lambda_max|` even when the dominant eigenvalue is complex; the spread of the final ratios is reported so a non-converged estimate cannot be mistaken for a converged one.
+with `W_hat = W / rho(W)`, so `gain` *is* the spectral radius of the linear part. See "Operating point" below: on this operator that normalisation is measured to be the wrong one, and the task runs row-normalised instead. `rho` is estimated by the growth rate of the power iteration, `||W^k v||^(1/k)`, which converges to `|lambda_max|` even when the dominant eigenvalue is complex; the spread of the final ratios is reported so a non-converged estimate cannot be mistaken for a converged one.
 
 Normalising by the largest absolute row sum — the Gershgorin bound used by the Gate 1 smoke — is rejected here: it guarantees contraction but scales the whole operator by its single worst hub.
 
@@ -92,11 +92,44 @@ This measurement is task-free and makes **no** claim about downstream accuracy:
 
 A clean negative here is an acceptable and publishable outcome. A negative with several live alternative explanations is not, which is why the confound checks above run on every cell of the grid.
 
+## Operating point — measured, not assumed
+
+Scaling by `0.95 / rho` was the plan and is measurably wrong for this operator.
+
+    rho (ARPACK)                 3776.27
+    typical ||Wv|| / ||v||        149.86
+    spectral concentration         24.79      (= 1 for an i.i.d. random matrix)
+
+The spectral radius is set by one structured mode roughly 25x above the bulk, so
+`0.95 / rho` leaves the typical gain at **0.038** and the recurrent drive at 0.9%
+of the input drive: the topology is not in the loop at all. Raising the gain until
+the bulk is live puts the dominant mode at ~24, far outside the echo state
+property. For this operator a live bulk and gain-by-spectral-radius are mutually
+exclusive.
+
+Per-row normalisation by postsynaptic in-strength — each row divided by its own
+in-strength, which is *not* the single max-row-sum scalar rejected above — drops
+the concentration from 24.8 to 3.4 (`rho` = 1.000, typical 0.295). That is the
+operating point the task uses, and it is what the 512-node v1/v2 tagger used when
+it produced a working reservoir.
+
+The two leading eigenvalues are near-degenerate (3776.27 and 3718.80) because they
+are the symmetric and antisymmetric combination of two hemisphere-local modes:
+`v1 + v2` carries 94.4% of its energy on the left soma side and `v1 - v2` 94.4% on
+the right. The 1.5% splitting is the cross-hemisphere coupling strength. This is
+why power iteration converges slowly here (as `(lambda_2/lambda_1)^k`), and it
+means that under `rho` normalisation the two slowest modes are "which hemisphere
+is ringing" rather than anything computational.
+
 ## Gate 2 — document-level task on the whole brain
 
 After Gates 0 and 1, all conditions receive the **same frozen byte stream**, the same split, and the same fixed random input projection.
 
-Primary task: document-level outcome classification of judicial decisions (`procedente` / `improcedente` / `parcial`, collapsed to binary if the weak label will not support three classes). The reservoir reads the whole decision byte by byte; the readout pools the descending-neuron state (final step and temporal mean).
+Primary task: predict the dispositivo of a judicial decision from its report and reasoning alone (`favourable` / `unfavourable` / `partial`). The reservoir reads the truncated decision byte by byte; the readout pools the descending-neuron state (final step and temporal mean).
+
+**Truncation, not masking.** Each document is cut at its last dispositivo marker ("Ante o exposto", "Diante do exposto", "Isso posto", "Pelo exposto", ...) and only the text before the cut is fed to any model, the character n-gram baseline included. Masking just the outcome phrase is not enough: the whole neighbourhood leaks — `art. 487, I` against `art. 485`, "condeno a parte autora nas custas" against "condeno o réu", "sucumbência recíproca" for a split outcome — and a character n-gram reads that as easily as it reads the phrase. The *last* marker is used because a decision quotes the ruling under appeal long before it opens its own dispositivo. What survives in the reasoning is legitimate signal, not leakage, and predicting the dispositivo from it is the long-range task the recurrence is supposed to be for.
+
+**Labelling from the isolated dispositivo.** The label is read from the extracted dispositivo alone, never from the whole document. Labelling whole documents is what produced outcomes like "parcialmente procedente" for an order that merely declined to schedule a hearing: any outcome word anywhere — in the report of the parties' claims, in a quoted precedent — could decide the label. A document with no dispositivo marker is *dropped, not labelled*: a text with no dispositivo is not a decision with a hidden outcome, it is a procedural act. On the 17 hand-annotated documents this labeller reproduces the human label 17/17.
 
 Input and readout are anchored by cell type rather than by degree: bytes enter through `cb_sensory` and `ol_sensory`, and the readout is the 1,314 descending neurons. A second readout over a random 5k-neuron sample is reported as a comparison only if the descending readout is degenerate.
 
@@ -123,7 +156,7 @@ Fixed before the first full run:
 
 - Split by period or by court, never by randomly mixing documents.
 - The segmenter `test.jsonl` stays untouched; all selection happens on validation.
-- Weak regex labels are measured against the 17 hand-annotated gold documents, and the measured label noise is reported alongside every accuracy number.
+- Weak regex labels are measured against the hand-annotated gold documents, and the measured label noise is reported alongside every accuracy number. Where the regex abstains or conflicts with a second labeller, the tie is broken by an LLM reading *only the extracted dispositivo*, never the whole document; a stratified sample is checked by hand so the noise figure has an attribution rather than just a bound.
 - Report macro-F1 plus the per-class confusion, parameter counts and wall-clock inference cost for each condition.
 - Do not call a result a MaleCNS advantage unless the true topology beats both nulls on held-out data.
 
