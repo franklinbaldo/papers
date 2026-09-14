@@ -1,5 +1,5 @@
 ---
-type: "Experiment Protocol"
+type: "Protocol"
 title: "Cached Semantic Tile Pyramid with Low-Level Flavourizers"
 description: "Pre-registered variation testing whether dense low-level semantic channels and reusable cached embeddings improve tag localisation, with and without MaleCNS-assisted training."
 tags: [malecns, semantic-tagging, flavourizer, multiscale, cache, preregistration]
