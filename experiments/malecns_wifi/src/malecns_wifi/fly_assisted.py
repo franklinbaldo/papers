@@ -58,9 +58,7 @@ class FlyAssistSpec:
         if max_epochs <= 0:
             raise ValueError("max_epochs must be positive")
         cutoff = max(1, int(np.ceil(max_epochs * self.assist_fraction)))
-        if epoch >= cutoff:
-            return 0.0
-        if cutoff == 1:
+        if epoch >= cutoff or cutoff == 1:
             return 0.0
         return float(self.assist_weight * (1.0 - epoch / (cutoff - 1)))
 
@@ -76,12 +74,19 @@ def _torch():
     return torch
 
 
-def make_model(input_dim: int, tag_count: int, taste_dim: int, spec: FlyAssistSpec):
+def make_model(
+    input_dim: int,
+    tag_count: int,
+    fly_readout_dim: int,
+    flavour_dim: int,
+    spec: FlyAssistSpec,
+):
     """Create the shared final tagger plus its disposable taste head.
 
-    The up-projection starts at zero, so every arm begins as the identity
-    transformation and differences cannot be blamed on a different initial
-    semantic representation.
+    ``fly_readout_dim`` is the number of neurons/features read from the substrate;
+    ``flavour_dim`` is the food-code width. They are intentionally independent.
+    The residual up-projection starts at zero, so every arm begins with exactly the
+    same semantic representation.
     """
     torch = _torch()
     nn = torch.nn
@@ -92,7 +97,7 @@ def make_model(input_dim: int, tag_count: int, taste_dim: int, spec: FlyAssistSp
             self.down = nn.Linear(input_dim, spec.rank, bias=False)
             self.up = nn.Linear(spec.rank, input_dim, bias=False)
             self.tag_head = nn.Linear(input_dim, tag_count)
-            self.taste_head = nn.Linear(taste_dim, taste_dim)
+            self.taste_head = nn.Linear(fly_readout_dim, flavour_dim)
             nn.init.zeros_(self.up.weight)
 
         def transform(self, features):
@@ -142,14 +147,10 @@ def semantic_reservoir_states(
 ):
     """Run a differentiable semantic trajectory through a frozen sparse operator.
 
-    Drive RMS is matched *inside each training document* after the flavourizer.
-    That matters here because a trainable upstream map could otherwise improve the
-    auxiliary loss merely by increasing current. Normalising the semantic rows and
-    re-scaling the realised projection makes the flavourizer change direction, not
-    volume.
-
-    Returns one readout state per original chunk plus the realised drive RMS.
-    The sparse operator is a tensor/buffer, never a parameter.
+    Drive RMS is matched inside each training document *after* the flavourizer.
+    A trainable upstream map therefore cannot improve the auxiliary loss merely by
+    increasing current: it must change the direction/geometry of the semantic
+    stream. The sparse operator is a tensor/buffer, never a parameter.
     """
     torch = _torch()
     features = unit_rows_torch(transformed)
@@ -165,8 +166,8 @@ def semantic_reservoir_states(
         drive = torch.zeros_like(state).index_add(0, input_indices, projected[:, step])
         pre = torch.sparse.mm(operator, state[:, None]).squeeze(1) * spec.gain + drive
         state = (1.0 - spec.leak) * state + spec.leak * torch.tanh(pre)
-        # Path positions 0, steps, 2*steps, ... are the last state for each
-        # original chunk. This mirrors the CPU Run-1 alignment exactly.
+        # Path positions 0, steps, 2*steps, ... are the final state for each
+        # original chunk, matching the CPU Run-1 alignment.
         if step == 0 or step % spec.steps_per_chunk == 0:
             outputs.append(state[readout_indices])
 
@@ -176,7 +177,7 @@ def semantic_reservoir_states(
 
 
 def food_target_torch(tag_masks, flavours):
-    """Training-only food target: overlap is a mixture of tag flavours."""
+    """Training-only food target: overlaps are mixtures of tag flavours."""
     return tag_masks @ flavours
 
 
@@ -193,11 +194,11 @@ def training_loss(
     readout_indices=None,
     flavours=None,
 ):
-    """Compute standalone tag loss plus optional fly-teacher loss.
+    """Standalone tag loss plus an optional disposable fly-teacher loss.
 
     The returned main logits never depend on the reservoir branch. When
-    ``assist_lambda == 0`` the branch is skipped entirely, which makes the final
-    phase of training identical to deployment.
+    ``assist_lambda == 0`` the branch is skipped entirely, so the final phase of
+    training is architecturally identical to deployment.
     """
     torch = _torch()
     transformed, residual = model.transform(features)
@@ -230,9 +231,6 @@ def training_loss(
             readout_indices=readout_indices,
             spec=spec,
         )
-        # A disposable linear map turns the chosen fly state into the same flavour
-        # space used by the food target. The flavourizer receives this gradient
-        # through the frozen recurrence; the taste head is thrown away later.
         if states.shape[1] != model.taste_head.in_features:
             raise ValueError(
                 f"taste head expects {model.taste_head.in_features} fly features, "
@@ -240,6 +238,11 @@ def training_loss(
             )
         predicted_taste = model.taste_head(states)
         targets = food_target_torch(tag_masks, flavours)
+        if targets.shape[1] != model.taste_head.out_features:
+            raise ValueError(
+                f"taste head emits {model.taste_head.out_features} flavour dims, "
+                f"target has {targets.shape[1]}"
+            )
         fly_loss = torch.nn.functional.mse_loss(predicted_taste, targets)
         total = total + float(assist_lambda) * fly_loss
 
