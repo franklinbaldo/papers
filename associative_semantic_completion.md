@@ -13,7 +13,7 @@ status: "pre-registered design; no confirmatory results yet"
 
 Dense multiresolution semantic representations are attractive for precise span tagging but expensive if every scale must be re-embedded at every position. We study a complementary architecture in which the live representation is sparse in measurement and approximately dense through associative memory. A cheap local or seen-prefix embedding acts as a retrieval key; previously observed expensive coarse channels attached to semantically similar keys are reused as provisional values. Low-confidence retrieval triggers the real expensive encoder, turning semantic memory into a cost-saving hypothesis mechanism rather than a source of fabricated certainty.
 
-The central question is not whether nearest-neighbour retrieval can approximate embeddings in the abstract. It is whether a leakage-safe associative completion layer can retain most of the tagging value of a fully observed semantic pyramid while avoiding a substantial fraction of expensive encoder calls.
+The central question is not whether nearest-neighbour retrieval can approximate embeddings in the abstract. It is whether a leakage-safe associative completion layer can retain most of the tagging value of a fully observed semantic pyramid while avoiding a substantial fraction of expensive encoder calls. We additionally test a domain-level mechanism prediction: structurally repetitive corpora should expose denser cross-document semantic memory and therefore permit more aggressive skipping of expensive observations at the same quality floor.
 
 ## Core idea
 
@@ -55,11 +55,17 @@ Associative completion answers: "have I seen a cheap semantic state like this be
 
 The first is exact reuse. The second is prediction from experience. They have different correctness and leakage rules and are measured separately.
 
-## Why it may work
+## Why formulaic corpora are the target, not a caveat
 
-Many domains, especially structured legal text, revisit similar local semantic states inside recurring larger contexts. A short fragment such as a procedural transition, citation pattern, report formula or dispositive marker may strongly constrain the kind of section surrounding it even when the exact larger text is new.
+Many high-volume text domains are deliberately repetitive: judicial decisions, contracts, medical records, insurance claims, filings and procurement documents use recurring semantic states and recurring larger structures. That is exactly the regime in which repeated expensive observation is most plausibly avoidable.
 
-This does not imply every local state determines its context. Semantic collisions and genuinely novel states are expected. The architecture gains value only if confidence separates recoverable cases from cases that need a real observation.
+The paper therefore makes an applicability prediction rather than apologizing for a favourable corpus:
+
+> **At a fixed quality floor, the fraction of expensive encoder calls that associative completion can avoid should increase with the corpus's structural/semantic repetitiveness.**
+
+We preregister two descriptive statistics. `F_sem` is label-free cross-document semantic neighbourability: for each cheap query key, find its closest admissible key from another document and summarize the cosine distribution (mean, median, lower-tail quantile and coverage over a frozen confidence grid). `F_struct`, where annotations exist, measures how concentrated recurring structural tags are in relative document position using normalized entropy.
+
+A single TJRO corpus cannot prove the cross-domain relationship. Its role is to report the local point `(formulaicity, savings, quality retention)`. The stronger mechanism claim is reserved for a future multi-genre study: if corpora with higher `F_sem`/`F_struct` do not systematically support more skipped expensive observations at the same quality floor, then the proposed explanation for when associative completion pays is wrong even if the method remains useful locally.
 
 ## Experimental decomposition
 
@@ -74,6 +80,14 @@ The governing protocol compares:
 - confidence-gated associative completion with real fallback.
 
 The primary result is joint: held-out tagging quality and measured embedding cost. A method that preserves quality but saves no expensive calls is not a systems win; a method that saves calls by degrading tagging is not a semantic win.
+
+## Confidence is a selected policy, not an oracle
+
+The fallback threshold `tau` determines how much real observation is purchased and is therefore a hyperparameter, not a descriptive statistic. It is selected strictly inside each outer training fold together with the other frozen retrieval choices such as `k` and top-k temperature.
+
+Selection is lexicographic. Inner-validation candidates must first satisfy the paper's quality floor relative to the real pyramid (at least 90% of its macroAP and within 0.03 absolute macroAP). Among those, the policy that avoids the most expensive calls wins; ties prefer higher macroAP and then more conservative fallback. If no candidate reaches the quality floor, selection falls back to the highest inner-validation macroAP and the failure to enter the economic regime is reported.
+
+Thus the held-out document never participates in deciding how much uncertainty is acceptable, and the final output reports `selected_by_fold` rather than a globally tuned confidence threshold.
 
 ## Causality and leakage
 
@@ -102,4 +116,6 @@ Retrieved channels are not treated as truth. They are remembered hypotheses abou
 
 A positive result would support a narrow claim: on this corpus and frozen key/value schemas, associative semantic memory recovers enough missing multiscale information to preserve tagging quality while reducing measured expensive embedding work.
 
-It would not establish that coarse embeddings are generally predictable from short text, that retrieval replaces long-context encoders, or that memory can safely use future context from the document being evaluated.
+A broader applicability claim requires independent corpora: the preregistered prediction is that formulaicity statistics predict the savings/quality frontier across genres. That prediction is separately falsifiable from whether TJRO itself yields a systems win.
+
+The result would not establish that coarse embeddings are generally predictable from short text, that retrieval replaces long-context encoders, or that memory can safely use future context from the document being evaluated.
