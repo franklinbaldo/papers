@@ -1,0 +1,19 @@
+[project]
+name = "malecns-visual-attractor-experiment"
+version = "0.1.0"
+description = "Closed-loop MaleCNS visual-attractor experiments with distance curriculum and matched swarm controls."
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2",
+  "pyarrow>=18",
+  "scipy>=1.14",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+gpu = ["torch>=2.4"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+pythonpath = ["src"]
