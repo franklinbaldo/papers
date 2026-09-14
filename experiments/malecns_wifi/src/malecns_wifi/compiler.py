@@ -241,7 +241,25 @@ def compile_connectome(
             "neurons_by_sign": {
                 "excitatory": int((sign > 0).sum()),
                 "inhibitory": int((sign < 0).sum()),
-                "silent": int((sign == 0).sum()),
+                # "zero_sign" is a transmitter-policy fact (DA/OA/5-HT/unclear/unknown),
+                # not a wiring fact: these neurons still receive edges. Wiring silence is
+                # counted separately below.
+                "zero_sign": int((sign == 0).sum()),
+            },
+            "neurons_by_connectivity": {
+                "no_incoming": int((np.diff(matrix.indptr) == 0).sum()),
+                "no_outgoing": int(n - np.unique(matrix.indices).size),
+                "isolated": int(
+                    np.setdiff1d(
+                        np.flatnonzero(np.diff(matrix.indptr) == 0),
+                        np.unique(matrix.indices),
+                        assume_unique=False,
+                    ).size
+                ),
+                "note": (
+                    "Counted on the compiled operator. Disconnected neurons are kept so that "
+                    "row indices stay stable against bodies/sign/superclass."
+                ),
             },
             "orientation": "W[post, pre]",
             "dtype": "float32",
