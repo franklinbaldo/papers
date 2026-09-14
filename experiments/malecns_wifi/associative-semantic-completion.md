@@ -184,6 +184,8 @@ coverage(c)  = fraction(m_i >= c) over a frozen confidence grid
 
 `F_sem` is label-free and requires no expensive target channel. It measures whether the cheap semantic states themselves recur across documents.
 
+Because nearest-neighbour confidence can be inflated by a few generic memory hubs, also report the distribution of which memory records win top-1 retrieval: top-1 winner concentration, unique-winner fraction, and the share of queries served by the most-used 1% of memory items. High `F_sem` with extreme hub concentration is not interpreted as healthy formulaicity.
+
 ### F_struct — annotated structural regularity
 
 Where span/section annotations exist, report a secondary structural statistic from the relative-position distributions of recurring tags. For tag `j`, bin its normalized start position into a frozen number of bins, compute normalized entropy `H_j / log(B)`, and define:
@@ -237,6 +239,7 @@ Systems value:
 Applicability diagnostics:
 
 - `F_sem_mean`, `F_sem_median`, `F_sem_q10` and frozen-threshold semantic coverage curve;
+- top-1 hub concentration / unique-winner fraction;
 - `F_struct` when structural annotations exist;
 - retrieval hit/fallback rate by target scale;
 - savings and quality-retention frontier conditioned on the formulaicity statistics.
