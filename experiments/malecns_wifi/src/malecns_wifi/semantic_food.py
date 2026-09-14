@@ -307,8 +307,9 @@ def tag_contrast(
     tagged: np.ndarray,
     tag_embedding: np.ndarray,
     *,
-    intensity: str = "similarity",
+    intensity: str = "redundancy",
     normalise: bool = True,
+    tau: float = 0.5,
 ) -> TagContrast:
     """Contrast between reading the text with and without the tag appended.
 
@@ -316,20 +317,30 @@ def tag_contrast(
     contrast is a movement on the sphere and is comparable across positions rather
     than tracking encoder magnitude.
 
-    Three intensity definitions are offered because their polarity is not the
-    same, and two of them are probably backwards. If the text is already about the
-    tag, appending the tag is redundant and moves the embedding very little, so
-    ``norm`` and ``alignment`` are expected to be *largest where the text is least
-    related* -- inverting the intended "this passage starts to taste like the
-    tag". ``similarity``, the plain cosine between text and tag, has the intended
-    polarity by construction. Which one actually tracks annotated spans is an
-    empirical question: measure it with :func:`intensity_polarity` on gold
-    documents before choosing, and do not assume the sign.
+    The polarity of these definitions is not the same, and the raw contrast is
+    expected to be inverted: if the text is already about the tag, appending the
+    tag is redundant and moves the embedding very little, so ``norm`` and
+    ``alignment`` should be *largest where the text is least related*.
 
-    * ``norm``       -- ``||F_t||``
-    * ``alignment``  -- ``<F_t, tag_hat>``
-    * ``similarity`` -- ``<E_t_hat, tag_hat>`` (default)
+    The answer to that is not to abandon the contrast for a plain text-tag cosine,
+    which throws away the tag-conditioning that makes this interesting and reduces
+    the whole construction back to similarity search. If the encoder confirms the
+    redundancy effect, then **food is semantic redundancy**: a passage tastes of
+    the tag precisely when the tag adds nothing to it. ``redundancy`` is that
+    reading, ``exp(-||F_t|| / tau)``, and it is the default. The direction of
+    ``F_t`` remains the flavour either way.
+
+    * ``redundancy`` -- ``exp(-||F_t|| / tau)`` (default): relevance as redundancy
+    * ``norm``       -- ``||F_t||``: the raw contrast, expected inverted
+    * ``alignment``  -- ``<F_t, tag_hat>``: expected inverted
+    * ``similarity`` -- ``<E_t_hat, tag_hat>``: trivial control, no tag conditioning
+
+    Which one tracks annotated spans is empirical: measure it with
+    :func:`intensity_polarity` on gold documents with the real encoder before
+    choosing, and do not assume the sign.
     """
+    if tau <= 0:
+        raise ValueError("tau must be positive")
     left = np.asarray(plain, dtype=np.float32)
     right = np.asarray(tagged, dtype=np.float32)
     if left.ndim != 2 or left.shape != right.shape:
@@ -344,7 +355,9 @@ def tag_contrast(
     tag_hat = tag / max(float(np.linalg.norm(tag)), 1e-12)
 
     contrast = (right - left).astype(np.float32)
-    if intensity == "norm":
+    if intensity == "redundancy":
+        values = np.exp(-np.linalg.norm(contrast, axis=1) / np.float32(tau))
+    elif intensity == "norm":
         values = np.linalg.norm(contrast, axis=1)
     elif intensity == "alignment":
         values = contrast @ tag_hat

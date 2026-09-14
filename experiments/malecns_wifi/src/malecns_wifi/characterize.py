@@ -639,3 +639,127 @@ def summary_table(report: dict) -> str:
                 f"{'yes' if entry['echo_state_property'] else 'no':>5}"
             )
     return "\n".join(lines)
+
+
+@dataclass(frozen=True)
+class ModeLoading:
+    """How much of the state sits in the leading modes, and whether they clamp."""
+
+    projections: np.ndarray
+    mass_weighted_saturation: np.ndarray
+    mode_saturation: np.ndarray
+    echo_state_separation: float
+    echo_state_property: bool
+    eigenvalues: list
+
+
+def measure_mode_loading(
+    operator,
+    leading,
+    *,
+    gain: float,
+    leak: float = 0.4,
+    steps: int = 600,
+    input_indices: np.ndarray | None = None,
+    input_scale: float = 1.0,
+    seed: int = 0,
+) -> ModeLoading:
+    """Drive the operator and watch the leading modes directly.
+
+    ``sat_all`` answers "is any of the brain clamped", which is not the question
+    the hemispheric-mode hypothesis asks. This projects the state onto each
+    leading right eigenvector, ``v_k^T x_t``, and weights saturation by the mass
+    each mode carries, so "the two slow modes are the thing that clamps" becomes
+    checkable rather than inferred from a global fraction.
+
+    ``leading`` is the dict from :func:`leading_eigenpairs` on the *same*
+    normalised operator that ``gain`` multiplies.
+    """
+    rng = np.random.default_rng(seed)
+    n = operator.shape[0]
+    modes = np.real(leading["right"]).astype(np.float32)
+    modes = modes / np.maximum(np.linalg.norm(modes, axis=0, keepdims=True), 1e-12)
+
+    if input_indices is None:
+        input_indices = np.arange(n)
+    weights = np.zeros(n, dtype=np.float32)
+    weights[input_indices] = rng.normal(size=len(input_indices)).astype(np.float32) * input_scale
+
+    # Two trajectories from different starts, same input: the echo state check.
+    state = np.zeros((n, 2), dtype=np.float32)
+    state[:, 1] = rng.uniform(-0.5, 0.5, size=n).astype(np.float32)
+    initial = float(np.linalg.norm(state[:, 1]))
+
+    projections = np.empty((steps, modes.shape[1]), dtype=np.float32)
+    weighted = np.zeros(modes.shape[1], dtype=np.float64)
+
+    for step in range(steps):
+        drive = weights[:, None] * np.float32(rng.uniform(-1.0, 1.0))
+        pre = (operator @ state) * np.float32(gain) + drive
+        state = ((1.0 - leak) * state + leak * np.tanh(pre)).astype(np.float32, copy=False)
+
+        primary = state[:, 0]
+        projections[step] = modes.T @ primary
+        clamped = np.abs(primary) > 0.99
+        # Saturation as each mode sees it: the share of that mode's own mass that
+        # is pinned, rather than the share of all 165k neurons.
+        mass = modes**2
+        weighted += (mass[clamped].sum(axis=0) / np.maximum(mass.sum(axis=0), 1e-12)).astype(
+            np.float64
+        )
+
+    separation = float(np.linalg.norm(state[:, 0] - state[:, 1]))
+    return ModeLoading(
+        projections=projections,
+        mass_weighted_saturation=(weighted / max(steps, 1)).astype(np.float32),
+        mode_saturation=np.abs(projections).max(axis=0).astype(np.float32),
+        echo_state_separation=separation,
+        echo_state_property=bool(separation < 1e-3 * max(initial, 1e-12)),
+        eigenvalues=[[complex(v).real, complex(v).imag] for v in leading["eigenvalues"]],
+    )
+
+
+def mode_loading_sweep(
+    matrix: sp.csr_matrix,
+    gains,
+    *,
+    leak: float = 0.4,
+    steps: int = 600,
+    modes: int = 3,
+    seed: int = 0,
+) -> dict:
+    """Mode loading, mass-weighted saturation and ESP across a gain grid.
+
+    The operator is normalised to unit spectral radius once, so ``gain`` is the
+    spectral radius of the linear part and the grid is directly comparable with
+    the task-side gain grid.
+    """
+    leading = leading_eigenpairs(matrix, k=max(modes, 3))
+    normalised = normalize_spectral_radius(matrix, leading["estimate"])
+    unit = leading_eigenpairs(normalised, k=max(modes, 3))
+
+    rows = []
+    for gain in gains:
+        loading = measure_mode_loading(
+            normalised, unit, gain=gain, leak=leak, steps=steps, seed=seed
+        )
+        rows.append(
+            {
+                "gain": float(gain),
+                "mode_rms": [float(x) for x in np.sqrt((loading.projections**2).mean(axis=0))],
+                "mode_peak": [float(x) for x in loading.mode_saturation],
+                "mass_weighted_saturation": [float(x) for x in loading.mass_weighted_saturation],
+                "echo_state_separation": loading.echo_state_separation,
+                "echo_state_property": loading.echo_state_property,
+            }
+        )
+    return {
+        "spectral_radius": leading["estimate"],
+        "eigenvalues": [[complex(v).real, complex(v).imag] for v in leading["eigenvalues"]],
+        "degeneracy_ratio": (
+            abs(leading["eigenvalues"][1]) / leading["estimate"] if leading["estimate"] else 0.0
+        ),
+        "leak": leak,
+        "steps": steps,
+        "sweep": rows,
+    }

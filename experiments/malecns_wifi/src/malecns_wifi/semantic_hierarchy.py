@@ -216,6 +216,7 @@ def relational_tag_contrast(
     *,
     intensity: str = "norm",
     tag_embedding: np.ndarray | None = None,
+    tau: float = 0.5,
 ) -> RelationalTagContrast:
     """Difference the multiscale relations read with and without the tag.
 
@@ -233,8 +234,10 @@ def relational_tag_contrast(
     * ``norm``            -- ``||F_i||`` over the concatenated relation
     * ``alignment_shift`` -- summed ``|delta a_i|`` across scales, i.e. how much
       the tag changes the degree to which this chunk follows its contexts
-    * ``similarity``      -- ``<child_hat, tag_hat>``, the polarity-safe reference,
-      which ignores the relation entirely and needs ``tag_embedding``
+    * ``similarity``      -- ``<child_hat, tag_hat>``, the trivial reference, which
+      ignores the relation entirely and needs ``tag_embedding``
+    * ``redundancy``      -- ``exp(-||F_i|| / tau)``: relevance read as the tag
+      adding nothing to this chunk's relation to its contexts
     """
     plain, slices = multiscale_relations(child_plain, parents_plain)
     tagged, tagged_slices = multiscale_relations(child_tagged, parents_tagged)
@@ -250,6 +253,10 @@ def relational_tag_contrast(
 
     if intensity == "norm":
         values = np.linalg.norm(contrast, axis=1)
+    elif intensity == "redundancy":
+        if tau <= 0:
+            raise ValueError("tau must be positive")
+        values = np.exp(-np.linalg.norm(contrast, axis=1) / np.float32(tau))
     elif intensity == "alignment_shift":
         values = np.abs(alignment_shift).sum(axis=1)
     elif intensity == "similarity":
@@ -318,3 +325,49 @@ def interpolate_contrast(
         scale_slices=contrast.scale_slices,
         intensity_mode=contrast.intensity_mode,
     )
+
+
+def contrast_norm(plain: np.ndarray, tagged: np.ndarray, *, normalise: bool = True) -> np.ndarray:
+    """``D(x) = ||f(x + tag) - f(x)||`` for a sequence of chunks at one granularity."""
+    left = _unit(plain) if normalise else np.asarray(plain, dtype=np.float32)
+    right = _unit(tagged) if normalise else np.asarray(tagged, dtype=np.float32)
+    if left.shape != right.shape:
+        raise ValueError("plain and tagged embeddings must share shape")
+    return np.linalg.norm(right - left, axis=1).astype(np.float32)
+
+
+def redundancy_differential(
+    child_plain: np.ndarray,
+    child_tagged: np.ndarray,
+    parents_plain,
+    parents_tagged,
+    *,
+    normalise: bool = True,
+) -> np.ndarray:
+    """``A_i^s = D(p_i^s) - D(c_i)``: does this chunk explain the tag better than its context?
+
+    ``D`` is the contrast magnitude, so a *small* ``D`` means the tag is redundant
+    there -- the text already says it. ``A_i^s > 0`` therefore means the fine chunk
+    makes the tag more redundant than the surrounding context does: this specific
+    passage explains the tag better than the broad region around it.
+
+    That is a sharper marker than either term alone. A whole section about the tag
+    gives every chunk inside it a small ``D``, so absolute redundancy cannot say
+    where within the section the answer sits; the differential can, because it is
+    measured against the very context the chunk is embedded in. One column per
+    context scale, since "better than the paragraph" and "better than the chapter"
+    are different claims.
+    """
+    child = contrast_norm(child_plain, child_tagged, normalise=normalise)
+    if len(parents_plain) != len(parents_tagged):
+        raise ValueError("parent scales must be aligned between plain and tagged")
+    if not parents_plain:
+        raise ValueError("at least one containing parent scale is required")
+
+    columns = []
+    for plain, tagged in zip(parents_plain, parents_tagged, strict=True):
+        parent = contrast_norm(plain, tagged, normalise=normalise)
+        if parent.shape != child.shape:
+            raise ValueError("parent arrays must be repeated to one row per fine chunk")
+        columns.append(parent - child)
+    return np.stack(columns, axis=1).astype(np.float32)

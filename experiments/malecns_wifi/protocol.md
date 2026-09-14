@@ -96,7 +96,11 @@ A clean negative here is an acceptable and publishable outcome. A negative with 
 
 **The rule.** Each operator picks its own gain from a shared logarithmic grid, `{0.25, 0.5, 0.95, 1.5, 2.5, 4} x (1/rho)`, selected on validation and scored on held-out data. Matching operators on a single scalar of the spectrum is ill-posed when the spectra have different shapes: MaleCNS is rank-2-plus-bulk, the nulls are flat, and there is no "same operating point" between those objects — only the best of each. This is standard ESN practice (one hyperparameter per model) and it asks the right question: topology at its best against null at its best. As robustness, the same contrast is reported at both fixed points, rho-matched (0.95) and bulk-matched (~3.2), so the reader can see how much the answer depends on the criterion. If MaleCNS wins at only one of them, that goes in the paper as it stands.
 
-**Registered prediction.** At gain >= 1.5/rho the two hemisphere-local modes should saturate — tanh clamping v1 and v2 — and the echo state property should break, which would make the bulk-matched point unreachable for MaleCNS without saturating. If that is what happens, the v1/v2 figure stops being an appendix: the real operator is a slow two-mode global integrator sitting on top of a weak reservoir, and no degree-preserving null reproduces that geometry.
+**Registered prediction.** At gain >= 1.5/rho the two hemisphere-local modes should saturate — tanh clamping v1 and v2 — and the echo state property should break, which would make the bulk-matched point unreachable for MaleCNS without saturating.
+
+**Measured so far, and refined.** MaleCNS *does* reach bulk-matched, and reaches it exactly at the knee where clamping begins: peak |x| is 0.970 at gain 0.95 and 1.000 by gain 4.0, while the saturated fraction stays at 0 until gain 4 (1.4%) and is 11.6% at gain 8. So the prediction's conclusion ("unreachable") is wrong and its mechanism is right: the operator cannot reach bulk-matched *without beginning to clamp*.
+
+That is a refinement, not a partial failure, and it needs the right instrument to close. A global saturated fraction does not test a claim about `v1` and `v2`: the mode-loading sweep projects the state onto each leading eigenvector (`v_k^T x_t`), weights saturation by the mass each mode carries, and checks the echo state property, at gains 2.5, 3.2, 4 and 8. Document length is a confound to remove separately — 384-byte tails may be too short for a slow two-mode integrator to charge.
 
 **Why the grid, in numbers.** Scaling by `0.95 / rho` was the original plan and is measurably wrong for this operator.
 
@@ -184,9 +188,19 @@ over the region being looked for.
 
 | definition | expression | expected polarity |
 |---|---|---|
+| `redundancy` | `exp(-||F_t||/tau)` | intended — **the default** |
 | `norm` | `||F_t||` | inverted |
 | `alignment` | `<F_t, tag_hat>` | inverted |
-| `similarity` | `<E_t_hat, tag_hat>` | intended, by construction |
+| `similarity` | `<E_t_hat, tag_hat>` | trivial control, no tag conditioning |
+
+The answer to the inversion is not to fall back on a plain text-tag cosine. That
+discards the tag-conditioning that makes the construction interesting and reduces
+it to similarity search. If the encoder confirms the redundancy effect, then
+**food is semantic redundancy**: a passage tastes of the tag precisely when the
+tag adds nothing to it. `exp(-||F_t||/tau)` scores +0.87 against the annotated
+region where `||F_t||` scores -0.89, essentially matching plain similarity (+0.89)
+while still depending on what the tag does to the text. The direction of `F_t`
+remains the flavour in every case; `similarity` stays as a control.
 
 On a synthetic corpus built with the redundancy effect, the point-biserial
 correlation with the annotated region is −0.89 for `norm`, −0.94 for `alignment`
@@ -216,6 +230,40 @@ actual encoder, before any training.
 Contrast magnitude is also reported **per context scale**: a boundary visible only
 against the 4096-token parent is a different claim from one visible against the
 256-token parent, and averaging the scales hides exactly that.
+
+### Chunk against parent: `A_i^s = D(p_i^s) - D(c_i)`
+
+With `D(x) = ||f(x + tag) - f(x)||`, a small `D` means the tag is redundant there.
+`A_i^s > 0` therefore means the fine chunk makes the tag more redundant than its
+containing context does: *this passage explains the tag better than the broad
+region around it*. That is sharper than either term alone, because a whole section
+about the tag gives every chunk inside it a small `D` and absolute redundancy
+cannot say where within the section the answer sits.
+
+Two limits, both measured rather than assumed:
+
+* **The sign is encoder-dependent.** `A` is positive only if a longer chunk's
+  embedding does not concentrate the shared topic more than its constituents do.
+  Where parents behave like averages of their children, the averaging cancels
+  per-chunk noise, the parent is the purer of the two, and `A` is negative
+  throughout — about −0.26 in the answer on the synthetic corpus.
+* **`A` is a within-context discriminator, not a global marker.** Outside a
+  relevant section both child and parent are equally unrelated to the tag, their
+  contrasts cancel, and `A` sits near zero — *above* its value inside the section.
+  It must be read against the section it belongs to, or gated by absolute
+  redundancy. On the synthetic corpus it separates the answer from the rest of its
+  own section by 0.151 against absolute redundancy's 0.095.
+
+### Four signals, each against every control
+
+| signal | question |
+|---|---|
+| `similarity(text, tag)` | trivial baseline |
+| `||F||` or its inversion | absolute contrast |
+| relational `F_i^s` across scales | the multiscale hypothesis |
+| `A_i^s` | does this chunk out-explain its context |
+
+Each is run against MaleCNS, both nulls, and the direct control.
 
 ### Mandatory control
 
