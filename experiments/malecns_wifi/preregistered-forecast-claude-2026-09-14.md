@@ -1,5 +1,5 @@
 ---
-type: "Forecast"
+type: "Preregistered Forecast"
 title: "Preregistered forecast — MaleCNS semantic tagging (Claude, 2026-09-14)"
 description: "Independent numerical forecast for four events in the MaleCNS semantic tagging experiment, registered before the matched-drive results exist and before reading the parallel forecast."
 tags: [malecns, forecast, preregistration, brier, connectome, reservoir-computing]

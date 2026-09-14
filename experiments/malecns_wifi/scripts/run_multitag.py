@@ -222,6 +222,9 @@ def main() -> None:
                     )
                     for document in np.unique(groups)
                 ])
+                states_by_seed[seed] = states
+                if key is not None:
+                    np.save(key, states)
 
             for flavour_source in spec.flavour_sources:
                 scores = [
