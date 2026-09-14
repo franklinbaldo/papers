@@ -62,7 +62,14 @@ class CharacterizeSpec:
 # --- spectral radius -------------------------------------------------------
 
 
-def leading_eigenpairs(matrix: sp.csr_matrix, *, k: int = 3, tol: float = 1e-9) -> dict:
+def leading_eigenpairs(
+    matrix: sp.csr_matrix,
+    *,
+    k: int = 3,
+    tol: float = 1e-9,
+    maxiter: int = 20000,
+    left: bool = True,
+) -> dict:
     """Leading eigenvalues and right/left eigenvectors via ARPACK.
 
     Preferred over power iteration on this operator. MaleCNS has a near-degenerate
@@ -76,16 +83,29 @@ def leading_eigenpairs(matrix: sp.csr_matrix, *, k: int = 3, tol: float = 1e-9) 
     """
     operator = matrix.astype(np.float64)
     k = min(k, matrix.shape[0] - 2)
-    values, right = sla.eigs(operator, k=k, which="LM", maxiter=20000, tol=tol)
-    left_values, left = sla.eigs(operator.T.tocsr(), k=k, which="LM", maxiter=20000, tol=tol)
-
+    values, right = sla.eigs(operator, k=k, which="LM", maxiter=maxiter, tol=tol)
     order = np.argsort(-np.abs(values))
+    if not left:
+        # The spectral radius never needs left eigenvectors, and computing them
+        # doubles the cost of every call for nothing.
+        return {
+            "eigenvalues": [complex(values[i]) for i in order],
+            "left_eigenvalues": [],
+            "right": right[:, order],
+            "left": np.zeros((matrix.shape[0], 0)),
+            "estimate": float(np.abs(values[order[0]])),
+            "method": "arpack",
+        }
+
+    left_values, left_vectors = sla.eigs(
+        operator.T.tocsr(), k=k, which="LM", maxiter=maxiter, tol=tol
+    )
     left_order = np.argsort(-np.abs(left_values))
     return {
         "eigenvalues": [complex(values[i]) for i in order],
         "left_eigenvalues": [complex(left_values[i]) for i in left_order],
         "right": right[:, order],
-        "left": left[:, left_order],
+        "left": left_vectors[:, left_order],
         "estimate": float(np.abs(values[order[0]])),
         "method": "arpack",
     }
@@ -115,7 +135,15 @@ def spectral_radius(
         and matrix.nnz > 0
     ):
         try:
-            pair = leading_eigenpairs(matrix, k=min(3, matrix.shape[0] - 2))
+            # A random sparse operator has no spectral gap, so ARPACK grinds to
+            # maxiter and finds nothing useful: one such call cost fifty minutes
+            # and a timeout. For a scaling factor 1e-6 is ample precision and a
+            # few hundred iterations is ample effort -- failing fast into power
+            # iteration is strictly better than converging slowly to the same
+            # number.
+            pair = leading_eigenpairs(
+                matrix, k=min(3, matrix.shape[0] - 2), tol=1e-6, maxiter=150, left=False
+            )
             values, estimate = pair["eigenvalues"], pair["estimate"]
             # ARPACK returns numerical noise on nilpotent and strongly defective
             # operators, where "largest magnitude" is degenerate at zero. The
