@@ -221,3 +221,70 @@ def test_changed_features_invalidate_the_cache() -> None:
     changed[3, 2] += 0.001
     assert array_fingerprint(values) != array_fingerprint(changed)
     assert array_fingerprint(values) != array_fingerprint(values[:, :4])
+
+
+def test_outer_document_labels_cannot_influence_its_own_selection() -> None:
+    """The leakage the nested form exists to remove, tested at the boundary.
+
+    Changing only the held-out document's labels must not change the (gain, ridge)
+    chosen for that fold: the selection sees sixteen documents, and the
+    seventeenth is not among them. The previous two-stage form failed this,
+    because a gain picked over 80% of the corpus was then used to score documents
+    inside that 80%.
+    """
+    from malecns_wifi.multitag import build_flavours, evaluate_nested
+
+    masks, groups, embeddings, rng = _corpus()
+    flavours = build_flavours(embeddings, _spec(), seed=0, source="semantic")
+    states = {
+        gain: np.hstack([masks * gain, rng.normal(size=(len(masks), 4))])
+        for gain in (0.5, 1.0, 2.0)
+    }
+
+    first = evaluate_nested(states, masks, flavours, groups, penalties=(0.1, 1.0))
+    held_out = "0"
+    altered = masks.copy()
+    rows = np.flatnonzero(groups == 0)
+    altered[rows] = altered[rows][::-1]          # scramble only that document
+    second = evaluate_nested(states, altered, flavours, groups, penalties=(0.1, 1.0))
+
+    assert first["selected_by_fold"][held_out] == second["selected_by_fold"][held_out]
+
+
+def test_nested_selection_may_choose_a_different_gain_per_fold() -> None:
+    """A single gain for every fold is the signature of the leaky form."""
+    from malecns_wifi.multitag import build_flavours, evaluate_nested
+
+    masks, groups, embeddings, rng = _corpus()
+    flavours = build_flavours(embeddings, _spec(), seed=0, source="semantic")
+    states = {gain: rng.normal(size=(len(masks), 6)) for gain in (0.5, 1.0, 2.0)}
+    result = evaluate_nested(states, masks, flavours, groups, penalties=(0.1, 1.0))
+    assert len(result["selected_by_fold"]) == len(np.unique(groups))
+    assert all(row["gain"] > 0 for row in result["selected_by_fold"].values())
+
+
+def test_graph_content_change_at_the_same_path_is_a_cache_miss() -> None:
+    """A recompiled graph.npz at the same path must not be served from cache."""
+    from malecns_wifi.multitag import array_fingerprint, run_fingerprint
+
+    rng = np.random.default_rng(0)
+    original = rng.normal(size=(50,)).astype(np.float32)
+    recompiled = original.copy()
+    recompiled[7] += 1e-3
+    base = dict(operator="malecns", seed=0, gain=0.95, leak=0.4, steps=4)
+    assert run_fingerprint(**base, graph=array_fingerprint(original)) != run_fingerprint(
+        **base, graph=array_fingerprint(recompiled)
+    )
+
+
+def test_a_different_readout_of_the_same_size_is_a_cache_miss() -> None:
+    """readout=1314 is not an identity; which 1,314 neurons is."""
+    from malecns_wifi.multitag import array_fingerprint, run_fingerprint
+
+    first = np.arange(1314, dtype=np.float32)
+    second = np.arange(1, 1315, dtype=np.float32)
+    assert first.size == second.size
+    base = dict(operator="malecns", seed=0, gain=0.95, leak=0.4, steps=4)
+    assert run_fingerprint(**base, readout=array_fingerprint(first)) != run_fingerprint(
+        **base, readout=array_fingerprint(second)
+    )

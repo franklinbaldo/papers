@@ -32,11 +32,13 @@ import numpy as np
 from malecns_wifi import load_graph
 from malecns_wifi.characterize import degree_preserving_null, random_esn
 from malecns_wifi.multitag import (
+    CACHE_SCHEMA,
     MultitagSpec,
     array_fingerprint,
     build_flavours,
     calibrate_drive,
     evaluate,
+    evaluate_nested,
     reservoir_states,
     run_fingerprint,
     unit_rows,
@@ -104,10 +106,15 @@ def main() -> None:
     )
 
     config_hash = run_fingerprint(
+        schema=CACHE_SCHEMA,
         gains=list(spec.gain_grid), leak=spec.leak, steps=spec.steps_per_chunk,
         drive=spec.input_scale, seeds=list(spec.seeds), graph=str(args.graph),
         representation=args.representation, flavour=args.flavour,
         features=array_fingerprint(block),
+        # Scores depend on these too, not only on the states.
+        tag_masks=array_fingerprint(tag_masks),
+        tag_embeddings=array_fingerprint(embeddings),
+        groups=array_fingerprint(groups.astype(np.float32)),
     )
     checkpoint = args.output.with_suffix(".partial.json")
     results: list[dict] = []
@@ -148,6 +155,13 @@ def main() -> None:
     archive = np.load(args.graph, allow_pickle=False)
     populations = select_populations(archive["superclass"])
     readout = populations.readout_indices
+    # Content, not path or size. A graph.npz recompiled at the same path, or a
+    # different 1,314-neuron readout, must not be served from an old cache.
+    graph_hash = array_fingerprint(matrix.data) + array_fingerprint(
+        matrix.indices.astype(np.float32)
+    )
+    inputs_hash = array_fingerprint(populations.input_indices.astype(np.float32))
+    readout_hash = array_fingerprint(readout.astype(np.float32))
 
     for seed in spec.seeds:
         rng = np.random.default_rng(seed)
@@ -189,10 +203,18 @@ def main() -> None:
                 key = None
                 if cache:
                     key = cache / (run_fingerprint(
+                        schema=CACHE_SCHEMA,
                         operator=kind, representation=args.representation, seed=seed,
                         gain=gain, leak=spec.leak, steps=spec.steps_per_chunk,
-                        drive=spec.input_scale, features=array_fingerprint(block),
-                        graph=str(args.graph), readout=int(readout.size),
+                        drive=spec.input_scale,
+                        features=array_fingerprint(block),
+                        graph=graph_hash,
+                        inputs=inputs_hash,
+                        readout=readout_hash,
+                        projection=array_fingerprint(projection),
+                        groups=array_fingerprint(groups.astype(np.float32)),
+                        calibration=round(float(calibration["mean"]), 12),
+                        normalisation="unit_rows+row_normalise",
                     ) + ".npy")
                     if key.exists():
                         states_by_gain[gain] = np.load(key)
@@ -214,31 +236,19 @@ def main() -> None:
                 if key is not None:
                     np.save(key, states)
 
-            # Gain chosen on a split of the TRAINING documents, never the held-out
-            # one, and on macro per-tag AUPRC.
-            validation = documents[: max(1, len(documents) // 5)]
-            held_in = ~np.isin(groups, validation)
-            selectable = [g for g in spec.gain_grid if g > 0]
-            best_gain, best_score = selectable[0], -np.inf
-            for gain in selectable:
-                states = states_by_gain[gain]
-                score = evaluate(states[held_in], tag_masks[held_in], flavours,
-                                 groups[held_in],
-                                 penalties=spec.ridge_penalties)["macro_tag_auprc"]
-                if np.isfinite(score) and score > best_score:
-                    best_gain, best_score = gain, score
-
-            chosen = evaluate(states_by_gain[best_gain], tag_masks, flavours, groups,
-                              penalties=spec.ridge_penalties)
+            chosen = evaluate_nested(
+                states_by_gain, tag_masks, flavours, groups,
+                penalties=spec.ridge_penalties,
+            )
             recurrence_delta = float("nan")
             if 0.0 in states_by_gain:
                 without = evaluate(states_by_gain[0.0], tag_masks, flavours, groups,
                                    penalties=spec.ridge_penalties)
                 recurrence_delta = chosen["macro_tag_auprc"] - without["macro_tag_auprc"]
                 record({"condition": f"{kind}_gain0", "seed": seed, **without})
+
             record({
-                "condition": kind, "seed": seed, "selected_gain": best_gain,
-                "validation_macro_ap": float(best_score),
+                "condition": kind, "seed": seed,
                 "recurrence_delta": recurrence_delta,
                 "gain_grid": list(spec.gain_grid),
                 "per_gain_macro_ap": {
@@ -254,7 +264,11 @@ def main() -> None:
         by_condition.setdefault(row["condition"], {})[row["seed"]] = row["macro_tag_auprc"]
 
     summary = {}
-    for control in ("projected_direct", "degree_null", "random_esn"):
+    # direct_raw is the comparator the forecast was registered against;
+    # projected_direct is the architecturally matched one. Both are reported, and
+    # neither silently replaces the other after the fact.
+    for control in ("direct_raw", "projected_direct", "projected_direct_delay",
+                    "degree_null", "random_esn"):
         if "malecns" in by_condition and control in by_condition:
             seeds = sorted(set(by_condition["malecns"]) & set(by_condition[control]))
             deltas = [by_condition["malecns"][s] - by_condition[control][s] for s in seeds]

@@ -500,6 +500,11 @@ def evaluate_exact_per_fold(
     }
 
 
+# Bump when the meaning of a cached state changes, so old caches cannot be
+# served to new code that computes something different under the same inputs.
+CACHE_SCHEMA = 2
+
+
 def run_fingerprint(**parts) -> str:
     """Hash of everything that changes the states or the scores.
 
@@ -525,3 +530,88 @@ def array_fingerprint(array: np.ndarray) -> str:
     digest = hashlib.blake2b(values.tobytes(), digest_size=10)
     digest.update(str(values.shape).encode())
     return digest.hexdigest()
+
+
+def evaluate_nested(
+    states_by_gain: dict,
+    tag_masks: np.ndarray,
+    flavours: np.ndarray,
+    groups: np.ndarray,
+    *,
+    penalties,
+) -> dict:
+    """Leave-one-document-out with ``(gain, ridge)`` chosen inside each outer fold.
+
+    The previous form picked one gain using a leave-one-out pass over ~80% of the
+    documents and then evaluated every document at that gain -- so for any
+    document inside that 80%, its own performance had helped choose the gain later
+    used to score it. The comment said "never the held-out one"; the code did not.
+
+    Here the outer document is removed first. The remaining sixteen choose both
+    the gain and the ridge penalty among themselves, the readout is fitted on
+    those sixteen at that setting, and only then is the held-out document
+    predicted. The selected gain therefore varies by fold, which is what a nested
+    protocol looks like, and the seventeen predictions are pooled once at the end.
+    """
+    gains = sorted(g for g in states_by_gain if g > 0)
+    if not gains:
+        raise ValueError("no positive gain available to select from")
+    any_states = states_by_gain[gains[0]]
+    targets = food_targets(tag_masks, flavours)
+    predictions = np.zeros_like(targets)
+    inside = tag_masks.max(axis=1) > 0
+    chosen: dict[str, dict] = {}
+
+    for document in np.unique(groups):
+        outer = groups == document
+        inner_groups = groups[~outer]
+        inner_documents = np.unique(inner_groups)
+        # A split of the sixteen; the seventeenth is not present at all.
+        validation = inner_documents[: max(1, len(inner_documents) // 4)]
+        inner_valid = np.isin(inner_groups, validation)
+
+        best = (-np.inf, gains[0], penalties[0])
+        for gain in gains:
+            states = states_by_gain[gain][~outer]
+            for penalty in penalties:
+                weights = ridge_multioutput(
+                    states[~inner_valid], targets[~outer][~inner_valid], penalty
+                )
+                scored = np.hstack(
+                    [states[inner_valid], np.ones((int(inner_valid.sum()), 1))]
+                ) @ weights
+                score = _macro_tag_ap(
+                    scored, tag_masks[~outer][inner_valid], flavours
+                )
+                if np.isfinite(score) and score > best[0]:
+                    best = (score, gain, penalty)
+
+        _, gain, penalty = best
+        chosen[str(int(document))] = {"gain": float(gain), "ridge": float(penalty)}
+        states = states_by_gain[gain]
+        weights = ridge_multioutput(states[~outer], targets[~outer], penalty)
+        predictions[outer] = (
+            np.hstack([states[outer], np.ones((int(outer.sum()), 1))]) @ weights
+        )
+
+    magnitude, predicted_tag = decode(predictions, flavours)
+    truth = np.argmax(tag_masks, axis=1)
+    correct = predicted_tag[inside] == truth[inside]
+    per_tag = {}
+    for index in range(flavours.shape[0]):
+        target = tag_masks[:, index] > 0
+        per_tag[index] = (
+            float(average_precision(predictions @ flavours[index], target))
+            if target.any() and not target.all()
+            else float("nan")
+        )
+    finite = [v for v in per_tag.values() if np.isfinite(v)]
+    return {
+        "inside_auprc": float(average_precision(magnitude, inside)),
+        "macro_tag_auprc": float(np.mean(finite)) if finite else float("nan"),
+        "per_tag_auprc": {str(k): v for k, v in per_tag.items()},
+        "tag_accuracy_on_true_spans": float(correct.mean()) if correct.size else float("nan"),
+        "random_auprc": float(inside.mean()),
+        "selected_by_fold": chosen,
+        "selection": "nested: (gain, ridge) chosen inside each outer fold",
+    }
