@@ -182,3 +182,42 @@ def test_unit_rows_normalises_each_sensation_vector() -> None:
     rng = np.random.default_rng(1)
     scaled = rng.normal(size=(5, 9)).astype(np.float32) * np.asarray([[0.01], [1], [10], [100], [1]])
     assert np.allclose(np.linalg.norm(unit_rows(scaled), axis=1), 1.0, atol=1e-5)
+
+
+def test_changing_only_the_gain_produces_a_cache_miss() -> None:
+    """The invariant that would otherwise fail silently and produce a wrong number.
+
+    The cache key was once (operator, representation, seed), which omits gain. A
+    gain sweep against that key reloads one gain's states and reports them as
+    another's -- no error, no warning, a wrong result from machinery introduced
+    for efficiency.
+    """
+    from malecns_wifi.multitag import run_fingerprint
+
+    base = dict(operator="malecns", representation="rel", seed=0, leak=0.4, steps=4)
+    assert run_fingerprint(**base, gain=0.95) != run_fingerprint(**base, gain=2.5)
+    # Every other axis that changes the states must also change the key.
+    assert run_fingerprint(**base, gain=0.95) != run_fingerprint(
+        **{**base, "leak": 0.2}, gain=0.95
+    )
+    assert run_fingerprint(**base, gain=0.95) != run_fingerprint(
+        **{**base, "steps": 8}, gain=0.95
+    )
+    assert run_fingerprint(**base, gain=0.95) != run_fingerprint(
+        **{**base, "seed": 1}, gain=0.95
+    )
+    # And an identical configuration must hit.
+    assert run_fingerprint(**base, gain=0.95) == run_fingerprint(**base, gain=0.95)
+
+
+def test_changed_features_invalidate_the_cache() -> None:
+    """A different corpus must not be served from an old run's states."""
+    from malecns_wifi.multitag import array_fingerprint
+
+    rng = np.random.default_rng(0)
+    values = rng.normal(size=(20, 5)).astype(np.float32)
+    assert array_fingerprint(values) == array_fingerprint(values.copy())
+    changed = values.copy()
+    changed[3, 2] += 0.001
+    assert array_fingerprint(values) != array_fingerprint(changed)
+    assert array_fingerprint(values) != array_fingerprint(values[:, :4])

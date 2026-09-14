@@ -41,6 +41,7 @@ from malecns_wifi.multitag import (
     run_fingerprint,
     unit_rows,
 )
+from malecns_wifi.gustation import delayed_stack, effective_delay_window
 from malecns_wifi.tagger import row_normalise, select_populations
 
 
@@ -63,8 +64,13 @@ def main() -> None:
     parser.add_argument("--graph", type=Path, default=Path("artifacts/runtime-v1/graph.npz"))
     parser.add_argument("--seeds", type=int, nargs="+", default=list(range(10)))
     parser.add_argument("--steps-per-chunk", type=int, default=4)
-    parser.add_argument("--gains", type=float, nargs="+",
-                        default=[0.25, 0.5, 0.95, 1.5, 2.5, 4.0])
+    parser.add_argument(
+        "--gains", type=float, nargs="+",
+        default=[0.0, 0.25, 0.5, 0.95, 1.5, 2.5, 4.0],
+        help="0.0 is a reported condition, not a debug aside: score(gain*) - score(0) "
+        "is how much each operator's recurrent matrix contributes, and operators may "
+        "differ in how much benefit they extract from recurrence at all.",
+    )
     parser.add_argument("--leak", type=float, default=0.4)
     parser.add_argument("--target-drive-rms", type=float, default=0.05)
     parser.add_argument("--representation", default="absolute_plus_relations")
@@ -91,6 +97,8 @@ def main() -> None:
         input_scale=args.target_drive_rms, gain_grid=tuple(args.gains),
     )
     documents = np.unique(groups)
+    # Matched to the leak's reach so the operator has no free memory advantage.
+    delay_horizon = effective_delay_window(spec.leak, spec.steps_per_chunk)
     prevalence = float(
         np.mean([(tag_masks[:, i] > 0).mean() for i in range(tag_masks.shape[1])])
     )
@@ -155,6 +163,7 @@ def main() -> None:
             ("direct_raw", block),
             ("direct_unit_norm", unit_rows(block)),
             ("projected_direct", projected),
+            ("projected_direct_delay", delayed_stack(projected, groups, delay_horizon)),
         ):
             if (name, seed) in done:
                 continue
@@ -209,20 +218,35 @@ def main() -> None:
             # one, and on macro per-tag AUPRC.
             validation = documents[: max(1, len(documents) // 5)]
             held_in = ~np.isin(groups, validation)
-            best_gain, best_score = spec.gain_grid[0], -np.inf
-            for gain, states in states_by_gain.items():
+            selectable = [g for g in spec.gain_grid if g > 0]
+            best_gain, best_score = selectable[0], -np.inf
+            for gain in selectable:
+                states = states_by_gain[gain]
                 score = evaluate(states[held_in], tag_masks[held_in], flavours,
                                  groups[held_in],
                                  penalties=spec.ridge_penalties)["macro_tag_auprc"]
                 if np.isfinite(score) and score > best_score:
                     best_gain, best_score = gain, score
 
+            chosen = evaluate(states_by_gain[best_gain], tag_masks, flavours, groups,
+                              penalties=spec.ridge_penalties)
+            recurrence_delta = float("nan")
+            if 0.0 in states_by_gain:
+                without = evaluate(states_by_gain[0.0], tag_masks, flavours, groups,
+                                   penalties=spec.ridge_penalties)
+                recurrence_delta = chosen["macro_tag_auprc"] - without["macro_tag_auprc"]
+                record({"condition": f"{kind}_gain0", "seed": seed, **without})
             record({
                 "condition": kind, "seed": seed, "selected_gain": best_gain,
                 "validation_macro_ap": float(best_score),
+                "recurrence_delta": recurrence_delta,
                 "gain_grid": list(spec.gain_grid),
-                **evaluate(states_by_gain[best_gain], tag_masks, flavours, groups,
-                           penalties=spec.ridge_penalties),
+                "per_gain_macro_ap": {
+                    str(g): float(evaluate(s, tag_masks, flavours, groups,
+                                           penalties=spec.ridge_penalties)["macro_tag_auprc"])
+                    for g, s in sorted(states_by_gain.items())
+                },
+                **chosen,
             })
 
     by_condition: dict[str, dict[int, float]] = {}
