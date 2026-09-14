@@ -20,7 +20,12 @@ from pathlib import Path
 import numpy as np
 import scipy.sparse as sp
 
-from .characterize import degree_preserving_null, random_esn, spectral_radius
+from .characterize import (
+    DeflatedOperator,
+    degree_preserving_null,
+    random_esn,
+    spectral_radius,
+)
 
 # Outcome classes. Appeals speak of provimento, first-instance rulings of
 # procedencia; both collapse onto the same three-way outcome.
@@ -278,6 +283,23 @@ def row_normalise(matrix: sp.csr_matrix) -> sp.csr_matrix:
     return normalised
 
 
+def typical_gain(matrix, *, seed: int = 0, probes: int = 3) -> float:
+    """Mean ``||Wv|| / ||v||`` on random vectors: what the bulk of the state feels.
+
+    The spectral radius is what the single slowest mode feels. On a spectrally
+    concentrated operator the two differ by more than an order of magnitude, and
+    the bulk is what does the computing.
+    """
+    rng = np.random.default_rng(seed)
+    n = matrix.shape[0]
+    values = []
+    for _ in range(probes):
+        vector = rng.normal(size=n).astype(np.float32)
+        vector /= np.linalg.norm(vector)
+        values.append(float(np.linalg.norm(matrix @ vector)))
+    return float(np.mean(values))
+
+
 def iter_operators(
     matrix: sp.csr_matrix,
     *,
@@ -285,6 +307,8 @@ def iter_operators(
     target_radius: float = 0.95,
     radius: float | None = None,
     normalise_rows: bool = True,
+    only: list[str] | None = None,
+    deflate_modes: int = 2,
 ):
     """Yield the real operator and both nulls, one at a time, each at ``target_radius``.
 
@@ -299,29 +323,52 @@ def iter_operators(
             return matrix, {}
         if name == "degree_null":
             return degree_preserving_null(matrix, seed=seed + 101)
-        return random_esn(matrix, seed=seed + 202)
+        if name == "random_esn":
+            return random_esn(matrix, seed=seed + 202)
+        raise KeyError(name)
 
-    for name in ("malecns", "degree_null", "random_esn"):
+    for name in ("malecns", "degree_null", "random_esn", "deflated"):
+        if name == "deflated":
+            # An ablation, not a null: the real wiring with its two hemisphere-local
+            # modes projected out, asking what the bulk does on its own. Built from
+            # the row-normalised real operator so it sits in the same family.
+            if only is not None and name not in only:
+                continue
+            base = row_normalise(matrix) if normalise_rows else matrix
+            deflated = DeflatedOperator(base, modes=deflate_modes)
+            own = spectral_radius(deflated, iterations=400, tail=40)["estimate"]
+            operator = deflated.rescaled(1.0 / own if own > 1e-12 else 1.0)
+            yield name, operator, {
+                "spectral_radius": own,
+                "row_normalised": normalise_rows,
+                "typical_gain_at_unit_radius": typical_gain(operator, seed=seed),
+                **deflated.stats(),
+            }
+            del deflated, operator
+            continue
+        if only is not None and name not in only:
+            continue
         candidate, stats = make(name)
         # Rewiring moves which edges land on which row, so in-strength has to be
-        # recomputed per operator; each is then put at the same operating point.
+        # recomputed per operator.
         if normalise_rows:
             candidate = row_normalise(candidate)
-        own = (
-            radius
-            if (name == "malecns" and radius is not None and not normalise_rows)
-            else spectral_radius(candidate, seed=seed)["estimate"]
-        )
+        own = spectral_radius(candidate, seed=seed)["estimate"]
         scaled = sp.csr_matrix(
             (
-                (candidate.data * np.float32(target_radius / own)).astype(np.float32),
+                (candidate.data * np.float32(1.0 / own)).astype(np.float32),
                 candidate.indices,
                 candidate.indptr,
             ),
             shape=candidate.shape,
         )
         del candidate
-        yield name, scaled, {"spectral_radius": own, "target_radius": target_radius, **stats}
+        yield name, scaled, {
+            "spectral_radius": own,
+            "row_normalised": normalise_rows,
+            "typical_gain_at_unit_radius": typical_gain(scaled, seed=seed),
+            **stats,
+        }
         del scaled
 
 
@@ -367,6 +414,7 @@ def reservoir_features(
     embedding: np.ndarray,
     projection: np.ndarray,
     spec: ReservoirSpec,
+    gain: float,
 ) -> tuple[np.ndarray, dict]:
     """Run one batch of documents and pool the readout population.
 
@@ -395,6 +443,7 @@ def reservoir_features(
             break
         drive[inputs] = projection @ embedding[byte_batch[:, step]].T
         pre = operator @ state
+        pre *= np.float32(gain)
         recurrent_energy += float(np.mean(pre[:, active] ** 2))
         input_energy += float(np.mean(drive[:, active] ** 2))
         pre += drive
@@ -416,7 +465,10 @@ def reservoir_features(
     diagnostics = {
         "recurrent_drive_rms": float(np.sqrt(recurrent_energy / steps)),
         "input_drive_rms": float(np.sqrt(input_energy / steps)),
+        # Saturation is the prediction to check at high gain: tanh clamping the two
+        # hemispheric modes would make "bulk-matched" unreachable for this operator.
         "saturated_fraction": float(np.mean(np.abs(final) > 0.99)),
+        "state_rms": float(np.sqrt(np.mean(final.astype(np.float64) ** 2))),
     }
     diagnostics["recurrent_to_input_ratio"] = diagnostics["recurrent_drive_rms"] / max(
         diagnostics["input_drive_rms"], 1e-12
@@ -431,6 +483,7 @@ def run_operator(
     embedding: np.ndarray,
     projection: np.ndarray,
     spec: ReservoirSpec,
+    gain: float,
 ) -> tuple[np.ndarray, dict]:
     """Features for every document, in batches, with pooled diagnostics."""
     blocks: list[np.ndarray] = []
@@ -439,14 +492,14 @@ def run_operator(
         chunk = documents[start : start + spec.batch_size]
         byte_batch, lengths = encode(chunk, spec)
         features, stats = reservoir_features(
-            operator, byte_batch, lengths, populations, embedding, projection, spec
+            operator, byte_batch, lengths, populations, embedding, projection, spec, gain
         )
         blocks.append(features)
         diagnostics.append(stats)
     merged = {
         key: float(np.mean([d[key] for d in diagnostics]))
         for key in ("recurrent_drive_rms", "input_drive_rms", "recurrent_to_input_ratio",
-                    "saturated_fraction")
+                    "saturated_fraction", "state_rms")
     }
     return np.vstack(blocks), merged
 
@@ -526,7 +579,13 @@ def one_hot(labels: list[str | None]) -> np.ndarray:
 class TaggerSpec:
     seeds: tuple[int, ...] = tuple(range(10))
     ridge: float = 1e-3
-    target_radius: float = 0.95
+    # Shared logarithmic grid in multiples of 1/rho. Matching operators on a single
+    # scalar of the spectrum is ill-posed when the spectra have different shapes --
+    # MaleCNS is rank-2-plus-bulk, the nulls are flat -- so each operator picks its
+    # own gain on validation and the comparison is topology-at-its-best against
+    # null-at-its-best. 0.95 is the rho-matched point; MaleCNS reaches bulk-matched
+    # near 3.2, which is why the grid runs past it.
+    gains: tuple[float, ...] = (0.25, 0.5, 0.95, 1.5, 2.5, 4.0)
     normalise_rows: bool = True
     ngram_orders: tuple[int, ...] = (3, 4, 5)
     reservoir: ReservoirSpec = field(default_factory=ReservoirSpec)
@@ -537,8 +596,9 @@ def run_experiment(
     train: list[Document],
     evaluate: list[Document],
     spec: TaggerSpec,
+    operators: list[str] | None = None,
 ) -> dict:
-    """Fit a ridge readout per operator per seed and score every one on held-out data."""
+    """Fit a ridge readout per operator per gain per seed, scored on held-out data."""
     archive = np.load(graph_path, allow_pickle=False)
     shape = tuple(int(x) for x in archive["shape"])
     matrix = sp.csr_matrix(
@@ -570,31 +630,36 @@ def run_experiment(
         for name, operator, operator_stats in iter_operators(
             matrix,
             seed=seed,
-            target_radius=spec.target_radius,
             radius=radius["estimate"],
             normalise_rows=spec.normalise_rows,
+            only=operators,
         ):
-            train_features, train_diag = run_operator(
-                operator, usable_train, populations, embedding, projection, reservoir
-            )
-            eval_features, eval_diag = run_operator(
-                operator, usable_eval, populations, embedding, projection, reservoir
-            )
-            centre = train_features.mean(axis=0)
-            scale = train_features.std(axis=0) + 1e-8
-            weights = ridge_fit((train_features - centre) / scale, y_train, spec.ridge)
-            standardised = (eval_features - centre) / scale
-            predictions = np.hstack([standardised, np.ones((standardised.shape[0], 1))]) @ weights
-            runs.append(
-                {
-                    "seed": seed,
-                    "operator": name,
-                    **macro_f1(truth, predictions.argmax(axis=1), CLASSES),
-                    "diagnostics": {"train": train_diag, "eval": eval_diag},
-                    "operator_stats": operator_stats,
-                    "seconds": round(time.perf_counter() - started, 1),
-                }
-            )
+            for gain in spec.gains:
+                train_features, train_diag = run_operator(
+                    operator, usable_train, populations, embedding, projection, reservoir, gain
+                )
+                eval_features, eval_diag = run_operator(
+                    operator, usable_eval, populations, embedding, projection, reservoir, gain
+                )
+                centre = train_features.mean(axis=0)
+                scale = train_features.std(axis=0) + 1e-8
+                weights = ridge_fit((train_features - centre) / scale, y_train, spec.ridge)
+                standardised = (eval_features - centre) / scale
+                predictions = (
+                    np.hstack([standardised, np.ones((standardised.shape[0], 1))]) @ weights
+                )
+                runs.append(
+                    {
+                        "seed": seed,
+                        "operator": name,
+                        "gain": gain,
+                        "typical_gain": gain * operator_stats["typical_gain_at_unit_radius"],
+                        **macro_f1(truth, predictions.argmax(axis=1), CLASSES),
+                        "diagnostics": {"train": train_diag, "eval": eval_diag},
+                        "operator_stats": operator_stats,
+                        "seconds": round(time.perf_counter() - started, 1),
+                    }
+                )
 
     baseline = char_ngram_baseline(
         usable_train, usable_eval, penalty=spec.ridge, orders=spec.ngram_orders
@@ -623,6 +688,7 @@ def run_experiment(
         "char_ngram_baseline": baseline,
         "runs": runs,
         "summary": summarise(runs),
+        "gain_grid": spec.gains,
         "claim_boundary": (
             "Only the ridge readout is fitted; recurrent weights and the input projection are "
             "frozen. A MaleCNS advantage requires beating BOTH nulls on held-out documents."
@@ -630,15 +696,43 @@ def run_experiment(
     }
 
 
-def summarise(runs: list[dict]) -> dict:
-    """Per-operator means and the paired per-seed differences against each null."""
+FIXED_POINTS = {"rho_matched": 0.95, "bulk_matched": 3.2}
+
+
+def select_gain(runs: list[dict], operator: str) -> float:
+    """The gain this operator scores best at, averaged over seeds.
+
+    Each operator gets its own gain, as in standard ESN practice. Matching the
+    operators on one gain would be matching them on a scalar of the spectrum,
+    which is the thing measured not to be comparable across these shapes.
+    """
+    scores: dict[float, list[float]] = {}
+    for run in runs:
+        if run["operator"] == operator:
+            scores.setdefault(run["gain"], []).append(run["macro_f1"])
+    return max(scores, key=lambda gain: float(np.mean(scores[gain])))
+
+
+def summarise(runs: list[dict], *, selection: dict[str, float] | None = None) -> dict:
+    """Per-operator results at the selected gain, plus the paired per-seed differences.
+
+    ``selection`` supplies a gain per operator chosen on a validation split. Without
+    it the gain is chosen on these same runs, which is a diagnostic sweep and is
+    labelled as such -- not a held-out number.
+    """
     operators = sorted({run["operator"] for run in runs})
+    chosen = selection or {name: select_gain(runs, name) for name in operators}
     by_operator = {
-        name: {run["seed"]: run["macro_f1"] for run in runs if run["operator"] == name}
+        name: {
+            run["seed"]: run["macro_f1"]
+            for run in runs
+            if run["operator"] == name and run["gain"] == chosen[name]
+        }
         for name in operators
     }
     summary: dict = {
         name: {
+            "selected_gain": chosen[name],
             "macro_f1_mean": float(np.mean(list(scores.values()))),
             "macro_f1_stdev": float(np.std(list(scores.values()), ddof=1))
             if len(scores) > 1
@@ -658,4 +752,26 @@ def summarise(runs: list[dict]) -> dict:
                 "malecns_wins": int(sum(1 for d in differences if d > 0)),
                 "seeds": len(differences),
             }
+
+    # Robustness: the same contrast at the two fixed points, so the reader can see
+    # how much the answer depends on the matching criterion rather than the data.
+    available = sorted({run["gain"] for run in runs})
+    for label, target in FIXED_POINTS.items():
+        nearest = min(available, key=lambda g: abs(g - target))
+        fixed = {
+            name: {run["seed"]: run["macro_f1"] for run in runs
+                   if run["operator"] == name and run["gain"] == nearest}
+            for name in operators
+        }
+        entry: dict = {"gain": nearest, "requested": target}
+        for name, scores in fixed.items():
+            if scores:
+                entry[name] = float(np.mean(list(scores.values())))
+        for null in ("degree_null", "random_esn"):
+            if fixed.get("malecns") and fixed.get(null):
+                seeds = sorted(set(fixed["malecns"]) & set(fixed[null]))
+                entry[f"malecns_minus_{null}"] = float(
+                    np.mean([fixed["malecns"][s] - fixed[null][s] for s in seeds])
+                ) if seeds else 0.0
+        summary[f"fixed_point_{label}"] = entry
     return summary

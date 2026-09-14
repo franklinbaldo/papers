@@ -200,19 +200,32 @@ def test_experiment_runs_end_to_end_and_reports_both_paired_contrasts(tmp_path: 
         graph,
         train,
         evaluate,
-        TaggerSpec(seeds=(0, 1), reservoir=ReservoirSpec(batch_size=4, max_bytes=64)),
+        TaggerSpec(
+            seeds=(0, 1), gains=(0.5, 0.95), reservoir=ReservoirSpec(batch_size=4, max_bytes=64)
+        ),
     )
 
     assert {run["operator"] for run in report["runs"]} == {
         "malecns",
         "degree_null",
         "random_esn",
+        "deflated",
     }
-    assert len(report["runs"]) == 6
+    assert len(report["runs"]) == 16  # 4 operators x 2 gains x 2 seeds
     for null in ("degree_null", "random_esn"):
         paired = report["summary"][f"malecns_minus_{null}"]
         assert paired["seeds"] == 2
         assert len(paired["values"]) == 2
+    # Each operator picks its own gain from the shared grid.
+    for name in ("malecns", "degree_null", "random_esn", "deflated"):
+        assert report["summary"][name]["selected_gain"] in (0.5, 0.95)
+    # The deflation is an ablation of the real operator, not a rewiring of it.
+    deflated = next(r for r in report["runs"] if r["operator"] == "deflated")
+    assert deflated["operator_stats"]["deflated_modes"] >= 0
+    assert "ablation, not a null" in deflated["operator_stats"]["note"]
+    # Both fixed points are reported for robustness regardless of what was selected.
+    for label in ("rho_matched", "bulk_matched"):
+        assert "malecns" in report["summary"][f"fixed_point_{label}"]
     assert 0.0 <= report["char_ngram_baseline"]["macro_f1"] <= 1.0
     for run in report["runs"]:
         assert np.isfinite(run["macro_f1"])

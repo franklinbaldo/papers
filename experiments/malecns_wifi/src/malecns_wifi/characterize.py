@@ -23,6 +23,7 @@ from pathlib import Path
 
 import numpy as np
 import scipy.sparse as sp
+import scipy.sparse.linalg as sla
 
 from .runtime import load_graph
 
@@ -61,12 +62,42 @@ class CharacterizeSpec:
 # --- spectral radius -------------------------------------------------------
 
 
+def leading_eigenpairs(matrix: sp.csr_matrix, *, k: int = 3, tol: float = 1e-9) -> dict:
+    """Leading eigenvalues and right/left eigenvectors via ARPACK.
+
+    Preferred over power iteration on this operator. MaleCNS has a near-degenerate
+    leading pair (3776.27 and 3718.80 -- the symmetric and antisymmetric
+    combination of two hemisphere-local modes), so power iteration converges as
+    ``(lambda_2/lambda_1)^k = 0.9848^k`` and needs hundreds of iterations for a
+    percent. ARPACK returns the whole leading subspace in seconds.
+
+    Left eigenvectors come from the transpose, and are what a spectral projector
+    needs: the projector onto mode ``i`` is ``v_i u_i^T / (u_i . v_i)``.
+    """
+    operator = matrix.astype(np.float64)
+    k = min(k, matrix.shape[0] - 2)
+    values, right = sla.eigs(operator, k=k, which="LM", maxiter=20000, tol=tol)
+    left_values, left = sla.eigs(operator.T.tocsr(), k=k, which="LM", maxiter=20000, tol=tol)
+
+    order = np.argsort(-np.abs(values))
+    left_order = np.argsort(-np.abs(left_values))
+    return {
+        "eigenvalues": [complex(values[i]) for i in order],
+        "left_eigenvalues": [complex(left_values[i]) for i in left_order],
+        "right": right[:, order],
+        "left": left[:, left_order],
+        "estimate": float(np.abs(values[order[0]])),
+        "method": "arpack",
+    }
+
+
 def spectral_radius(
     matrix: sp.csr_matrix,
     *,
     seed: int = 0,
     iterations: int = 200,
     tail: int = 20,
+    method: str = "arpack",
 ) -> dict:
     """Estimate ``|lambda_max|`` by the growth rate of the power iteration.
 
@@ -77,6 +108,47 @@ def spectral_radius(
     per-step ratio oscillates around the true modulus instead of settling, which
     is why the tail spread is reported alongside the estimate.
     """
+    if (
+        method == "arpack"
+        and sp.issparse(matrix)
+        and matrix.shape[0] > 3
+        and matrix.nnz > 0
+    ):
+        try:
+            pair = leading_eigenpairs(matrix, k=min(3, matrix.shape[0] - 2))
+            values, estimate = pair["eigenvalues"], pair["estimate"]
+            # ARPACK returns numerical noise on nilpotent and strongly defective
+            # operators, where "largest magnitude" is degenerate at zero. The
+            # eigenpair residual catches that: a real eigenpair has a small one.
+            leading = pair["right"][:, 0]
+            residual = float(
+                np.linalg.norm(matrix @ leading - values[0] * leading) / max(estimate, 1e-300)
+            )
+            # Cross-check against the norm growth rate, which is an honest estimator
+            # exactly where ARPACK is not: it goes to zero on a nilpotent operator.
+            probe = np.random.default_rng(seed).normal(size=matrix.shape[0])
+            probe /= np.linalg.norm(probe)
+            for _ in range(40):
+                probe = matrix @ probe
+                norm = float(np.linalg.norm(probe))
+                if norm == 0.0:
+                    break
+                probe /= norm
+            growth = norm if norm > 0 else 0.0
+            if residual < 1e-6 and growth > 0.5 * estimate:
+                second = abs(values[1]) if len(values) > 1 else 0.0
+                return {
+                    "estimate": estimate,
+                    "method": "arpack",
+                    "converged": True,
+                    "residual": residual,
+                    "growth_cross_check": growth,
+                    "leading_eigenvalues": [[v.real, v.imag] for v in values],
+                    "degeneracy_ratio": second / estimate if estimate else 0.0,
+                }
+        except (sla.ArpackNoConvergence, sla.ArpackError, ValueError):
+            pass  # fall through to power iteration
+
     rng = np.random.default_rng(seed)
     n = matrix.shape[0]
     vector = rng.normal(size=n).astype(np.float64)
@@ -92,13 +164,20 @@ def spectral_radius(
         vector = product / norm
 
     if not ratios or ratios[-1] == 0.0:
-        return {"estimate": 0.0, "converged": True, "iterations": len(ratios), "tail_spread": 0.0}
+        return {
+            "estimate": 0.0,
+            "method": "power_iteration",
+            "converged": True,
+            "iterations": len(ratios),
+            "tail_spread": 0.0,
+        }
 
     window = ratios[-min(tail, len(ratios)) :]
     estimate = float(np.exp(np.mean(np.log(window))))
     spread = float((max(window) - min(window)) / estimate) if estimate > 0 else 0.0
     return {
         "estimate": estimate,
+        "method": "power_iteration",
         "last_ratio": float(ratios[-1]),
         "tail_min": float(min(window)),
         "tail_max": float(max(window)),
@@ -107,6 +186,103 @@ def spectral_radius(
         "converged": bool(spread < 1e-3),
         "note": "geometric mean of the last ||W^k v|| ratios; oscillation => complex dominant pair",
     }
+
+
+class DeflatedOperator:
+    """``W`` with its leading spectral modes projected out, applied matrix-free.
+
+    Not a null model -- it is a question. The two leading MaleCNS modes are
+    hemisphere-local and enormous relative to the bulk; removing them asks what the
+    rest of the wiring does on its own, which no degree-preserving rewiring can
+    answer because no rewiring reproduces that geometry.
+
+    The rank-k correction stays factored rather than materialised: ``W`` minus a
+    dense 165k x 165k update is not representable, but ``W x - sum_i lambda_i v_i
+    (u_i . x) / (u_i . v_i)`` costs one extra O(n) pass per mode. Left eigenvectors
+    are required -- for a non-symmetric operator the spectral projector is
+    ``v u^T / (u . v)``, not ``v v^T``.
+    """
+
+    def __init__(self, matrix: sp.csr_matrix, *, modes: int = 2, tol: float = 1e-9,
+                 scale: float = 1.0):
+        pair = leading_eigenpairs(matrix, k=max(modes + 2, 4), tol=tol)
+        self.matrix = matrix
+        self.shape = matrix.shape
+        self.nnz = matrix.nnz
+        self.modes = modes
+        self.scale = np.float32(scale)
+
+        values = pair["eigenvalues"]
+        right_all, left_all = pair["right"], pair["left"]
+        # ARPACK returns the left and right spectra in their own orders, and near
+        # degeneracy makes index-matching wrong. Pair them by eigenvalue instead.
+        kept_right, kept_left, kept_values = [], [], []
+        used: set[int] = set()
+        for index in range(min(modes, len(values))):
+            value = values[index]
+            # Only real modes are deflated with a real rank-1 projector. A complex
+            # pair spans a two-dimensional real invariant subspace and cannot be
+            # removed this way; deflating its real part alone is not a projector
+            # and can make the spectral radius grow.
+            if abs(value.imag) > 1e-6 * max(abs(value), 1e-300):
+                continue
+            candidates = [
+                j for j in range(left_all.shape[1])
+                if j not in used and abs(pair["left_eigenvalues"][j] - value) < 1e-6 * abs(value)
+            ]
+            if not candidates:
+                continue
+            j = candidates[0]
+            used.add(j)
+            right = np.real(right_all[:, index]).astype(np.float64)
+            left = np.real(left_all[:, j]).astype(np.float64)
+            overlap = float(left @ right)
+            if abs(overlap) < 1e-8:
+                continue
+            kept_right.append(right)
+            kept_left.append(left / overlap)
+            kept_values.append(float(value.real))
+
+        self.right = (
+            np.stack(kept_right, axis=1).astype(np.float32)
+            if kept_right
+            else np.zeros((matrix.shape[0], 0), dtype=np.float32)
+        )
+        self.left = (
+            np.stack(kept_left, axis=1).astype(np.float32)
+            if kept_left
+            else np.zeros((matrix.shape[0], 0), dtype=np.float32)
+        )
+        self.values = np.asarray(kept_values, dtype=np.float32)
+        self.eigenvalues = [complex(v) for v in values[:modes]]
+        self.deflated_modes = len(kept_values)
+        self.skipped_complex_modes = modes - self.deflated_modes
+
+    def __matmul__(self, state: np.ndarray) -> np.ndarray:
+        flat = state.ndim == 1
+        columns = state[:, None] if flat else state
+        product = self.matrix @ columns
+        if self.deflated_modes:
+            coefficients = self.left.T @ columns          # (modes, batch)
+            product = product - self.right @ (self.values[:, None] * coefficients)
+        product = product * self.scale
+        return product[:, 0] if flat else product
+
+    def rescaled(self, scale: float) -> "DeflatedOperator":
+        """Same deflation, different overall scale, without redoing the eigensolve."""
+        clone = object.__new__(DeflatedOperator)
+        clone.__dict__.update(self.__dict__)
+        clone.scale = np.float32(scale)
+        return clone
+
+    def stats(self) -> dict:
+        return {
+            "kind": f"leading-{self.modes}-mode deflation of the real operator",
+            "deflated_modes": self.deflated_modes,
+            "skipped_complex_modes": self.skipped_complex_modes,
+            "deflated_eigenvalues": [[v.real, v.imag] for v in self.eigenvalues],
+            "note": "an ablation, not a null: asks what the bulk does without the slow modes",
+        }
 
 
 def normalize_spectral_radius(matrix: sp.csr_matrix, radius: float) -> sp.csr_matrix:

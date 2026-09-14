@@ -18,7 +18,11 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path("artifacts/runtime-v1/tagger-v3.json"))
     parser.add_argument("--seeds", type=int, nargs="+", default=list(range(10)))
     parser.add_argument("--leak", type=float, default=0.4)
-    parser.add_argument("--target-radius", type=float, default=0.95)
+    parser.add_argument("--gains", type=float, nargs="+", default=[0.25, 0.5, 0.95, 1.5, 2.5, 4.0])
+    parser.add_argument(
+        "--operators", nargs="+", default=None,
+        help="restrict to these operators (diagnostic sweeps); default runs all three.",
+    )
     parser.add_argument("--embedding-dim", type=int, default=64)
     parser.add_argument("--input-scale", type=float, default=1.0)
     parser.add_argument("--batch-size", type=int, default=64)
@@ -52,7 +56,7 @@ def main() -> None:
     spec = TaggerSpec(
         seeds=tuple(args.seeds),
         ridge=args.ridge,
-        target_radius=args.target_radius,
+        gains=tuple(args.gains),
         normalise_rows=not args.no_row_normalise,
         reservoir=ReservoirSpec(
             leak=args.leak,
@@ -62,7 +66,7 @@ def main() -> None:
             max_bytes=args.max_bytes,
         ),
     )
-    report = run_experiment(args.graph, train, evaluate, spec)
+    report = run_experiment(args.graph, train, evaluate, spec, operators=args.operators)
     report["truncated_at_dispositivo"] = truncate
     report["label_noise"] = {
         "train": label_noise(train),
@@ -73,18 +77,16 @@ def main() -> None:
 
     print(f"truncated at dispositivo: {truncate}   (untruncated runs are plumbing checks)")
     print(f"documents kept: train {len(train)}, eval {len(evaluate)}")
-    print(f"{'operator':<16}{'macro-F1':>10}{'stdev':>9}{'rec/in':>9}")
-    for name, stats in report["summary"].items():
-        if not name.startswith("malecns_minus_"):
-            ratio = next(
-                run["diagnostics"]["eval"]["recurrent_to_input_ratio"]
-                for run in report["runs"]
-                if run["operator"] == name
-            )
-            print(
-                f"{name:<16}{stats['macro_f1_mean']:>10.4f}{stats['macro_f1_stdev']:>9.4f}"
-                f"{ratio:>9.3f}"
-            )
+    print(
+        f"{'operator':<14}{'gain':>6}{'typ':>7}{'macro-F1':>10}{'rec/in':>9}{'sat':>7}{'|x|':>8}"
+    )
+    for run in sorted(report["runs"], key=lambda r: (r["operator"], r["gain"], r["seed"])):
+        diag = run["diagnostics"]["eval"]
+        print(
+            f"{run['operator']:<14}{run['gain']:>6.2f}{run['typical_gain']:>7.3f}"
+            f"{run['macro_f1']:>10.4f}{diag['recurrent_to_input_ratio']:>9.3f}"
+            f"{diag['saturated_fraction']:>7.3f}{diag['state_rms']:>8.4f}"
+        )
     print(f"{'char-ngram':<16}{report['char_ngram_baseline']['macro_f1']:>10.4f}")
     for null in ("degree_null", "random_esn"):
         key = f"malecns_minus_{null}"
