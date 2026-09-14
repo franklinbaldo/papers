@@ -1,5 +1,5 @@
 ---
-type: "Preregistered Run"
+type: "Protocol"
 title: "MaleCNS Visual Attractor Run 1 — Dynamic Positive Control"
 description: "Frozen operating point, controls and decision rule for the first closed-loop visual-attraction run."
 tags: [malecns, drosophila, visual-tracking, positive-control, preregistration]
