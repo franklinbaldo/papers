@@ -1,0 +1,57 @@
+{
+  "bit_widths": [4, 8, 16],
+  "file": "model.safetensors",
+  "group_size": 128,
+  "included_tensor_rule": "ndim >= 2 and dtype in F16/BF16/F32/F64",
+  "metrics": [
+    {
+      "avg_trits": 3.8334284851193194,
+      "binary_length_prefix_bits": 4.833428485119319,
+      "binary_length_prefix_ratio": 1.2083571212798299,
+      "bits": 4,
+      "capacity_equivalent_bits": 6.075840398110429,
+      "capacity_ratio": 1.5189600995276074,
+      "cell_ratio": 0.9583571212798299,
+      "fixed_bits": 4.0,
+      "packed_2bit_bits": 7.666856970238639,
+      "packed_2bit_ratio": 1.9167142425596597,
+      "weights": 134479872,
+      "zero_rate": 0.19954499956692404
+    },
+    {
+      "avg_trits": 7.98991620099103,
+      "binary_length_prefix_bits": 9.989916200991031,
+      "binary_length_prefix_ratio": 1.2487395251238789,
+      "bits": 8,
+      "capacity_equivalent_bits": 12.663717562475222,
+      "capacity_ratio": 1.5829646953094028,
+      "cell_ratio": 0.9987395251238788,
+      "fixed_bits": 8.0,
+      "packed_2bit_bits": 15.97983240198206,
+      "packed_2bit_ratio": 1.9974790502477575,
+      "weights": 134479872,
+      "zero_rate": 0.011251066628022966
+    },
+    {
+      "avg_trits": 15.868971187004105,
+      "binary_length_prefix_bits": 18.868971187004103,
+      "binary_length_prefix_ratio": 1.1793106991877564,
+      "bits": 16,
+      "capacity_equivalent_bits": 25.151724256426,
+      "capacity_ratio": 1.571982766026625,
+      "cell_ratio": 0.9918106991877566,
+      "fixed_bits": 16.0,
+      "packed_2bit_bits": 31.73794237400821,
+      "packed_2bit_ratio": 1.983621398375513,
+      "weights": 134479872,
+      "zero_rate": 0.00004443044086181165
+    }
+  ],
+  "mode": "safetensors",
+  "model_id": "HuggingFaceTB/SmolLM2-135M",
+  "numpy_version": "2.5.2",
+  "revision": "d6a5589c239236d22370e2126bbe23d4843c47d9",
+  "sha256": "80521b40281d6ce74e35c9282c22539e75aa0ac8578892b2a59955ef78d55da1",
+  "skipped_dtypes": [],
+  "tensor_count": 211
+}

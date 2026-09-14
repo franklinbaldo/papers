@@ -1,0 +1,56 @@
+{
+  "bit_widths": [
+    4,
+    8
+  ],
+  "file": "model.safetensors",
+  "group_size": 128,
+  "included_tensor_rule": "ndim >= 2 and dtype in F16/BF16/F32/F64",
+  "metrics": [
+    {
+      "adaptive_bitmap_sparse_bits_per_weight": 3.9521162542450963,
+      "adaptive_bitmap_sparse_ratio": 0.9880290635612741,
+      "bitplane_enumerative_bits_per_weight": 3.5585457874320405,
+      "bitplane_enumerative_ratio": 0.8896364468580101,
+      "bits": 4,
+      "fixed_bits_per_weight": 4.0,
+      "length_fixed_bits_per_weight": 4.198546180948179,
+      "length_fixed_ratio": 1.0496365452370449,
+      "length_huffman_bits_per_weight": 4.184733548824318,
+      "length_huffman_ratio": 1.0461833872060795,
+      "observed_quantized_values": 15,
+      "value_huffman_bits_per_weight": 3.267944968002349,
+      "value_huffman_ratio": 0.8169862420005872,
+      "value_shannon_entropy_bits_per_weight": 3.2382270955862955,
+      "value_shannon_entropy_ratio": 0.8095567738965739,
+      "weights": 134479872,
+      "zero_rate": 0.19954499956692404
+    },
+    {
+      "adaptive_bitmap_sparse_bits_per_weight": 8.007810953300133,
+      "adaptive_bitmap_sparse_ratio": 1.0009763691625166,
+      "bitplane_enumerative_bits_per_weight": 7.577544957806028,
+      "bitplane_enumerative_ratio": 0.9471931197257535,
+      "bits": 8,
+      "fixed_bits_per_weight": 8.0,
+      "length_fixed_bits_per_weight": 8.906752327961764,
+      "length_fixed_ratio": 1.1133440409952204,
+      "length_huffman_bits_per_weight": 8.4764707613642,
+      "length_huffman_ratio": 1.059558845170525,
+      "observed_quantized_values": 255,
+      "value_huffman_bits_per_weight": 7.418025026079739,
+      "value_huffman_ratio": 0.9272531282599674,
+      "value_shannon_entropy_bits_per_weight": 7.380176259879645,
+      "value_shannon_entropy_ratio": 0.9225220324849557,
+      "weights": 134479872,
+      "zero_rate": 0.011251066628022966
+    }
+  ],
+  "mode": "binary-alternatives",
+  "model_id": "HuggingFaceTB/SmolLM2-135M",
+  "numpy_version": "2.5.2",
+  "revision": "d6a5589c239236d22370e2126bbe23d4843c47d9",
+  "sha256": "80521b40281d6ce74e35c9282c22539e75aa0ac8578892b2a59955ef78d55da1",
+  "skipped_dtypes": [],
+  "tensor_count": 211
+}
