@@ -138,6 +138,56 @@ Only real modes are deflated. A complex pair spans a two-dimensional real invari
 subspace; removing its real part alone is not a projector and can make the spectral
 radius grow rather than shrink. Skipped modes are counted in the report.
 
+## Semantic tagging: food derived from the semantic space
+
+The food signal is not a supervised pulse over an annotated span. It comes from
+the encoder itself, by asking what the tag *does* to the reading of the text so
+far:
+
+    E_t     = f(text up to t)
+    E_t^tag = f(text up to t + tag)
+    F_t     = E_t^tag - E_t
+
+`F_t` is what the presence of this tag changes about the interpretation at this
+point. The whole vector, not a scalar, is projected onto the gustatory population,
+so different semantic directions produce different patterns across the food
+neurons — distinct tastes rather than only more or less food. Intensity controls
+how much; the direction of `F_t` controls which flavour.
+
+The fly then reads two synchronised trajectories: the motion of meaning `dE_t`,
+and the tag-relevance signal `F_t`. **START and END are not declared.** They are
+where the signal rises and falls, which is the property that makes this
+formulation better than feeding on a hand-marked span.
+
+### Intensity: polarity is measured, never assumed
+
+Three definitions are available and **two of them are probably inverted**. If the
+text is already about the tag, appending the tag is redundant and moves the
+embedding very little, so `||F_t||` and `<F_t, tag>` are expected to be *largest
+where the text is least related*. Feeding on either would starve the fly exactly
+over the region being looked for.
+
+| definition | expression | expected polarity |
+|---|---|---|
+| `norm` | `||F_t||` | inverted |
+| `alignment` | `<F_t, tag_hat>` | inverted |
+| `similarity` | `<E_t_hat, tag_hat>` | intended, by construction |
+
+On a synthetic corpus built with the redundancy effect, the point-biserial
+correlation with the annotated region is −0.89 for `norm`, −0.94 for `alignment`
+and +0.89 for `similarity`. That construction assumes the effect it demonstrates,
+so it establishes that the failure mode is real, not that a given encoder shows
+it. The definition is chosen by running `intensity_polarity` against the gold
+spans with the actual encoder, before any training.
+
+### Mandatory control
+
+A classifier receiving `[E_t, F_t, dE_t]` with no fly. If that already delimits
+the region cleanly, the encoder solved the tagging and the connectome is
+decoration. The claim worth making is the connectome improving continuity, edge
+placement, or the temporal decision over a noisy signal — and it is only available
+once this control has been run and lost.
+
 ## Gate 2 — document-level task on the whole brain
 
 After Gates 0 and 1, all conditions receive the **same frozen byte stream**, the same split, and the same fixed random input projection.

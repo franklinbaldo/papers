@@ -274,3 +274,176 @@ def teacher_food_drive(
     drive = np.zeros((time_steps, neurons), dtype=np.float32)
     drive[:, food] = active[:, None] * np.float32(amplitude)
     return drive
+
+
+# --- unsupervised food from the semantic space ------------------------------
+#
+# The teacher above needs an annotated span to know when to feed. The contrast
+# below does not: the food signal comes from the encoder itself, by asking what
+# the tag *does* to the reading of the text so far.
+#
+#     E_t     = f(text up to t)
+#     E_t^tag = f(text up to t + tag)
+#     F_t     = E_t^tag - E_t
+#
+# F_t is "what the presence of this tag changes about the interpretation here".
+# Its direction is a flavour and its magnitude an amount, so START and END need
+# not be declared: they are where the signal rises and falls.
+
+
+@dataclass(frozen=True)
+class TagContrast:
+    """The tag-conditioned semantic contrast and its scalar intensity."""
+
+    contrast: np.ndarray
+    intensity: np.ndarray
+    plain: np.ndarray
+    tagged: np.ndarray
+    intensity_mode: str
+
+
+def tag_contrast(
+    plain: np.ndarray,
+    tagged: np.ndarray,
+    tag_embedding: np.ndarray,
+    *,
+    intensity: str = "similarity",
+    normalise: bool = True,
+) -> TagContrast:
+    """Contrast between reading the text with and without the tag appended.
+
+    Both sequences are unit-normalised before differencing unless disabled, so the
+    contrast is a movement on the sphere and is comparable across positions rather
+    than tracking encoder magnitude.
+
+    Three intensity definitions are offered because their polarity is not the
+    same, and two of them are probably backwards. If the text is already about the
+    tag, appending the tag is redundant and moves the embedding very little, so
+    ``norm`` and ``alignment`` are expected to be *largest where the text is least
+    related* -- inverting the intended "this passage starts to taste like the
+    tag". ``similarity``, the plain cosine between text and tag, has the intended
+    polarity by construction. Which one actually tracks annotated spans is an
+    empirical question: measure it with :func:`intensity_polarity` on gold
+    documents before choosing, and do not assume the sign.
+
+    * ``norm``       -- ``||F_t||``
+    * ``alignment``  -- ``<F_t, tag_hat>``
+    * ``similarity`` -- ``<E_t_hat, tag_hat>`` (default)
+    """
+    left = np.asarray(plain, dtype=np.float32)
+    right = np.asarray(tagged, dtype=np.float32)
+    if left.ndim != 2 or left.shape != right.shape:
+        raise ValueError("plain and tagged embeddings must share shape [steps, dimensions]")
+    tag = np.asarray(tag_embedding, dtype=np.float32).reshape(-1)
+    if tag.size != left.shape[1]:
+        raise ValueError("tag embedding must live in the same semantic space as the text")
+
+    if normalise:
+        left = left / np.maximum(np.linalg.norm(left, axis=1, keepdims=True), 1e-12)
+        right = right / np.maximum(np.linalg.norm(right, axis=1, keepdims=True), 1e-12)
+    tag_hat = tag / max(float(np.linalg.norm(tag)), 1e-12)
+
+    contrast = (right - left).astype(np.float32)
+    if intensity == "norm":
+        values = np.linalg.norm(contrast, axis=1)
+    elif intensity == "alignment":
+        values = contrast @ tag_hat
+    elif intensity == "similarity":
+        unit = left / np.maximum(np.linalg.norm(left, axis=1, keepdims=True), 1e-12)
+        values = unit @ tag_hat
+    else:
+        raise ValueError(f"unknown intensity mode {intensity!r}")
+
+    return TagContrast(
+        contrast=contrast,
+        intensity=values.astype(np.float32),
+        plain=left,
+        tagged=right,
+        intensity_mode=intensity,
+    )
+
+
+def intensity_polarity(intensity: np.ndarray, mask: np.ndarray) -> dict:
+    """Does this intensity rise or fall inside the annotated region?
+
+    Settles the polarity question by measurement instead of argument. A negative
+    ``point_biserial`` means the signal is *lower* where the tag applies, so that
+    definition is inverted and feeding on it would starve the fly exactly where
+    the answer is.
+    """
+    values = np.asarray(intensity, dtype=np.float64).reshape(-1)
+    inside = np.asarray(mask, dtype=bool).reshape(-1)
+    if values.size != inside.size:
+        raise ValueError("intensity and mask must share length")
+    if inside.all() or not inside.any():
+        return {
+            "point_biserial": 0.0,
+            "inside_mean": 0.0,
+            "outside_mean": 0.0,
+            "separation": 0.0,
+            "degenerate": True,
+        }
+    correlation = (
+        0.0
+        if values.std() < 1e-12
+        else float(np.corrcoef(values, inside.astype(np.float64))[0, 1])
+    )
+    return {
+        "point_biserial": correlation,
+        "inside_mean": float(values[inside].mean()),
+        "outside_mean": float(values[~inside].mean()),
+        "separation": float(values[inside].mean() - values[~inside].mean()),
+        "degenerate": False,
+    }
+
+
+def contrast_food_drive(
+    contrast: TagContrast,
+    food_indices: np.ndarray,
+    *,
+    seed: int,
+    amplitude: float = 1.0,
+    separate_flavour_from_amount: bool = True,
+) -> np.ndarray:
+    """Project the contrast onto the gustatory population: direction is flavour.
+
+    The whole vector is projected rather than reduced to a scalar first, so
+    different semantic directions produce different patterns across the food
+    neurons -- distinct tastes, not merely more or less food. With
+    ``separate_flavour_from_amount`` the pattern is unit-normalised and then scaled
+    by the intensity, keeping "which flavour" and "how much" independently
+    controlled; without it the raw projection carries both at once.
+
+    The projection is a fixed seeded random matrix: part of the frozen interface,
+    never fitted.
+    """
+    food = np.asarray(food_indices, dtype=np.int64)
+    if food.size == 0:
+        raise ValueError("food population is empty")
+    dimensions = contrast.contrast.shape[1]
+    rng = np.random.default_rng(seed)
+    projection = rng.normal(
+        scale=1.0 / np.sqrt(dimensions), size=(dimensions, food.size)
+    ).astype(np.float32)
+
+    pattern = contrast.contrast @ projection
+    if separate_flavour_from_amount:
+        norms = np.maximum(np.linalg.norm(pattern, axis=1, keepdims=True), 1e-12)
+        pattern = pattern / norms * contrast.intensity[:, None]
+    return (pattern * np.float32(amplitude)).astype(np.float32)
+
+
+def direct_control_features(trajectory: SemanticTrajectory, contrast: TagContrast) -> np.ndarray:
+    """``[E_t, F_t, dE_t]`` -- everything the fly is given, with no fly.
+
+    The mandatory control for this formulation. If a classifier on these features
+    already delimits the region cleanly, the encoder solved the tagging and the
+    connectome is decoration. The interesting result is the connectome improving
+    continuity, edges, or the temporal decision over a noisy signal, and that
+    claim is only available once this control has been run and lost.
+    """
+    if trajectory.states.shape[0] != contrast.contrast.shape[0]:
+        raise ValueError("trajectory and contrast must share the time axis")
+    return np.concatenate(
+        [trajectory.states, contrast.contrast, trajectory.deltas], axis=1
+    ).astype(np.float32)
