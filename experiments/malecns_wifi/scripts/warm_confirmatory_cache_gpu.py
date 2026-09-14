@@ -1,11 +1,13 @@
 """Warm the frozen F2/F3 state cache on CUDA without changing the runner.
 
-The CPU ``run_confirmatory.py`` remains authoritative.  This script only writes
-state arrays under the *same* content-addressed keys.  Every gain for one
-(operator, seed, document) is evolved in parallel so the ~10M-edge matrix is read
-once per timestep rather than once per gain.
+The CPU ``run_confirmatory.py`` remains authoritative. This script only writes
+state arrays under the *same* content-addressed keys. Every document and gain for
+one (operator, seed) is evolved as an independent column of one sparse CUDA pass,
+so the ~10M-edge matrix is streamed once per global timestep rather than once per
+document per gain.
 
-A real CPU<->GPU parity check is mandatory before any cache file is written.
+A real full-operator CPU<->GPU state parity check *and* downstream scoring parity
+are mandatory before any cache file is written.
 """
 
 from __future__ import annotations
@@ -21,14 +23,16 @@ from malecns_wifi import load_graph
 from malecns_wifi.characterize import degree_preserving_null, random_esn
 from malecns_wifi.gpu_cache import (
     compare_states,
-    reservoir_states_multi_gain,
+    reservoir_states_documents_multi_gain,
     scipy_csr_to_torch,
 )
 from malecns_wifi.multitag import (
     CACHE_SCHEMA,
     MultitagSpec,
     array_fingerprint,
+    build_flavours,
     calibrate_drive,
+    evaluate,
     reservoir_states,
     run_fingerprint,
 )
@@ -103,6 +107,7 @@ def main() -> None:
         choices=["malecns", "degree_null", "random_esn"],
     )
     parser.add_argument("--representation", default="absolute_plus_relations")
+    parser.add_argument("--flavour", default="semantic", choices=["semantic", "random_codebook"])
     parser.add_argument("--leak", type=float, default=0.4)
     parser.add_argument("--steps-per-chunk", type=int, default=4)
     parser.add_argument("--target-drive-rms", type=float, default=0.05)
@@ -110,6 +115,7 @@ def main() -> None:
     parser.add_argument("--parity-gain", type=float, default=0.95)
     parser.add_argument("--parity-max-abs", type=float, default=2e-3)
     parser.add_argument("--parity-relative-rmse", type=float, default=2e-3)
+    parser.add_argument("--parity-metric-abs", type=float, default=1e-4)
     parser.add_argument("--expected-features-hash", default="")
     parser.add_argument("--expected-graph-hash", default="")
     parser.add_argument("--force", action="store_true")
@@ -124,6 +130,8 @@ def main() -> None:
 
     stored = np.load(args.features, allow_pickle=False)
     groups = np.asarray(stored["groups"])
+    tag_masks = np.asarray(stored["tag_masks"])
+    tag_embeddings = np.asarray(stored["tag_embeddings"])
     blocks = {
         "absolute": stored["absolute"],
         "relations": stored["sensation"],
@@ -155,8 +163,16 @@ def main() -> None:
     if args.parity_gain not in gains:
         raise SystemExit("--parity-gain must be present in --gains")
 
+    spec = MultitagSpec(
+        seeds=tuple(args.seeds),
+        steps_per_chunk=args.steps_per_chunk,
+        leak=args.leak,
+        input_scale=args.target_drive_rms,
+        gain_grid=gains,
+    )
+
     report: dict = {
-        "format": "papers/malecns-confirmatory-gpu-cache-v1",
+        "format": "papers/malecns-confirmatory-gpu-cache-v2",
         "cache_schema": CACHE_SCHEMA,
         "device": args.device,
         "torch": torch.__version__,
@@ -176,6 +192,7 @@ def main() -> None:
     started = time.perf_counter()
     for kind in args.operators:
         for seed in args.seeds:
+            cell_started = time.perf_counter()
             operator = build_operator(kind, matrix, seed)
             torch_operator = scipy_csr_to_torch(operator, device=args.device)
 
@@ -213,74 +230,100 @@ def main() -> None:
                 )
                 continue
 
-            per_gain_parts: dict[float, list[np.ndarray]] = {gain: [] for gain in gains}
-            for document_index, document in enumerate(documents):
-                rows = groups == document
-                gpu = reservoir_states_multi_gain(
-                    operator,
-                    block[rows],
-                    input_weights=projection,
-                    readout_indices=readout,
-                    input_indices=populations.input_indices,
-                    gains=gains,
-                    leak=args.leak,
+            gpu = reservoir_states_documents_multi_gain(
+                operator,
+                block,
+                groups,
+                input_weights=projection,
+                readout_indices=readout,
+                input_indices=populations.input_indices,
+                gains=gains,
+                leak=args.leak,
+                steps_per_chunk=args.steps_per_chunk,
+                scale=calibration["mean"],
+                device=args.device,
+                torch_operator=torch_operator,
+            )
+
+            # Mandatory full-corpus parity before the first cache write. One CPU
+            # reference gain costs a single old-style pass, but verifies both the
+            # state tensor and the downstream ranking metric that adjudicates F2/F3.
+            if not parity_done:
+                cpu_spec = MultitagSpec(
+                    seeds=tuple(args.seeds),
                     steps_per_chunk=args.steps_per_chunk,
-                    scale=calibration["mean"],
-                    device=args.device,
-                    torch_operator=torch_operator,
+                    gain=args.parity_gain,
+                    leak=args.leak,
+                    input_scale=args.target_drive_rms,
                 )
-
-                # Mandatory real parity before the first cache write.  It uses the
-                # actual 165k-neuron operator, actual document and actual projection.
-                if not parity_done:
-                    cpu_spec = MultitagSpec(
-                        seeds=tuple(args.seeds),
-                        steps_per_chunk=args.steps_per_chunk,
-                        gain=args.parity_gain,
-                        leak=args.leak,
-                        input_scale=args.target_drive_rms,
+                cpu = np.vstack(
+                    [
+                        reservoir_states(
+                            operator,
+                            block[groups == document],
+                            input_weights=projection,
+                            readout_indices=readout,
+                            input_indices=populations.input_indices,
+                            spec=cpu_spec,
+                            scale=calibration["mean"],
+                        )[0]
+                        for document in documents
+                    ]
+                )
+                parity = compare_states(cpu, gpu[args.parity_gain])
+                flavours = build_flavours(
+                    tag_embeddings, spec, seed=seed, source=args.flavour
+                )
+                cpu_score = evaluate(
+                    cpu, tag_masks, flavours, groups, penalties=spec.ridge_penalties
+                )
+                gpu_score = evaluate(
+                    gpu[args.parity_gain], tag_masks, flavours, groups,
+                    penalties=spec.ridge_penalties,
+                )
+                macro_delta = abs(
+                    float(cpu_score["macro_tag_auprc"])
+                    - float(gpu_score["macro_tag_auprc"])
+                )
+                inside_delta = abs(
+                    float(cpu_score["inside_auprc"])
+                    - float(gpu_score["inside_auprc"])
+                )
+                parity_record = {
+                    "operator": kind,
+                    "seed": seed,
+                    "gain": args.parity_gain,
+                    "max_abs": parity.max_abs,
+                    "rmse": parity.rmse,
+                    "reference_rms": parity.reference_rms,
+                    "relative_rmse": parity.relative_rmse,
+                    "max_abs_limit": args.parity_max_abs,
+                    "relative_rmse_limit": args.parity_relative_rmse,
+                    "cpu_macro_tag_auprc": float(cpu_score["macro_tag_auprc"]),
+                    "gpu_macro_tag_auprc": float(gpu_score["macro_tag_auprc"]),
+                    "macro_tag_auprc_abs_delta": macro_delta,
+                    "cpu_inside_auprc": float(cpu_score["inside_auprc"]),
+                    "gpu_inside_auprc": float(gpu_score["inside_auprc"]),
+                    "inside_auprc_abs_delta": inside_delta,
+                    "metric_abs_limit": args.parity_metric_abs,
+                }
+                report["parity"] = parity_record
+                manifest_path.parent.mkdir(parents=True, exist_ok=True)
+                manifest_path.write_text(json.dumps(report, indent=2) + "\n")
+                if (
+                    parity.max_abs > args.parity_max_abs
+                    or parity.relative_rmse > args.parity_relative_rmse
+                    or macro_delta > args.parity_metric_abs
+                    or inside_delta > args.parity_metric_abs
+                ):
+                    raise SystemExit(
+                        "CPU/GPU parity failed; refusing to write cache: "
+                        + json.dumps(parity_record)
                     )
-                    cpu, _ = reservoir_states(
-                        operator,
-                        block[rows],
-                        input_weights=projection,
-                        readout_indices=readout,
-                        input_indices=populations.input_indices,
-                        spec=cpu_spec,
-                        scale=calibration["mean"],
-                    )
-                    parity = compare_states(cpu, gpu[args.parity_gain])
-                    parity_record = {
-                        "operator": kind,
-                        "seed": seed,
-                        "document": int(document),
-                        "gain": args.parity_gain,
-                        "max_abs": parity.max_abs,
-                        "rmse": parity.rmse,
-                        "reference_rms": parity.reference_rms,
-                        "relative_rmse": parity.relative_rmse,
-                        "max_abs_limit": args.parity_max_abs,
-                        "relative_rmse_limit": args.parity_relative_rmse,
-                    }
-                    report["parity"] = parity_record
-                    manifest_path.parent.mkdir(parents=True, exist_ok=True)
-                    manifest_path.write_text(json.dumps(report, indent=2) + "\n")
-                    if (
-                        parity.max_abs > args.parity_max_abs
-                        or parity.relative_rmse > args.parity_relative_rmse
-                    ):
-                        raise SystemExit(
-                            "CPU/GPU parity failed; refusing to write cache: "
-                            + json.dumps(parity_record)
-                        )
-                    parity_done = True
+                parity_done = True
 
-                for gain in gains:
-                    per_gain_parts[gain].append(gpu[gain])
-
-            cell_seconds = time.perf_counter() - started
             for gain in gains:
-                states = np.vstack(per_gain_parts[gain]).astype(np.float32, copy=False)
+                states = np.asarray(gpu[gain], dtype=np.float32)
                 np.save(paths[gain], states)
             report["cells"].append(
                 {
@@ -288,18 +331,18 @@ def main() -> None:
                     "seed": seed,
                     "status": "written",
                     "keys": keys,
-                    "shapes": {str(g): list(np.vstack(per_gain_parts[g]).shape) for g in gains},
-                    "elapsed_total_seconds": round(cell_seconds, 3),
+                    "shapes": {str(g): list(gpu[g].shape) for g in gains},
+                    "seconds": round(time.perf_counter() - cell_started, 3),
                 }
             )
             manifest_path.write_text(json.dumps(report, indent=2) + "\n")
             print(
                 f"{kind} seed={seed}: wrote {len(gains)} gains "
-                f"({time.perf_counter() - started:.1f}s total)",
+                f"({time.perf_counter() - cell_started:.1f}s cell)",
                 flush=True,
             )
 
-            del torch_operator, operator
+            del torch_operator, operator, gpu
             if args.device.startswith("cuda"):
                 torch.cuda.empty_cache()
 
