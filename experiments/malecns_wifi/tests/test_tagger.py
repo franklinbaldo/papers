@@ -237,3 +237,28 @@ def test_experiment_refuses_a_split_with_no_labels(tmp_path: Path) -> None:
     train = [Document("t", "texto", gold=CLASSES[0], weak=None)]
     with pytest.raises(ValueError, match="no labelled documents"):
         run_experiment(graph, train, [Document("e", "texto", gold=None, weak=None)], TaggerSpec())
+
+
+def test_char_ngram_baseline_is_reproducible_across_processes(tmp_path: Path) -> None:
+    """The builtin hash is randomised per process; the baseline must not be.
+
+    Two identical runs of the experiment scored 0.5556 and 0.1667 on the same
+    split before the bucketing moved to crc32.
+    """
+    import subprocess
+    import sys
+
+    source = _corpus_file(tmp_path / "corpus.jsonl")
+    script = (
+        "from pathlib import Path;"
+        "from malecns_wifi.tagger import char_ngram_baseline, load_corpus;"
+        f"d=load_corpus(Path(r'{source}'), truncate=True);"
+        "print(char_ngram_baseline(d, d, penalty=1e-3, orders=(3, 4))['macro_f1'])"
+    )
+    scores = {
+        subprocess.run(
+            [sys.executable, "-c", script], capture_output=True, text=True, check=True
+        ).stdout.strip()
+        for _ in range(2)
+    }
+    assert len(scores) == 1, f"baseline differs between processes: {scores}"

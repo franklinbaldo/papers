@@ -129,8 +129,8 @@ def main() -> None:
     for name, gain in selection.items():
         print(f"  {name:<14} {gain:.2f}")
     print(
-        f"{'operator':<14}{'gain':>6}{'typ':>7}{'macro-F1':>10}"
-        f"{'rec/in':>9}{'sat':>7}{'|x|':>8}"
+        f"{'operator':<14}{'gain':>6}{'typ':>7}{'macro-F1':>10}{'rec/in':>9}"
+        f"{'sat_all':>9}{'peak|x|':>9}{'rms_all':>9}"
     )
     for run in sorted(report["runs"], key=lambda r: (r["operator"], r["gain"], r["seed"])):
         # Print only selected and fixed-point held-out cells.
@@ -140,7 +140,8 @@ def main() -> None:
         print(
             f"{run['operator']:<14}{run['gain']:>6.2f}{run['typical_gain']:>7.3f}"
             f"{run['macro_f1']:>10.4f}{diag['recurrent_to_input_ratio']:>9.3f}"
-            f"{diag['saturated_fraction']:>7.3f}{diag['state_rms']:>8.4f}"
+            f"{diag['saturated_fraction']:>9.4f}{diag['peak_abs_state']:>9.4f}"
+            f"{diag['full_state_rms']:>9.4f}"
         )
     print(f"{'char-ngram':<16}{report['char_ngram_baseline']['macro_f1']:>10.4f}")
     for null in ("degree_null", "random_esn"):

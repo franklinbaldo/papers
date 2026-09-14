@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import re
 import time
+import zlib
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -436,6 +437,10 @@ def reservoir_features(
     decayed = np.empty((n, count), dtype=np.float32)
     recurrent_energy = 0.0
     input_energy = 0.0
+    saturated_steps = 0.0
+    full_state_energy = 0.0
+    peak_state = 0.0
+    measured_steps = 0
 
     for step in range(width):
         active = lengths > step
@@ -453,6 +458,16 @@ def reservoir_features(
         pre += decayed
         state[:, active] = pre[:, active]
 
+        # Saturation has to be measured on the whole state, not on the readout.
+        # The registered prediction is about the two hemisphere-local modes
+        # clamping, and those modes are not carried by the descending neurons: a
+        # probe restricted to the readout reports no saturation while the modes
+        # that drive the dynamics are pinned at +-1.
+        saturated_steps += float(np.mean(np.abs(state[:, active]) > 0.99))
+        peak_state = max(peak_state, float(np.abs(state[:, active]).max()))
+        full_state_energy += float(np.mean(state[:, active] ** 2))
+        measured_steps += 1
+
         probed = state[readout]
         accumulated[:, active] += probed[:, active]
         ending = lengths == step + 1
@@ -467,7 +482,10 @@ def reservoir_features(
         "input_drive_rms": float(np.sqrt(input_energy / steps)),
         # Saturation is the prediction to check at high gain: tanh clamping the two
         # hemispheric modes would make "bulk-matched" unreachable for this operator.
-        "saturated_fraction": float(np.mean(np.abs(final) > 0.99)),
+        "saturated_fraction": saturated_steps / max(measured_steps, 1),
+        "readout_saturated_fraction": float(np.mean(np.abs(final) > 0.99)),
+        "full_state_rms": float(np.sqrt(full_state_energy / max(measured_steps, 1))),
+        "peak_abs_state": peak_state,
         "state_rms": float(np.sqrt(np.mean(final.astype(np.float64) ** 2))),
     }
     diagnostics["recurrent_to_input_ratio"] = diagnostics["recurrent_drive_rms"] / max(
@@ -499,7 +517,8 @@ def run_operator(
     merged = {
         key: float(np.mean([d[key] for d in diagnostics]))
         for key in ("recurrent_drive_rms", "input_drive_rms", "recurrent_to_input_ratio",
-                    "saturated_fraction", "state_rms")
+                    "saturated_fraction", "readout_saturated_fraction",
+                    "full_state_rms", "peak_abs_state", "state_rms")
     }
     return np.vstack(blocks), merged
 
@@ -542,7 +561,14 @@ def macro_f1(true: np.ndarray, predicted: np.ndarray, classes: tuple[str, ...]) 
 def char_ngram_baseline(
     train: list[Document], evaluate: list[Document], *, penalty: float, orders: tuple[int, ...]
 ) -> dict:
-    """Hashed character n-grams plus a ridge readout -- the honest text baseline."""
+    """Hashed character n-grams plus a ridge readout -- the honest text baseline.
+
+    Bucketing uses crc32, not the builtin ``hash``. Python randomises string
+    hashing per process, so a builtin-hash baseline is not reproducible across
+    runs: two identical invocations of this experiment scored 0.5556 and 0.1667
+    before this was fixed. A baseline that moves between processes cannot be
+    compared against anything.
+    """
     buckets = 2**15
 
     def featurise(documents: list[Document]) -> np.ndarray:
@@ -551,7 +577,8 @@ def char_ngram_baseline(
             lowered = document.text.lower()
             for order in orders:
                 for position in range(len(lowered) - order + 1):
-                    matrix[row, hash(lowered[position : position + order]) % buckets] += 1.0
+                    gram = lowered[position : position + order].encode("utf-8")
+                    matrix[row, zlib.crc32(gram) % buckets] += 1.0
             norm = np.linalg.norm(matrix[row])
             if norm > 0:
                 matrix[row] /= norm
