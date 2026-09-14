@@ -14,6 +14,67 @@ Can the released MaleCNS v1.0 connectome serve as a useful fixed recurrent reser
 
 The experiment does **not** assume a biological advantage. The MaleCNS topology must beat or complement simpler matched baselines before any such claim is made.
 
+## Registered prediction — descending channel utility
+
+The pyramid hypothesis is now specific enough to be wrong in a stated way.
+Registered before the dense pyramid is built:
+
+> **The conditional utility of a channel rises as the scales descend, from global
+> semantic scales to local ones, until it collapses at an encoder-dependent
+> floor.**
+
+Measured three ways per channel, because they answer different questions and
+disagree in an informative way:
+
+* `singleton` — what the channel carries alone. A fine channel may be near
+  useless here and still be the one that resolves a boundary.
+* `leave_one_out` — `score(B) - score(B \ C_k)`. **Understates grouped
+  importance under collinearity**: three adjacent scales carrying overlapping
+  information are each individually removable, so all three score near zero while
+  removing all three would cost a great deal. Demonstrated in the tests rather
+  than asserted here.
+* `add_one` — nested coarse-to-fine, each channel added to the bank of everything
+  above it. **This is the measure the prediction is about**, because the pyramid's
+  question is what each resolution adds *given* the ones already present.
+
+A clean negative: if the leave-one-out and add-one curves show no contribution at
+the fine channels, the "the gain was hidden by missing resolution" hypothesis is
+not confirmed. Two-token, one-token and byte channels are **not** appended
+afterwards to rescue it — that is a different experiment with its own
+registration.
+
+### The mixer: strong enough to calibrate, too weak to tag
+
+Two conditions, both declared now, and no others:
+
+1. **equal** — fixed equal weights. The minimal, hardest test.
+2. **scalar-gated** — one non-negative weight per channel on the simplex,
+   `z_t = sum_k alpha_k P_k C_k,t`, shared across every document, position and
+   tag, with the final RMS calibrated so nine channels deliver the current two
+   do. Nine numbers can say "channel 16 is twice as useful as channel 256"; they
+   cannot say where a tag is. `alpha` is fitted on training folds only.
+
+No position-dependent, content-dependent or tag-dependent weighting in this
+experiment. Attention or an MLP over channels would let the mixer do the tagger's
+job, and a win would say nothing about the field.
+
+### How each outcome reads
+
+| outcome | reading |
+|---|---|
+| equal fails, scalar-gated works | the channels were good; the interface needed to calibrate scales |
+| both fail, direct bank works | the information is there; the operator or interface cannot use it |
+| the direct bank also fails | the predeclared pyramid added nothing useful for this task |
+| fine channels have positive leave-one-out but the aggregate does not improve | a combination or capacity problem, not absence of signal |
+
+### What the current evidence does and does not say
+
+On Jina, `absolute` 0.396 against `absolute_plus_relations` 0.377 macroAP is
+recorded as **coarse relational complementarity failed** — real evidence against
+the hypothesis in the channels already tested, and not weakened. It is *not*
+"multiscale complementarity failed", because the specific claim is that the gain
+appears at 32/16/8/4, where a 64-to-512 chunk cannot represent a boundary at all.
+
 ## The connectome as a substrate: what a negative result scopes
 
 There is no single question "does the fly work on text". There are several ways
