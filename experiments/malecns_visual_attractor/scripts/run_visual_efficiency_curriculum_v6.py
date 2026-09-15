@@ -21,7 +21,7 @@ def _bounded_channels(params):
     """Recover the six bounded screen channels from the v1 named controls.
 
     v1 maps a six-dimensional body latent through a 6x6 trainable transducer and
-    then turns those bounded outputs into named screen controls.  v6 keeps the
+    then turns those bounded outputs into named screen controls. v6 keeps the
     exact same trainable boundary and reconstructs those six bounded outputs so
     each can actuate one display blob instead of deforming a fixed three-lobe
     glyph.
@@ -53,8 +53,8 @@ def _render_six_blob_pattern(
 ):
     """Render six independently actuated blobs on one stationary 16:9 screen.
 
-    The physical display remains fixed at the world origin.  Receiver pose sets
-    the display bearing/apparent size.  The six generator screen channels control
+    The physical display remains fixed at the world origin. Receiver pose sets
+    the display bearing/apparent size. The six generator screen channels control
     six blob amplitudes and small radial displacements around a hexagonal field.
     v3 subsequently clips this raw pattern to the same hard physical aperture as
     the uniform-TV control; v5 then applies the same energy floor/matching policy.
@@ -103,7 +103,7 @@ def _render_six_blob_pattern(
     dx = (rx - blob_x[None, :, :, :]) / sigma_x[None, :, :, :]
     dy = (ry - blob_y[None, :, :, :]) / sigma_y[None, :, :, :]
     gaussians = torch.exp(-0.5 * (dx * dx + dy * dy))
-    weighted = gaussians * amplitudes.T[:, :, None, None].permute(1, 2, 3, 0)
+    weighted = gaussians * amplitudes[None, :, None, :]
     visual = torch.clamp(weighted.sum(dim=-1), 0.0, 1.0)
     return visual.to(dtype=receptor_x.dtype), distance, bearing
 
