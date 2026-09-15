@@ -31,6 +31,8 @@ py-modules = [
   "reward_plastic_adapter",
   "full_screen_decoder",
   "image_artifacts",
+  "compound_eye_environment",
+  "compound_eye_artifacts",
 ]
 
 [tool.pytest.ini_options]
