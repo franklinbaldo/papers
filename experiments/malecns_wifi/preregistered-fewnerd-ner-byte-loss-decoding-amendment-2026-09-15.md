@@ -1,46 +1,26 @@
 ---
 type: "Protocol"
-title: "Preregistration amendment — byte loss and token/entity decoding for Few-NERD NER"
-description: "Freezes equal-token-weight byte supervision and deterministic byte-logit aggregation back to official Few-NERD token/entity predictions before the first trained NER smoke."
-tags: [malecns, few-nerd, ner, bytes, loss, decoding, preregistration]
+title: "Withdrawn amendment — byte-weighted loss for Few-NERD NER"
+description: "Records and withdraws, before any trained run, a proposed byte-level cross-entropy objective in favor of the already preregistered token-boundary loss after byte-logit aggregation."
+tags: [malecns, few-nerd, ner, bytes, loss, preregistration, withdrawn]
 timestamp: 2026-09-15T22:45:00Z
 ---
 
-# Preregistration amendment — byte loss and token/entity decoding for Few-NERD NER
+# Withdrawn amendment — byte-weighted loss for Few-NERD NER
 
 Date: 2026-09-15
 
-Recorded before the first trained MaleCNS Few-NERD NER smoke.
+**Status: withdrawn before the first trained MaleCNS Few-NERD execution.**
 
-## Output space
+This file originally proposed applying cross-entropy independently to every UTF-8 byte, with inverse-token-byte-length weights. Review before execution showed that this would add an artificial auxiliary task: every byte would be required to classify the entity independently even though the public benchmark is defined on official Few-NERD tokens/entities.
 
-The trainable NER head emits one logit vector per UTF-8 byte position for the complete Few-NERD fine ontology: outside (`O`) plus 66 fine entity types.
+The controlling protocol is therefore `preregistered-fewnerd-ner-decoder-amendment-2026-09-15.md`, recorded earlier and retained unchanged:
 
-Semantic fields and the recurrent MaleCNS state remain positional. Official token boundaries are used only to define supervision weights and the benchmark-boundary decoder.
+1. MaleCNS dynamics still advance at every UTF-8 byte position;
+2. the decoder emits 67 real-valued logits at every byte;
+3. logits are averaged across the exact bytes of each official token;
+4. ordinary 67-way cross-entropy is applied once per official token;
+5. separator bytes are excluded from the token aggregation and supervision;
+6. token predictions are converted to Few-NERD IO entities and scored by exact span + fine type.
 
-## Training loss
-
-Every byte inside an official token inherits that token's `fine_ner_tags` class. ASCII separator bytes inserted by canonical reconstruction are excluded from supervised loss.
-
-To avoid giving longer UTF-8 spellings more weight merely because they contain more bytes, each official token receives total weight 1. Within a token of `n` bytes, each byte-level cross-entropy term therefore receives weight `1/n`. The sentence loss is the mean of these per-token losses.
-
-This preserves byte-level supervision while making the learning objective invariant to UTF-8 byte length of an official token.
-
-## Benchmark-boundary decoding
-
-For each official token, average the model's **pre-softmax byte logits** over that token's exact UTF-8 byte interval. The token prediction is `argmax` of the resulting 67-class mean-logit vector.
-
-Do not majority-vote hard byte labels for the benchmark result: averaging logits preserves confidence information and is deterministic.
-
-Convert the predicted token labels to Few-NERD IO entities using maximal contiguous runs of the same non-zero fine label. A label change terminates the current entity even without an intervening `O`.
-
-## Primary score
-
-Entity-level micro precision, recall and F1 with exact token span + fine entity type match.
-
-## Guardrails
-
-- Separator bytes never contribute to supervised loss or entity scoring.
-- Test labels do not influence thresholds, pooling, decoding, class weights, training budget or stopping.
-- Validation may be used for training-budget selection; the first frozen full-test evaluation is the primary result.
-- Byte logits remain inspectable so boundary behaviour can be analysed independently of the official token-level scorer.
+This gives every official token equal supervision weight regardless of UTF-8 length while preserving byte-level recurrent dynamics and positional evidence. No trained smoke or benchmark result was observed before this decision.
