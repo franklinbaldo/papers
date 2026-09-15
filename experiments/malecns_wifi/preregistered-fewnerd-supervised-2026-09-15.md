@@ -137,6 +137,22 @@ encoders alone and (b) the projection scaffolding without the topology --
 exactly the question the whole-brain reservoir experiments have been asking
 for MultiEURLEX, now on a task the architecture was actually built for.
 
+## Cache storage, corrected 2026-09-15
+
+Persisting the byte-interpolated channel field directly does not scale: on
+the full supervised corpus (~25M bytes) it measured at ~860 GB before
+compression and OOM'd during construction (74.4M window occurrences held in
+memory before any encoding). Measured on the real corpus, window text is
+enormously redundant at small scales (scale=1: 17,342x duplicate ratio;
+scale=2: 2,356x; scale=4: 50x; scale=8: 2.9x); across all 12 scales combined,
+only 7.32M of 74.4M window occurrences are textually unique. The cache
+therefore stores each **unique window text once** (16-byte BLAKE2b digest,
+model-independent), cutting storage to ~20 GB and encoder calls by ~10x;
+stage B recomputes window spans deterministically and looks embeddings up by
+hash, assembling the byte-resolution field transiently per sentence batch --
+it is never written to disk. This cache is a local intermediate and is not
+published to the Hub.
+
 ## Engineering metrics to record
 
 bytes/s, sentences/s, MiniLM/E5 seconds, reservoir forward seconds, SpMM call

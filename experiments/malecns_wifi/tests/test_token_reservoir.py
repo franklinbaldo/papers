@@ -149,47 +149,70 @@ class _FakeSentenceTransformer:
         return self.dim
 
 
-def test_encode_model_produces_one_row_per_byte_unit_normalised(monkeypatch):
-    import sentence_transformers
-
-    monkeypatch.setattr(sentence_transformers, "SentenceTransformer", _FakeSentenceTransformer)
-    texts = ["Ann met Bob", "ok"]
-    embeddings, info = fc.encode_model("fake/minilm", texts, scales=(4, 8), device="cpu", batch_size=8)
-    expected_rows = sum(len(t.encode("utf-8")) for t in texts)
-    assert embeddings.shape == (expected_rows, 6 * 2)  # 2 scales concatenated
-    assert np.allclose(np.linalg.norm(embeddings[:, :6], axis=1), 1.0, atol=1e-5)
-    assert np.allclose(np.linalg.norm(embeddings[:, 6:], axis=1), 1.0, atol=1e-5)
-    assert info["scales"] == [4, 8] and info["dim"] == 12
-
-
 def test_default_scale_ladder_is_power_of_two_sweep():
     assert fc.DEFAULT_SCALES == (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048)
 
 
-def test_encode_model_full_ladder_saturates_for_large_scales(monkeypatch):
+def test_window_key_is_stable_and_content_addressed():
+    assert fc.window_key("ab") == fc.window_key("ab")
+    assert fc.window_key("ab") != fc.window_key("ba")
+    assert len(fc.window_key("x")) == 16  # KEY_DIGEST_SIZE
+
+
+def test_collect_unique_windows_dedups_across_sentences_and_scales():
+    texts = ["aaaa", "aaab"]
+    unique = fc.collect_unique_windows(texts, scales=(1, 2))
+    # scale=1 windows are single characters: only 'a' and 'b' exist across both sentences
+    single_char_values = {v for v in unique.values() if len(v) == 1}
+    assert single_char_values == {"a", "b"}
+    assert unique[fc.window_key("a")] == "a"
+
+
+def test_encode_unique_windows_and_assemble_channel_round_trip(monkeypatch, tmp_path):
     import sentence_transformers
 
     monkeypatch.setattr(sentence_transformers, "SentenceTransformer", _FakeSentenceTransformer)
-    text = "Ann met Bob in Paris"  # short sentence; large scales exceed its byte length
-    embeddings, info = fc.encode_model("fake/minilm", [text], scales=fc.DEFAULT_SCALES, device="cpu", batch_size=8)
-    n_bytes = len(text.encode("utf-8"))
-    assert embeddings.shape == (n_bytes, 6 * len(fc.DEFAULT_SCALES))
-    # every scale >= sentence length collapses to one whole-sentence window,
-    # so its byte-aligned field is constant across the sentence
-    last_scale_field = embeddings[:, -6:]
-    assert np.allclose(last_scale_field, last_scale_field[0])
-    assert not np.allclose(embeddings[:, :6], embeddings[0, :6])  # the finest scale still varies across bytes
+    texts = ["Ann met Bob", "ok"]
+    unique = fc.collect_unique_windows(texts, scales=(4, 8))
+    embeddings, sorted_keys, info = fc.encode_unique_windows("fake/minilm", unique, device="cpu", batch_size=8)
+    assert info["unique_windows"] == len(sorted_keys) == len(unique)
+    assert embeddings.shape == (len(unique), 6)
+    model_dir = tmp_path / "fake-minilm"
+    fc.write_dedup_table(model_dir, embeddings, sorted_keys)
+
+    keys = np.load(model_dir / "keys.npy")
+    mm = np.memmap(model_dir / "embeddings.f32", dtype=np.float32, mode="r", shape=(len(keys), 6))
+    encoder = fc.DedupEncoder(name="fake/minilm", base_dim=6, sorted_keys=keys, embeddings=mm)
+
+    cache = fc.FewnerdCache(manifest={"labels": {}}, directory=tmp_path, sentences=None,
+                            encoders={"fake/minilm": encoder}, scales=(4, 8))
+    for text in texts:
+        channel = cache.assemble_channel(("fake/minilm",), text)
+        n_bytes = len(text.encode("utf-8"))
+        assert channel.shape == (n_bytes, 6 * 2)
+        assert np.allclose(np.linalg.norm(channel[:, :6], axis=1), 1.0, atol=1e-5)
+        assert np.allclose(np.linalg.norm(channel[:, 6:], axis=1), 1.0, atol=1e-5)
+
+    with pytest.raises(KeyError):
+        encoder.lookup_many(["never seen this text before"])
 
 
-def test_fewnerd_byte_table_row_count_matches_byte_labels():
+def test_build_sentence_records_and_write_sentences(tmp_path):
     documents = {
         "train": [{"id": "0", "tokens": ["Ann", "met", "Bob"], "fine": [51, 0, 51], "coarse": [7, 0, 7]}],
         "validation": [{"id": "1", "tokens": ["café"], "fine": [21], "coarse": [4]}],
         "test": [{"id": "2", "tokens": ["ok"], "fine": [0], "coarse": [0]}],
     }
     spec = fc.TokenCacheSpec(models=("fake/minilm",), max_tokens=16)
-    table = fc.ByteTable.from_documents(spec, documents)
-    assert len(table) == len("Ann met Bob".encode("utf-8")) + len("café".encode("utf-8")) + len("ok".encode("utf-8"))
-    assert table.sentence_texts == ["Ann met Bob", "café", "ok"]
+    records = fc.build_sentence_records(spec, documents)
+    assert [r.text for r in records] == ["Ann met Bob", "café", "ok"]
+    assert len(records[0].byte_fine) == len("Ann met Bob".encode("utf-8"))
     assert fc.sentence_key(["Ann", "met", "Bob"]) == fc.sentence_key(["Ann", "met", "Bob"])
     assert fc.sentence_key(["Ann", "met", "Bob"]) != fc.sentence_key(["café"])
+
+    path = fc.write_sentences(records, output_dir=tmp_path)
+    import pyarrow.parquet as pq
+
+    table = pq.read_table(path)
+    assert table.column("id").to_pylist() == ["0", "1", "2"]
+    assert table.column("fine_label").to_pylist()[0][:3] == [51, 51, 51]  # "Ann" broadcast onto its bytes

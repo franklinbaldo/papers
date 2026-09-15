@@ -1,11 +1,13 @@
-"""Stage B: Few-NERD byte-channel cache -> per-byte frozen MaleCNS readout embeddings.
+"""Stage B: Few-NERD dedup cache -> per-byte frozen MaleCNS readout embeddings.
 
-Sentences are the batch unit and UTF-8 bytes are the time axis: one recurrent
-step per byte position (driven by the byte-synchronised multiscale channels
-from stage A), a readout emitted at every step (not just the last, unlike the
-MultiEURLEX document encoder). Batches are grouped by sentence byte-length so
-no padded position is computed needlessly. Output is one 256-d embedding per
-byte, in cache order, plus labels for stage C.
+Reads stage A's deduplicated window-embedding cache (no per-byte field is ever
+stored on disk); for each sentence batch, reassembles the byte-synchronised
+fused channel on the fly (deterministic window spans + hash lookup +
+interpolation, see ``fewnerd_cache.FewnerdCache.assemble_channel``), then runs
+the frozen MaleCNS positional reservoir over it. Sentences are the batch unit
+and UTF-8 bytes are the time axis: one recurrent step per byte position, a
+readout emitted at every step. Batches are grouped by sentence byte-length so
+no padded position is computed needlessly.
 """
 
 from __future__ import annotations
@@ -13,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import time
 from pathlib import Path
 
 import numpy as np
@@ -23,25 +26,17 @@ from malecns_wifi.telemetry import Telemetry, progress_fields
 from malecns_wifi.token_reservoir import PositionalReservoir, TokenReservoirConfig
 
 
-def pack_cube(fused: np.ndarray, offsets: np.ndarray, sentence_indices: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    counts = offsets[sentence_indices + 1] - offsets[sentence_indices]
-    steps = int(counts.max()) if counts.size else 0
-    dim = int(fused.shape[1])
-    cube = np.zeros((len(sentence_indices), steps, dim), dtype=np.float32)
-    active = np.zeros((len(sentence_indices), steps), dtype=np.bool_)
-    for row, sentence in enumerate(sentence_indices):
-        start, stop = int(offsets[sentence]), int(offsets[sentence + 1])
-        cube[row, : stop - start] = fused[start:stop]
-        active[row, : stop - start] = True
+def pack_cube(channels: list[np.ndarray]) -> tuple[np.ndarray, np.ndarray]:
+    """``channels``: list of [byte_length_i, dim] arrays (equal dim, possibly ragged length)."""
+    steps = max(c.shape[0] for c in channels)
+    dim = channels[0].shape[1]
+    cube = np.zeros((len(channels), steps, dim), dtype=np.float32)
+    active = np.zeros((len(channels), steps), dtype=np.bool_)
+    for row, channel in enumerate(channels):
+        n = channel.shape[0]
+        cube[row, :n] = channel
+        active[row, :n] = True
     return cube, active
-
-
-def iter_batches(offsets: np.ndarray, *, batch_size: int):
-    counts = np.diff(offsets)
-    for length in np.unique(counts):
-        members = np.flatnonzero(counts == length)
-        for start in range(0, len(members), batch_size):
-            yield members[start:start + batch_size]
 
 
 def main() -> None:
@@ -61,50 +56,69 @@ def main() -> None:
     args = parser.parse_args()
 
     cache = load_cache(args.token_cache)
-    fused = cache.fused
+    model_names = tuple(cache.manifest.get("encoder_order") or list(cache.encoders))
+    sentences = cache.sentences
+    texts = sentences.column("text").to_pylist()
+    fine_lists = sentences.column("fine_label").to_pylist()
+    coarse_lists = sentences.column("coarse_label").to_pylist()
+    splits = sentences.column("split").to_pylist()
+    split_indices = sentences.column("split_index").to_numpy()
+    lengths = np.asarray([len(f) for f in fine_lists], dtype=np.int64)
+    n_sentences = len(texts)
+
     matrix, input_indices = load_reservoir_inputs(args.graph)
+    semantic_dim = sum(cache.encoders[m].base_dim for m in model_names) * len(cache.scales)
     config = TokenReservoirConfig(readout_width=args.readout_width, seed=args.seed, gain=args.gain,
                                    leak=args.leak, target_rms=args.target_rms)
-    reservoir = PositionalReservoir(matrix, input_indices, semantic_dim=fused.shape[1], config=config,
+    reservoir = PositionalReservoir(matrix, input_indices, semantic_dim=semantic_dim, config=config,
                                      device=args.device, index_dtype=args.index_dtype)
     telemetry = Telemetry("stage-b-fewnerd-reservoir", config={"batch_size": args.batch_size, "device": args.device,
                           "index_dtype": args.index_dtype})
 
-    n_tokens = int(cache.offsets[-1])
-    output = np.zeros((n_tokens, config.readout_width), dtype=np.float32)
-    done_sentences = 0
-    import time
+    total_bytes = int(lengths.sum())
+    fine_label = np.zeros(total_bytes, dtype=np.int64)
+    coarse_label = np.zeros(total_bytes, dtype=np.int64)
+    doc_split = np.empty(total_bytes, dtype="U16")
+    doc_split_index = np.zeros(total_bytes, dtype=np.int64)
+    offsets = np.concatenate([[0], np.cumsum(lengths)]).astype(np.int64)
+    embeddings = np.zeros((total_bytes, config.readout_width), dtype=np.float32)
+    for i in range(n_sentences):
+        start, stop = int(offsets[i]), int(offsets[i + 1])
+        fine_label[start:stop] = fine_lists[i]
+        coarse_label[start:stop] = coarse_lists[i]
+        doc_split[start:stop] = splits[i]
+        doc_split_index[start:stop] = split_indices[i]
 
+    done_sentences = 0
     started = time.perf_counter()
-    for sentences in iter_batches(cache.offsets, batch_size=args.batch_size):
-        cube, active = pack_cube(fused, cache.offsets, sentences)
-        per_position = reservoir.forward(cube, active)  # [batch, steps, width]
-        for row, sentence in enumerate(sentences):
-            start, stop = int(cache.offsets[sentence]), int(cache.offsets[sentence + 1])
-            output[start:stop] = per_position[row, : stop - start]
-        done_sentences += len(sentences)
-        telemetry.log({**progress_fields(done_sentences, cache.sentences, started, "sentences"),
-                       "spmm_calls": reservoir.stats.spmm_calls}, min_interval=2.0)
+    for length in np.unique(lengths):
+        members = np.flatnonzero(lengths == length)
+        for start in range(0, len(members), args.batch_size):
+            batch_idx = members[start:start + args.batch_size]
+            channels = [cache.assemble_channel(model_names, texts[i]) for i in batch_idx]
+            cube, active = pack_cube(channels)
+            per_position = reservoir.forward(cube, active)
+            for row, sentence in enumerate(batch_idx):
+                s, e = int(offsets[sentence]), int(offsets[sentence + 1])
+                embeddings[s:e] = per_position[row, : e - s]
+            done_sentences += len(batch_idx)
+            telemetry.log({**progress_fields(done_sentences, n_sentences, started, "sentences"),
+                           "spmm_calls": reservoir.stats.spmm_calls}, min_interval=2.0)
 
     equivalence = None
     if args.reference is not None:
         reference = np.load(args.reference, allow_pickle=False)
-        equivalence = equivalence_report(reference["embeddings"], output)
+        equivalence = equivalence_report(reference["embeddings"], embeddings)
         equivalence["gate_passed"] = passes_gate(equivalence)
-
-    # per-token split/split-index, expanded from the per-sentence cache arrays
-    counts = np.diff(cache.offsets)
-    token_split = np.repeat(cache.doc_split, counts)
-    token_split_index = np.repeat(cache.doc_split_index, counts)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
-        args.output, embeddings=output, fine_label=cache.fine_label, coarse_label=cache.coarse_label,
-        doc_split=token_split, doc_split_index=token_split_index, offsets=cache.offsets,
+        args.output, embeddings=embeddings, fine_label=fine_label, coarse_label=coarse_label,
+        doc_split=doc_split, doc_split_index=doc_split_index, offsets=offsets,
     )
     stats = reservoir.stats.as_dict()
     manifest = {
-        "schema": "papers/malecns-fewnerd-token-embeddings-v1",
+        "schema": "papers/malecns-fewnerd-token-embeddings-v2",
         "index_dtype": args.index_dtype, "device": args.device, "batch_size": args.batch_size,
         "config": config.as_dict(), "token_cache": str(args.token_cache),
         "token_cache_fingerprint": cache.manifest.get("fingerprint"),
@@ -114,7 +128,7 @@ def main() -> None:
         "note": "fine_label/coarse_label are stored for stage C's probe, never seen by the reservoir",
     }
     args.output.with_suffix(".manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    telemetry.summary({"tokens_per_second": stats.get("chunks_per_second"), "forward_seconds": stats.get("forward_seconds"),
+    telemetry.summary({"bytes_per_second": stats.get("chunks_per_second"), "forward_seconds": stats.get("forward_seconds"),
                        **({f"equivalence/{k}": v for k, v in equivalence.items()} if equivalence else {})})
     telemetry.finish()
     print(json.dumps({"event": "fewnerd_tokens_encoded", **manifest}, ensure_ascii=False), flush=True)

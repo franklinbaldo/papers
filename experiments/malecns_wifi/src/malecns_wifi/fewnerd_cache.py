@@ -1,28 +1,38 @@
-"""Stage A: Few-NERD -> frozen, byte-synchronised multiscale semantic channels.
+"""Stage A: Few-NERD -> frozen, deduplicated, byte-synchronised multiscale channels.
 
-Same design as ``multieurlex_cache`` (one parquet per frozen encoder, joined by
-row key, published as a versioned HF dataset), but the unit is a **UTF-8 byte**
-of the reconstructed sentence text, not a document chunk -- and the channel
-construction follows this programme's established convention
+The channel construction follows this programme's established convention
 (``text_axis_channels.py``, ``smoke_concept_flavour_gpu.py``): for each scale in
-``spec.scales``, overlapping character windows are pooled by the frozen
-encoder, and the resulting anchor embeddings are linearly interpolated to
-*every* byte position. Channels from every (model, scale) pair are
-unit-normalised and concatenated -- there is no tokenizer, no subword pooling,
-and no per-token hidden state anywhere in this stage.
+``spec.scales``, overlapping character windows are pooled by a frozen encoder,
+and the resulting anchor embeddings are linearly interpolated to *every* byte
+position of the sentence. There is no tokenizer, no subword pooling, and no
+per-token hidden state anywhere in this stage.
 
-Few-NERD gives pre-tokenized words, not raw text, so the sentence is
-reconstructed as ``" ".join(words)``; each word's fine/coarse label is
-broadcast onto its own byte span (via the same `utf8_byte_axis` used for the
-channels), and the single-space bytes between words carry label `O`. This is a
-preregistered, documented approximation of the original text, not a change to
-any label.
+Persisting the byte-interpolated field directly does not scale: on the full
+Few-NERD supervised corpus (~25M bytes) it would be ~860 GB before compression
+and OOMs during construction (74M window occurrences held in memory at once).
+Measured on the real corpus, window text is enormously redundant at small
+scales (scale=1: 17,342x duplicate ratio; scale=2: 2,356x; scale=4: 50x) and
+mildly redundant even at scale=8 (2.9x); across all 12 scales combined, only
+**7.3M of 74.4M** window occurrences are textually unique. So this cache
+stores each **unique window text once** (keyed by a 16-byte BLAKE2b digest,
+model-independent), and stage B recomputes window spans deterministically
+(``window_spans`` is a pure function of text and scale) and looks embeddings
+up by hash -- the byte-resolution field is never written to disk, only
+assembled transiently, per sentence batch, inside the reservoir's forward pass.
 
-Columns per row::
+This cache is not published (no Hub upload): it is a local intermediate,
+regenerated per experiment, kept in a raw memory-mappable layout instead of
+parquet's row-per-embedding format specifically to bound RAM.
 
-    id | config | split | split_index | byte_index | text_sha256
-    | embedding (list<float32>) | fine_label | coarse_label | dataset_revision
-    | hf_subset (=config) | model_name | model_revision | chunking_version
+Layout::
+
+    <output_dir>/
+      manifest.json
+      sentences.parquet        # id, split, split_index, text, fine_label, coarse_label
+                                #   (fine_label/coarse_label are list<int16>, one entry per byte)
+      <model-slug>/
+        keys.npy                # sorted (N,) array of dtype 'S16' BLAKE2b digests
+        embeddings.f32           # raw flat float32, shape (N, base_dim), row i matches keys[i]
 """
 
 from __future__ import annotations
@@ -39,10 +49,16 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from malecns_wifi.multieurlex_cache import MANIFEST_NAME, _sha, model_prefix, model_slug
-from malecns_wifi.text_axis_channels import char_spans_to_byte_spans, utf8_byte_axis, window_spans
+from malecns_wifi.text_axis_channels import (
+    char_spans_to_byte_spans,
+    interpolate_to_bytes,
+    span_centres,
+    utf8_byte_axis,
+    window_spans,
+)
 
-SCHEMA = "papers/malecns-fewnerd-byte-channel-cache-v1"
-CHUNKING_POLICY = "byte-synchronised-multiscale-v1"
+SCHEMA = "papers/malecns-fewnerd-dedup-channel-cache-v1"
+CHUNKING_POLICY = "byte-synchronised-multiscale-dedup-v1"
 DATASET_PATH = "DFKI-SLT/few-nerd"
 DATASET_REVISION = "205f3e9c9f3577ea2561d43f2f62dc249ab92d5b"
 DEFAULT_MODELS = (
@@ -52,7 +68,8 @@ DEFAULT_MODELS = (
 DEFAULT_SCALES = tuple(2**i for i in range(0, 12))  # 1, 2, 4, ..., 2048 bytes
 DEFAULT_SPLITS = ("train", "validation", "test")
 DEFAULT_CONFIG = "supervised"
-DEFAULT_HUB_REPO = "franklinbaldo/fewnerd-semantic-cache"
+KEY_DIGEST_SIZE = 16
+SENTENCES_FILE = "sentences.parquet"
 
 
 def _read_manifest(output_dir: Path) -> dict[str, Any] | None:
@@ -69,6 +86,11 @@ def _write_manifest(output_dir: Path, manifest: dict[str, Any]) -> None:
 
 def sentence_key(words: list[str]) -> str:
     return hashlib.sha256(" ".join(words).encode("utf-8")).hexdigest()
+
+
+def window_key(text: str) -> bytes:
+    """Model-independent identity of a window's text: same text, same key."""
+    return hashlib.blake2b(text.encode("utf-8"), digest_size=KEY_DIGEST_SIZE).digest()
 
 
 def reconstruct_text(words: list[str]) -> tuple[str, list[tuple[int, int]]]:
@@ -165,53 +187,63 @@ def _model_revision(model) -> str | None:
 
 
 @dataclass
-class ByteTable:
-    """Per-byte rows (labels only; embeddings are encoded separately per model)."""
-
-    ids: list[str] = field(default_factory=list)
-    splits: list[str] = field(default_factory=list)
-    split_index: list[int] = field(default_factory=list)
-    byte_index: list[int] = field(default_factory=list)
-    text_sha256: list[str] = field(default_factory=list)
-    fine_label: list[int] = field(default_factory=list)
-    coarse_label: list[int] = field(default_factory=list)
-    sentence_texts: list[str] = field(default_factory=list)  # one per sentence, for encoding
-
-    @classmethod
-    def from_documents(cls, spec: TokenCacheSpec, documents: dict[str, list[dict[str, Any]]]) -> "ByteTable":
-        table = cls()
-        for split in spec.splits:
-            for index, doc in enumerate(documents[split]):
-                words = doc["tokens"][: spec.max_tokens]
-                fine = doc["fine"][: spec.max_tokens]
-                coarse = doc["coarse"][: spec.max_tokens]
-                text, byte_fine, byte_coarse = byte_labels(words, fine, coarse)
-                key = sentence_key(words)
-                for byte_i in range(len(byte_fine)):
-                    table.ids.append(doc["id"])
-                    table.splits.append(split)
-                    table.split_index.append(index)
-                    table.byte_index.append(byte_i)
-                    table.text_sha256.append(key)
-                    table.fine_label.append(int(byte_fine[byte_i]))
-                    table.coarse_label.append(int(byte_coarse[byte_i]))
-                table.sentence_texts.append(text)
-        return table
-
-    def __len__(self) -> int:
-        return len(self.ids)
+class SentenceRecord:
+    id: str
+    split: str
+    split_index: int
+    text: str
+    byte_fine: np.ndarray
+    byte_coarse: np.ndarray
 
 
-def encode_model(
-    model_name: str, texts: list[str], *, scales: tuple[int, ...], device: str, batch_size: int,
-) -> tuple[np.ndarray, dict[str, Any]]:
-    """Byte-synchronised multiscale channel for every sentence, one frozen encoder.
+def build_sentence_records(spec: TokenCacheSpec, documents: dict[str, list[dict[str, Any]]]) -> list[SentenceRecord]:
+    records = []
+    for split in spec.splits:
+        for index, doc in enumerate(documents[split]):
+            words = doc["tokens"][: spec.max_tokens]
+            fine = doc["fine"][: spec.max_tokens]
+            coarse = doc["coarse"][: spec.max_tokens]
+            text, byte_fine, byte_coarse = byte_labels(words, fine, coarse)
+            records.append(SentenceRecord(doc["id"], split, index, text, byte_fine, byte_coarse))
+    return records
 
-    For each scale, overlapping character windows are pooled by the encoder and
-    linearly interpolated onto the sentence's byte axis (``text_axis_channels``);
-    each (scale) field is unit-normalised per byte, then concatenated across
-    scales. All windows of all sentences and scales are encoded in one batched
-    pass for throughput.
+
+def write_sentences(records: list[SentenceRecord], *, output_dir: Path) -> Path:
+    table = pa.table({
+        "id": pa.array([r.id for r in records], type=pa.string()),
+        "split": pa.array([r.split for r in records], type=pa.string()),
+        "split_index": pa.array([r.split_index for r in records], type=pa.int32()),
+        "text": pa.array([r.text for r in records], type=pa.string()),
+        "fine_label": pa.array([r.byte_fine.astype(np.int16).tolist() for r in records], type=pa.list_(pa.int16())),
+        "coarse_label": pa.array([r.byte_coarse.astype(np.int16).tolist() for r in records], type=pa.list_(pa.int16())),
+    })
+    output_dir.mkdir(parents=True, exist_ok=True)
+    path = output_dir / SENTENCES_FILE
+    pq.write_table(table, path, compression="zstd")
+    return path
+
+
+def collect_unique_windows(texts: list[str], scales: tuple[int, ...]) -> dict[bytes, str]:
+    """Every distinct window text across all sentences and scales, keyed once."""
+    unique: dict[bytes, str] = {}
+    for text in texts:
+        for scale in scales:
+            for a, b in window_spans(text, scale):
+                window = text[a:b]
+                key = window_key(window)
+                if key not in unique:
+                    unique[key] = window
+    return unique
+
+
+def encode_unique_windows(
+    model_name: str, unique: dict[bytes, str], *, device: str, batch_size: int, slice_size: int = 4096,
+    progress=None,
+) -> tuple[np.ndarray, list[bytes], dict[str, Any]]:
+    """Encode every unique window once; returns (embeddings, sorted_keys, info).
+
+    ``embeddings[i]`` corresponds to ``sorted_keys[i]``; keys are sorted so
+    stage B can binary-search them without loading a hash map into memory.
     """
     from sentence_transformers import SentenceTransformer
 
@@ -221,165 +253,128 @@ def encode_model(
     prefix = model_prefix(model_name)
     dim = int(model.get_sentence_embedding_dimension())
 
-    axes = [utf8_byte_axis(text) for text in texts]
-    spans_by_sentence: list[dict[int, list[tuple[int, int]]]] = []
-    flat_windows: list[str] = []
-    provenance: list[tuple[int, int]] = []  # (sentence_index, scale)
-    for si, text in enumerate(texts):
-        local = {}
-        for scale in scales:
-            spans = window_spans(text, scale)
-            local[scale] = spans
-            for a, b in spans:
-                flat_windows.append(text[a:b])
-                provenance.append((si, scale))
-        spans_by_sentence.append(local)
+    sorted_keys = sorted(unique.keys())
+    texts = [unique[k] for k in sorted_keys]
 
     t1 = time.perf_counter()
     parts = []
-    for start in range(0, len(flat_windows), 2048):
-        local = flat_windows[start:start + 2048]
+    for start in range(0, len(texts), slice_size):
+        local = texts[start:start + slice_size]
         parts.append(model.encode(
             [prefix + w for w in local], batch_size=batch_size, convert_to_numpy=True,
             normalize_embeddings=False, show_progress_bar=False,
-        ))
+        ).astype(np.float32))
+        if progress is not None:
+            progress(model_name, min(start + len(local), len(texts)), len(texts), t1)
     encode_seconds = time.perf_counter() - t1
-    flat_embeddings = np.concatenate(parts, axis=0) if parts else np.zeros((0, dim), dtype=np.float32)
+    embeddings = np.concatenate(parts, axis=0) if parts else np.zeros((0, dim), dtype=np.float32)
 
-    grouped: dict[tuple[int, int], list[np.ndarray]] = {}
-    for (si, scale), vector in zip(provenance, flat_embeddings):
-        grouped.setdefault((si, scale), []).append(vector)
-
-    per_sentence_fields = []
-    for si, text in enumerate(texts):
-        axis = axes[si]
-        scale_fields = []
-        for scale in scales:
-            spans = spans_by_sentence[si][scale]
-            anchors = np.asarray(grouped[(si, scale)], dtype=np.float32)
-            byte_spans = char_spans_to_byte_spans(text, spans)
-            field = _byte_aligned_scale(anchors, byte_spans, byte_length=axis.byte_length)
-            norm = np.maximum(np.linalg.norm(field, axis=1, keepdims=True), 1e-12)
-            scale_fields.append((field / norm).astype(np.float32))
-        per_sentence_fields.append(np.concatenate(scale_fields, axis=1))
-    embeddings = (
-        np.concatenate(per_sentence_fields, axis=0) if per_sentence_fields else np.zeros((0, dim * len(scales)), dtype=np.float32)
-    )
     info = {
         "name": model_name, "slug": model_slug(model_name), "revision": _model_revision(model),
-        "dim": int(embeddings.shape[1]), "base_dim": dim, "scales": list(scales),
-        "load_seconds": load_seconds, "encode_seconds": encode_seconds, "seconds": load_seconds + encode_seconds,
-        "windows": len(flat_windows), "bytes_per_second": (len(embeddings) / encode_seconds) if encode_seconds else None,
+        "base_dim": dim, "load_seconds": load_seconds, "encode_seconds": encode_seconds,
+        "seconds": load_seconds + encode_seconds, "unique_windows": len(sorted_keys),
+        "windows_per_second": (len(sorted_keys) / encode_seconds) if encode_seconds else None,
         "device": device, "batch_size": int(batch_size), "prefix": prefix,
     }
     del model
-    return embeddings, info
+    return embeddings, sorted_keys, info
 
 
-def _byte_aligned_scale(anchor_embeddings: np.ndarray, anchor_spans: np.ndarray, *, byte_length: int) -> np.ndarray:
-    from malecns_wifi.text_axis_channels import interpolate_to_bytes, span_centres
-
-    return interpolate_to_bytes(anchor_embeddings, span_centres(anchor_spans), byte_length=byte_length)
-
-
-def write_model_table(spec: TokenCacheSpec, table: ByteTable, embeddings: np.ndarray, info: dict[str, Any], *, output_dir: Path) -> Path:
-    n = len(table)
-    dim = int(embeddings.shape[1])
-    flat = pa.array(np.ascontiguousarray(embeddings, dtype=np.float32).reshape(-1), type=pa.float32())
-    pa_table = pa.table({
-        "id": pa.array(table.ids, type=pa.string()),
-        "split": pa.array(table.splits, type=pa.string()),
-        "split_index": pa.array(table.split_index, type=pa.int32()),
-        "byte_index": pa.array(table.byte_index, type=pa.int32()),
-        "text_sha256": pa.array(table.text_sha256, type=pa.string()),
-        "embedding": pa.FixedSizeListArray.from_arrays(flat, dim),
-        "fine_label": pa.array(table.fine_label, type=pa.int16()),
-        "coarse_label": pa.array(table.coarse_label, type=pa.int16()),
-        "dataset_path": pa.array([spec.dataset_path] * n, type=pa.string()),
-        "dataset_revision": pa.array([spec.dataset_revision] * n, type=pa.string()),
-        "hf_subset": pa.array([spec.config] * n, type=pa.string()),
-        "model_name": pa.array([info["name"]] * n, type=pa.string()),
-        "model_revision": pa.array([info.get("revision") or ""] * n, type=pa.string()),
-        "chunking_version": pa.array([spec.chunking_version] * n, type=pa.string()),
-    })
-    output_dir.mkdir(parents=True, exist_ok=True)
-    path = output_dir / f"{info['slug']}.parquet"
-    pq.write_table(pa_table, path, compression="zstd")
-    return path
+def write_dedup_table(model_dir: Path, embeddings: np.ndarray, sorted_keys: list[bytes]) -> dict[str, int]:
+    model_dir.mkdir(parents=True, exist_ok=True)
+    keys_array = np.frombuffer(b"".join(sorted_keys), dtype=f"S{KEY_DIGEST_SIZE}")
+    np.save(model_dir / "keys.npy", keys_array)
+    embeddings = np.ascontiguousarray(embeddings, dtype=np.float32)
+    embeddings.tofile(model_dir / "embeddings.f32")
+    return {
+        "keys_bytes": int((model_dir / "keys.npy").stat().st_size),
+        "embeddings_bytes": int((model_dir / "embeddings.f32").stat().st_size),
+    }
 
 
 def build_cache(
-    spec: TokenCacheSpec, *, output_dir: Path, device: str = "cuda", batch_size: int = 64,
+    spec: TokenCacheSpec, *, output_dir: Path, device: str = "cuda", batch_size: int = 256,
     loaded: dict[str, Any] | None = None, progress=None,
 ) -> dict[str, Any]:
     started = time.perf_counter()
     if loaded is None:
         loaded = load_fewnerd(spec)
-    table = ByteTable.from_documents(spec, loaded["documents"])
+    records = build_sentence_records(spec, loaded["documents"])
+    texts = [r.text for r in records]
+    total_bytes = int(sum(len(r.byte_fine) for r in records))
+
     output_dir.mkdir(parents=True, exist_ok=True)
-    manifest = _read_manifest(output_dir)
-    if manifest is None:
-        manifest = {
-            "schema": SCHEMA,
-            "task": "fine-grained NER (Few-NERD), byte-resolution",
-            "dataset": {
-                "path": spec.dataset_path, "revision": spec.dataset_revision, "config": spec.config,
-                "splits": {s: len(loaded["documents"][s]) for s in spec.splits},
-                "limit_per_split": spec.limit_per_split, "partial": spec.limit_per_split is not None,
-            },
-            "chunking": {"policy": CHUNKING_POLICY, "scales": list(spec.scales), "max_words": spec.max_tokens,
-                        "version": spec.chunking_version},
-            "labels": {"fine": loaded["fine_names"], "coarse": loaded["coarse_names"]},
-            "sentences": len(table.sentence_texts), "bytes": len(table), "encoders": [],
-        }
+    write_sentences(records, output_dir=output_dir)
+
+    t0 = time.perf_counter()
+    unique = collect_unique_windows(texts, spec.scales)
+    dedup_seconds = time.perf_counter() - t0
+    total_occurrences = sum(len(window_spans(t, s)) for t in texts for s in spec.scales)
+
+    manifest = {
+        "schema": SCHEMA,
+        "task": "fine-grained NER (Few-NERD), byte-resolution, deduplicated windows",
+        "dataset": {
+            "path": spec.dataset_path, "revision": spec.dataset_revision, "config": spec.config,
+            "splits": {s: len(loaded["documents"][s]) for s in spec.splits},
+            "limit_per_split": spec.limit_per_split, "partial": spec.limit_per_split is not None,
+        },
+        "chunking": {"policy": CHUNKING_POLICY, "scales": list(spec.scales), "max_words": spec.max_tokens,
+                    "version": spec.chunking_version},
+        "labels": {"fine": loaded["fine_names"], "coarse": loaded["coarse_names"]},
+        "sentences": len(records), "bytes": total_bytes,
+        "dedup": {"unique_windows": len(unique), "total_occurrences": total_occurrences,
+                  "dedup_ratio": (total_occurrences / len(unique)) if unique else None, "seconds": dedup_seconds},
+        "encoders": [],
+    }
+
     for model_name in spec.models:
-        embeddings, info = encode_model(model_name, table.sentence_texts, scales=spec.scales, device=device, batch_size=batch_size)
-        if progress is not None:
-            progress(model_name, len(embeddings), len(embeddings), started)
-        path = write_model_table(spec, table, embeddings, info, output_dir=output_dir)
-        info["file"] = path.name
-        info["bytes_on_disk"] = int(path.stat().st_size)
+        embeddings, sorted_keys, info = encode_unique_windows(
+            model_name, unique, device=device, batch_size=batch_size, progress=progress
+        )
+        sizes = write_dedup_table(output_dir / info["slug"], embeddings, sorted_keys)
+        info.update(sizes)
         info["fingerprint"] = spec.model_fingerprint(model_name, info.get("revision"))
         manifest["encoders"] = [e for e in manifest["encoders"] if e["name"] != model_name] + [info]
         ordered = sorted(manifest["encoders"], key=lambda e: DEFAULT_MODELS.index(e["name"]) if e["name"] in DEFAULT_MODELS else 99)
         manifest["encoders"] = ordered
         manifest["encoder_order"] = [e["name"] for e in ordered]
-        manifest["semantic_dim"] = int(sum(e["dim"] for e in ordered))
+        manifest["semantic_dim"] = int(sum(e["base_dim"] for e in ordered) * len(spec.scales))
         manifest["fingerprint"] = (
             spec.fingerprint({e["name"]: e.get("revision") for e in ordered})
             if {e["name"] for e in ordered} == set(spec.models) else None
         )
         manifest["seconds"] = time.perf_counter() - started
-        manifest["total_bytes_on_disk"] = int(sum(e["bytes_on_disk"] for e in ordered))
+        manifest["total_bytes_on_disk"] = int(sum(e["keys_bytes"] + e["embeddings_bytes"] for e in ordered))
         _write_manifest(output_dir, manifest)
     return manifest
 
 
-# -- loading -----------------------------------------------------------------
+# -- loading / assembly -------------------------------------------------------
 
 @dataclass
-class TokenSemanticCache:
-    manifest: dict[str, Any]
-    doc_id: np.ndarray
-    doc_split: np.ndarray
-    doc_split_index: np.ndarray
-    offsets: np.ndarray  # one entry per sentence, byte-row offsets
-    fine_label: np.ndarray
-    coarse_label: np.ndarray
-    models: list[str]
-    per_model: list[np.ndarray]
+class DedupEncoder:
+    name: str
+    base_dim: int
+    sorted_keys: np.ndarray  # (N,) dtype S16, sorted
+    embeddings: np.ndarray   # memory-mapped (N, base_dim) float32
 
-    @property
-    def fused(self) -> np.ndarray:
-        return np.concatenate(self.per_model, axis=1).astype(np.float32, copy=False)
+    def lookup(self, text: str) -> np.ndarray:
+        key = np.frombuffer(window_key(text), dtype=f"S{KEY_DIGEST_SIZE}")[0]
+        index = np.searchsorted(self.sorted_keys, key)
+        if index >= len(self.sorted_keys) or self.sorted_keys[index] != key:
+            raise KeyError(f"window not found in dedup cache: {text!r}")
+        return self.embeddings[index]
 
-    @property
-    def sentences(self) -> int:
-        return int(len(self.offsets) - 1)
-
-    @property
-    def label_names(self) -> dict[str, list[str]]:
-        return self.manifest["labels"]
+    def lookup_many(self, texts: list[str]) -> np.ndarray:
+        keys = np.array([np.frombuffer(window_key(t), dtype=f"S{KEY_DIGEST_SIZE}")[0] for t in texts])
+        indices = np.searchsorted(self.sorted_keys, keys)
+        indices = np.clip(indices, 0, len(self.sorted_keys) - 1)
+        found = self.sorted_keys[indices] == keys
+        if not np.all(found):
+            missing = [t for t, ok in zip(texts, found) if not ok]
+            raise KeyError(f"{len(missing)} window(s) not found in dedup cache, e.g. {missing[0]!r}")
+        return np.asarray(self.embeddings[indices], dtype=np.float32)
 
 
 def resolve_cache_dir(location: str | Path) -> Path:
@@ -392,10 +387,38 @@ def resolve_cache_dir(location: str | Path) -> Path:
     return Path(text)
 
 
+@dataclass
+class FewnerdCache:
+    manifest: dict[str, Any]
+    directory: Path
+    sentences: Any  # pyarrow.Table: id, split, split_index, text, fine_label, coarse_label
+    encoders: dict[str, DedupEncoder]
+    scales: tuple[int, ...]
+
+    @property
+    def label_names(self) -> dict[str, list[str]]:
+        return self.manifest["labels"]
+
+    def assemble_channel(self, model_names: tuple[str, ...], text: str) -> np.ndarray:
+        """Byte-synchronised fused channel for one sentence: [byte_length, sum(base_dim)*len(scales)]."""
+        axis = utf8_byte_axis(text)
+        pieces = []
+        for name in model_names:
+            enc = self.encoders[name]
+            for scale in self.scales:
+                spans = window_spans(text, scale)
+                windows = [text[a:b] for a, b in spans]
+                anchors = enc.lookup_many(windows)
+                byte_spans = char_spans_to_byte_spans(text, spans)
+                field = interpolate_to_bytes(anchors, span_centres(byte_spans), byte_length=axis.byte_length)
+                norm = np.maximum(np.linalg.norm(field, axis=1, keepdims=True), 1e-12)
+                pieces.append((field / norm).astype(np.float32))
+        return np.concatenate(pieces, axis=1) if len(pieces) > 1 else pieces[0]
+
+
 def load_cache(
-    location: str | Path, *, spec: TokenCacheSpec | None = None,
-    models: tuple[str, ...] | None = None, splits: tuple[str, ...] | None = None,
-) -> TokenSemanticCache:
+    location: str | Path, *, spec: TokenCacheSpec | None = None, models: tuple[str, ...] | None = None,
+) -> FewnerdCache:
     directory = resolve_cache_dir(location)
     manifest = _read_manifest(directory)
     if manifest is None:
@@ -404,125 +427,25 @@ def load_cache(
         models = spec.models if spec is not None else tuple(
             manifest.get("encoder_order") or [e["name"] for e in manifest["encoders"]]
         )
-    if splits is None:
-        splits = spec.splits if spec is not None else tuple(manifest["dataset"]["splits"].keys())
     by_name = {e["name"]: e for e in manifest["encoders"]}
     missing = [m for m in models if m not in by_name]
     if missing:
-        raise RuntimeError(f"byte cache lacks encoders {missing}")
+        raise RuntimeError(f"dedup cache lacks encoders {missing}")
     if spec is not None:
         for name in models:
             expected = spec.model_fingerprint(name, by_name[name].get("revision"))
             if by_name[name].get("fingerprint") != expected:
-                raise RuntimeError(f"byte cache fingerprint mismatch for {name}: dataset/chunking/encoder differs")
+                raise RuntimeError(f"dedup cache fingerprint mismatch for {name}: dataset/chunking/encoder differs")
 
-    tables = {name: pq.read_table(directory / by_name[name]["file"]) for name in models}
-    reference_keys = None
-    per_model = []
-    order = None
-    first_table = None
+    encoders = {}
     for name in models:
-        table = tables[name]
-        split_col = np.asarray(table.column("split").to_pylist())
-        keep = np.isin(split_col, list(splits))
-        table = table.filter(pa.array(keep))
-        split_col = split_col[keep]
-        split_rank = np.asarray([splits.index(s) for s in split_col], dtype=np.int64)
-        split_index = np.asarray(table.column("split_index").to_numpy(), dtype=np.int64)
-        byte_index = np.asarray(table.column("byte_index").to_numpy(), dtype=np.int64)
-        local_order = np.lexsort((byte_index, split_index, split_rank))
-        keys = list(zip(
-            np.asarray(table.column("id").to_pylist())[local_order].tolist(),
-            split_col[local_order].tolist(), byte_index[local_order].tolist(),
-        ))
-        if reference_keys is None:
-            reference_keys, order, first_table = keys, local_order, table
-        elif keys != reference_keys:
-            raise RuntimeError(f"encoder table {name} does not join with {models[0]}: rows differ")
-        embedding = table.column("embedding").combine_chunks()
-        values = np.asarray(embedding.values.to_numpy(), dtype=np.float32).reshape(len(table), -1)
-        per_model.append(np.ascontiguousarray(values[local_order]))
+        info = by_name[name]
+        model_dir = directory / info["slug"]
+        keys = np.load(model_dir / "keys.npy")
+        embeddings = np.memmap(model_dir / "embeddings.f32", dtype=np.float32, mode="r",
+                               shape=(len(keys), info["base_dim"]))
+        encoders[name] = DedupEncoder(name=name, base_dim=info["base_dim"], sorted_keys=keys, embeddings=embeddings)
 
-    byte_index = np.asarray(first_table.column("byte_index").to_numpy(), dtype=np.int64)[order]
-    sentence_starts = np.flatnonzero(byte_index == 0)
-    offsets = np.concatenate([sentence_starts, [len(byte_index)]]).astype(np.int64)
-    ids = np.asarray(first_table.column("id").to_pylist())[order][sentence_starts]
-    split_arr = np.asarray(first_table.column("split").to_pylist())[order][sentence_starts]
-    split_index = np.asarray(first_table.column("split_index").to_numpy(), dtype=np.int64)[order][sentence_starts]
-    fine_label = np.asarray(first_table.column("fine_label").to_numpy(), dtype=np.int64)[order]
-    coarse_label = np.asarray(first_table.column("coarse_label").to_numpy(), dtype=np.int64)[order]
-    return TokenSemanticCache(
-        manifest=manifest, doc_id=np.asarray(ids, dtype="U64"), doc_split=np.asarray(split_arr, dtype="U16"),
-        doc_split_index=split_index, offsets=offsets, fine_label=fine_label, coarse_label=coarse_label,
-        models=list(models), per_model=per_model,
-    )
-
-
-def dataset_card(manifest: dict[str, Any]) -> str:
-    dataset = manifest["dataset"]
-    encoders = "\n".join(
-        f"| `{e['name']}` | `{e.get('revision')}` | {e['dim']} (base {e['base_dim']} x {len(e['scales'])} scales) | `{e['file']}` |"
-        for e in manifest["encoders"]
-    )
-    splits = ", ".join(f"{k}: {v}" for k, v in dataset["splits"].items())
-    return f"""---
-license: cc-by-sa-4.0
-task_categories:
-- token-classification
-language:
-- en
-pretty_name: Few-NERD frozen byte-synchronised semantic cache (MiniLM + E5)
-tags:
-- few-nerd
-- ner
-- embeddings
-- malecns
----
-
-# Few-NERD ({dataset['config']}) — frozen byte-synchronised multiscale semantic cache
-
-Precomputed, byte-resolution semantic channels of the official
-`{dataset['path']}` dataset (`{dataset['config']}` config), built with this
-research programme's established multiscale byte-axis convention
-(`text_axis_channels.py`): for each scale, overlapping character windows are
-pooled by a frozen encoder and linearly interpolated to every UTF-8 byte
-position of the (word-joined) sentence text. No benchmark labels are used to
-produce these embeddings; `fine_label`/`coarse_label` carry the official
-Few-NERD word labels broadcast onto their byte spans, for convenience only.
-
-* source dataset: `{dataset['path']}` revision `{dataset['revision']}`, config `{dataset['config']}`
-* splits: {splits}{' (deterministic prefix, partial)' if dataset.get('partial') else ''}
-* sentences: {manifest['sentences']}, bytes: {manifest['bytes']}
-* chunking: `{manifest['chunking']['version']}` — scales {manifest['chunking']['scales']} chars, word cap {manifest['chunking']['max_words']}
-* combined fingerprint: `{manifest.get('fingerprint')}`
-
-| encoder | revision | dim | file |
-|---|---|---|---|
-{encoders}
-
-Each parquet row is one byte of the reconstructed sentence text: `id`, `split`,
-`split_index`, `byte_index`, `text_sha256` (hash of the original word list),
-`embedding` (float32 list, concatenated unit-normalised per-scale channels),
-`fine_label`/`coarse_label` (Few-NERD's own IDs, broadcast per word span),
-plus provenance columns. Tables join on `(id, split, byte_index)`.
-
-Generated by `experiments/malecns_wifi/scripts/build_fewnerd_semantic_cache.py`
-in `franklinbaldo/papers`.
-"""
-
-
-def push_to_hub(output_dir: Path, *, repo_id: str = DEFAULT_HUB_REPO, token: str | None = None, private: bool = False) -> str:
-    from huggingface_hub import HfApi
-
-    manifest = _read_manifest(output_dir)
-    if manifest is None:
-        raise RuntimeError(f"no manifest in {output_dir}")
-    (output_dir / "README.md").write_text(dataset_card(manifest), encoding="utf-8")
-    api = HfApi(token=token)
-    api.create_repo(repo_id, repo_type="dataset", exist_ok=True, private=private)
-    info = api.upload_folder(
-        repo_id=repo_id, repo_type="dataset", folder_path=str(output_dir),
-        allow_patterns=["*.parquet", MANIFEST_NAME, "README.md"],
-        commit_message=f"byte channel cache {manifest.get('fingerprint') or 'partial'}",
-    )
-    return getattr(info, "oid", None) or str(info)
+    sentences = pq.read_table(directory / SENTENCES_FILE)
+    scales = tuple(manifest["chunking"]["scales"])
+    return FewnerdCache(manifest=manifest, directory=directory, sentences=sentences, encoders=encoders, scales=scales)
