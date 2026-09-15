@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "malecns-visual-attractor-experiment"
+version = "0.1.0"
+description = "Closed-loop MaleCNS visual-attractor and connectome-to-connectome generator experiments."
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2",
+  "pyarrow>=18",
+  "scipy>=1.14",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+gpu = ["torch>=2.4"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = [
+  "visual_attractor",
+  "gpu_batch",
+  "connectome_generator",
+  "connectome_generator_gpu",
+  "generator_optimizer",
+  "dyad",
+  "screen_reward_loop",
+  "visual_efficiency",
+  "reward_plastic_adapter",
+  "full_screen_decoder",
+  "image_artifacts",
+  "compound_eye_environment",
+  "compound_eye_artifacts",
+  "swarm_transport",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+pythonpath = ["src"]

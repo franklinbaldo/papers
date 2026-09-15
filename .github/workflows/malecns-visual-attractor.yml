@@ -1,0 +1,62 @@
+name: MaleCNS Visual Attractor
+
+on:
+  pull_request:
+    paths:
+      - "experiments/malecns_visual_attractor/**"
+      - "learned_visual_attractors.md"
+      - ".github/workflows/malecns-visual-attractor.yml"
+  push:
+    branches:
+      - experiment/fly-visual-lures
+    paths:
+      - "experiments/malecns_visual_attractor/**"
+      - "learned_visual_attractors.md"
+      - ".github/workflows/malecns-visual-attractor.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: malecns-visual-attractor-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: experiments/malecns_visual_attractor/pyproject.toml
+      - name: Install experiment including batched Torch backend
+        working-directory: experiments/malecns_visual_attractor
+        run: uv sync --extra dev --extra gpu
+      - name: Smoke the exact script import path used by Kaggle
+        working-directory: experiments/malecns_visual_attractor
+        run: |
+          uv run python scripts/build_interface.py --help >/dev/null
+          uv run python scripts/build_screen_geometry.py --help >/dev/null
+          uv run python scripts/run_positive_control.py --help >/dev/null
+          uv run python scripts/run_connectome_generator_es.py --help >/dev/null
+          uv run python scripts/run_direct_gaze_dyad.py --help >/dev/null
+          uv run python scripts/run_stationary_screen_reward_loop.py --help >/dev/null
+          uv run python scripts/run_visual_efficiency_curriculum.py --help >/dev/null
+          uv run python scripts/run_visual_efficiency_curriculum_v2.py --help >/dev/null
+          uv run python scripts/run_visual_efficiency_curriculum_v3.py --help >/dev/null
+          uv run python scripts/run_visual_efficiency_curriculum_v4.py --help >/dev/null
+          uv run python scripts/run_visual_efficiency_curriculum_v5.py --help >/dev/null
+          uv run python scripts/run_visual_efficiency_curriculum_v6.py --help >/dev/null
+          uv run python scripts/run_visual_efficiency_curriculum_v7.py --help >/dev/null
+          uv run python scripts/run_online_plastic_screen_learning.py --help >/dev/null
+          uv run python scripts/run_physical_full_screen_attractor.py --help >/dev/null
+          uv run python scripts/run_physical_full_screen_compound_eye.py --help >/dev/null
+          uv run python scripts/run_physical_full_screen_ray_room.py --help >/dev/null
+          uv run python scripts/run_swarm_screen_evolution.py --help >/dev/null
+          uv run python scripts/render_screen_png.py --help >/dev/null
+          uv run python scripts/render_full_screen_images.py --help >/dev/null
+      - name: Run closed-loop invariants
+        working-directory: experiments/malecns_visual_attractor
+        run: uv run pytest -q
