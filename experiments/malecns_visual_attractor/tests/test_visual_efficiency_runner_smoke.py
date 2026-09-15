@@ -1,5 +1,6 @@
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
+import sys
 
 import numpy as np
 import scipy.sparse as sp
@@ -11,11 +12,16 @@ from visual_attractor import ArenaConfig, Interface
 
 def load_runner():
     path = Path(__file__).parents[1] / "scripts" / "run_visual_efficiency_curriculum.py"
-    spec = spec_from_file_location("visual_efficiency_runner", path)
-    assert spec is not None and spec.loader is not None
-    module = module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    scripts_dir = str(path.parent)
+    sys.path.insert(0, scripts_dir)
+    try:
+        spec = spec_from_file_location("visual_efficiency_runner", path)
+        assert spec is not None and spec.loader is not None
+        module = module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    finally:
+        sys.path.remove(scripts_dir)
 
 
 def test_energy_matched_runner_smoke_cpu(tmp_path):
