@@ -124,6 +124,9 @@ def _peer_loss(model, fields, target, pos_weight):
     return torch.stack(losses).mean()
 
 
+from malecns_wifi.fast_spmv import fast_sparse_mm as _fast_sparse_mm, csr_to_fast_operator
+
+
 def _reservoir_logits(model, fields, operator, input_weights, input_indices,
                       whole_brain, readout_projection, *, target_rms=0.05):
     features = torch.cat([
@@ -137,7 +140,7 @@ def _reservoir_logits(model, fields, operator, input_weights, input_indices,
     outputs = []
     for step in range(features.shape[0]):
         drive = torch.zeros_like(state).index_add(0, input_indices, projected[:, step])
-        pre = torch.sparse.mm(operator, state[:, None]).squeeze(1) * 4.0 + drive
+        pre = _fast_sparse_mm(operator, state[:, None]).squeeze(1) * 4.0 + drive
         state = 0.6 * state + 0.4 * torch.tanh(pre)
         outputs.append(torch.sparse.mm(readout_projection, state[whole_brain, None]).squeeze(1))
     states = torch.stack(outputs)
@@ -385,10 +388,8 @@ def main():
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     rng = np.random.default_rng(args.seed)
-    device = torch.device("cuda")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     scales = tuple(args.scales)
-    if not torch.cuda.is_available():
-        raise SystemExit("CUDA is required")
     if tuple(scales) != (8, 32, 128):
         raise SystemExit("this first translation smoke is preregistered for scales 8,32,128")
 
@@ -400,7 +401,7 @@ def main():
     train_indices = list(range(len(train_examples)))
     val_indices = list(range(len(train_examples), len(examples)))
 
-    encoders = base._prepare_encoders(args.models, examples, scales, device="cuda")
+    encoders = base._prepare_encoders(args.models, examples, scales, device=str(device))
     spaces = _space_bank(encoders, train_indices, [example.mask for example in examples], scales)
     direct_fields = _fields_by_space(encoders, spaces, examples, device)
     translators = _fit_translators(encoders, spaces, train_indices)
@@ -410,7 +411,7 @@ def main():
     matrix = base.row_normalise(base.load_graph(args.graph))
     archive = np.load(args.graph, allow_pickle=False)
     populations = base.select_populations(archive["superclass"])
-    operator = base._csr_to_torch(matrix, device=device)
+    operator = csr_to_fast_operator(matrix, device=device)
     input_indices = torch.as_tensor(populations.input_indices, dtype=torch.int64, device=device)
     whole_brain = torch.arange(matrix.shape[0], dtype=torch.int64, device=device)
     readout_projection = base._fixed_sparse_projection(
@@ -464,8 +465,8 @@ def main():
         "pos_weight": float(pos_weight),
         "independent": independent,
         "coupled": coupled,
-        "device": torch.cuda.get_device_name(0),
-        "max_cuda_memory_allocated": int(torch.cuda.max_memory_allocated()),
+        "device": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu",
+        "max_cuda_memory_allocated": int(torch.cuda.max_memory_allocated()) if torch.cuda.is_available() else 0,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")

@@ -88,8 +88,6 @@ VAL_EXAMPLES = (
 
 def _torch():
     import torch
-    if not torch.cuda.is_available():
-        raise SystemExit("CUDA is required")
     return torch
 
 
@@ -205,6 +203,52 @@ def _encode_fields(model, model_name: str, examples: list[Example], scales: tupl
 
 
 def _prepare_encoders(model_names: list[str], examples: list[Example], scales: tuple[int, ...], device: str):
+    cache_path = Path("artifacts/embedding_cache/embeddings.npz")
+    if cache_path.exists():
+        try:
+            cached = np.load(cache_path, allow_pickle=False)
+            result = []
+            for model_index, model_name in enumerate(model_names):
+                prefix = f"model_{model_index}_"
+                literal = cached[prefix + "literal"]
+                positive_centroid = cached[prefix + "positive_centroid"]
+                negative_centroid = cached[prefix + "negative_centroid"]
+                discriminative = cached[prefix + "discriminative"]
+                heldout_centroid = cached[prefix + "heldout_centroid"]
+                fields = []
+                for ex_idx in range(len(examples)):
+                    local = {}
+                    for sc in scales:
+                        local[sc] = cached[f"{prefix}ex_{ex_idx}_scale_{sc}"]
+                    fields.append(local)
+                geom = {
+                    "literal_to_positive": _cosine_np(literal, positive_centroid),
+                    "literal_to_negative": _cosine_np(literal, negative_centroid),
+                    "discriminative_to_positive": _cosine_np(discriminative, positive_centroid),
+                    "discriminative_to_negative": _cosine_np(discriminative, negative_centroid),
+                    "discriminative_to_heldout": float(_unit_vec_np(discriminative) @ _unit_vec_np(heldout_centroid)),
+                }
+                result.append({
+                    "name": model_name,
+                    "dim": int(literal.shape[0]),
+                    "literal": literal,
+                    "positive_centroid": positive_centroid,
+                    "negative_centroid": negative_centroid,
+                    "discriminative": discriminative,
+                    "heldout_centroid": heldout_centroid,
+                    "fields": fields,
+                    "geometry": geom,
+                })
+                print(json.dumps({
+                    "event": "embedding_model_cached",
+                    "model": model_name,
+                    "embedding_dim": int(literal.shape[0]),
+                    "geometry": geom,
+                }), flush=True)
+            return result
+        except Exception as e:
+            print(f"Notice: could not load from cache ({e}), falling back to live encoding", flush=True)
+
     from sentence_transformers import SentenceTransformer
 
     torch = _torch()
@@ -247,7 +291,8 @@ def _prepare_encoders(model_names: list[str], examples: list[Example], scales: t
             "geometry": result[-1]["geometry"],
         }), flush=True)
         del model
-        torch.cuda.empty_cache()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
     return result
 
 
@@ -601,7 +646,7 @@ def main() -> None:
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     rng = np.random.default_rng(args.seed)
-    device = torch.device("cuda")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     scales = tuple(args.scales)
 
     train_examples = [Example(*row) for row in TRAIN_EXAMPLES]
@@ -615,7 +660,7 @@ def main() -> None:
     train_y = [examples[index].mask for index in train_indices]
     val_y = [examples[index].mask for index in val_indices]
 
-    encoders = _prepare_encoders(args.models, examples, scales, device="cuda")
+    encoders = _prepare_encoders(args.models, examples, scales, device=str(device))
 
     direct_probes = {}
     cosine_probes = {}
@@ -763,8 +808,8 @@ def main() -> None:
         "wholebrain_projection_width": args.readout_width,
         "frozen_flavour": frozen,
         "online_flavour": online,
-        "device": torch.cuda.get_device_name(0),
-        "max_cuda_memory_allocated": int(torch.cuda.max_memory_allocated()),
+        "device": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu",
+        "max_cuda_memory_allocated": int(torch.cuda.max_memory_allocated()) if torch.cuda.is_available() else 0,
         "interpretation_guardrails": [
             "direct probes test whether the conditioned embedding field already contains the signal",
             "frozen-vs-online isolates whether reward-driven flavour movement helps beyond offline calibration",
