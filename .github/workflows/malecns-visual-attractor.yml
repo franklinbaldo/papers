@@ -50,6 +50,7 @@ jobs:
           uv run python scripts/run_visual_efficiency_curriculum_v5.py --help >/dev/null
           uv run python scripts/run_visual_efficiency_curriculum_v6.py --help >/dev/null
           uv run python scripts/run_visual_efficiency_curriculum_v7.py --help >/dev/null
+          uv run python scripts/run_online_plastic_screen_learning.py --help >/dev/null
       - name: Run closed-loop invariants
         working-directory: experiments/malecns_visual_attractor
         run: uv run pytest -q
