@@ -5,3 +5,10 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 *.egg-info/
+
+# Credentials. The repo has no allowlist, so a key dropped here would otherwise
+# be one `git add -A` away from being published.
+.env
+.env.*
+!.env.example
+.envrc
