@@ -1,18 +1,25 @@
-"""Frozen MaleCNS positional reservoir for token-level tasks (NER first).
+"""Frozen MaleCNS positional reservoir for byte-synchronised token tasks (NER first).
 
 Unlike the MultiEURLEX document encoder, which pools a handful of text chunks
-into one embedding, this reservoir treats the token sequence itself as the time
-axis: one frozen sensory drive per token, one recurrent step per token, and a
-readout emitted at *every* position, not just the last. The only place a
-non-frozen parameter appears is a linear probe fit afterwards on the readout
-embeddings (see ``token_probe.py``) -- the connectome, its input weights and its
-readout projection are exactly as frozen as in the document encoder.
+into one embedding, this reservoir runs over the sentence's canonical UTF-8
+byte axis: every byte is a time step, driven by the same multiscale
+byte-synchronised semantic channels already established in
+``text_axis_channels.py`` and used by the flavour/food experiments -- window
+embeddings at several character scales, linearly interpolated to every byte
+position (not per-token hidden states from a tokenizer, which has no fixed
+place in this programme's channel convention). A readout is emitted at *every*
+byte, not just the last, so labels can be scored at the same resolution the
+channels are defined on. The only place a non-frozen parameter appears is a
+linear probe fit afterwards on the readout embeddings (``token_probe.py``) --
+the connectome, its input weights and its readout projection are exactly as
+frozen as in the document encoder.
 
-    tokens -> per-token frozen MiniLM/E5 hidden states (word-pooled) -> fused
-           -> fixed Gaussian sensory projection (RMS-normalised per token)
-           -> row-normalised MaleCNS recurrent step (gain, leak, tanh)
-           -> fixed sparse whole-brain readout at EVERY position
-           -> [sentence, token, readout_width]
+    text -> UTF-8 byte axis -> multiscale window embeddings (frozen MiniLM/E5)
+         -> interpolated to every byte, unit-normalised per (model, scale),
+            concatenated -> fixed Gaussian sensory projection (RMS-normalised
+            per byte) -> row-normalised MaleCNS recurrent step (gain, leak,
+            tanh) -> fixed sparse whole-brain readout at EVERY byte position
+         -> [sentence, byte, readout_width]
 """
 
 from __future__ import annotations
@@ -29,28 +36,6 @@ from malecns_wifi.document_reservoir import (
     fixed_sparse_projection,
     sensory_input_weights,
 )
-
-
-def word_pool_hidden_states(
-    hidden_states: np.ndarray, word_ids: list[int | None], num_words: int
-) -> np.ndarray:
-    """Mean-pool subword hidden states onto each pre-tokenized word.
-
-    ``word_ids[i]`` is the pre-tokenized word index subword ``i`` belongs to, or
-    ``None`` for special tokens; a word may span several subwords (mean-pooled)
-    or, rarely, a tokenizer artifact may leave a word with zero subwords (kept
-    as an exact-zero vector, not fabricated content).
-    """
-    dim = hidden_states.shape[-1]
-    sums = np.zeros((num_words, dim), dtype=np.float32)
-    counts = np.zeros(num_words, dtype=np.int64)
-    for row, word in enumerate(word_ids):
-        if word is None:
-            continue
-        sums[word] += hidden_states[row]
-        counts[word] += 1
-    safe = np.maximum(counts, 1)[:, None]
-    return sums / safe
 
 
 @dataclass(frozen=True)
@@ -72,7 +57,7 @@ class TokenReservoirConfig:
 
 
 class PositionalReservoir:
-    """Frozen MaleCNS recurrent encoder emitting one readout per token."""
+    """Frozen MaleCNS recurrent encoder emitting one readout per byte position."""
 
     def __init__(
         self,
@@ -114,9 +99,10 @@ class PositionalReservoir:
             torch.cuda.synchronize(self.device)
 
     def forward(self, cube: np.ndarray, active: np.ndarray) -> np.ndarray:
-        """``cube``: [batch, steps, semantic_dim]; ``active``: [batch, steps] padding mask.
+        """``cube``: [batch, steps, semantic_dim] byte-synchronised channels;
+        ``active``: [batch, steps] padding mask (steps = bytes here).
 
-        Returns ``[batch, steps, readout_width]`` -- one embedding per token
+        Returns ``[batch, steps, readout_width]`` -- one embedding per byte
         position, not just the sentence-final state.
         """
         import torch

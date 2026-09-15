@@ -41,6 +41,36 @@ def utf8_byte_axis(text: str) -> ByteAxis:
     return ByteAxis(byte_length=total, char_to_byte=np.asarray(offsets, dtype=np.int64))
 
 
+def window_spans(text: str, scale: int) -> list[tuple[int, int]]:
+    """Overlapping ``scale``-character windows spanning ``text`` (stride = scale//2).
+
+    Same policy the flavour/food smoke scripts use for their anchor windows
+    (``_window_spans`` there); published here as public API so every
+    byte-synchronised-channel consumer, including token-classification tasks,
+    shares one definition instead of re-deriving it.
+    """
+    n = len(text)
+    if n == 0:
+        return [(0, 1)]
+    if n <= scale:
+        return [(0, n)]
+    stride = max(1, scale // 2)
+    starts = list(range(0, n - scale + 1, stride))
+    last = n - scale
+    if starts[-1] != last:
+        starts.append(last)
+    return [(start, start + scale) for start in starts]
+
+
+def char_spans_to_byte_spans(text: str, char_spans: list[tuple[int, int]]) -> np.ndarray:
+    """Convert ``[char_start, char_end)`` spans to UTF-8 byte coordinates."""
+    axis = utf8_byte_axis(text)
+    return np.asarray(
+        [(int(axis.char_to_byte[a]), int(axis.char_to_byte[b])) for a, b in char_spans],
+        dtype=np.int64,
+    )
+
+
 def span_centres(spans: np.ndarray) -> np.ndarray:
     """Centre byte coordinate for aligned ``[start, end)`` spans."""
     values = np.asarray(spans, dtype=np.float64)

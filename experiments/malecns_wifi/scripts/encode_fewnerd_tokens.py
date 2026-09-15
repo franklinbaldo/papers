@@ -1,10 +1,11 @@
-"""Stage B: Few-NERD token cache -> per-token frozen MaleCNS readout embeddings.
+"""Stage B: Few-NERD byte-channel cache -> per-byte frozen MaleCNS readout embeddings.
 
-Sentences are the batch unit and tokens are the time axis: one recurrent step
-per token position, a readout emitted at every step (not just the last, unlike
-the MultiEURLEX document encoder). Batches are grouped by sentence length so no
-padded position is computed needlessly. Output is one 256-d embedding per
-token, in cache order, plus labels for stage C.
+Sentences are the batch unit and UTF-8 bytes are the time axis: one recurrent
+step per byte position (driven by the byte-synchronised multiscale channels
+from stage A), a readout emitted at every step (not just the last, unlike the
+MultiEURLEX document encoder). Batches are grouped by sentence byte-length so
+no padded position is computed needlessly. Output is one 256-d embedding per
+byte, in cache order, plus labels for stage C.
 """
 
 from __future__ import annotations

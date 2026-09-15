@@ -1,4 +1,3 @@
-import json
 import sys
 from pathlib import Path
 
@@ -11,6 +10,7 @@ torch = pytest.importorskip("torch")
 from malecns_wifi import token_reservoir as tr
 from malecns_wifi import token_probe as tp
 from malecns_wifi import fewnerd_cache as fc
+from malecns_wifi import text_axis_channels as tac
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPTS) not in sys.path:
@@ -25,20 +25,47 @@ def _graph(n=250, density=0.03, seed=7):
     return matrix, inputs
 
 
-def test_word_pool_hidden_states_means_over_subwords():
-    hidden = np.array([[1.0, 0.0], [3.0, 0.0], [0.0, 2.0], [10.0, 10.0]], dtype=np.float32)
-    word_ids = [0, 0, 1, None]  # word 0 spans two subwords, word 1 one, special token dropped
-    pooled = tr.word_pool_hidden_states(hidden, word_ids, num_words=2)
-    assert np.allclose(pooled[0], [2.0, 0.0])
-    assert np.allclose(pooled[1], [0.0, 2.0])
+# -- byte-axis primitives (the established channel convention) --------------
+
+def test_window_spans_covers_short_and_long_text():
+    assert tr is not None  # module import sanity (reservoir depends on nothing byte-specific)
+    assert tac.window_spans("hi", 8) == [(0, 2)]
+    spans = tac.window_spans("a" * 20, 8)
+    assert spans[0] == (0, 8) and spans[-1] == (12, 20)
+    assert all(b - a == 8 for a, b in spans)
 
 
-def test_word_pool_handles_word_with_no_subwords():
-    hidden = np.array([[1.0, 1.0]], dtype=np.float32)
-    pooled = tr.word_pool_hidden_states(hidden, [0], num_words=2)
-    assert np.allclose(pooled[0], [1.0, 1.0])
-    assert np.allclose(pooled[1], [0.0, 0.0])  # never fabricated, exact zero
+def test_char_spans_to_byte_spans_matches_utf8_lengths():
+    text = "café"  # 'é' is 2 UTF-8 bytes
+    spans = tac.char_spans_to_byte_spans(text, [(0, 4)])
+    assert spans[0][1] == len(text.encode("utf-8"))
 
+
+# -- byte-label reconstruction ------------------------------------------------
+
+def test_reconstruct_text_and_byte_labels_broadcast_word_spans():
+    words = ["Ann", "met", "Bob"]
+    fine = [51, 0, 51]
+    coarse = [7, 0, 7]
+    text, byte_fine, byte_coarse = fc.byte_labels(words, fine, coarse)
+    assert text == "Ann met Bob"
+    # "Ann" occupies bytes 0-3, the space is O (0), "Bob" occupies bytes 8-11
+    assert list(byte_fine[0:3]) == [51, 51, 51]
+    assert byte_fine[3] == 0  # space between words
+    assert list(byte_fine[8:11]) == [51, 51, 51]
+    assert byte_coarse[0] == 7 and byte_coarse[3] == 0
+
+
+def test_byte_labels_handles_multibyte_words():
+    words = ["café", "ok"]
+    text, byte_fine, _ = fc.byte_labels(words, [21, 0], [4, 0])
+    assert text == "café ok"
+    café_bytes = len("café".encode("utf-8"))
+    assert list(byte_fine[:café_bytes]) == [21] * café_bytes
+    assert byte_fine[café_bytes] == 0  # the space
+
+
+# -- positional reservoir (unit-agnostic: works over whatever axis it's fed) --
 
 def test_positional_reservoir_emits_one_readout_per_step():
     matrix, inputs = _graph()
@@ -56,8 +83,8 @@ def test_positional_reservoir_emits_one_readout_per_step():
     assert out.shape == (batch, steps, 12)
     norms = np.linalg.norm(out, axis=2)
     assert np.allclose(norms[active], 1.0, atol=1e-5)
-    # step 0's readout never touches the recurrent operator (state is exactly zero before it);
-    # every later step makes exactly one SpMM call.
+    # step 0's readout never touches the recurrent operator (state is exactly zero
+    # before it); every later step makes exactly one SpMM call.
     assert reservoir.stats.spmm_calls == steps - 1
 
 
@@ -71,10 +98,11 @@ def test_positional_reservoir_padding_freezes_state():
     active = np.ones((2, 5), dtype=np.bool_)
     active[1, 2:] = False
     out = reservoir.forward(cube, active)
-    # a padded position repeats the last real embedding for that sentence (state frozen, readout deterministic in state)
     assert np.allclose(out[1, 2], out[1, 3])
     assert np.allclose(out[1, 3], out[1, 4])
 
+
+# -- span metrics -------------------------------------------------------------
 
 def test_bio_conversion_and_span_metrics_perfect_match():
     names = ["O", "person", "location"]
@@ -100,75 +128,49 @@ def test_bio_conversion_false_positive_lowers_precision_not_recall():
     assert metrics["micro_recall"] == 0.0  # no true entities to recall
 
 
-class _FakeTokenizerOutput(dict):
-    def to(self, device):
-        return self
+# -- fake-encoder round trip through the byte-channel pipeline ---------------
 
-    def word_ids(self, batch_index):
-        return self["_word_ids"][batch_index]
+class _FakeSentenceTransformer:
+    """Deterministic stand-in: embeds text as a hashed character histogram."""
 
+    dim = 6
 
-class _FakeTokenizer:
-    def __call__(self, batch, **kwargs):
-        max_len = max(len(s) for s in batch) + 1  # +1 for a leading [CLS]-like special token
-        word_ids = [[None] + list(range(len(s))) + [None] * (max_len - len(s) - 1) for s in batch]
-        input_ids = torch.zeros((len(batch), max_len), dtype=torch.long)
-        return _FakeTokenizerOutput(input_ids=input_ids, _word_ids=word_ids)
+    def __init__(self, name, device=None):
+        self.name = name
 
+    def encode(self, texts, **kwargs):
+        out = np.zeros((len(texts), self.dim), dtype=np.float32)
+        for i, text in enumerate(texts):
+            for ch in text:
+                out[i, ord(ch) % self.dim] += 1.0
+        return out
 
-class _FakeConfig:
-    hidden_size = 6
-    _commit_hash = "deadbeef"
-
-
-class _FakeModel:
-    def __init__(self):
-        self.config = _FakeConfig()
-
-    def to(self, device):
-        return self
-
-    def eval(self):
-        return self
-
-    def __call__(self, **kwargs):
-        input_ids = kwargs["input_ids"]
-        batch, seq = input_ids.shape
-        rng = np.random.default_rng(0)
-        hidden = torch.as_tensor(rng.normal(size=(batch, seq, 6)).astype(np.float32))
-
-        class Output:
-            last_hidden_state = hidden
-
-        return Output()
+    def get_sentence_embedding_dimension(self):
+        return self.dim
 
 
-def test_encode_model_word_pools_and_normalises(monkeypatch):
-    import transformers
+def test_encode_model_produces_one_row_per_byte_unit_normalised(monkeypatch):
+    import sentence_transformers
 
-    monkeypatch.setattr(transformers, "AutoTokenizer", type("T", (), {"from_pretrained": staticmethod(lambda name: _FakeTokenizer())}))
-    monkeypatch.setattr(transformers, "AutoModel", type("M", (), {"from_pretrained": staticmethod(lambda name: _FakeModel())}))
+    monkeypatch.setattr(sentence_transformers, "SentenceTransformer", _FakeSentenceTransformer)
+    texts = ["Ann met Bob", "ok"]
+    embeddings, info = fc.encode_model("fake/minilm", texts, scales=(4, 8), device="cpu", batch_size=8)
+    expected_rows = sum(len(t.encode("utf-8")) for t in texts)
+    assert embeddings.shape == (expected_rows, 6 * 2)  # 2 scales concatenated
+    assert np.allclose(np.linalg.norm(embeddings[:, :6], axis=1), 1.0, atol=1e-5)
+    assert np.allclose(np.linalg.norm(embeddings[:, 6:], axis=1), 1.0, atol=1e-5)
+    assert info["scales"] == [4, 8] and info["dim"] == 12
 
-    sentences = [["hello", "world"], ["a", "b", "c"]]
-    embeddings, info = fc.encode_model("fake/model", sentences, device="cpu", batch_size=2, max_tokens=16)
-    assert embeddings.shape == (5, 6)
-    assert np.allclose(np.linalg.norm(embeddings, axis=1), 1.0, atol=1e-5)
-    assert info["dim"] == 6 and info["revision"] == "deadbeef"
 
-
-def test_fewnerd_cache_manifest_fields(tmp_path):
+def test_fewnerd_byte_table_row_count_matches_byte_labels():
     documents = {
         "train": [{"id": "0", "tokens": ["Ann", "met", "Bob"], "fine": [51, 0, 51], "coarse": [7, 0, 7]}],
-        "validation": [{"id": "1", "tokens": ["Paris"], "fine": [21], "coarse": [4]}],
+        "validation": [{"id": "1", "tokens": ["café"], "fine": [21], "coarse": [4]}],
         "test": [{"id": "2", "tokens": ["ok"], "fine": [0], "coarse": [0]}],
     }
-    fine_names = ["O"] * 67
-    fine_names[51] = "person-other"
-    fine_names[21] = "location-GPE"
-    loaded = {"documents": documents, "fine_names": fine_names, "coarse_names": ["O"] * 9}
-    spec = fc.TokenCacheSpec(models=("fake/minilm",), limit_per_split=None, max_tokens=16)
-    table = fc.TokenTable.from_documents(spec, documents)
-    assert len(table) == 3 + 1 + 1
-    assert table.sentence_tokens == [["Ann", "met", "Bob"], ["Paris"], ["ok"]]
+    spec = fc.TokenCacheSpec(models=("fake/minilm",), max_tokens=16)
+    table = fc.ByteTable.from_documents(spec, documents)
+    assert len(table) == len("Ann met Bob".encode("utf-8")) + len("café".encode("utf-8")) + len("ok".encode("utf-8"))
+    assert table.sentence_texts == ["Ann met Bob", "café", "ok"]
     assert fc.sentence_key(["Ann", "met", "Bob"]) == fc.sentence_key(["Ann", "met", "Bob"])
-    assert fc.sentence_key(["Ann", "met", "Bob"]) != fc.sentence_key(["Paris"])
+    assert fc.sentence_key(["Ann", "met", "Bob"]) != fc.sentence_key(["café"])

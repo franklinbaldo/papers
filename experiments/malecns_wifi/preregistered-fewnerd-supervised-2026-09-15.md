@@ -35,47 +35,64 @@ CoNLL-2003 kept only as a historical sanity check, not a headline result.
   scored label space.
 - Tag scheme as published: **IO**, not BIO/BIOES -- a run of identical
   non-`O` fine labels is one entity. Converting that run to BIO for scoring
-  (mark the first token `B-`, the rest `I-`) is bookkeeping for the metric
+  (mark the first byte of a run `B-`, the rest `I-`) is bookkeeping for the metric
   library, not a change to any label or prediction; see "Metric" below.
 
-## Architecture (positional, token-first)
+## Architecture (positional, byte-synchronised)
+
+This programme already has an established convention for feeding text to
+MaleCNS positionally: `text_axis_channels.py`, used by the flavour/food/wifi
+experiments. The first draft of this protocol proposed per-token hidden
+states from a HF tokenizer instead -- a different, ad hoc representation with
+no place in the rest of the programme -- and was corrected before any
+benchmark-evidence run. The channel construction below is that established
+convention, not a new one:
 
 ```
-tokens -> per-token frozen MiniLM/E5 hidden states (word-pooled over subwords)
-       -> fused semantic vector (unit-per-model, concatenated)
-       -> fixed Gaussian sensory projection (RMS-normalised per token)
-       -> row-normalised MaleCNS recurrent step (gain, leak, tanh) -- one step per token
-       -> fixed sparse whole-brain readout emitted at EVERY position
-       -> 256-d embedding per token
+sentence text (word-joined) -> UTF-8 byte axis
+   -> for each scale in {8, 32, 128} chars: overlapping windows, pooled by a
+      frozen encoder, interpolated to every byte position (text_axis_channels.
+      window_spans / interpolate_to_bytes)
+   -> unit-normalised per (model, scale), concatenated -> fused byte channel
+   -> fixed Gaussian sensory projection (RMS-normalised per byte)
+   -> row-normalised MaleCNS recurrent step (gain, leak, tanh) -- one step per BYTE
+   -> fixed sparse whole-brain readout emitted at EVERY byte position
+   -> 256-d embedding per byte
 ```
 
-No pooling of the sequence into a single document vector at any point. The
-connectome (`malecns_wifi.token_reservoir.PositionalReservoir`), its frozen
-sensory-input weights, and its frozen sparse readout projection are
-**identical in construction** to the MultiEURLEX document encoder
-(`document_reservoir.py`): row-normalised operator, same gain/leak/target-RMS
-defaults, same seeded fixed projections. Only the *time axis* changes -- token
-positions instead of up to four sampled text windows -- and the readout is
-taken after every step instead of only the last.
+No pooling of the sequence into a single document vector at any point, and no
+tokenizer subword alignment anywhere. The connectome
+(`malecns_wifi.token_reservoir.PositionalReservoir`), its frozen sensory-input
+weights, and its frozen sparse readout projection are **identical in
+construction** to the MultiEURLEX document encoder (`document_reservoir.py`):
+row-normalised operator, same gain/leak/target-RMS defaults, same seeded fixed
+projections. Only the *time axis* changes -- one step per UTF-8 byte instead
+of up to four sampled text windows -- and the readout is taken after every
+step instead of only the last.
 
 Frozen encoders: the same pair as MultiEURLEX --
 `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` and
 `intfloat/multilingual-e5-small` -- for continuity across the research
 programme, even though Few-NERD is English-only and a monolingual encoder
-would also be a legitimate choice.
+would also be a legitimate choice. E5's `"query: "`/`"passage: "` prefix
+convention applies exactly as it does for the flavour/food channels: every
+pooled window is a "passage", so the `"passage: "` prefix is used, same as
+`multieurlex_cache.model_prefix`.
 
-**Preregistered deviation from the document pipeline**: E5's
-`"query: "`/`"passage: "` prefix convention has no defined per-token alignment
-(it is a pooled-sentence-embedding instruction), so it is **not** applied when
-extracting per-token hidden states. This changes what the frozen encoder is
-asked to compute, not any label, split, or downstream decision.
+**Preregistered deviation from the document pipeline**: Few-NERD supplies
+pre-tokenized words, not raw text, so the sentence is reconstructed as
+`" ".join(words)`. Word-level fine/coarse labels are broadcast onto each
+word's own byte span (via the same `utf8_byte_axis` used for the channels);
+the single-space bytes between words carry label `O`. This is a documented
+approximation of the original text and its labels' resolution, not a change to
+any label's value.
 
 ## What is frozen vs. what is fit
 
 - Frozen, never sees labels: both semantic encoders, the sensory projection,
   the connectome operator, the sparse whole-brain readout.
 - The **only** supervised component is a linear probe (multinomial logistic
-  regression) from the 256-d per-token readout to the 66-way fine label,
+  regression) from the 256-d per-byte readout to the 66-way fine label,
   fit on `train`. This is the token-classification analogue of the k-NN
   classifier the MTEB evaluator fits on top of a frozen sentence encoder for
   document classification -- not a claim that the encoder itself is
@@ -88,21 +105,21 @@ asked to compute, not any label, split, or downstream decision.
 
 - Primary: entity-level micro-F1 (seqeval, IO->BIO converted as above),
   following Few-NERD's own evaluation convention.
-- Secondary: entity-level macro-F1, per-entity-type P/R/F1, raw token
-  accuracy (context only -- token accuracy on a 66-way, heavily `O`-skewed
+- Secondary: entity-level macro-F1, per-entity-type P/R/F1, raw byte-level
+  label accuracy (context only -- byte accuracy on a 66-way, heavily `O`-skewed
   label space is not comparable to span F1 and must not be reported as if it
   were the headline number).
 - Validation accuracy of the probe is recorded for provenance, not compared
   across variants as a benchmark result.
 
-## Comparable controls (same tokens, same encoders, no MaleCNS)
+## Comparable controls (same byte channels, same encoders, no MaleCNS)
 
 Mirroring the MultiEURLEX label-free controls, sharing the exact fused
-per-token inputs:
+per-byte channel inputs:
 
 - `sensory-only`: the same reservoir with the recurrent operator switched off
   (`gain = 0`) -- sensory projection + leaky tanh + readout, no topology.
-- `fused-mean-proj` / raw fused vector: the per-token fused MiniLM/E5 vector
+- `fused-mean-proj` / raw fused vector: the per-byte fused MiniLM/E5 channel
   (optionally projected to 256-d by the same fixed seeded projection) fed
   straight to the identical probe, with no reservoir step at all.
 
@@ -113,7 +130,7 @@ for MultiEURLEX, now on a task the architecture was actually built for.
 
 ## Engineering metrics to record
 
-tokens/s, sentences/s, MiniLM/E5 seconds, reservoir forward seconds, SpMM call
+bytes/s, sentences/s, MiniLM/E5 seconds, reservoir forward seconds, SpMM call
 count, peak RAM/VRAM, cache size, probe fit seconds -- same discipline as
 `multieurlex21-throughput.md`. Stage A/B/C split so the semantic cache is
 computed once and reused by the probe, the controls, and any later ablation
