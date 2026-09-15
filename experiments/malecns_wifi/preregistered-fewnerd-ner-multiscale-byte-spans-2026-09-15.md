@@ -1,3 +1,11 @@
+---
+type: "Protocol"
+title: "Preregistration amendment — multiscale byte/token/span channels for Few-NERD NER"
+description: "Protocol amendment freezing the initial multiscale semantic receptive fields projected onto a common UTF-8 byte axis for MaleCNS NER."
+tags: [malecns, few-nerd, ner, embeddings, multiscale, preregistration]
+timestamp: 2026-09-15T18:04:00Z
+---
+
 # Preregistration amendment — multiscale byte/token/span channels for Few-NERD NER
 
 Date: 2026-09-15
