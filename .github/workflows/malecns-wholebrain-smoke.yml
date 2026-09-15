@@ -71,10 +71,16 @@ jobs:
         working-directory: experiments/malecns_wifi
         run: |
           uv run python - <<'PY'
+          import hashlib
           import os
           import numpy as np
           from malecns_wifi import load_graph
-          from malecns_wifi.multitag import array_fingerprint
+
+          def array_fingerprint(array):
+              values = np.ascontiguousarray(np.asarray(array, dtype=np.float32))
+              digest = hashlib.blake2b(values.tobytes(), digest_size=10)
+              digest.update(str(values.shape).encode())
+              return digest.hexdigest()
 
           features = np.load('artifacts/wholebrain-smoke-inputs/features.npz', allow_pickle=False)
           block = np.hstack([features['absolute'], features['sensation']])
