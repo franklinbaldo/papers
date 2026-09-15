@@ -1,3 +1,11 @@
+---
+type: "Companion Note"
+title: "MultiEURLEX-21 PT — staged pipeline, semantic cache dataset and fast MaleCNS reservoir"
+description: "Engineering note for the frozen-MaleCNS MultiEURLEX-21 PT benchmark: three-stage pipeline (semantic cache as a published dataset, reservoir/controls, official evaluator), canonical-vs-fast equivalence gates, label-free controls, and the local CPU throughput milestone."
+tags: [malecns, multieurlex, mteb, semantic-cache, throughput, reproducibility]
+timestamp: 2026-09-15T18:00:00+00:00
+---
+
 # MultiEURLEX-21 PT — staged pipeline and throughput work
 
 Date: 2026-09-15. Infrastructure only: the scientific protocol of
