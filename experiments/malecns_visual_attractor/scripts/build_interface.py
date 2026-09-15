@@ -149,8 +149,10 @@ def build_interface(
     forward_left = typed_side_indices("DNg100", "L")
     forward_right = typed_side_indices("DNg100", "R")
 
-    # MaleCNS uses P1_* names for connectomically defined male pC1/P1 types.
-    courtship_mask = np.char.startswith(cell_type.astype(str), "P1_")
+    # MaleCNS annotations use pC1* names for the male courtship-command family
+    # (for example pC1a, pC1b, pC1_4b, pC1_7b and pC1_11b). The earlier P1_*
+    # spelling was literature terminology, not the dataset's cell-type prefix.
+    courtship_mask = np.char.startswith(cell_type.astype(str), "pC1")
     courtship_indices = graph_index[courtship_mask]
 
     required_run1 = {
@@ -158,7 +160,7 @@ def build_interface(
         "DNa02 right": steer_right,
         "DNg100 left": forward_left,
         "DNg100 right": forward_right,
-        "P1_* courtship-prime": courtship_indices,
+        "pC1* courtship-prime": courtship_indices,
     }
     missing_run1 = [name for name, values in required_run1.items() if values.size == 0]
     if missing_run1:
@@ -204,7 +206,7 @@ def build_interface(
             "descending": "superclass contains 'descending', split by soma/root side",
             "steering_readout": "DNa02 split by soma/root side",
             "forward_readout": "DNg100 split by soma/root side",
-            "courtship_prime": "cell type starts with 'P1_'",
+            "courtship_prime": "cell type starts with 'pC1'",
             "run1_required_groups": sorted(required_run1),
         },
         "counts": {
