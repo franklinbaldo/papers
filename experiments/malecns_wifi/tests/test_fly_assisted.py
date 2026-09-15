@@ -121,3 +121,106 @@ def test_taste_head_is_disposable_at_inference() -> None:
         model.taste_head.bias.normal_(100, 10)
     after, _ = model.standalone_logits(features)
     assert torch.allclose(before, after)
+
+
+def test_whole_brain_readout_exposes_the_complete_recurrent_state() -> None:
+    spec, model, features, _, _, projection, inputs, _ = _case()
+    transformed, _ = model.transform(features)
+    whole_brain = torch.arange(_operator().shape[0])
+
+    states, _ = semantic_reservoir_states(
+        _operator(),
+        transformed,
+        input_weights=projection,
+        input_indices=inputs,
+        readout_indices=whole_brain,
+        spec=spec,
+    )
+
+    assert states.shape == (features.shape[0], _operator().shape[0])
+
+
+def test_fixed_projection_can_read_whole_brain_at_a_matched_budget() -> None:
+    spec, model, features, _, _, projection, inputs, _ = _case()
+    transformed, _ = model.transform(features)
+    neurons = _operator().shape[0]
+    whole_brain = torch.arange(neurons)
+    budget = 6
+    torch.manual_seed(7)
+    readout_projection = torch.randn(budget, neurons)
+
+    states, _ = semantic_reservoir_states(
+        _operator(),
+        transformed,
+        input_weights=projection,
+        input_indices=inputs,
+        readout_indices=whole_brain,
+        readout_projection=readout_projection,
+        spec=spec,
+    )
+
+    assert states.shape == (features.shape[0], budget)
+
+
+def test_sparse_and_dense_whole_brain_projections_agree() -> None:
+    spec, model, features, _, _, projection, inputs, _ = _case()
+    transformed, _ = model.transform(features)
+    neurons = _operator().shape[0]
+    whole_brain = torch.arange(neurons)
+    torch.manual_seed(8)
+    dense = torch.randn(5, neurons)
+    dense[dense.abs() < 0.8] = 0.0
+    sparse = dense.to_sparse().coalesce()
+
+    dense_states, _ = semantic_reservoir_states(
+        _operator(),
+        transformed,
+        input_weights=projection,
+        input_indices=inputs,
+        readout_indices=whole_brain,
+        readout_projection=dense,
+        spec=spec,
+    )
+    sparse_states, _ = semantic_reservoir_states(
+        _operator(),
+        transformed,
+        input_weights=projection,
+        input_indices=inputs,
+        readout_indices=whole_brain,
+        readout_projection=sparse,
+        spec=spec,
+    )
+
+    assert torch.allclose(dense_states, sparse_states, atol=1e-6)
+
+
+def test_whole_brain_auxiliary_gradient_reaches_the_flavourizer() -> None:
+    spec, _, features, masks, flavours, projection, inputs, _ = _case()
+    neurons = _operator().shape[0]
+    whole_brain = torch.arange(neurons)
+    budget = 6
+    torch.manual_seed(9)
+    fixed_projection = torch.randn(budget, neurons)
+    model = make_model(features.shape[1], masks.shape[1], budget, flavours.shape[1], spec)
+    with torch.no_grad():
+        model.up.weight.normal_(0, 0.05)
+
+    result = training_loss(
+        model,
+        features,
+        masks,
+        spec=spec,
+        assist_lambda=1.0,
+        operator=_operator(),
+        input_weights=projection,
+        input_indices=inputs,
+        readout_indices=whole_brain,
+        readout_projection=fixed_projection,
+        flavours=flavours,
+    )
+    result["fly_loss"].backward()
+
+    assert model.up.weight.grad is not None
+    assert model.up.weight.grad.abs().sum() > 0
+    assert model.down.weight.grad is not None
+    assert model.down.weight.grad.abs().sum() > 0
