@@ -26,7 +26,8 @@ For each official Few-NERD sentence and each frozen semantic encoder:
 2. run the frozen encoder contextually over the sentence;
 3. align encoder subword offsets back to each official Few-NERD token;
 4. mean-pool overlapping non-special subword hidden states into one contextual vector per official token;
-5. persist those token vectors with sentence id, token index, official token text, encoder identity/revision, dataset/config/split provenance and numeric dtype.
+5. L2-normalise each pooled official-token vector;
+6. persist those token vectors with sentence id, token index, official token text, encoder identity/revision, dataset/config/split provenance and numeric dtype.
 
 MiniLM and E5 remain separate native channels. E5 uses its documented passage prefix; alignment accounts for the prefix offset.
 
@@ -35,7 +36,7 @@ MiniLM and E5 remain separate native channels. E5 uses its documented passage pr
 The cached token vectors are the only expensive frozen-encoder product. Receptive-field channels are derived deterministically from them:
 
 - scale 1: the token vector itself;
-- scale 2, 4 and 8: mean of a deterministic local token window of that maximum width containing the target token, clipped at sentence boundaries.
+- scale 2, 4 and 8: mean of a deterministic local token window of that maximum width containing the target token, clipped at sentence boundaries, followed by L2 normalisation.
 
 For even widths, allocate the extra token to the right: `left=(width-1)//2`, `right=width-left-1`.
 
