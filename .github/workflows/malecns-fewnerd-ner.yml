@@ -6,18 +6,20 @@ on:
     paths:
       - "experiments/malecns_wifi/scripts/fewnerd_ner_core.py"
       - "experiments/malecns_wifi/scripts/fewnerd_byte_ner_smoke.py"
+      - "experiments/malecns_wifi/scripts/fewnerd_semantic_cache.py"
       - "experiments/malecns_wifi/tests/test_fewnerd_ner_core.py"
+      - "experiments/malecns_wifi/preregistered-fewnerd-ner-*.md"
       - ".github/workflows/malecns-fewnerd-ner.yml"
 
 jobs:
   contract-and-smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-      - name: Unit tests for IO/entity/UTF-8 contract
-        run: uv run --with pytest pytest -q experiments/malecns_wifi/tests/test_fewnerd_ner_core.py
+      - name: Unit tests for IO/entity/UTF-8/cache contract
+        run: uv run --with pytest --with numpy pytest -q experiments/malecns_wifi/tests/test_fewnerd_ner_core.py
       - name: Few-NERD fine-label byte smoke
         run: >-
           uv run --with datasets
@@ -25,9 +27,24 @@ jobs:
           --split train
           --limit 64
           --output artifacts/fewnerd-ner/byte-smoke.json
+      - name: Contextual semantic-cache smoke on CPU
+        run: >-
+          uv run --with datasets --with transformers --with torch --with numpy
+          python experiments/malecns_wifi/scripts/fewnerd_semantic_cache.py
+          --split train
+          --limit 8
+          --device cpu
+          --batch-size 4
+          --dtype float16
+          --output artifacts/fewnerd-ner/contextual-token-smoke.npz
       - name: Show smoke evidence
-        run: cat artifacts/fewnerd-ner/byte-smoke.json
+        run: |
+          cat artifacts/fewnerd-ner/byte-smoke.json
+          cat artifacts/fewnerd-ner/contextual-token-smoke.manifest.json
       - uses: actions/upload-artifact@v4
         with:
-          name: fewnerd-ner-byte-smoke
-          path: artifacts/fewnerd-ner/byte-smoke.json
+          name: fewnerd-ner-smoke
+          path: |
+            artifacts/fewnerd-ner/byte-smoke.json
+            artifacts/fewnerd-ner/contextual-token-smoke.npz
+            artifacts/fewnerd-ner/contextual-token-smoke.manifest.json
