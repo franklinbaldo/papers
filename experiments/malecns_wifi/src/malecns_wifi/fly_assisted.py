@@ -15,7 +15,14 @@ The final path is always::
 
 The assisted arm temporarily adds::
 
-    flavourized features -> frozen recurrent operator -> taste head -> food target
+    flavourized features -> frozen recurrent operator -> state readout -> taste head
+                         -> food target
+
+The state readout is deliberately not restricted to descending neurons. Descending
+neurons are a biologically meaningful action port, but semantic identification asks
+what information is present in the recurrent brain state. The caller may therefore
+read an anatomical subset, the whole state, or a fixed projection of the whole
+state while keeping the recurrent operator frozen.
 
 The tag head and flavourizer are shared. The auxiliary weight is annealed to zero,
 and the entire recurrent/taste branch is skipped at held-out evaluation. A positive
@@ -42,6 +49,10 @@ class FlyAssistSpec:
     low-rank map, not an attention model. ``assist_fraction`` says how much of
     training may use the fly. After that point lambda is exactly zero and the fly
     branch is not evaluated, forcing the standalone tagger to finish on its own.
+
+    ``steps_per_chunk`` is the recurrent depth used by one forward pass. A later
+    protocol may select it from a preregistered grid, but this dataclass keeps one
+    concrete value so each run has an unambiguous dynamical regime.
     """
 
     rank: int = 32
@@ -83,8 +94,11 @@ def make_model(
 ):
     """Create the shared final tagger plus its disposable taste head.
 
-    ``fly_readout_dim`` is the number of neurons/features read from the substrate;
-    ``flavour_dim`` is the food-code width. They are intentionally independent.
+    ``fly_readout_dim`` is the number of features exposed by the chosen state
+    readout. It may be an anatomical subset, the complete recurrent state, or a
+    fixed projection of that state. ``flavour_dim`` is the food-code width. They
+    are intentionally independent.
+
     The residual up-projection starts at zero, so every arm begins with exactly the
     same semantic representation.
     """
@@ -136,6 +150,23 @@ def interpolate_torch(features, steps: int):
     return torch.cat(pieces, dim=0)
 
 
+def _read_state(state, readout_indices, readout_projection=None):
+    """Read an anatomical subset or a fixed projection of the recurrent state.
+
+    ``readout_indices`` chooses the state that is made observable. Passing all
+    neuron indices exposes the whole brain. ``readout_projection`` can then match
+    a comparator's dimensional budget without discarding neurons *before* the
+    projection. Dense and Torch sparse projections are both accepted.
+    """
+    torch = _torch()
+    probed = state[readout_indices]
+    if readout_projection is None:
+        return probed
+    if readout_projection.layout == torch.strided:
+        return readout_projection @ probed
+    return torch.sparse.mm(readout_projection, probed[:, None]).squeeze(1)
+
+
 def semantic_reservoir_states(
     operator,
     transformed,
@@ -144,6 +175,7 @@ def semantic_reservoir_states(
     input_indices,
     readout_indices,
     spec: FlyAssistSpec,
+    readout_projection=None,
 ):
     """Run a differentiable semantic trajectory through a frozen sparse operator.
 
@@ -151,6 +183,11 @@ def semantic_reservoir_states(
     A trainable upstream map therefore cannot improve the auxiliary loss merely by
     increasing current: it must change the direction/geometry of the semantic
     stream. The sparse operator is a tensor/buffer, never a parameter.
+
+    The recurrent dynamics always update the complete operator state. Readout is a
+    separate concern: callers may inspect descending neurons, all neurons, or a
+    fixed projection of all neurons. This keeps semantic-state decoding distinct
+    from future action/control readouts.
     """
     torch = _torch()
     features = unit_rows_torch(transformed)
@@ -169,7 +206,7 @@ def semantic_reservoir_states(
         # Path positions 0, steps, 2*steps, ... are the final state for each
         # original chunk, matching the CPU Run-1 alignment.
         if step == 0 or step % spec.steps_per_chunk == 0:
-            outputs.append(state[readout_indices])
+            outputs.append(_read_state(state, readout_indices, readout_projection))
 
     stacked = torch.stack(outputs, dim=0)
     realised = torch.sqrt(torch.mean(projected.square()))
@@ -192,6 +229,7 @@ def training_loss(
     input_weights=None,
     input_indices=None,
     readout_indices=None,
+    readout_projection=None,
     flavours=None,
 ):
     """Standalone tag loss plus an optional disposable fly-teacher loss.
@@ -199,6 +237,11 @@ def training_loss(
     The returned main logits never depend on the reservoir branch. When
     ``assist_lambda == 0`` the branch is skipped entirely, so the final phase of
     training is architecturally identical to deployment.
+
+    ``readout_projection`` is fixed infrastructure, never a trainable shortcut. A
+    whole-brain projected arm therefore asks whether semantic information exists
+    in the recurrent state under a matched output width, not whether an additional
+    learned network can manufacture it.
     """
     torch = _torch()
     transformed, residual = model.transform(features)
@@ -229,6 +272,7 @@ def training_loss(
             input_weights=input_weights,
             input_indices=input_indices,
             readout_indices=readout_indices,
+            readout_projection=readout_projection,
             spec=spec,
         )
         if states.shape[1] != model.taste_head.in_features:
@@ -285,12 +329,15 @@ def protocol_dict(spec: FlyAssistSpec) -> dict:
     return {
         "name": "fly-assisted-standalone-tagger",
         "inference_path": "semantic -> flavourizer -> tag_head (no fly, no food, no mask)",
-        "training_auxiliary": "flavourizer -> frozen operator -> taste_head -> food target",
+        "training_auxiliary": (
+            "flavourizer -> frozen operator -> fixed state readout -> taste_head -> food target"
+        ),
         "spec": asdict(spec),
         "claim_boundary": (
             "A positive means the training-time substrate improved the final standalone "
             "tagger. It does not mean the connectome is required at inference. A topology "
             "claim additionally requires MaleCNS assistance to beat tag-only, degree-null "
-            "assistance and random-ESN assistance under the same final architecture."
+            "assistance and random-ESN assistance under the same final architecture and "
+            "the same state-readout budget."
         ),
     }
