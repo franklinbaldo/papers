@@ -30,6 +30,7 @@ py-modules = [
   "visual_efficiency",
   "reward_plastic_adapter",
   "full_screen_decoder",
+  "image_artifacts",
 ]
 
 [tool.pytest.ini_options]
