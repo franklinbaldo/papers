@@ -7,6 +7,7 @@ on:
       - "experiments/malecns_wifi/scripts/fewnerd_ner_core.py"
       - "experiments/malecns_wifi/scripts/fewnerd_byte_ner_smoke.py"
       - "experiments/malecns_wifi/scripts/fewnerd_semantic_cache.py"
+      - "experiments/malecns_wifi/scripts/fewnerd_malecns_ner_smoke.py"
       - "experiments/malecns_wifi/tests/test_fewnerd_ner_core.py"
       - "experiments/malecns_wifi/preregistered-fewnerd-ner-*.md"
       - ".github/workflows/malecns-fewnerd-ner.yml"
@@ -18,6 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
+      - name: Compile trained whole-brain runner
+        run: python -m py_compile experiments/malecns_wifi/scripts/fewnerd_malecns_ner_smoke.py
       - name: Unit tests for IO/entity/UTF-8/cache contract
         run: uv run --with pytest --with numpy pytest -q experiments/malecns_wifi/tests/test_fewnerd_ner_core.py
       - name: Few-NERD fine-label byte smoke
