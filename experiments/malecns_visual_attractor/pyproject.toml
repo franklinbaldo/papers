@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "malecns-visual-attractor-experiment"
 version = "0.1.0"
@@ -12,6 +16,16 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 gpu = ["torch>=2.4"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = [
+  "visual_attractor",
+  "gpu_batch",
+  "connectome_generator",
+  "connectome_generator_gpu",
+  "generator_optimizer",
+]
 
 [tool.pytest.ini_options]
 addopts = "-q"
