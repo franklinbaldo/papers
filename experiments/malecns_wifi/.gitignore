@@ -1,3 +1,4 @@
 # Compiled connectome artifacts are large binaries rebuilt by the workflow from
 # hashed public sources; the manifest in CI is the record, not the repo.
 artifacts/
+wandb/

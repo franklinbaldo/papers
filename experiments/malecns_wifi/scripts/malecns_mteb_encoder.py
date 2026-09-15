@@ -1,72 +1,38 @@
-"""Frozen MaleCNS document encoder compatible with the MTEB EncoderProtocol.
+"""Frozen MaleCNS document encoders compatible with the MTEB EncoderProtocol.
 
-The encoder uses no benchmark labels. Frozen MiniLM/E5 semantic channels drive
-sensory populations of the row-normalised MaleCNS connectome. Up to four text
-windows are sampled across each document and integrated recurrently; a fixed
-sparse whole-brain projection is returned as the document embedding.
+Two encoders share the same logical representation (see
+``malecns_wifi.document_reservoir``):
+
+* ``FrozenMaleCNSEncoder`` runs the frozen MiniLM/E5 semantic stage and the
+  MaleCNS reservoir live, per MTEB batch. This is the path used by the first
+  official run.
+* ``CachedDocumentEncoder`` serves precomputed document embeddings (stage B
+  output) looked up by the sha256 of the document text, so the official MTEB
+  evaluator can be re-run on any variant without paying the encoders again.
+
+Neither encoder sees benchmark labels.
 """
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import numpy as np
-import scipy.sparse as sp
 
-from malecns_wifi import load_graph
-from malecns_wifi.tagger import row_normalise, select_populations
+from malecns_wifi.document_reservoir import (
+    DocumentReservoir,
+    DocumentReservoirConfig,
+    load_reservoir_inputs,
+    sample_windows,
+    unit_rows,
+)
+from malecns_wifi.multieurlex_cache import model_prefix, text_key
 
-
-def _csr_to_torch(matrix: sp.csr_matrix, *, device):
-    import torch
-
-    matrix = matrix.tocsr().astype(np.float32)
-    return torch.sparse_csr_tensor(
-        torch.as_tensor(matrix.indptr, dtype=torch.int64, device=device),
-        torch.as_tensor(matrix.indices, dtype=torch.int64, device=device),
-        torch.as_tensor(matrix.data, dtype=torch.float32, device=device),
-        size=matrix.shape,
-        device=device,
-    )
-
-
-def _fixed_sparse_projection(rows: int, cols: int, *, seed: int, device):
-    import torch
-
-    rng = np.random.default_rng(seed)
-    per_row = max(1, int(round(math.sqrt(cols))))
-    row = np.repeat(np.arange(rows, dtype=np.int64), per_row)
-    col = np.concatenate([
-        rng.choice(cols, size=per_row, replace=False).astype(np.int64)
-        for _ in range(rows)
-    ])
-    sign = rng.choice([-1.0, 1.0], size=len(row)).astype(np.float32)
-    value = sign / np.float32(math.sqrt(per_row))
-    indices = torch.as_tensor(np.vstack([row, col]), dtype=torch.int64, device=device)
-    values = torch.as_tensor(value, dtype=torch.float32, device=device)
-    return torch.sparse_coo_tensor(indices, values, (rows, cols), device=device).coalesce()
-
-
-def _sample_windows(text: str, *, max_chunks: int, chunk_chars: int) -> list[str]:
-    text = str(text or "").strip()
-    if not text:
-        return [" "]
-    if len(text) <= chunk_chars:
-        return [text]
-    count = min(max_chunks, max(2, math.ceil(len(text) / chunk_chars)))
-    max_start = max(0, len(text) - chunk_chars)
-    starts = np.linspace(0, max_start, num=count, dtype=np.int64)
-    return [text[int(start): int(start) + chunk_chars] for start in starts]
-
-
-def _unit_rows(values: np.ndarray) -> np.ndarray:
-    values = np.asarray(values, dtype=np.float32)
-    if values.ndim == 1:
-        values = values[None, :]
-    return values / np.maximum(np.linalg.norm(values, axis=1, keepdims=True), 1e-12)
+# Backwards-compatible aliases for the first official run's module layout.
+_sample_windows = sample_windows
+_unit_rows = unit_rows
 
 
 @dataclass(frozen=True)
@@ -84,52 +50,87 @@ class MaleCNSEncoderConfig:
     leak: float = 0.4
     target_rms: float = 0.05
     batch_size: int = 16
+    backend: str = "canonical"
+    device: str = "cuda"
+
+    def reservoir_config(self) -> DocumentReservoirConfig:
+        return DocumentReservoirConfig(
+            readout_width=self.readout_width,
+            seed=self.seed,
+            max_chunks=self.max_chunks,
+            chunk_chars=self.chunk_chars,
+            gain=self.gain,
+            leak=self.leak,
+            target_rms=self.target_rms,
+        )
 
 
-class FrozenMaleCNSEncoder:
+class _SimilarityMixin:
+    @property
+    def mteb_model_meta(self):
+        # Instantiated directly by our runner, so MTEB needs no registry metadata.
+        # The property is still required by the runtime-checkable EncoderProtocol.
+        return None
+
+    def similarity(self, embeddings1, embeddings2):
+        left = unit_rows(np.asarray(embeddings1, dtype=np.float32))
+        right = unit_rows(np.asarray(embeddings2, dtype=np.float32))
+        return left @ right.T
+
+    def similarity_pairwise(self, embeddings1, embeddings2):
+        left = unit_rows(np.asarray(embeddings1, dtype=np.float32))
+        right = unit_rows(np.asarray(embeddings2, dtype=np.float32))
+        if left.shape != right.shape:
+            raise ValueError(
+                f"pairwise similarity requires equal shapes, got {left.shape} and {right.shape}"
+            )
+        return np.sum(left * right, axis=1)
+
+
+def _iter_texts(inputs, requested: int):
+    for dataloader_batch in inputs:
+        texts = dataloader_batch["text"]
+        if isinstance(texts, str):
+            texts = [texts]
+        texts = list(texts)
+        for start in range(0, len(texts), requested):
+            yield texts[start:start + requested]
+
+
+class FrozenMaleCNSEncoder(_SimilarityMixin):
     """MTEB-compatible encoder using the frozen full MaleCNS recurrent graph."""
 
     def __init__(self, config: MaleCNSEncoderConfig):
         import torch
         from sentence_transformers import SentenceTransformer
 
-        if not torch.cuda.is_available():
-            raise RuntimeError("FrozenMaleCNSEncoder currently requires CUDA")
+        if config.device == "cuda" and not torch.cuda.is_available():
+            raise RuntimeError("FrozenMaleCNSEncoder requested CUDA but it is not available")
         self.config = config
-        self.device = torch.device("cuda")
+        self.device = torch.device(config.device)
 
-        matrix = row_normalise(load_graph(config.graph))
-        archive = np.load(config.graph, allow_pickle=False)
-        populations = select_populations(archive["superclass"])
-        self.operator = _csr_to_torch(matrix, device=self.device)
-        self.neurons = int(matrix.shape[0])
-        self.edges = int(matrix.nnz)
-        self.input_indices = torch.as_tensor(
-            populations.input_indices, dtype=torch.int64, device=self.device
-        )
-        self.sensory_neurons = int(populations.input_indices.size)
+        matrix, input_indices = load_reservoir_inputs(config.graph)
 
         self.semantic_models = []
         dims = []
         for model_name in config.models:
-            model = SentenceTransformer(model_name, device="cuda")
-            dim = int(model.get_sentence_embedding_dimension())
+            model = SentenceTransformer(model_name, device=config.device)
+            dims.append(int(model.get_sentence_embedding_dimension()))
             self.semantic_models.append((model_name, model))
-            dims.append(dim)
         self.semantic_dim = int(sum(dims))
 
-        rng = np.random.default_rng(config.seed)
-        weights = rng.normal(
-            size=(self.sensory_neurons, self.semantic_dim)
-        ).astype(np.float32) / np.float32(math.sqrt(self.semantic_dim))
-        self.input_weights = torch.as_tensor(weights, dtype=torch.float32, device=self.device)
-        self.readout_projection = _fixed_sparse_projection(
-            config.readout_width,
-            self.neurons,
-            seed=config.seed + 17,
+        self.reservoir = DocumentReservoir(
+            matrix,
+            input_indices,
+            semantic_dim=self.semantic_dim,
+            config=config.reservoir_config(),
             device=self.device,
+            backend=config.backend,
         )
-
+        self.neurons = self.reservoir.neurons
+        self.edges = self.reservoir.edges
+        self.sensory_neurons = self.reservoir.sensory_neurons
+        self.semantic_seconds: dict[str, float] = {name: 0.0 for name in config.models}
         self.stats: dict[str, Any] = {
             "documents": 0,
             "semantic_chunks": 0,
@@ -139,37 +140,15 @@ class FrozenMaleCNSEncoder:
             "semantic_dim": self.semantic_dim,
             "readout_width": config.readout_width,
             "models": list(config.models),
+            "backend": config.backend,
         }
-
-    @property
-    def mteb_model_meta(self):
-        # This object is instantiated directly by our runner, so MTEB does not
-        # need registry metadata to construct it. The property is still required
-        # by the runtime-checkable EncoderProtocol.
-        return None
-
-    def similarity(self, embeddings1, embeddings2):
-        left = _unit_rows(np.asarray(embeddings1, dtype=np.float32))
-        right = _unit_rows(np.asarray(embeddings2, dtype=np.float32))
-        return left @ right.T
-
-    def similarity_pairwise(self, embeddings1, embeddings2):
-        left = _unit_rows(np.asarray(embeddings1, dtype=np.float32))
-        right = _unit_rows(np.asarray(embeddings2, dtype=np.float32))
-        if left.shape != right.shape:
-            raise ValueError(
-                f"pairwise similarity requires equal shapes, got {left.shape} and {right.shape}"
-            )
-        return np.sum(left * right, axis=1)
 
     def _embed_documents(self, texts: list[str]) -> tuple[np.ndarray, np.ndarray]:
         """Return [batch, max_chunks, semantic_dim] and active mask."""
+        import time
+
         windows_per_doc = [
-            _sample_windows(
-                text,
-                max_chunks=self.config.max_chunks,
-                chunk_chars=self.config.chunk_chars,
-            )
+            sample_windows(text, max_chunks=self.config.max_chunks, chunk_chars=self.config.chunk_chars)
             for text in texts
         ]
         max_steps = max(len(w) for w in windows_per_doc)
@@ -182,17 +161,17 @@ class FrozenMaleCNSEncoder:
 
         per_model = []
         for model_name, model in self.semantic_models:
-            values = flat
-            if "e5" in model_name.lower():
-                values = ["passage: " + value for value in flat]
+            prefix = model_prefix(model_name)
+            t0 = time.perf_counter()
             encoded = model.encode(
-                values,
+                [prefix + value for value in flat],
                 batch_size=max(8, self.config.batch_size * 2),
                 convert_to_numpy=True,
                 normalize_embeddings=True,
                 show_progress_bar=False,
             )
-            per_model.append(_unit_rows(encoded))
+            self.semantic_seconds[model_name] += time.perf_counter() - t0
+            per_model.append(unit_rows(encoded))
         fused = np.concatenate(per_model, axis=1).astype(np.float32)
 
         cube = np.zeros((len(texts), max_steps, self.semantic_dim), dtype=np.float32)
@@ -204,28 +183,7 @@ class FrozenMaleCNSEncoder:
         return cube, active
 
     def _reservoir_batch(self, cube: np.ndarray, active: np.ndarray) -> np.ndarray:
-        import torch
-
-        batch, steps, _ = cube.shape
-        features = torch.as_tensor(cube, dtype=torch.float32, device=self.device)
-        active_t = torch.as_tensor(active, dtype=torch.bool, device=self.device)
-        state = torch.zeros((self.neurons, batch), dtype=torch.float32, device=self.device)
-
-        for step in range(steps):
-            local = features[:, step, :]
-            projected = self.input_weights @ local.T
-            rms = torch.sqrt(torch.mean(projected.square(), dim=0, keepdim=True)).clamp_min(1e-12)
-            projected = projected * (self.config.target_rms / rms)
-            drive = torch.zeros_like(state)
-            drive.index_copy_(0, self.input_indices, projected)
-            pre = torch.sparse.mm(self.operator, state) * self.config.gain + drive
-            updated = (1.0 - self.config.leak) * state + self.config.leak * torch.tanh(pre)
-            mask = active_t[:, step][None, :]
-            state = torch.where(mask, updated, state)
-
-        readout = torch.sparse.mm(self.readout_projection, state).T
-        readout = readout / torch.linalg.vector_norm(readout, dim=1, keepdim=True).clamp_min(1e-12)
-        return readout.detach().cpu().numpy().astype(np.float32)
+        return self.reservoir.forward(cube, active)
 
     def encode(
         self,
@@ -241,16 +199,58 @@ class FrozenMaleCNSEncoder:
         del task_metadata, hf_split, hf_subset, prompt_type, kwargs
         output = []
         requested = int(batch_size or self.config.batch_size)
-        for dataloader_batch in inputs:
-            texts = dataloader_batch["text"]
-            if isinstance(texts, str):
-                texts = [texts]
-            texts = list(texts)
-            for start in range(0, len(texts), requested):
-                local = texts[start:start + requested]
-                cube, active = self._embed_documents(local)
-                output.append(self._reservoir_batch(cube, active))
-                self.stats["documents"] += len(local)
+        for local in _iter_texts(inputs, requested):
+            cube, active = self._embed_documents(local)
+            output.append(self._reservoir_batch(cube, active))
+            self.stats["documents"] += len(local)
+        self.stats["semantic_seconds"] = dict(self.semantic_seconds)
+        self.stats["reservoir"] = self.reservoir.stats.as_dict()
         if not output:
             return np.empty((0, self.config.readout_width), dtype=np.float32)
         return np.concatenate(output, axis=0)
+
+
+class CachedDocumentEncoder(_SimilarityMixin):
+    """Serve stage-B document embeddings to the MTEB evaluator by text hash."""
+
+    def __init__(self, embeddings_path: Path):
+        import json
+
+        archive = np.load(embeddings_path, allow_pickle=False)
+        self.embeddings = archive["embeddings"].astype(np.float32)
+        keys = archive["doc_key"].tolist()
+        self.index = {str(key): i for i, key in enumerate(keys)}
+        manifest_file = embeddings_path.with_suffix(".manifest.json")
+        self.manifest = json.loads(manifest_file.read_text(encoding="utf-8")) if manifest_file.exists() else {}
+        self.stats: dict[str, Any] = {
+            "documents": 0,
+            "cached_documents": int(self.embeddings.shape[0]),
+            "readout_width": int(self.embeddings.shape[1]),
+            "variant": self.manifest.get("variant"),
+            "backend": self.manifest.get("backend"),
+            "semantic_cache_fingerprint": self.manifest.get("semantic_cache_fingerprint"),
+        }
+
+    def encode(
+        self,
+        inputs,
+        *,
+        task_metadata,
+        hf_split: str,
+        hf_subset: str,
+        prompt_type=None,
+        batch_size: int | None = None,
+        **kwargs,
+    ) -> np.ndarray:
+        del task_metadata, hf_split, hf_subset, prompt_type, kwargs
+        rows = []
+        for local in _iter_texts(inputs, int(batch_size or 64)):
+            for text in local:
+                key = text_key(text)
+                if key not in self.index:
+                    raise KeyError("document missing from stage-B embeddings; rebuild the semantic cache")
+                rows.append(self.index[key])
+            self.stats["documents"] += len(local)
+        if not rows:
+            return np.empty((0, self.embeddings.shape[1]), dtype=np.float32)
+        return self.embeddings[np.asarray(rows, dtype=np.int64)]
