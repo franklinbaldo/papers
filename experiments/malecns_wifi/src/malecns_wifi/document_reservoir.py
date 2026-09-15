@@ -315,15 +315,20 @@ class DocumentReservoir:
         batch_size: int,
         group_by_length: bool | None = None,
         gain: float | None = None,
+        progress=None,
     ) -> np.ndarray:
         """Encode every document of a semantic cache; output follows cache order."""
         if group_by_length is None:
             group_by_length = self.backend == "fast"
         n_docs = int(len(offsets) - 1)
         output = np.zeros((n_docs, self.config.readout_width), dtype=np.float32)
+        done = 0
         for docs in iter_batches(offsets, batch_size=batch_size, group_by_length=group_by_length):
             cube, active = pack_cube(fused, offsets, docs)
             output[docs] = self.forward(cube, active, gain=gain)
+            done += len(docs)
+            if progress is not None:
+                progress(done, n_docs, self.stats)
         return output
 
 

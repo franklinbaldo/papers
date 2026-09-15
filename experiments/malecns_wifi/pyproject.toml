@@ -21,7 +21,7 @@ dev = ["pytest>=8"]
 train = ["torch>=2.4"]
 # The MultiEURLEX staged pipeline: official MTEB evaluator, frozen sentence encoders,
 # Hub publishing of the semantic cache.
-mteb = ["mteb==2.20.11", "sentence-transformers>=5,<6", "huggingface_hub>=0.30", "psutil>=6"]
+mteb = ["mteb==2.20.11", "sentence-transformers>=5,<6", "huggingface_hub>=0.30", "psutil>=6", "wandb>=0.18"]
 
 [tool.pytest.ini_options]
 addopts = "-q"

@@ -29,6 +29,7 @@ from malecns_wifi.document_reservoir import (
     passes_gate,
 )
 from malecns_wifi.multieurlex_cache import load_cache
+from malecns_wifi.telemetry import Telemetry
 
 
 def _fmt(value, digits=2):
@@ -53,6 +54,9 @@ def main() -> None:
     import torch
 
     cache = load_cache(args.semantic_cache)
+    telemetry = Telemetry("stage-b-benchmark", config={
+        "device": args.device, "batch_sizes": args.batch_sizes, "index_dtypes": args.index_dtypes,
+    })
     config = DocumentReservoirConfig(
         seed=args.seed,
         max_chunks=int(cache.manifest["chunking"]["max_chunks"]),
@@ -109,6 +113,11 @@ def main() -> None:
                 "sensory_neurons": reservoir.sensory_neurons,
             }
         result["runs"].append(entry)
+        telemetry.log({
+            "run": name, "docs_per_second": stats.get("docs_per_second"), "batch_size": batch_size,
+            "spmm_mean_ms": stats.get("spmm_mean_ms"), "peak_vram_bytes": usage.get("peak_vram_bytes"),
+            "variant": variant, "backend": backend, "index_dtype": index_dtype,
+        })
         print(json.dumps({"event": "benchmark_run", **{k: v for k, v in entry.items() if k != "resources"}}), flush=True)
         return embeddings, entry
 
@@ -176,6 +185,13 @@ def main() -> None:
             f"  mean cosine to MaleCNS canonical: {_fmt(entry['cosine_to_malecns'], 4)}",
             "",
         ]
+    telemetry.summary({
+        "canonical_docs_per_second": ref_entry["stats"]["docs_per_second"],
+        **{f"{e['name']}/docs_per_second": e["stats"]["docs_per_second"] for e in fast_entries},
+        **{f"{e['name']}/speedup": e["speedup"] for e in fast_entries},
+        **{f"{e['name']}/gate": e["equivalence"]["gate_passed"] for e in fast_entries},
+    })
+    telemetry.finish()
     report = "\n".join(lines)
     args.output.with_suffix(".txt").write_text(report + "\n", encoding="utf-8")
     print(report, flush=True)

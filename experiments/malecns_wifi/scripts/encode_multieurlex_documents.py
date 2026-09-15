@@ -33,6 +33,7 @@ from malecns_wifi.document_reservoir import (
     passes_gate,
 )
 from malecns_wifi.multieurlex_cache import load_cache
+from malecns_wifi.telemetry import Telemetry, progress_fields
 
 
 def encode_variant(
@@ -46,8 +47,23 @@ def encode_variant(
     batch_size: int,
     index_dtype: str = "int64",
     group_by_length: bool | None = None,
+    telemetry: Telemetry | None = None,
 ):
+    import time
+
     fused = cache.fused
+    started = [None]
+
+    def progress(done, total, stats):
+        if telemetry is None:
+            return
+        if started[0] is None:
+            started[0] = time.perf_counter() - stats.forward_seconds
+        telemetry.log({
+            **progress_fields(done, total, started[0], "docs"),
+            "spmm_calls": stats.spmm_calls,
+            "spmm_mean_ms": (1000 * stats.spmm_seconds / stats.spmm_calls) if stats.spmm_calls else None,
+        }, min_interval=2.0)
     reservoir = None
     if variant in ("malecns", "sensory-only"):
         if graph is None:
@@ -65,7 +81,7 @@ def encode_variant(
     with resource_usage.track(device) as usage:
         if variant == "malecns":
             embeddings = reservoir.encode_cached(
-                fused, cache.offsets, batch_size=batch_size, group_by_length=group_by_length
+                fused, cache.offsets, batch_size=batch_size, group_by_length=group_by_length, progress=progress
             )
         else:
             embeddings = control_embeddings(
@@ -100,6 +116,10 @@ def main() -> None:
     args = parser.parse_args()
 
     cache = load_cache(args.semantic_cache)
+    telemetry = Telemetry(f"stage-b-{args.variant}", config={
+        "variant": args.variant, "backend": args.backend, "index_dtype": args.index_dtype,
+        "batch_size": args.batch_size, "device": args.device,
+    }, tags=(args.variant, args.backend))
     config = DocumentReservoirConfig(
         readout_width=args.readout_width,
         seed=args.seed,
@@ -118,6 +138,7 @@ def main() -> None:
         device=args.device,
         batch_size=args.batch_size,
         index_dtype=args.index_dtype,
+        telemetry=telemetry,
     )
 
     equivalence = None
@@ -156,6 +177,12 @@ def main() -> None:
     args.output.with_suffix(".manifest.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
+    telemetry.summary({
+        "docs_per_second": stats.get("docs_per_second"), "forward_seconds": stats.get("forward_seconds"),
+        "peak_vram_bytes": usage.get("peak_vram_bytes"), "peak_rss_bytes": usage.get("peak_rss_bytes"),
+        **({f"equivalence/{k}": v for k, v in equivalence.items()} if equivalence else {}),
+    })
+    telemetry.finish()
     print(json.dumps({"event": "multieurlex_documents_encoded", **manifest}, ensure_ascii=False), flush=True)
 
 

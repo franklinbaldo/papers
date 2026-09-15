@@ -24,6 +24,7 @@ from typing import Any
 import numpy as np
 
 from malecns_mteb_encoder import CachedDocumentEncoder, FrozenMaleCNSEncoder, MaleCNSEncoderConfig
+from malecns_wifi.telemetry import Telemetry
 
 TASK_NAME = "MultiEURLEXMultilabelClassification"
 HF_SUBSET = "pt"
@@ -134,6 +135,10 @@ def main() -> None:
             "uses_benchmark_labels_inside_encoder": False,
         }
 
+    variant = encoder_payload.get("stage_b_manifest", {}).get("variant") if args.document_embeddings else "live"
+    telemetry = Telemetry(f"stage-c-{variant}", config={
+        "variant": variant, "smoke": args.smoke, "source": encoder_payload["source"],
+    }, tags=(str(variant),))
     started = time.perf_counter()
     scores = task.evaluate(
         encoder,
@@ -186,6 +191,13 @@ def main() -> None:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    pt_scores = _jsonable(scores)
+    pt_scores = pt_scores.get(HF_SUBSET, {}) if isinstance(pt_scores, dict) else {}
+    telemetry.summary({
+        "seconds": elapsed, "smoke": args.smoke,
+        **{k: v for k, v in pt_scores.items() if k in ("accuracy", "lrap", "f1", "hamming", "main_score")},
+    })
+    telemetry.finish()
     print(json.dumps({
         "event": "multieurlex21_pt_complete",
         "smoke": args.smoke,

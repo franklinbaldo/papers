@@ -184,7 +184,14 @@ def encode_model(
     *,
     device: str,
     batch_size: int,
+    slice_size: int = 2048,
+    progress=None,
 ) -> tuple[np.ndarray, dict[str, Any]]:
+    """Encode windows in slices so progress can be reported while running.
+
+    Slicing only changes which windows share a padded batch, never a window's
+    own embedding (attention is masked), so it is telemetry, not representation.
+    """
     from sentence_transformers import SentenceTransformer
 
     t0 = time.perf_counter()
@@ -192,14 +199,20 @@ def encode_model(
     load_seconds = time.perf_counter() - t0
     prefix = model_prefix(model_name)
     t1 = time.perf_counter()
-    values = model.encode(
-        [prefix + w for w in windows],
-        batch_size=batch_size,
-        convert_to_numpy=True,
-        normalize_embeddings=True,
-        show_progress_bar=False,
-    )
+    parts = []
+    for start in range(0, len(windows), max(1, slice_size)):
+        local = windows[start:start + slice_size]
+        parts.append(model.encode(
+            [prefix + w for w in local],
+            batch_size=batch_size,
+            convert_to_numpy=True,
+            normalize_embeddings=True,
+            show_progress_bar=False,
+        ))
+        if progress is not None:
+            progress(model_name, min(start + len(local), len(windows)), len(windows), t1)
     encode_seconds = time.perf_counter() - t1
+    values = np.concatenate(parts, axis=0) if parts else np.zeros((0, 1), dtype=np.float32)
     embeddings = unit_rows(np.asarray(values, dtype=np.float32))
     info = {
         "name": model_name,
@@ -260,6 +273,7 @@ def build_cache(
     device: str = "cuda",
     batch_size: int = 64,
     documents: dict[str, list[dict[str, Any]]] | None = None,
+    progress=None,
 ) -> dict[str, Any]:
     """Encode every requested model into ``output_dir`` and update its manifest."""
     started = time.perf_counter()
@@ -269,7 +283,9 @@ def build_cache(
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest = _read_manifest(output_dir) or _new_manifest(spec, documents, chunks)
     for model_name in spec.models:
-        embeddings, info = encode_model(model_name, chunks.windows, device=device, batch_size=batch_size)
+        embeddings, info = encode_model(
+            model_name, chunks.windows, device=device, batch_size=batch_size, progress=progress
+        )
         path = write_model_table(spec, chunks, embeddings, info, output_dir=output_dir)
         info["file"] = path.name
         info["bytes"] = int(path.stat().st_size)

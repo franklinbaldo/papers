@@ -17,7 +17,9 @@ import json
 import os
 from pathlib import Path
 
+from malecns_wifi.telemetry import Telemetry, progress_fields
 from malecns_wifi.multieurlex_cache import (
+    model_slug,
     DEFAULT_HUB_REPO,
     DEFAULT_MODELS,
     DEFAULT_SPLITS,
@@ -50,7 +52,25 @@ def main() -> None:
         splits=tuple(args.splits),
         limit_per_split=args.limit_per_split,
     )
-    manifest = build_cache(spec, output_dir=args.output_dir, device=args.device, batch_size=args.batch_size)
+    telemetry = Telemetry("stage-a-semantic-cache", config={
+        "models": args.models, "splits": args.splits, "max_chunks": args.max_chunks,
+        "chunk_chars": args.chunk_chars, "limit_per_split": args.limit_per_split,
+        "device": args.device, "batch_size": args.batch_size,
+    })
+
+    def progress(model_name, done, total, started):
+        slug = model_slug(model_name)
+        telemetry.log({f"{slug}/{k}": v for k, v in progress_fields(done, total, started, "chunks").items()})
+        print(json.dumps({"event": "semantic_cache_progress", "model": model_name, "done": done, "total": total}), flush=True)
+
+    manifest = build_cache(spec, output_dir=args.output_dir, device=args.device, batch_size=args.batch_size,
+                           progress=progress)
+    telemetry.summary({
+        "documents": manifest["documents"], "chunks": manifest["chunks"], "bytes": manifest.get("bytes"),
+        "fingerprint": manifest.get("fingerprint"),
+        **{f"{e['slug']}/encode_seconds": e["encode_seconds"] for e in manifest["encoders"]},
+        **{f"{e['slug']}/chunks_per_second": e["chunks_per_second"] for e in manifest["encoders"]},
+    })
     print(json.dumps({"event": "multieurlex_semantic_cache_complete", "manifest": manifest}), flush=True)
     if args.push_to_hub:
         if spec.limit_per_split is not None:
@@ -60,6 +80,8 @@ def main() -> None:
             raise SystemExit("--push-to-hub needs --token or $HF_TOKEN")
         commit = push_to_hub(args.output_dir, repo_id=args.hub_repo, token=token, private=args.hub_private)
         print(json.dumps({"event": "multieurlex_semantic_cache_published", "repo": args.hub_repo, "commit": commit}), flush=True)
+        telemetry.summary({"published_repo": args.hub_repo, "published_commit": commit})
+    telemetry.finish()
 
 
 if __name__ == "__main__":
