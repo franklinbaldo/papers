@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import time
 from dataclasses import asdict
 from math import pi, tan
 from pathlib import Path
@@ -128,6 +129,7 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     trajectory_dir = args.output_dir / "trajectories"
     trajectory_dir.mkdir(exist_ok=True)
+    progress_path = args.output_dir / "progress.jsonl"
 
     graph = load_graph(args.graph)
     interface = load_interface(args.interface)
@@ -147,8 +149,10 @@ def main() -> None:
         acquisition_seconds=args.acquisition_seconds,
     )
 
+    run_started = time.monotonic()
     scene_rows: list[dict] = []
     for scene_index in range(args.scenes):
+        scene_started = time.monotonic()
         seed = args.seed_base + scene_index
         starts = radial_swarm(flies=args.flies, radius=d0, seed=seed)
         result = simulate_stimulus_swarm_batch(
@@ -190,20 +194,31 @@ def main() -> None:
                 "trajectory": trajectory_path.name,
             }
         )
-        print(
-            json.dumps(
-                {
-                    "scene": scene_index,
-                    "seed": seed,
-                    "approach": {
-                        name: round(values["approach"], 4)
-                        for name, values in summary.items()
-                    },
-                },
-                sort_keys=True,
-            ),
-            flush=True,
-        )
+
+        scene_elapsed = time.monotonic() - scene_started
+        total_elapsed = time.monotonic() - run_started
+        completed = scene_index + 1
+        mean_scene_seconds = total_elapsed / completed
+        eta_seconds = mean_scene_seconds * (args.scenes - completed)
+        progress = {
+            "event": "scene_complete",
+            "scene": scene_index,
+            "completed_scenes": completed,
+            "total_scenes": args.scenes,
+            "seed": seed,
+            "scene_elapsed_s": round(scene_elapsed, 3),
+            "elapsed_s": round(total_elapsed, 3),
+            "mean_scene_s": round(mean_scene_seconds, 3),
+            "eta_s": round(eta_seconds, 3),
+            "approach": {
+                name: round(values["approach"], 4)
+                for name, values in summary.items()
+            },
+        }
+        line = json.dumps(progress, sort_keys=True)
+        with progress_path.open("a", encoding="utf-8") as stream:
+            stream.write(line + "\n")
+        print(line, flush=True)
 
     aggregate = aggregate_scenes(scene_rows)
     moving = aggregate["moving_target"]["approach"]["mean"]
