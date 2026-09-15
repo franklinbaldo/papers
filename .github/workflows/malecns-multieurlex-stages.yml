@@ -1,0 +1,53 @@
+name: MaleCNS MultiEURLEX staged pipeline tests
+
+on:
+  pull_request:
+    paths:
+      - "experiments/malecns_wifi/src/malecns_wifi/document_reservoir.py"
+      - "experiments/malecns_wifi/src/malecns_wifi/multieurlex_cache.py"
+      - "experiments/malecns_wifi/scripts/malecns_mteb_encoder.py"
+      - "experiments/malecns_wifi/scripts/build_multieurlex_semantic_cache.py"
+      - "experiments/malecns_wifi/scripts/encode_multieurlex_documents.py"
+      - "experiments/malecns_wifi/scripts/benchmark_document_throughput.py"
+      - "experiments/malecns_wifi/scripts/run_multieurlex21_pt_mteb.py"
+      - "experiments/malecns_wifi/scripts/resource_usage.py"
+      - "experiments/malecns_wifi/tests/test_document_reservoir.py"
+      - "experiments/malecns_wifi/pyproject.toml"
+      - ".github/workflows/malecns-multieurlex-stages.yml"
+  push:
+    branches:
+      - experiment/malecns-multieurlex21-throughput
+    paths:
+      - "experiments/malecns_wifi/**"
+      - ".github/workflows/malecns-multieurlex-stages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: malecns-multieurlex-stages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  staged-pipeline-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: experiments/malecns_wifi/pyproject.toml
+      - name: Install dev/train/mteb extras (CPU torch)
+        working-directory: experiments/malecns_wifi
+        run: |
+          uv venv
+          uv pip install --index-strategy unsafe-best-match \
+            --extra-index-url https://download.pytorch.org/whl/cpu \
+            -e ".[dev,train,mteb]"
+      - name: Test canonical bit-exactness, fast-path gate, cache join, cached encoder
+        working-directory: experiments/malecns_wifi
+        env:
+          PYTHONPATH: scripts
+        run: uv run --no-sync pytest -q tests/test_document_reservoir.py
