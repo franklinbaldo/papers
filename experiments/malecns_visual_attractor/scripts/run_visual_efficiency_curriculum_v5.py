@@ -10,6 +10,7 @@ import run_visual_efficiency_curriculum_v4 as v4
 
 INTENSITY_FLOOR = 1e-6
 _ORIGINAL_NORMALIZE_EXACT = v3._normalize_exact
+_ORIGINAL_COMMON_TARGET = v4._common_target
 
 
 def _torch():
@@ -24,7 +25,7 @@ def _sanitize_raw(visual, resolved_mask, *, floor: float = INTENSITY_FLOOR):
     A Gaussian is mathematically positive almost everywhere, but an arbitrarily
     small tail is not a physically useful display pixel. Counting such tails as
     saturatable support made the theoretical attainable-energy calculation
-    disagree with finite numerical normalization.  v5 declares an explicit
+    disagree with finite numerical normalization. v5 declares an explicit
     intensity floor and applies it symmetrically to every nonblank arm.
     """
     torch = _torch()
@@ -35,7 +36,11 @@ def _sanitize_raw(visual, resolved_mask, *, floor: float = INTENSITY_FLOOR):
 
 def _common_target_v5(*raw_arms, resolved_mask, budget: float):
     sanitized = [_sanitize_raw(arm, resolved_mask) for arm in raw_arms]
-    return v4._common_target(*sanitized, resolved_mask=resolved_mask, budget=budget)
+    return _ORIGINAL_COMMON_TARGET(
+        *sanitized,
+        resolved_mask=resolved_mask,
+        budget=budget,
+    )
 
 
 def _normalize_exact_v5(visual, resolved_mask, target, *, iterations: int = 40):
