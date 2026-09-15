@@ -28,6 +28,8 @@ py-modules = [
   "dyad",
   "screen_reward_loop",
   "visual_efficiency",
+  "reward_plastic_adapter",
+  "full_screen_decoder",
 ]
 
 [tool.pytest.ini_options]
