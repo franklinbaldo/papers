@@ -12,6 +12,8 @@ Status: **frozen before any Run 1 behavioural result is observed**.
 
 This document resolves implementation choices left open by `protocol.md`. Changing any value below after observing Run 1 is a new run, not a reinterpretation of Run 1.
 
+Implementation note, 2026-09-14: before any Run 1 behavioural result was observed, the courtship-prime selector was corrected from the literature-style label `P1_*` to the MaleCNS annotation family `pC1*` (`pC1a`, `pC1b`, `pC1_...`). This is a dataset-nomenclature correction only; the intended biological population, drive amplitude, seeds, operating point and decision rule are unchanged.
+
 ## Biological basis of the positive control
 
 The positive control is deliberately a small moving target in a courtship-primed male state rather than a static photograph.
@@ -41,7 +43,7 @@ The graph and interface SHA-256 fingerprints are written into the result manifes
 - visual input types: `R1-6`, `R7`, `R8`;
 - azimuth: pinned optic-column mapping from `flyconnectome/2025malecns@67767d2233657983993ff6c2be48e836a935863c`;
 - `visual_scale = 0.5`;
-- courtship-prime population: all resolved `P1_*` cell types;
+- courtship-prime population: all resolved `pC1*` MaleCNS cell types;
 - `prime_scale = 0.08`;
 - `dt = 0.02` simulation units/seconds in the engineering arena.
 
