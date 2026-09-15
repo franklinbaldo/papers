@@ -80,10 +80,18 @@ def main() -> None:
     }
     passes["replication_supports_reliability_hypothesis"] = all(passes.values())
 
+    first = runs[str(SEEDS[0])]
     payload = {
         "schema": "papers/malecns-peer-reliability-replication-batch-v1",
         "claim_status": "preregistered new-seed replication curriculum evidence; not Stage A/B",
         "preregistration": "preregistered-peer-reliability-replication-2026-09-15.md",
+        "flavour_rule": first.get("flavour_rule", "one flavour per (encoder, scale) native space with one trainable adapter per channel"),
+        "coupling_rule": "compare equal-weight leave-one-out peer evidence against fixed training-reliability-weighted leave-one-out evidence at lambda 0.50",
+        "translation_rule": first.get("translation_rule", "ridge maps fitted on aligned training bytes only"),
+        "models": first.get("models"),
+        "scales": first.get("scales"),
+        "spaces": first.get("spaces"),
+        "translation_reconstruction": first.get("translation_reconstruction"),
         "seeds": list(SEEDS),
         "lambda": 0.50,
         "comparisons": comparisons,
@@ -91,6 +99,8 @@ def main() -> None:
         "mean_weighted_minus_independent_all": mean_all_delta,
         "mean_weighted_minus_unweighted_unseen": mean_vs_unweighted,
         "preregistered_checks": passes,
+        "max_cuda_memory_allocated": max(int(run.get("max_cuda_memory_allocated", 0)) for run in runs.values()),
+        "device": first.get("device"),
         "runs": runs,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
