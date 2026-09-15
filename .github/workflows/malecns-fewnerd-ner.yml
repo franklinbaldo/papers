@@ -1,0 +1,33 @@
+name: MaleCNS Few-NERD NER
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "experiments/malecns_wifi/scripts/fewnerd_ner_core.py"
+      - "experiments/malecns_wifi/scripts/fewnerd_byte_ner_smoke.py"
+      - "experiments/malecns_wifi/tests/test_fewnerd_ner_core.py"
+      - ".github/workflows/malecns-fewnerd-ner.yml"
+
+jobs:
+  contract-and-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Unit tests for IO/entity/UTF-8 contract
+        run: uv run --with pytest pytest -q experiments/malecns_wifi/tests/test_fewnerd_ner_core.py
+      - name: Few-NERD fine-label byte smoke
+        run: >-
+          uv run --with datasets
+          python experiments/malecns_wifi/scripts/fewnerd_byte_ner_smoke.py
+          --split train
+          --limit 64
+          --output artifacts/fewnerd-ner/byte-smoke.json
+      - name: Show smoke evidence
+        run: cat artifacts/fewnerd-ner/byte-smoke.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fewnerd-ner-byte-smoke
+          path: artifacts/fewnerd-ner/byte-smoke.json
