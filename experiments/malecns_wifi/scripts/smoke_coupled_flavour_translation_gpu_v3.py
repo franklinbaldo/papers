@@ -2,13 +2,13 @@
 
 Builds on v2 (device-safe) while keeping v1/v2 intact for provenance.
 Every semantic channel owns an independent low-rank residual adapter, even when
-another channel has the same dimensionality.  Cross-channel communication stays
+another channel has the same dimensionality. Cross-channel communication stays
 at the evidence level; adapter weights are never shared across embedding models
 or context scales.
 
 The adapter is identity at initialization:
     A(x) = unit(x + scale * up(tanh(down(unit(x)))))
-with `up` zero-initialized.  This lets the run start from the exact frozen
+with `up` zero-initialized. This lets the run start from the exact frozen
 embedding geometry and then specialize each (encoder, scale) channel online.
 """
 
@@ -17,7 +17,7 @@ from __future__ import annotations
 import torch
 
 # Importing v2 first installs the device-safe flavour bundle and forward invariant
-# into the v1 module.  We then extend that patched module with per-channel adapters.
+# into the v1 module. We then extend that patched module with per-channel adapters.
 import smoke_coupled_flavour_translation_gpu_v2 as v2  # noqa: F401
 import smoke_coupled_flavour_translation_gpu as v1
 
@@ -46,8 +46,6 @@ class PerChannelAdapterFlavourBundle(v1.FlavourBundle):
             ChannelAdapter(len(value), rank=16, residual_scale=0.1, device=device)
             for value in initial_flavours
         ])
-        # `super()` is device-safe through v2, but make the invariant explicit for
-        # newly added modules too.
         self.to(device)
 
     def adapt(self, index: int, field):
@@ -55,6 +53,7 @@ class PerChannelAdapterFlavourBundle(v1.FlavourBundle):
 
 
 _base_reservoir_logits = v1._reservoir_logits
+_base_flavour_report = v1._flavour_report
 
 
 def _adapted_reservoir_logits(
@@ -94,9 +93,20 @@ def _adapted_local_logits(model, fields):
     return torch.stack(rows, dim=1)
 
 
+def _adapter_flavour_report(model, spaces):
+    rows = _base_flavour_report(model, spaces)
+    for index, row in enumerate(rows):
+        adapter = model.channel_adapters[index]
+        row["adapter_up_norm"] = float(adapter.up.weight.detach().norm().cpu())
+        row["adapter_down_norm"] = float(adapter.down.weight.detach().norm().cpu())
+        row["adapter_residual_scale"] = float(adapter.residual_scale)
+    return rows
+
+
 v1.FlavourBundle = PerChannelAdapterFlavourBundle
 v1._reservoir_logits = _adapted_reservoir_logits
 v1._local_logits = _adapted_local_logits
+v1._flavour_report = _adapter_flavour_report
 
 
 if __name__ == "__main__":
