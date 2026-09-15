@@ -43,6 +43,7 @@ jobs:
           uv run python scripts/run_connectome_generator_es.py --help >/dev/null
           uv run python scripts/run_direct_gaze_dyad.py --help >/dev/null
           uv run python scripts/run_stationary_screen_reward_loop.py --help >/dev/null
+          uv run python scripts/run_visual_efficiency_curriculum.py --help >/dev/null
       - name: Run closed-loop invariants
         working-directory: experiments/malecns_visual_attractor
         run: uv run pytest -q
