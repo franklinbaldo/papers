@@ -33,6 +33,7 @@ py-modules = [
   "image_artifacts",
   "compound_eye_environment",
   "compound_eye_artifacts",
+  "swarm_transport",
 ]
 
 [tool.pytest.ini_options]
