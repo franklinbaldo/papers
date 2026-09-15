@@ -12,7 +12,9 @@ def toy():
     graph = sp.csr_matrix((data, (rows, cols)), shape=(4, 4))
     interface = Interface(
         visual_indices=np.array([0, 1], dtype=np.int32),
-        visual_azimuth=np.array([-0.5, 0.5], dtype=np.float32),
+        # Keep the toy receptors inside the narrow central target footprint so
+        # this test checks stimulus separation rather than float32 underflow.
+        visual_azimuth=np.array([-0.02, 0.02], dtype=np.float32),
         descending_left=np.array([2], dtype=np.int32),
         descending_right=np.array([3], dtype=np.int32),
         steer_left=np.array([2], dtype=np.int32),
