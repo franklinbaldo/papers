@@ -1,5 +1,6 @@
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
+import sys
 
 import numpy as np
 import torch
@@ -7,11 +8,16 @@ import torch
 
 def load_runner():
     path = Path(__file__).parents[1] / "scripts" / "run_visual_efficiency_curriculum_v2.py"
-    spec = spec_from_file_location("visual_efficiency_runner_v2", path)
-    assert spec is not None and spec.loader is not None
-    module = module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    scripts_dir = str(path.parent)
+    sys.path.insert(0, scripts_dir)
+    try:
+        spec = spec_from_file_location("visual_efficiency_runner_v2", path)
+        assert spec is not None and spec.loader is not None
+        module = module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    finally:
+        sys.path.remove(scripts_dir)
 
 
 def test_controls_can_match_delivered_energy_tensor():
@@ -48,4 +54,8 @@ def test_controls_can_match_delivered_energy_tensor():
 def test_v2_imports_v1_without_changing_registered_conditions():
     runner = load_runner()
     assert tuple(runner.CONDITIONS) == ("learned", "uniform_tv", "spatial_shuffle", "blank")
-    assert np.isfinite(runner.v1._mutate_weights(np.zeros((6, 6), dtype=np.float32), population=2, sigma=0.1, seed=1)).all()
+    assert np.isfinite(
+        runner.v1._mutate_weights(
+            np.zeros((6, 6), dtype=np.float32), population=2, sigma=0.1, seed=1
+        )
+    ).all()
