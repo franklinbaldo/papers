@@ -52,6 +52,7 @@ jobs:
           uv run python scripts/run_visual_efficiency_curriculum_v7.py --help >/dev/null
           uv run python scripts/run_online_plastic_screen_learning.py --help >/dev/null
           uv run python scripts/run_physical_full_screen_attractor.py --help >/dev/null
+          uv run python scripts/run_physical_full_screen_compound_eye.py --help >/dev/null
           uv run python scripts/render_full_screen_images.py --help >/dev/null
       - name: Run closed-loop invariants
         working-directory: experiments/malecns_visual_attractor
