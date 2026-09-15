@@ -4,11 +4,15 @@ import json
 import sys
 from pathlib import Path
 
+import numpy as np
+
+import run_visual_efficiency_curriculum_v2 as v2
 import run_visual_efficiency_curriculum_v3 as v3
 import run_visual_efficiency_curriculum_v5 as v5
 
 
 BLOB_COUNT = 6
+_ORIGINAL_INITIAL_TRANSDUCER = v2.initial_transducer
 
 
 def _torch():
@@ -18,14 +22,7 @@ def _torch():
 
 
 def _bounded_channels(params):
-    """Recover the six bounded screen channels from the v1 named controls.
-
-    v1 maps a six-dimensional body latent through a 6x6 trainable transducer and
-    then turns those bounded outputs into named screen controls. v6 keeps the
-    exact same trainable boundary and reconstructs those six bounded outputs so
-    each can actuate one display blob instead of deforming a fixed three-lobe
-    glyph.
-    """
+    """Recover the six bounded screen channels from the v1 named controls."""
     torch = _torch()
     return torch.stack(
         [
@@ -40,6 +37,32 @@ def _bounded_channels(params):
     )
 
 
+def _find_resume_checkpoint() -> Path | None:
+    candidates = (
+        Path.cwd() / "initial-transducer.npz",
+        Path("/kaggle/src/initial-transducer.npz"),
+        Path(__file__).with_name("initial-transducer.npz"),
+    )
+    return next((path for path in candidates if path.exists()), None)
+
+
+def _install_resume_checkpoint() -> Path | None:
+    checkpoint = _find_resume_checkpoint()
+    if checkpoint is None:
+        return None
+    archive = np.load(checkpoint, allow_pickle=False)
+    weight = np.asarray(archive["weight"], dtype=np.float32)
+    if weight.shape != (6, 6):
+        raise RuntimeError(f"resume transducer must be 6x6, got {weight.shape}")
+
+    def resumed_initial_transducer(*, seed: int, scale: float = 0.25):
+        del seed, scale
+        return weight.copy(), np.zeros(6, dtype=np.float32)
+
+    v2.initial_transducer = resumed_initial_transducer
+    return checkpoint
+
+
 def _render_six_blob_pattern(
     *,
     receptor_x,
@@ -51,14 +74,7 @@ def _render_six_blob_pattern(
     params,
     target_fov_rad,
 ):
-    """Render six independently actuated blobs on one stationary 16:9 screen.
-
-    The physical display remains fixed at the world origin. Receiver pose sets
-    the display bearing/apparent size. The six generator screen channels control
-    six blob amplitudes and small radial displacements around a hexagonal field.
-    v3 subsequently clips this raw pattern to the same hard physical aperture as
-    the uniform-TV control; v5 then applies the same energy floor/matching policy.
-    """
+    """Render six body-controlled blobs on one stationary 16:9 screen."""
     torch = _torch()
     candidates, flies = x.shape
     bearing = torch.remainder(torch.atan2(-y, -x) - heading + torch.pi, 2 * torch.pi) - torch.pi
@@ -72,13 +88,8 @@ def _render_six_blob_pattern(
     half_x = torch.clamp(0.5 * angular_width / float(target_fov_rad), min=0.025)
     half_y = torch.clamp(half_x * (9.0 / 16.0), min=0.018)
 
-    channels = _bounded_channels(params)  # candidates x 6, each in [-1, 1]
+    channels = _bounded_channels(params)
     amplitudes = 0.5 + 0.5 * channels
-
-    # Global rotation is still driven by one of the six body-derived channels,
-    # while every channel independently changes the radius and brightness of its
-    # own blob. This creates a richer spatial vocabulary without adding trainable
-    # dimensions to the 6x6 body-to-screen transducer.
     rotation = params["orientation"][:, None]
     phase = torch.arange(BLOB_COUNT, device=x.device, dtype=torch.float32)[None, :]
     phase = phase * (2.0 * torch.pi / float(BLOB_COUNT)) + rotation
@@ -88,10 +99,6 @@ def _render_six_blob_pattern(
 
     blob_x = center_x[:, :, None] + half_x[:, :, None] * local_x[:, None, :]
     blob_y = center_y[:, :, None] + half_y[:, :, None] * local_y[:, None, :]
-
-    # Blob width is controlled by the old size channel but remains comfortably
-    # inside the screen aperture. Energy normalization, not raw width/contrast,
-    # determines the delivered-light budget downstream.
     size_u = channels[:, 2]
     sigma_x = half_x[:, :, None] * (0.12 + 0.08 * (0.5 + 0.5 * size_u[:, None, None]))
     sigma_y = half_y[:, :, None] * (0.15 + 0.08 * (0.5 + 0.5 * size_u[:, None, None]))
@@ -109,13 +116,11 @@ def _render_six_blob_pattern(
 
 
 def _install_v6_renderer() -> None:
-    # v3's hard-aperture wrapper calls this captured renderer. Replacing the
-    # captured callable is safer than monkey-patching v1 directly because v4
-    # reinstalls the v3 aperture boundary at the start of every stage.
     v3._ORIGINAL_BODY_RENDER = _render_six_blob_pattern
 
 
 def main() -> None:
+    resumed_from = _install_resume_checkpoint()
     _install_v6_renderer()
     v5.main()
 
@@ -130,6 +135,11 @@ def main() -> None:
     summary["scientific_status"] = (
         "engineering calibration; v5 exact-energy policy + six-blob screen vocabulary"
     )
+    summary["learning_state"] = {
+        "mode": "resumed" if resumed_from is not None else "fresh",
+        "checkpoint": resumed_from.name if resumed_from is not None else None,
+        "persisted_object": "6x6 body-latent-to-screen transducer weight",
+    }
     summary["renderer"] = {
         "name": "six-blob body-latent field",
         "blobs": BLOB_COUNT,
@@ -145,6 +155,7 @@ def main() -> None:
                 "max_energy_mismatch": summary.get("max_energy_mismatch_all_stages"),
                 "budgets": summary.get("parameters", {}).get("budgets"),
                 "renderer": "six-blob",
+                "learning_mode": summary["learning_state"]["mode"],
             },
             sort_keys=True,
         ),
