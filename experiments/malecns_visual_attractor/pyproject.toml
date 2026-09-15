@@ -27,6 +27,7 @@ py-modules = [
   "generator_optimizer",
   "dyad",
   "screen_reward_loop",
+  "visual_efficiency",
 ]
 
 [tool.pytest.ini_options]
