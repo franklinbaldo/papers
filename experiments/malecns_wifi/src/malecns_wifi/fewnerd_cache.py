@@ -49,7 +49,7 @@ DEFAULT_MODELS = (
     "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
     "intfloat/multilingual-e5-small",
 )
-DEFAULT_SCALES = (8, 32, 128)
+DEFAULT_SCALES = tuple(2**i for i in range(0, 12))  # 1, 2, 4, ..., 2048 bytes
 DEFAULT_SPLITS = ("train", "validation", "test")
 DEFAULT_CONFIG = "supervised"
 DEFAULT_HUB_REPO = "franklinbaldo/fewnerd-semantic-cache"

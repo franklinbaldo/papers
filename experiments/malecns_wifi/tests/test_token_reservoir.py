@@ -162,6 +162,25 @@ def test_encode_model_produces_one_row_per_byte_unit_normalised(monkeypatch):
     assert info["scales"] == [4, 8] and info["dim"] == 12
 
 
+def test_default_scale_ladder_is_power_of_two_sweep():
+    assert fc.DEFAULT_SCALES == (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048)
+
+
+def test_encode_model_full_ladder_saturates_for_large_scales(monkeypatch):
+    import sentence_transformers
+
+    monkeypatch.setattr(sentence_transformers, "SentenceTransformer", _FakeSentenceTransformer)
+    text = "Ann met Bob in Paris"  # short sentence; large scales exceed its byte length
+    embeddings, info = fc.encode_model("fake/minilm", [text], scales=fc.DEFAULT_SCALES, device="cpu", batch_size=8)
+    n_bytes = len(text.encode("utf-8"))
+    assert embeddings.shape == (n_bytes, 6 * len(fc.DEFAULT_SCALES))
+    # every scale >= sentence length collapses to one whole-sentence window,
+    # so its byte-aligned field is constant across the sentence
+    last_scale_field = embeddings[:, -6:]
+    assert np.allclose(last_scale_field, last_scale_field[0])
+    assert not np.allclose(embeddings[:, :6], embeddings[0, :6])  # the finest scale still varies across bytes
+
+
 def test_fewnerd_byte_table_row_count_matches_byte_labels():
     documents = {
         "train": [{"id": "0", "tokens": ["Ann", "met", "Bob"], "fine": [51, 0, 51], "coarse": [7, 0, 7]}],

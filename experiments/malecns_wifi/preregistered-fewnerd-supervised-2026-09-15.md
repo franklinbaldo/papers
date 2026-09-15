@@ -50,9 +50,9 @@ convention, not a new one:
 
 ```
 sentence text (word-joined) -> UTF-8 byte axis
-   -> for each scale in {8, 32, 128} chars: overlapping windows, pooled by a
-      frozen encoder, interpolated to every byte position (text_axis_channels.
-      window_spans / interpolate_to_bytes)
+   -> for each scale in the power-of-two ladder {1, 2, 4, 8, ..., 2048} chars:
+      overlapping windows, pooled by a frozen encoder, interpolated to every
+      byte position (text_axis_channels.window_spans / interpolate_to_bytes)
    -> unit-normalised per (model, scale), concatenated -> fused byte channel
    -> fixed Gaussian sensory projection (RMS-normalised per byte)
    -> row-normalised MaleCNS recurrent step (gain, leak, tanh) -- one step per BYTE
@@ -69,6 +69,15 @@ row-normalised operator, same gain/leak/target-RMS defaults, same seeded fixed
 projections. Only the *time axis* changes -- one step per UTF-8 byte instead
 of up to four sampled text windows -- and the readout is taken after every
 step instead of only the last.
+
+Scale ladder decided 2026-09-15: `2**i` for `i` in `0..11` (1, 2, 4, 8, 16, 32,
+64, 128, 256, 512, 1024, 2048 characters) -- a full geometric sweep from
+single-character to whole-sentence context, rather than the 3-point ladder
+(`{8, 32, 128}`) other experiments in this programme use. Scales at or above a
+sentence's byte length collapse to one whole-sentence window
+(`window_spans`'s `n <= scale` branch), so the ladder saturates gracefully
+instead of erroring; per-scale channel count is fixed regardless of sentence
+length.
 
 Frozen encoders: the same pair as MultiEURLEX --
 `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` and
