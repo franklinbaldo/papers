@@ -1,7 +1,7 @@
 """Frozen MaleCNS document encoder compatible with the MTEB EncoderProtocol.
 
-The encoder uses no benchmark labels.  Frozen MiniLM/E5 semantic channels drive
-sensory populations of the row-normalised MaleCNS connectome.  Up to four text
+The encoder uses no benchmark labels. Frozen MiniLM/E5 semantic channels drive
+sensory populations of the row-normalised MaleCNS connectome. Up to four text
 windows are sampled across each document and integrated recurrently; a fixed
 sparse whole-brain projection is returned as the document embedding.
 """
@@ -64,6 +64,8 @@ def _sample_windows(text: str, *, max_chunks: int, chunk_chars: int) -> list[str
 
 def _unit_rows(values: np.ndarray) -> np.ndarray:
     values = np.asarray(values, dtype=np.float32)
+    if values.ndim == 1:
+        values = values[None, :]
     return values / np.maximum(np.linalg.norm(values, axis=1, keepdims=True), 1e-12)
 
 
@@ -138,6 +140,27 @@ class FrozenMaleCNSEncoder:
             "readout_width": config.readout_width,
             "models": list(config.models),
         }
+
+    @property
+    def mteb_model_meta(self):
+        # This object is instantiated directly by our runner, so MTEB does not
+        # need registry metadata to construct it. The property is still required
+        # by the runtime-checkable EncoderProtocol.
+        return None
+
+    def similarity(self, embeddings1, embeddings2):
+        left = _unit_rows(np.asarray(embeddings1, dtype=np.float32))
+        right = _unit_rows(np.asarray(embeddings2, dtype=np.float32))
+        return left @ right.T
+
+    def similarity_pairwise(self, embeddings1, embeddings2):
+        left = _unit_rows(np.asarray(embeddings1, dtype=np.float32))
+        right = _unit_rows(np.asarray(embeddings2, dtype=np.float32))
+        if left.shape != right.shape:
+            raise ValueError(
+                f"pairwise similarity requires equal shapes, got {left.shape} and {right.shape}"
+            )
+        return np.sum(left * right, axis=1)
 
     def _embed_documents(self, texts: list[str]) -> tuple[np.ndarray, np.ndarray]:
         """Return [batch, max_chunks, semantic_dim] and active mask."""
