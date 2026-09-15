@@ -1,3 +1,11 @@
+---
+type: "Protocol"
+title: "MaleCNS receptor telemetry"
+description: "Telemetry contract for receptor-level snapshots in the stationary-screen calibration."
+tags: [malecns, drosophila, telemetry, visual]
+timestamp: 2026-09-14T21:15:00-04:00
+---
+
 # Receptor telemetry
 
 The stationary-screen calibration emits a compact retina snapshot at registered checkpoints. Each snapshot contains:
