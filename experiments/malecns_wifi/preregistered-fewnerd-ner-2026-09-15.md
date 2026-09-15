@@ -1,3 +1,11 @@
+---
+type: "Protocol"
+title: "Preregistration — MaleCNS × Few-NERD NER"
+description: "Preregistered protocol for evaluating the complete MaleCNS method on fine-grained token/span-level Few-NERD named-entity recognition."
+tags: [malecns, few-nerd, ner, preregistration]
+timestamp: 2026-09-15T18:00:00Z
+---
+
 # Preregistration — MaleCNS × Few-NERD NER
 
 Date: 2026-09-15
