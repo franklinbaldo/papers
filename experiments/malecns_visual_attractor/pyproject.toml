@@ -26,6 +26,7 @@ py-modules = [
   "connectome_generator_gpu",
   "generator_optimizer",
   "dyad",
+  "screen_reward_loop",
 ]
 
 [tool.pytest.ini_options]
