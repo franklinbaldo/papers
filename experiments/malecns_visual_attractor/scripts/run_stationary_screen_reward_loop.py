@@ -122,6 +122,10 @@ def _render_body_pattern(
     wing_b = gaussian(cx - dx[None, :, :], cy - dy[None, :, :])
     visual = torch.clamp(body + 0.55 * wing_a + 0.55 * wing_b, 0.0, 1.0)
     visual *= params["contrast"][None, :, None]
+    # Geometry is intentionally float64, but the neural boundary is float32.
+    # Cast the rendered retina exactly once at that boundary so sparse recurrent
+    # state and visual injection always share a dtype on CPU and CUDA.
+    visual = visual.to(dtype=receptor_x.dtype)
     return visual, distance, bearing
 
 
