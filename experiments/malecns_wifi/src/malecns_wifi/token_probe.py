@@ -28,7 +28,7 @@ class ProbeResult:
 def fit_probe(
     train_x: np.ndarray, train_y: np.ndarray, val_x: np.ndarray, val_y: np.ndarray,
     *, candidate_C: tuple[float, ...] = (0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0), max_iter: int = 200,
-    seed: int = 20260915,
+    seed: int = 20260915, max_train_rows: int | None = 100_000,
 ) -> tuple[Any, float, float]:
     """Fit a multinomial probe, selecting ``C`` by validation macro-F1, not accuracy.
 
@@ -40,9 +40,22 @@ def fit_probe(
     plus macro-F1 selection lets minority entity types actually influence which
     regularisation strength wins. Selection still uses only train/validation;
     test labels never enter this function.
+
+    ``max_train_rows`` uniformly subsamples the TRAINING rows only (seeded,
+    label-blind -- a random row subset, not filtered by label value) before
+    fitting, purely to bound memory: LogisticRegression's solver OOM'd fitting
+    ~1.6M rows x 1,314 dims (the descending-neuron readout) on a standard
+    Colab instance. This mirrors the MTEB classification evaluator's own
+    ``samples_per_label`` undersampling convention rather than inventing a new
+    one. ``validation``/``test`` are never subsampled -- only prediction
+    (cheap) happens on them, not fitting.
     """
     from sklearn.linear_model import LogisticRegression
     from sklearn.metrics import f1_score
+
+    if max_train_rows is not None and len(train_x) > max_train_rows:
+        keep = np.random.default_rng(seed).choice(len(train_x), size=max_train_rows, replace=False)
+        train_x, train_y = train_x[keep], train_y[keep]
 
     best_model, best_c, best_f1, best_acc = None, None, -1.0, -1.0
     for c in candidate_C:

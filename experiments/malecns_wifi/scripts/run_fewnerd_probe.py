@@ -38,7 +38,11 @@ def main() -> None:
     parser.add_argument("--fine-names", type=Path, required=True, help="JSON list of fine label names")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--variant", default="malecns")
+    parser.add_argument("--max-train-rows", type=int, default=100_000,
+                        help="cap on training BYTE rows used to fit the probe (seeded random subsample; "
+                             "validation/test are never subsampled). 0 disables the cap.")
     args = parser.parse_args()
+    max_train_rows = args.max_train_rows or None
 
     data = np.load(args.document_embeddings, allow_pickle=False)
     label_names = json.loads(args.fine_names.read_text(encoding="utf-8"))
@@ -49,7 +53,8 @@ def main() -> None:
     masks = {s: split == s for s in ("train", "validation", "test")}
     started = time.perf_counter()
     model, best_c, val_acc = fit_probe(
-        embeddings[masks["train"]], labels[masks["train"]], embeddings[masks["validation"]], labels[masks["validation"]]
+        embeddings[masks["train"]], labels[masks["train"]], embeddings[masks["validation"]], labels[masks["validation"]],
+        max_train_rows=max_train_rows
     )
     fit_seconds = time.perf_counter() - started
 

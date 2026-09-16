@@ -172,6 +172,29 @@ def test_fit_probe_recovers_minority_class_on_imbalanced_labels():
     assert 1 in set(pred.tolist()), "macro-F1 selection must not collapse to majority-only prediction"
 
 
+def test_fit_probe_caps_training_rows_not_validation():
+    """Regression: LogisticRegression OOM'd fitting ~1.6M rows x 1,314 dims
+    (descending-neuron readout) on a standard Colab instance. max_train_rows
+    must subsample TRAIN only, deterministically, and never touch validation.
+    """
+    rng = np.random.default_rng(1)
+    n_majority, n_minority = 5000, 1000
+    majority = rng.normal(loc=0.0, scale=0.3, size=(n_majority, 2))
+    minority = rng.normal(loc=4.0, scale=0.3, size=(n_minority, 2))
+    train_x = np.concatenate([majority, minority])
+    train_y = np.concatenate([np.zeros(n_majority, dtype=np.int64), np.ones(n_minority, dtype=np.int64)])
+    val_x, val_y = train_x[:200].copy(), train_y[:200].copy()
+
+    model, c, val_acc = tp.fit_probe(train_x, train_y, val_x, val_y, max_train_rows=500)
+    assert model.n_features_in_ == 2  # ran at all, on a capped subsample
+    # same call with the cap disabled must still work and see the full training set
+    model_full, _, _ = tp.fit_probe(train_x, train_y, val_x, val_y, max_train_rows=None)
+    assert model_full.n_features_in_ == 2
+    # capping is deterministic given the seed
+    model_again, c_again, _ = tp.fit_probe(train_x, train_y, val_x, val_y, max_train_rows=500)
+    assert c_again == c
+
+
 def test_bio_conversion_and_span_metrics_perfect_match():
     names = ["O", "person", "location"]
     true = [np.array([0, 1, 1, 0, 2]), np.array([2, 2, 0])]
