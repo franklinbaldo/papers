@@ -163,11 +163,13 @@ class PositionalReservoir:
         state = torch.zeros((self.neurons, batch), dtype=torch.float32, device=self.device)
         outputs = torch.zeros((steps, batch, self.readout_width), dtype=torch.float32, device=self.device)
 
+        # Fused sensory projection across all steps (FlyDoom-style BLAS batching)
+        all_projected = torch.matmul(features, self.input_weights.T)
+        rms = torch.sqrt(torch.mean(all_projected.square(), dim=-1, keepdim=True)).clamp_min(1e-12)
+        all_projected = (all_projected * (target_rms / rms)).permute(2, 0, 1).contiguous()
+
         for step in range(steps):
-            local = features[:, step, :]
-            projected = self.input_weights @ local.T
-            rms = torch.sqrt(torch.mean(projected.square(), dim=0, keepdim=True)).clamp_min(1e-12)
-            projected = projected * (target_rms / rms)
+            projected = all_projected[:, :, step]
 
             if step == 0:
                 pre = torch.zeros_like(state)

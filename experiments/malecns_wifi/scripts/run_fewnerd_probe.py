@@ -38,9 +38,22 @@ def main() -> None:
     parser.add_argument("--fine-names", type=Path, required=True, help="JSON list of fine label names")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--variant", default="malecns")
-    parser.add_argument("--max-train-rows", type=int, default=100_000,
-                        help="cap on training BYTE rows used to fit the probe (seeded random subsample; "
-                             "validation/test are never subsampled). 0 disables the cap.")
+    parser.add_argument(
+        "--classifier",
+        choices=["pool_reward", "dense_reward", "logistic_regression"],
+        default="pool_reward",
+        help="probe classifier: 'pool_reward' (biological descending neuron pool WTA decoder), "
+             "'dense_reward' (dense dopaminergic RPE), or 'logistic_regression'",
+    )
+    parser.add_argument("--epochs", type=int, default=10, help="epochs for reward-driven classifiers")
+    parser.add_argument("--learning-rate", type=float, default=0.01, help="learning rate")
+    parser.add_argument("--batch-size", type=int, default=256, help="batch size for reward training")
+    parser.add_argument(
+        "--max-train-rows",
+        type=int,
+        default=0,
+        help="cap on training BYTE rows used to fit the probe (0 disables the cap).",
+    )
     args = parser.parse_args()
     max_train_rows = args.max_train_rows or None
 
@@ -49,12 +62,30 @@ def main() -> None:
     embeddings, labels, split = data["embeddings"], data["fine_label"], data["doc_split"]
     offsets = data["offsets"]
 
-    telemetry = Telemetry(f"stage-c-fewnerd-{args.variant}", config={"variant": args.variant})
+    # Reconstruct per-sentence sequences for validation & test
+    sentence_count = int(len(offsets) - 1)
+    doc_split = data["doc_split"]
+    val_true_seqs = []
+    for sentence in range(sentence_count):
+        start, stop = int(offsets[sentence]), int(offsets[sentence + 1])
+        if doc_split[start] == "validation":
+            val_true_seqs.append(labels[start:stop])
+
+    telemetry = Telemetry(f"stage-c-fewnerd-{args.variant}", config={"variant": args.variant, "classifier": args.classifier})
     masks = {s: split == s for s in ("train", "validation", "test")}
     started = time.perf_counter()
     model, best_c, val_acc = fit_probe(
-        embeddings[masks["train"]], labels[masks["train"]], embeddings[masks["validation"]], labels[masks["validation"]],
-        max_train_rows=max_train_rows
+        embeddings[masks["train"]],
+        labels[masks["train"]],
+        embeddings[masks["validation"]],
+        labels[masks["validation"]],
+        classifier=args.classifier,
+        epochs=args.epochs,
+        lr=args.learning_rate,
+        batch_size=args.batch_size,
+        max_train_rows=max_train_rows,
+        val_true_seqs=val_true_seqs if val_true_seqs else None,
+        label_names=label_names,
     )
     fit_seconds = time.perf_counter() - started
 
@@ -63,8 +94,6 @@ def main() -> None:
     token_acc = token_accuracy(test_true, test_pred)
 
     # regroup test predictions/labels back into per-sentence sequences for span scoring
-    sentence_count = int(len(offsets) - 1)
-    doc_split = data["doc_split"]
     true_seqs, pred_seqs = [], []
     cursor = 0
     for sentence in range(sentence_count):
@@ -72,15 +101,21 @@ def main() -> None:
         if doc_split[start] != "test":
             continue
         n = stop - start
-        true_seqs.append(test_true[cursor:cursor + n])
-        pred_seqs.append(test_pred[cursor:cursor + n])
+        true_seqs.append(test_true[cursor : cursor + n])
+        pred_seqs.append(test_pred[cursor : cursor + n])
         cursor += n
 
     metrics = span_metrics(true_seqs, pred_seqs, label_names)
     payload = {
         "schema": "papers/malecns-fewnerd-probe-v1",
         "variant": args.variant,
-        "probe": {"C": best_c, "val_accuracy": val_acc, "fit_seconds": fit_seconds},
+        "probe": {
+            "method": args.classifier,
+            "C": best_c if isinstance(best_c, (int, float)) else None,
+            "info": best_c if isinstance(best_c, dict) else None,
+            "val_accuracy": val_acc,
+            "fit_seconds": fit_seconds,
+        },
         "test_token_accuracy": token_acc,
         "test_span_metrics": _jsonable(metrics),
         "test_sentences": len(true_seqs),
@@ -88,12 +123,23 @@ def main() -> None:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    telemetry.summary({"val_accuracy": val_acc, "test_token_accuracy": token_acc,
-                       "test_micro_f1": metrics["micro_f1"], "test_macro_f1": metrics["macro_f1"]})
+    telemetry.summary({
+        "val_accuracy": val_acc,
+        "test_token_accuracy": token_acc,
+        "test_micro_f1": metrics["micro_f1"],
+        "test_macro_f1": metrics["macro_f1"],
+    })
     telemetry.finish()
-    print(json.dumps({"event": "fewnerd_probe_complete", "variant": args.variant,
-                      "test_token_accuracy": token_acc, "test_micro_f1": metrics["micro_f1"],
-                      "test_macro_f1": metrics["macro_f1"]}), flush=True)
+    print(
+        json.dumps({
+            "test_micro_f1": metrics["micro_f1"],
+            "test_macro_f1": metrics["macro_f1"],
+            "test_token_accuracy": token_acc,
+            "event": "fewnerd_probe_complete",
+            "variant": args.variant,
+        }),
+        flush=True,
+    )
 
 
 if __name__ == "__main__":

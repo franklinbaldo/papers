@@ -195,6 +195,61 @@ def test_fit_probe_caps_training_rows_not_validation():
     assert c_again == c
 
 
+def test_descending_pool_classifier_partition_and_wta_prediction():
+    """1,314 descending neurons partitioned into 66 Few-NERD pools (~20 per pool)."""
+    n_neurons = 1314
+    n_classes = 66
+    clf = tp.DescendingPoolClassifier(n_features=n_neurons, n_classes=n_classes)
+    assert len(clf.pools) == 66
+    # Total neurons covered must be exactly 1314 with no overlap
+    covered = np.concatenate(clf.pools)
+    assert len(covered) == 1314
+    assert np.array_equal(np.sort(covered), np.arange(1314))
+    # Check pool sizes: 60 pools of 20, 6 pools of 19
+    sizes = [len(p) for p in clf.pools]
+    assert min(sizes) >= 19 and max(sizes) <= 20
+
+    # WTA prediction
+    X = np.zeros((3, n_neurons), dtype=np.float32)
+    # Activate neurons in pool 7 (e.g. building-airport)
+    X[0, clf.pools[7]] = 5.0
+    # Activate neurons in pool 42
+    X[1, clf.pools[42]] = 8.0
+    pred = clf.predict(X)
+    assert pred[0] == 7
+    assert pred[1] == 42
+
+
+def test_descending_pool_classifier_dopaminergic_reward_learning():
+    """Reward-prediction-error learning must recover minority entity classes on imbalanced data."""
+    rng = np.random.default_rng(42)
+    n_features = 66 * 4  # 4 neurons per pool across 66 classes
+    n_classes = 66
+    n_samples = 2000
+
+    # 80% class 0 ('O'), 20% distributed across classes 1..65
+    y = np.zeros(n_samples, dtype=np.int64)
+    non_zero = int(n_samples * 0.20)
+    y[:non_zero] = rng.integers(1, n_classes, size=non_zero)
+    rng.shuffle(y)
+
+    # Feature signal: neurons in true class pool have higher activity
+    X = rng.normal(loc=0.0, scale=0.5, size=(n_samples, n_features)).astype(np.float32)
+    clf = tp.DescendingPoolClassifier(n_features=n_features, n_classes=n_classes)
+    for i in range(n_samples):
+        c = y[i]
+        X[i, clf.pools[c]] += 2.0
+
+    split = n_samples // 2
+    clf.fit(X[:split], y[:split], X[split:], y[split:], epochs=15, lr=0.02)
+    val_pred = clf.predict(X[split:])
+
+    # Must predict entity classes and not collapse to all-zero
+    entity_preds = np.sum(val_pred > 0)
+    assert entity_preds > 0, "Dopaminergic reward learning must not collapse to predicting only 'O'"
+    assert clf.best_val_accuracy > 0.50
+
+
 def test_bio_conversion_and_span_metrics_perfect_match():
     names = ["O", "person", "location"]
     true = [np.array([0, 1, 1, 0, 2]), np.array([2, 2, 0])]

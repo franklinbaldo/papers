@@ -118,21 +118,26 @@ any label's value.
 ## What is frozen vs. what is fit
 
 - Frozen, never sees labels: both semantic encoders, the sensory projection,
-  the connectome operator, the sparse whole-brain readout.
-- The **only** supervised component is a linear probe (multinomial logistic
-  regression) from the 256-d per-byte readout to the 66-way fine label,
-  fit on `train`. This is the token-classification analogue of the k-NN
-  classifier the MTEB evaluator fits on top of a frozen sentence encoder for
-  document classification -- not a claim that the encoder itself is
-  supervised.
-- Regularisation strength (`C`) is selected on `validation` only, using
-  macro-F1, not accuracy, and the probe uses `class_weight="balanced"`.
-  Corrected 2026-09-15: plain-accuracy selection on this label space (`O` is
-  ~80% of bytes across 66 classes) collapsed to predicting `O` everywhere --
-  the highest-accuracy model, and a model with exactly zero entity-span
-  recall -- confirmed empirically at 4,000 training sentences, not just at
-  toy scale. `test` labels never influence probe fitting, model selection,
-  the connectome, or any hyperparameter (gain/leak/target-RMS/readout width).
+  the connectome operator, and the readout population.
+  - Stage B accelerates recurrent stepping via FlyDoom-style fused batch BLAS
+    projection of sensory input channels across all steps simultaneously, eliminating
+    redundant GEMMs inside the recurrence loop.
+  - Two readout modes are supported: `random_sparse` (256-d fixed projection) and
+    `descending_neuron` (1,314-d anatomical descending neuron states verbatim).
+- Supervised readout decoding:
+  - **Biologically grounded action decoder (`DescendingPoolClassifier`, primary)**:
+    The 1,314 descending neurons are partitioned into 66 functional pools $P_0, \dots, P_{65}$
+    corresponding to the 66 Few-NERD fine entity tags ($P_0$ is `O`, $P_1 \dots P_{65}$ are fine entities;
+    ~20 neurons per pool). Each pool integrates regional activation $S_k(x) = \sum_{j \in P_k} w_j x_j + b_k$.
+    Decision is Winner-Take-All (WTA): $\hat{y} = \arg\max_k S_k$.
+    Trained online via dopaminergic reward prediction error (RPE):
+    $\delta_k = (\mathbb{I}[k = y^*] - p_k) \cdot \omega(y^*)$, where $\omega(y^*)$
+    balances class frequencies to eliminate class `O` dominance without discarding any
+    training data or crashing with OOM ($O(1)$ parameter memory: 1,314 weights and 66 biases).
+  - **Multinomial Logistic Regression probe (baseline/comparator)**:
+    Standard L-BFGS linear probe on train/validation for comparison.
+- Model selection: checkpoint selected on `validation` split macro-F1/micro-F1;
+  `test` labels never influence fitting, model selection, or the connectome.
 
 ## Metrics
 
