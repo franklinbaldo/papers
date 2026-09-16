@@ -39,9 +39,13 @@ from malecns_wifi.document_reservoir import (
 )
 
 
+READOUT_MODES = ("random_sparse", "descending_neuron")
+
+
 @dataclass(frozen=True)
 class TokenReservoirConfig:
-    readout_width: int = 256
+    readout_width: int = 256  # ignored when readout_mode == "descending_neuron"
+    readout_mode: str = "random_sparse"
     seed: int = 20260915
     gain: float = 4.0
     leak: float = 0.4
@@ -50,6 +54,7 @@ class TokenReservoirConfig:
     def as_dict(self) -> dict[str, Any]:
         return {
             "readout_width": self.readout_width,
+            "readout_mode": self.readout_mode,
             "seed": self.seed,
             "gain": self.gain,
             "leak": self.leak,
@@ -58,7 +63,22 @@ class TokenReservoirConfig:
 
 
 class PositionalReservoir:
-    """Frozen MaleCNS recurrent encoder emitting one readout per byte position."""
+    """Frozen MaleCNS recurrent encoder emitting one readout per byte position.
+
+    Two readout modes, both frozen (no labels, nothing trained here):
+
+    * ``"random_sparse"`` (default, matches the MultiEURLEX document encoder):
+      a fixed seeded sparse random projection of the whole 165k-neuron state
+      to ``readout_width`` dimensions -- cheap and storage-bounded, but an
+      arbitrary compression of the connectome's actual output.
+    * ``"descending_neuron"``: reads the state of the connectome's own
+      anatomically-identified descending neurons verbatim -- no projection,
+      no compression, the population this programme's other experiments
+      (``tagger.select_populations``) already treat as the connectome's real
+      output channel to behaviour. Width is fixed by anatomy (MaleCNS v1.0:
+      1,314 neurons), not a free hyperparameter; pass ``readout_indices``
+      (``tagger.select_populations(...).readout_indices``).
+    """
 
     def __init__(
         self,
@@ -69,9 +89,12 @@ class PositionalReservoir:
         config: TokenReservoirConfig,
         device,
         index_dtype: str = "int64",
+        readout_indices: np.ndarray | None = None,
     ):
         import torch
 
+        if config.readout_mode not in READOUT_MODES:
+            raise ValueError(f"unknown readout_mode {config.readout_mode!r}; expected one of {READOUT_MODES}")
         self.config = config
         self.device = torch.device(device)
         self.neurons = int(matrix.shape[0])
@@ -88,10 +111,31 @@ class PositionalReservoir:
             dtype=torch.float32,
             device=self.device,
         )
-        self.readout_projection = fixed_sparse_projection(
-            config.readout_width, self.neurons, seed=config.seed + 17, device=self.device
-        )
+        self.readout_projection = None
+        self.readout_indices = None
+        if config.readout_mode == "random_sparse":
+            self.readout_projection = fixed_sparse_projection(
+                config.readout_width, self.neurons, seed=config.seed + 17, device=self.device
+            )
+            self.readout_width = int(config.readout_width)
+        else:
+            if readout_indices is None or len(readout_indices) == 0:
+                raise ValueError("readout_mode='descending_neuron' needs a non-empty readout_indices array")
+            self.readout_indices = torch.as_tensor(
+                np.asarray(readout_indices, dtype=np.int64), dtype=torch.int64, device=self.device
+            )
+            self.readout_width = int(self.readout_indices.numel())
         self.stats = ReservoirStats()
+
+    def _readout(self, state):
+        """One [neurons, batch] state -> [batch, readout_width] unit-normalised readout."""
+        import torch
+
+        if self.config.readout_mode == "random_sparse":
+            readout = torch.sparse.mm(self.readout_projection, state).T
+        else:
+            readout = state.index_select(0, self.readout_indices).T
+        return readout / torch.linalg.vector_norm(readout, dim=1, keepdim=True).clamp_min(1e-12)
 
     def _sync(self) -> None:
         import torch
@@ -117,7 +161,7 @@ class PositionalReservoir:
         features = torch.as_tensor(cube, dtype=torch.float32, device=self.device)
         active_t = torch.as_tensor(active, dtype=torch.bool, device=self.device)
         state = torch.zeros((self.neurons, batch), dtype=torch.float32, device=self.device)
-        outputs = torch.zeros((steps, batch, self.config.readout_width), dtype=torch.float32, device=self.device)
+        outputs = torch.zeros((steps, batch, self.readout_width), dtype=torch.float32, device=self.device)
 
         for step in range(steps):
             local = features[:, step, :]
@@ -142,9 +186,7 @@ class PositionalReservoir:
             mask = active_t[:, step][None, :]
             state = torch.where(mask, updated, state)
 
-            readout = torch.sparse.mm(self.readout_projection, state).T
-            readout = readout / torch.linalg.vector_norm(readout, dim=1, keepdim=True).clamp_min(1e-12)
-            outputs[step] = readout
+            outputs[step] = self._readout(state)
 
         result = outputs.permute(1, 0, 2).detach().cpu().numpy().astype(np.float32)
         self._sync()

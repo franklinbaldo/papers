@@ -400,3 +400,19 @@ def load_reservoir_inputs(graph: Path):
     archive = np.load(graph, allow_pickle=False)
     populations = select_populations(archive["superclass"])
     return matrix, populations.input_indices
+
+
+def load_reservoir_populations(graph: Path):
+    """Row-normalised operator plus BOTH sensory and readout (descending-neuron)
+    populations, as ``malecns_wifi.tagger.select_populations`` already defines them
+    for the rest of this programme's experiments (wifi tagging etc.) -- unlike
+    ``load_reservoir_inputs``, which drops the anatomical readout population in
+    favour of a synthetic fixed random projection.
+    """
+    from malecns_wifi import load_graph
+    from malecns_wifi.tagger import row_normalise, select_populations
+
+    matrix = row_normalise(load_graph(graph))
+    archive = np.load(graph, allow_pickle=False)
+    populations = select_populations(archive["superclass"])
+    return matrix, populations.input_indices, populations.readout_indices

@@ -20,7 +20,7 @@ from pathlib import Path
 
 import numpy as np
 
-from malecns_wifi.document_reservoir import equivalence_report, load_reservoir_inputs, passes_gate
+from malecns_wifi.document_reservoir import equivalence_report, load_reservoir_populations, passes_gate
 from malecns_wifi.fewnerd_cache import load_cache
 from malecns_wifi.telemetry import Telemetry, progress_fields
 from malecns_wifi.token_reservoir import PositionalReservoir, TokenReservoirConfig
@@ -46,7 +46,8 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--batch-size", type=int, default=32)
-    parser.add_argument("--readout-width", type=int, default=256)
+    parser.add_argument("--readout-width", type=int, default=256, help="ignored when --readout-mode=descending_neuron")
+    parser.add_argument("--readout-mode", choices=["random_sparse", "descending_neuron"], default="random_sparse")
     parser.add_argument("--seed", type=int, default=20260915)
     parser.add_argument("--gain", type=float, default=4.0)
     parser.add_argument("--leak", type=float, default=0.4)
@@ -66,11 +67,12 @@ def main() -> None:
     lengths = np.asarray([len(f) for f in fine_lists], dtype=np.int64)
     n_sentences = len(texts)
 
-    matrix, input_indices = load_reservoir_inputs(args.graph)
+    matrix, input_indices, readout_indices = load_reservoir_populations(args.graph)
     semantic_dim = sum(cache.encoders[m].base_dim for m in model_names) * len(cache.scales)
-    config = TokenReservoirConfig(readout_width=args.readout_width, seed=args.seed, gain=args.gain,
-                                   leak=args.leak, target_rms=args.target_rms)
+    config = TokenReservoirConfig(readout_width=args.readout_width, readout_mode=args.readout_mode, seed=args.seed,
+                                   gain=args.gain, leak=args.leak, target_rms=args.target_rms)
     reservoir = PositionalReservoir(matrix, input_indices, semantic_dim=semantic_dim, config=config,
+                                     readout_indices=readout_indices,
                                      device=args.device, index_dtype=args.index_dtype)
     telemetry = Telemetry("stage-b-fewnerd-reservoir", config={"batch_size": args.batch_size, "device": args.device,
                           "index_dtype": args.index_dtype})

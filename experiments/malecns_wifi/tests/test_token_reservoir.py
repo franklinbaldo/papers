@@ -88,6 +88,30 @@ def test_positional_reservoir_emits_one_readout_per_step():
     assert reservoir.stats.spmm_calls == steps - 1
 
 
+def test_positional_reservoir_descending_neuron_readout_matches_state_verbatim():
+    matrix, inputs = _graph()
+    rng = np.random.default_rng(5)
+    dim = 10
+    readout_indices = np.array([3, 17, 42, 100])
+    config = tr.TokenReservoirConfig(readout_mode="descending_neuron")
+    reservoir = tr.PositionalReservoir(matrix, inputs, semantic_dim=dim, config=config, device="cpu",
+                                       readout_indices=readout_indices)
+    assert reservoir.readout_width == 4 and reservoir.readout_projection is None
+
+    cube = rng.normal(size=(3, 4, dim)).astype(np.float32)
+    active = np.ones((3, 4), dtype=np.bool_)
+    out = reservoir.forward(cube, active)
+    assert out.shape == (3, 4, 4)
+    assert np.allclose(np.linalg.norm(out, axis=2), 1.0, atol=1e-5)
+
+
+def test_positional_reservoir_descending_neuron_needs_indices():
+    matrix, inputs = _graph()
+    config = tr.TokenReservoirConfig(readout_mode="descending_neuron")
+    with pytest.raises(ValueError):
+        tr.PositionalReservoir(matrix, inputs, semantic_dim=10, config=config, device="cpu")
+
+
 def test_positional_reservoir_padding_freezes_state():
     matrix, inputs = _graph()
     rng = np.random.default_rng(11)
