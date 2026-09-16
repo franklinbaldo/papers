@@ -54,7 +54,13 @@ def main() -> None:
     parser.add_argument("--target-rms", type=float, default=0.05)
     parser.add_argument("--index-dtype", choices=["int64", "int32"], default="int64")
     parser.add_argument("--reference", type=Path, help="stage-B npz to compare against (equivalence gate)")
+    parser.add_argument("--flavorizer", type=Path, default=None, help="path to trained ChannelFlavorizer npz")
     args = parser.parse_args()
+
+    flavorizer = None
+    if args.flavorizer is not None:
+        from malecns_wifi.channel_flavorizer import ChannelFlavorizer
+        flavorizer = ChannelFlavorizer.load(args.flavorizer)
 
     cache = load_cache(args.token_cache)
     model_names = tuple(cache.manifest.get("encoder_order") or list(cache.encoders))
@@ -72,10 +78,10 @@ def main() -> None:
     config = TokenReservoirConfig(readout_width=args.readout_width, readout_mode=args.readout_mode, seed=args.seed,
                                    gain=args.gain, leak=args.leak, target_rms=args.target_rms)
     reservoir = PositionalReservoir(matrix, input_indices, semantic_dim=semantic_dim, config=config,
-                                     readout_indices=readout_indices,
+                                     readout_indices=readout_indices, flavorizer=flavorizer,
                                      device=args.device, index_dtype=args.index_dtype)
     telemetry = Telemetry("stage-b-fewnerd-reservoir", config={"batch_size": args.batch_size, "device": args.device,
-                          "index_dtype": args.index_dtype})
+                          "index_dtype": args.index_dtype, "flavorizer": str(args.flavorizer) if args.flavorizer else None})
 
     total_bytes = int(lengths.sum())
     fine_label = np.zeros(total_bytes, dtype=np.int64)

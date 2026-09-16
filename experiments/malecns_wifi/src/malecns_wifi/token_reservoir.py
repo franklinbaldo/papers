@@ -90,6 +90,7 @@ class PositionalReservoir:
         device,
         index_dtype: str = "int64",
         readout_indices: np.ndarray | None = None,
+        flavorizer=None,
     ):
         import torch
 
@@ -97,6 +98,28 @@ class PositionalReservoir:
             raise ValueError(f"unknown readout_mode {config.readout_mode!r}; expected one of {READOUT_MODES}")
         self.config = config
         self.device = torch.device(device)
+        if flavorizer is not None:
+            if hasattr(flavorizer, "V") and hasattr(flavorizer, "U") and not hasattr(flavorizer, "parameters"):
+                # NumPy ChannelFlavorizer wrapped for torch tensor execution
+                import torch.nn as nn
+
+                class _TorchWrapper(nn.Module):
+                    def __init__(self, f_np, dev):
+                        super().__init__()
+                        self.V = torch.as_tensor(f_np.V, dtype=torch.float32, device=dev)
+                        self.U = torch.as_tensor(f_np.U, dtype=torch.float32, device=dev)
+
+                    def forward(self, x):
+                        h = torch.tanh(torch.matmul(x, self.V.T))
+                        return x + torch.matmul(h, self.U.T)
+
+                self.flavorizer = _TorchWrapper(flavorizer, self.device)
+            elif hasattr(flavorizer, "to"):
+                self.flavorizer = flavorizer.to(self.device)
+            else:
+                self.flavorizer = flavorizer
+        else:
+            self.flavorizer = None
         self.neurons = int(matrix.shape[0])
         self.edges = int(matrix.nnz)
         self.semantic_dim = int(semantic_dim)
@@ -162,6 +185,9 @@ class PositionalReservoir:
         active_t = torch.as_tensor(active, dtype=torch.bool, device=self.device)
         state = torch.zeros((self.neurons, batch), dtype=torch.float32, device=self.device)
         outputs = torch.zeros((steps, batch, self.readout_width), dtype=torch.float32, device=self.device)
+
+        if self.flavorizer is not None:
+            features = self.flavorizer(features)
 
         # Fused sensory projection across all steps (FlyDoom-style BLAS batching)
         all_projected = torch.matmul(features, self.input_weights.T)

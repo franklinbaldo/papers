@@ -415,3 +415,79 @@ def test_build_sentence_records_and_write_sentences(tmp_path):
     table = pq.read_table(path)
     assert table.column("id").to_pylist() == ["0", "1", "2"]
     assert table.column("fine_label").to_pylist()[0][:3] == [51, 51, 51]  # "Ann" broadcast onto its bytes
+
+
+# -- channel flavorizer --------------------------------------------------------
+
+def test_channel_flavorizer_identity_initialization_and_forward():
+    from malecns_wifi.channel_flavorizer import ChannelFlavorizer, make_torch_flavorizer
+
+    dim = 16
+    flav = ChannelFlavorizer(semantic_dim=dim, rank=4, seed=42)
+    assert flav.U.shape == (dim, 4)
+    assert np.all(flav.U == 0.0)
+
+    x = np.random.default_rng(0).normal(size=(5, 3, dim)).astype(np.float32)
+    # Zero-initialized U means exact identity
+    assert np.allclose(flav(x), x)
+
+    # PyTorch flavorizer identity
+    import torch
+    mod = make_torch_flavorizer(semantic_dim=dim, rank=4, seed=42)
+    tx = torch.as_tensor(x)
+    assert torch.allclose(mod(tx), tx)
+
+
+def test_channel_flavorizer_integration_in_positional_reservoir():
+    import scipy.sparse as sp
+    from malecns_wifi.channel_flavorizer import ChannelFlavorizer
+
+    matrix = sp.csr_matrix([[0.0, 0.5], [0.5, 0.0]], dtype=np.float32)
+    inputs = np.array([0, 1], dtype=np.int64)
+    readouts = np.array([0, 1], dtype=np.int64)
+    dim = 8
+    config = tr.TokenReservoirConfig(readout_width=2, readout_mode="descending_neuron", seed=42)
+
+    # Reservoir without flavorizer
+    res_base = tr.PositionalReservoir(matrix, inputs, readout_indices=readouts, semantic_dim=dim, config=config, device="cpu")
+
+    # Reservoir with zero-initialized flavorizer (identity)
+    flav = ChannelFlavorizer(semantic_dim=dim, rank=4, seed=42)
+    res_flav = tr.PositionalReservoir(matrix, inputs, readout_indices=readouts, semantic_dim=dim, config=config, device="cpu", flavorizer=flav)
+
+    rng = np.random.default_rng(123)
+    cube = rng.normal(size=(2, 4, dim)).astype(np.float32)
+    active = np.ones((2, 4), dtype=np.bool_)
+
+    out_base = res_base.forward(cube, active)
+    out_flav = res_flav.forward(cube, active)
+
+    # Must be identical when U is 0
+    assert np.allclose(out_base, out_flav, atol=1e-6)
+
+    # When U is perturbed (trained flavorizer), output must diverge
+    flav.U += 1.5
+    res_perturbed = tr.PositionalReservoir(matrix, inputs, readout_indices=readouts, semantic_dim=dim, config=config, device="cpu", flavorizer=flav)
+    out_perturbed = res_perturbed.forward(cube, active)
+    assert not np.allclose(out_base, out_perturbed)
+
+
+def test_train_flavorizer_updates_weights_and_transforms_channels():
+    from malecns_wifi.channel_flavorizer import train_flavorizer
+
+    rng = np.random.default_rng(99)
+    n_samples = 300
+    dim = 16
+    n_classes = 5
+
+    features = rng.normal(size=(n_samples, dim)).astype(np.float32)
+    labels = rng.integers(0, n_classes, size=n_samples)
+
+    flav = train_flavorizer(features, labels, semantic_dim=dim, rank=4, epochs=3, lr=0.01, device="cpu")
+    # After training, U should no longer be identically zero
+    assert not np.all(flav.U == 0.0)
+    transformed = flav(features)
+    assert transformed.shape == features.shape
+    assert not np.allclose(transformed, features)
+
+
