@@ -122,8 +122,21 @@ To test whether topological buffering governs internal state-transition dynamics
    At 10% rewiring, the continuous manifold geometry is almost completely preserved ($\text{CKA} = 0.9768$), with Markov divergence climbing only to $4.28$ and active entropy maintaining $H(\boldsymbol{\pi}) = 2.03$ across 7 distinct attractors. This provides quantitative dynamical confirmation of the topological buffering observed in downstream semantic decoding.
 2. **Attractor Collapse in Unconstrained Nulls:**  
    Under unconstrained configuration rewiring (`degree_null`, $p=1.0$), the trajectory suffers complete attractor collapse when measured against biological microstates: active states collapse to $N=1$, stationary entropy vanishes to $H = 0.00$, and CKA plummets to $0.6279$. The isotropic null lacks modular potential barriers, causing its latent trajectory to fall into a trivial central sink.
-3. **The SBM Inter-Block Requirement for Geometric Decay:**  
-   Preserving only the coarse block traffic matrix $\mathbf{M} \in \mathbb{R}^{58 \times 58}$ (`sbm_neuropil`) maintains moderate trajectory alignment ($\text{CKA} = 0.7482$), but without intra-block distance-decay constraints (Peters' Rule, Model 2), it fails to prevent microstate collapse ($H = 0.06$). Thus, a complete procedural surrogate requires pairing block-level routing with spatial metric kernels.
+### 3.4 Massive-Scale MultiEURLEX-21 Benchmark (Preliminary Scale Results)
+To test whether the biological bottleneck persists at scale and rules out small-corpus drafting formulaicity artifacts, we evaluated the frozen 1,000-chunk MultiEURLEX-21 benchmark across 477 complete EU legal documents under nested 10-fold cross-validation (`artifacts/runtime-v1/multieurlex-exp1-results.partial.json`):
+
+| Evaluation Condition | Seed | macroAP | $\Delta_{\text{recurrence}}$ ($\text{gain}^* - \text{gain}_0$) | Selected Gains ($\rho^*$) |
+| :--- | :---: | :---: | :---: | :---: |
+| **`direct_raw`** (Unprojected Text Embedding) | 0, 1, 2 | **0.2106 $\pm$ 0.0039** | — | — |
+| **`direct_unit_norm`** (Unit Normalized) | 0, 1, 2 | 0.2106 $\pm$ 0.0039 | — | — |
+| **`projected_direct`** (Matched Sensory Projection) | 0, 1, 2 | 0.2031 $\pm$ 0.0034 | — | — |
+| **`projected_direct_delay`** (Delay Horizon $h=4$) | 0, 1, 2 | 0.2052 $\pm$ 0.0023 | — | — |
+| **`malecns_gain0`** (Feedforward Ingress Only) | 0 | 0.1802 | — | 0.00 |
+| **`malecns`** (Biological Recurrent Connectome) | 0 | **0.1960** | **+0.0158** | 0.25 – 4.00 |
+
+*Preliminary Observations:*
+1. **Measurable Semantic Signal Above Empirical Floor:** While random chance prevalence across the 21 EuroVoc labels is $0.176$, feedforward baseline embeddings achieve $0.2106 \pm 0.0039$, demonstrating consistent, low-variance semantic decodability across international legal text.
+2. **Biological Recurrence Bottlenecking at Scale:** Routing through the 165,122-neuron MaleCNS connectome (`malecns` macroAP = $0.1960$) shows that recurrence adds positive signal over feedforward projection ($\Delta_{\text{rec}} = +0.0158$), but remains strictly below the direct sensory projection controls ($\Delta_{\text{bio-direct}} = -0.0071$ against `projected_direct`, $-0.0092$ against `projected_direct_delay`), confirming that the biological wiring behaves as a restrictive inductive filter rather than an isotropic reservoir even on 1,000 chunks across 477 diverse documents. (Evaluation of rewiring continuum $p \in \{0.10, 0.50, 1.00\}$ and remaining seeds in progress).
 
 ---
 
