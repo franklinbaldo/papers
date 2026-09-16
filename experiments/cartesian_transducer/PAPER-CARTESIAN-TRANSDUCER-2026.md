@@ -297,7 +297,7 @@ To move from formal biophysical theory to clinical translation and empirical fal
   - Pituitary adenohypophyseal cells (somatotropes, corticotropes) are **electrically excitable neuroendocrine cells**. They express high densities of voltage-gated L-type calcium channels ($\text{Ca}_V1.2$) and TTX-sensitive $\text{Na}^+$ channels.
   - While native physiology uses hypothalamic releasing peptides (GHRH, CRH) to trigger membrane depolarization, direct electrical field micro-stimulation bypasses the peptide receptor cascade entirely: extracellular micro-voltage pulses depolarize the endocrine cell membrane directly, provoking $\text{Ca}^{2+}$ influx and vesicular exocytosis into local capillaries.
 - **Biohybrid System Architecture:**
-  1. *Stem-Cell-Derived Pituitary Organoid:* Induced pluripotent stem cells (iPSCs) derived from the recipient patient, differentiated *in vitro* into functional three-dimensional anterior pituitary tissue aggregates (expressing native GH, ACTH, and TSH secretory vesicles).
+  1. *The Functional Organ Compiler (FOC) & Stem-Cell Organoids:* Utilizing regulatory genomic grammar (the AlphaGenome paradigm) and bioelectric morphogenetic patterning (Levin, 2021; Suga et al., 2011), induced pluripotent stem cells (iPSCs) derived from the patient are guided through an *in vitro* developmental program. This compiles functional three-dimensional anterior pituitary tissue aggregates with self-organized corticotropic and somatotropic clusters, exhibiting correct spatial polarity, dense-core secretory granules, and high-density voltage-gated calcium channels ($\text{Ca}_V1.2$).
   2. *Semi-Permeable Immuno-Isolating Capsule:* An engineered biocompatible microporous polymer envelope (pore cut-off $\approx 50\text{ nm}$). It permits bidirectional diffusion of oxygen, glucose, amino acids, and secreted hormones into adjacent dermal micro-capillary beds while strictly excluding host cytotoxic T-lymphocytes ($\approx 7-10\,\mu\text{m}$) and immunoglobulin complexes, preventing graft rejection without systemic immunosuppression.
   3. *Silicon Neuromorphic Pacer:* A sub-millimeter CMOS ASIC running the procedural connectome surrogate $\mathcal{G}_{\text{syn}}(\boldsymbol{\theta})$ integrated into the capsule wall. The chip interfaces with the organoid through a high-density planar Titanium Nitride (TiN) Multi-Electrode Array (MEA).
   4. *Outpatient Subcutaneous Placement:* Implanted under local anesthesia into the subcutaneous adipose tissue of the forearm or abdominal wall (analogous to subdermal contraceptive rods or cardiac loop recorders), supported by wireless inductive power transfer and bidirectional telemetry (NFC/Bluetooth).
@@ -335,6 +335,27 @@ Yet, stripped of seventeenth-century theological baggage, Descartes captured a p
 
 The Cartesian Transducer demonstrates that dualism was not an ontological error, but a **scale-separation design problem**. When an algorithmic neural network learns to pilot the hypothalamic valve, the circle closes: information once again commands the machine.
 
+### 6.3 The Functional Organ Compiler: Unifying Genomic Code, Bioelectricity, and Cybernetics
+The convergence of the Algorithmic Connectome, AlphaGenome, and the Cartesian Transducer establishes a unified multi-scale engineering stack for regenerative and bioelectronic medicine:
+
+$$\begin{matrix}
+\text{\textbf{LAYER 1: DNA Sequence}} & \longrightarrow & \text{Regulatory grammar mapped by foundational models (AlphaGenome / Enformer)} \\
+\big\downarrow & & \\
+\text{\textbf{LAYER 2: Bioelectric Fields}} & \longrightarrow & \text{Endogenous voltage patterns instructing tissue shape and organ boundaries (Levin, 2021)} \\
+\big\downarrow & & \\
+\text{\textbf{LAYER 3: Organ Compilation}} & \longrightarrow & \text{Self-organized functional pituitary tissue aggregates compiled } \text{\textit{in vitro}} \text{ (Suga et al., 2011)} \\
+\big\downarrow & & \\
+\text{\textbf{LAYER 4: Procedural Connectome}} & \longrightarrow & \text{SBM and distance-decay generative graph executing non-linear homeostatic control} \\
+\big\downarrow & & \\
+\text{\textbf{LAYER 5: Cartesian Transduction}} & \longrightarrow & \text{Micro-electrode array pacing somatic endocrine secretion in closed loop}
+\end{matrix}$$
+
+This hierarchy proves that bioengineering need not copy brute-force biological point-clouds at any scale:
+- At the molecular scale, we do not hand-engineer every promoter—we sample the **regulatory sequence model**.
+- At the network scale, we do not simulate 10 million individual synapses—we instantiate the **algorithmic connectome**.
+- At the tissue scale, we do not micro-print each endocrine capillary—we execute the **functional organ compiler**.
+- At the physiological scale, we do not inject foreign pharmacology—we command the **Cartesian Transducer**.
+
 ---
 
 ## References
@@ -350,3 +371,5 @@ The Cartesian Transducer demonstrates that dualism was not an ontological error,
 9. Clarkson, J., et al. (2017). Definition of the hypothalamic GnRH pulse generator in mice. *Proceedings of the National Academy of Sciences*, 114(47), E10216–E10223.
 10. Baldo, F. (2026). The Algorithmic Connectome: Replacing Biological Neural Wiring with Procedural Topologies. *Papers / Experiments / MaleCNS*.
 11. Suga, H., et al. (2011). Self-formation of functional adenohypophysis in three-dimensional culture. *Nature*, 480(7375), 57–62.
+12. Levin, M. (2021). Bioelectric networks as cognitive media: Information processing and anatomical control by non-neural cell collectives. *Frontiers in Cellular Neuroscience*, 15, 636139.
+13. Avsec, Ž., et al. (2021). Effective gene expression prediction from sequence by integrating long-range interactions (Enformer). *Nature Methods*, 18(10), 1196–1203.

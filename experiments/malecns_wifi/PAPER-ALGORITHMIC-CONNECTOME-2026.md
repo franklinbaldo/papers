@@ -106,7 +106,24 @@ Its performance remains stable at $\approx 0.114 - 0.123$ with recurrence gain $
 
 *Epistemic boundary:* While consistent with mesoscale compartmentalization, this pilot sweep identifies functional decoupling rather than direct anatomical causality. Confirmatory 10-seed expansion and targeted neuropil ablation remain necessary to isolate the specific anatomical tracts responsible for this buffering.
 
+### 3.3 Empirical Markov State Dynamics ($K=32$ Frozen Codebook Benchmark)
+To test whether topological buffering governs internal state-transition dynamics, we deployed the pre-registered Markov ruler (Section 8.2; execution artifact in `artifacts/runtime-v1/sbm-markov-results.json`). Discretizing continuous latent trajectories of the 1,314 descending motor channels into a frozen biological codebook ($K=32$ centroids fitted strictly on biological training runs under continuous sensory drive, $T_{\text{train}}=1000, T_{\text{test}}=1000$), we evaluate operator Frobenius divergence $\|\mathbf{T}_{\text{bio}} - \mathbf{T}\|_F^2$, stationary Jensen-Shannon divergence $D_{\text{JS}}(\boldsymbol{\pi}_{\text{bio}} \,\|\, \boldsymbol{\pi})$, trajectory Centered Kernel Alignment (CKA), and active state entropy $H(\boldsymbol{\pi})$:
 
+| Model Architecture | Markov Divergence ($\mathcal{D}_{\text{Markov}}$) | Frobenius $\|\mathbf{T}_{\text{bio}} - \mathbf{T}\|_F^2$ | $D_{\text{JS}}(\boldsymbol{\pi}_{\text{bio}} \,\|\, \boldsymbol{\pi})$ | Trajectory CKA | Active States ($N_{\text{act}}$) | Stationary Entropy $H(\boldsymbol{\pi})$ |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`bio_malecns`** (Ground Truth, $p=0.0$) | **0.0000** | 0.0000 | 0.0000 | **1.0000** | **13** | **2.83** |
+| **`rewired_p10`** (10% Rewired Buffering) | **4.2830** | 4.0482 | **0.2348** | **0.9768** | 7 | **2.03** |
+| **`rewired_p50`** (50% Hybrid Transition) | **7.1347** | 6.8354 | 0.2993 | 0.7533 | 7 | 1.68 |
+| **`sbm_neuropil`** (Block Traffic Preserved) | **10.3001** | 9.8205 | 0.4796 | 0.7482 | 1 | 0.06 |
+| **`degree_null`** (Full Configuration, $p=1.0$) | **10.9019** | 10.4102 | 0.4917 | **0.6279** | 1 | **0.00** |
+
+#### Dynamical Interpretations:
+1. **Geometric Buffering at $p=0.10$:**  
+   At 10% rewiring, the continuous manifold geometry is almost completely preserved ($\text{CKA} = 0.9768$), with Markov divergence climbing only to $4.28$ and active entropy maintaining $H(\boldsymbol{\pi}) = 2.03$ across 7 distinct attractors. This provides quantitative dynamical confirmation of the topological buffering observed in downstream semantic decoding.
+2. **Attractor Collapse in Unconstrained Nulls:**  
+   Under unconstrained configuration rewiring (`degree_null`, $p=1.0$), the trajectory suffers complete attractor collapse when measured against biological microstates: active states collapse to $N=1$, stationary entropy vanishes to $H = 0.00$, and CKA plummets to $0.6279$. The isotropic null lacks modular potential barriers, causing its latent trajectory to fall into a trivial central sink.
+3. **The SBM Inter-Block Requirement for Geometric Decay:**  
+   Preserving only the coarse block traffic matrix $\mathbf{M} \in \mathbb{R}^{58 \times 58}$ (`sbm_neuropil`) maintains moderate trajectory alignment ($\text{CKA} = 0.7482$), but without intra-block distance-decay constraints (Peters' Rule, Model 2), it fails to prevent microstate collapse ($H = 0.06$). Thus, a complete procedural surrogate requires pairing block-level routing with spatial metric kernels.
 
 ---
 
@@ -200,6 +217,20 @@ A profound implication of the algorithmic connectome is investigating whether to
 
 3. **From Connectome Compression to a Generative Neural Language:**
    Under this formulation, the *Algorithmic Connectome* transcends the narrow task of "compressing the fly connectome." It defines a **compact generative language capable of describing families of nervous systems across scales**. This reframing motivates the autopoietic question of Section 7: *can an in silico nervous system infer and synthesize its own minimal description within this shared generative language?*
+
+### 6.4 The Genomic & Bioelectric Foundations: From AlphaGenome to Morphogenetic Compilers
+The Algorithmic Connectome hypothesis directly connects to the frontier of deep regulatory genomics and developmental bioelectricity:
+
+1. **The DNA Sequence as a Regulatory Program (The AlphaGenome Paradigm):**
+   Foundational machine learning models of gene regulation—exemplified by Google DeepMind's Enformer and AlphaGenome—demonstrate that non-coding DNA is not an unstructured repository, but a sequence-to-expression execution code. Regulatory motifs (enhancers, promoters, transcription factor binding affinities, chromatin accessibility) define high-dimensional transfer functions that map cellular context into spatial gene expression cascades. An animal genome does not possess the information capacity to store an explicit synaptic adjacency matrix; rather, it compiles developmental gradients, guidance cues, and cell-adhesion affinities.
+
+2. **Bioelectric Pattern Memories and Morphogenetic Codes:**
+   As demonstrated in developmental bioelectricity (Levin, 2021), cellular collectives process morphogenetic information via non-neural resting potential networks ($V_{\text{mem}}$ gradients and gap junctions). These slow bioelectric patterns act as a hardware-level computational medium that instructs anatomical shape, axis specification, and organ placement long before synaptic circuits form.
+
+3. **The Unbroken Pipeline: Genome $\to$ Graph $\to$ Organ:**
+   Connecting these layers reveals a unified developmental continuum:
+   $$\text{Regulatory DNA (AlphaGenome)} \xrightarrow{\text{Transcription}} \text{Bioelectric Gradients} \xrightarrow{\text{Guidance \& SBM Rules}} \text{Algorithmic Connectome} \xrightarrow{\text{Transduction}} \text{Physiological Control}$$
+   Under this perspective, the *Algorithmic Connectome* is the topological compiler that translates genomic and bioelectric pattern constraints into functional neural dynamical manifolds.
 
 ---
 
@@ -373,3 +404,5 @@ To empirically validate and falsify the claims of this position paper, we establ
 5. Baldo, F. (2026). MaleCNS Reservoir — Compile, Control and Document-Task Protocol v1. *Papers / Experiments / MaleCNS*.
 6. Franke, K., et al. (2024). Universal principles of axonal wiring and developmental economy across insect central complexes. *Current Biology*.
 7. The MICrONS Consortium (2021). Functional connectomics spanning multiple areas of mouse visual cortex. *bioRxiv / Nature*.
+8. Avsec, Ž., et al. (2021). Effective gene expression prediction from sequence by integrating long-range interactions (Enformer). *Nature Methods*, 18(10), 1196–1203.
+9. Levin, M. (2021). Bioelectric networks as cognitive media: Information processing and anatomical control by non-neural cell collectives. *Frontiers in Cellular Neuroscience*, 15, 636139.
