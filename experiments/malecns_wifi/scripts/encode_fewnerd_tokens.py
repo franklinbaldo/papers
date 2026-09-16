@@ -83,7 +83,7 @@ def main() -> None:
     doc_split = np.empty(total_bytes, dtype="U16")
     doc_split_index = np.zeros(total_bytes, dtype=np.int64)
     offsets = np.concatenate([[0], np.cumsum(lengths)]).astype(np.int64)
-    embeddings = np.zeros((total_bytes, config.readout_width), dtype=np.float32)
+    embeddings = np.zeros((total_bytes, reservoir.readout_width), dtype=np.float32)
     for i in range(n_sentences):
         start, stop = int(offsets[i]), int(offsets[i + 1])
         fine_label[start:stop] = fine_lists[i]
@@ -122,7 +122,7 @@ def main() -> None:
     manifest = {
         "schema": "papers/malecns-fewnerd-token-embeddings-v2",
         "index_dtype": args.index_dtype, "device": args.device, "batch_size": args.batch_size,
-        "config": config.as_dict(), "token_cache": str(args.token_cache),
+        "config": config.as_dict(), "actual_readout_width": reservoir.readout_width, "token_cache": str(args.token_cache),
         "token_cache_fingerprint": cache.manifest.get("fingerprint"),
         "graph": {"neurons": reservoir.neurons, "edges": reservoir.edges, "sensory_neurons": reservoir.sensory_neurons},
         "stats": stats, "equivalence": equivalence, "python": platform.python_version(),

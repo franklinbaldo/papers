@@ -105,6 +105,25 @@ def test_positional_reservoir_descending_neuron_readout_matches_state_verbatim()
     assert np.allclose(np.linalg.norm(out, axis=2), 1.0, atol=1e-5)
 
 
+def test_config_readout_width_is_not_the_actual_width_in_descending_mode():
+    """Regression: encode_fewnerd_tokens.py once allocated its output array with
+    ``config.readout_width`` (the default 256) even in descending-neuron mode,
+    where the real width is set by ``readout_indices`` -- crashed on the very
+    first non-empty batch with a shape mismatch. Any code consuming a
+    reservoir's output width MUST read ``reservoir.readout_width``, never
+    ``config.readout_width``, once ``readout_mode="descending_neuron"``.
+    """
+    matrix, inputs = _graph()
+    readout_indices = np.array([1, 2, 3, 4])
+    config = tr.TokenReservoirConfig(readout_width=256, readout_mode="descending_neuron")
+    reservoir = tr.PositionalReservoir(matrix, inputs, semantic_dim=8, config=config, device="cpu",
+                                       readout_indices=readout_indices)
+    assert reservoir.readout_width != config.readout_width
+    assert reservoir.readout_width == len(readout_indices)
+    out = reservoir.forward(np.zeros((1, 1, 8), dtype=np.float32), np.ones((1, 1), dtype=np.bool_))
+    assert out.shape[-1] == reservoir.readout_width  # not config.readout_width
+
+
 def test_positional_reservoir_descending_neuron_needs_indices():
     matrix, inputs = _graph()
     config = tr.TokenReservoirConfig(readout_mode="descending_neuron")
