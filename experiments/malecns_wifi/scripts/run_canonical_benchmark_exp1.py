@@ -160,6 +160,44 @@ def evaluate_canonical_nested_kfold(
     }
 
 
+def simulate_image_reservoir(
+    operator,
+    image_block: np.ndarray,
+    projection: np.ndarray,
+    input_indices: np.ndarray,
+    readout_indices: np.ndarray,
+    gain: float,
+    leak: float,
+    steps: int,
+    scale: float = 1.0,
+) -> np.ndarray:
+    """Drive the connectome for `steps` iterations per sample.
+    
+    Because sensory inputs are 3 to 5 synaptic layers away from descending readouts,
+    sustaining the input drive for T steps allows the signal to propagate across the
+    neuropilar hierarchy into the descending motor neurons.
+    """
+    n_samples = len(image_block)
+    n_neurons = operator.shape[0]
+    normed = unit_rows(image_block)
+    projected = (normed @ projection.T) * np.float32(scale)
+    out_states = np.zeros((n_samples, readout_indices.size), dtype=np.float32)
+    drive = np.zeros(n_neurons, dtype=np.float32)
+
+    for i in range(n_samples):
+        state = np.zeros(n_neurons, dtype=np.float32)
+        drive[:] = 0.0
+        drive[input_indices] = projected[i]
+        for t in range(steps):
+            pre = (operator @ state) * np.float32(gain) + drive
+            state = ((1.0 - leak) * state + leak * np.tanh(pre)).astype(np.float32, copy=False)
+        out_states[i] = state[readout_indices]
+        if (i + 1) % 250 == 0 or (i + 1) == n_samples:
+            print(f"    simulated {i + 1}/{n_samples} samples (gain={gain}, steps={steps})", flush=True)
+
+    return out_states
+
+
 def build_operator(kind: str, matrix, seed: int):
     if kind == "none":
         return None
@@ -197,6 +235,7 @@ def main() -> None:
         type=Path,
         default=Path("artifacts/runtime-v1/mnist-exp1-results.json"),
     )
+    parser.add_argument("--skip-baselines", action="store_true", help="Skip direct baselines.")
     parser.add_argument("--state-cache", type=Path, default=Path("artifacts/runtime-v1/state-cache"))
     args = parser.parse_args()
 
@@ -269,29 +308,32 @@ def main() -> None:
     readout = populations.readout_indices
 
     # 1. Direct Baselines
-    print(f"\n{'condition':<24}{'seed':>5}{'macroAP':>12}{'accuracy':>12}")
-    for seed in spec.seeds:
-        rng = np.random.default_rng(seed)
-        flavours = build_flavours(embeddings, spec, seed=seed, source="semantic")
-        projection = rng.normal(
-            size=(populations.input_indices.size, block.shape[1])
-        ).astype(np.float32)
-        calibration = calibrate_drive(projection, block, groups, target_rms=spec.input_scale)
-        projected = (unit_rows(block) @ projection.T) * np.float32(calibration["mean"])
+    if not args.skip_baselines:
+        print(f"\n{'condition':<24}{'seed':>5}{'macroAP':>12}{'accuracy':>12}")
+        for seed in spec.seeds:
+            rng = np.random.default_rng(seed)
+            flavours = build_flavours(embeddings, spec, seed=seed, source="semantic")
+            projection = rng.normal(
+                size=(populations.input_indices.size, block.shape[1])
+            ).astype(np.float32)
+            calibration = calibrate_drive(projection, block, groups, target_rms=spec.input_scale)
+            projected = (unit_rows(block) @ projection.T) * np.float32(calibration["mean"])
 
-        for name, feats in (
-            ("direct_raw", block),
-            ("direct_unit_norm", unit_rows(block)),
-            ("projected_direct", projected),
-            ("projected_direct_delay", delayed_stack(projected, groups, delay_horizon)),
-        ):
-            if (name, seed) in done:
-                continue
-            scored = evaluate_canonical_kfold(
-                feats, tag_masks, flavours, chunk_folds,
-                penalties=spec.ridge_penalties, n_folds=args.n_folds,
-            )
-            record({"condition": name, "seed": seed, **scored})
+            for name, feats in (
+                ("direct_raw", block),
+                ("direct_unit_norm", unit_rows(block)),
+                ("projected_direct", projected),
+                ("projected_direct_delay", delayed_stack(projected, groups, delay_horizon)),
+            ):
+                if (name, seed) in done:
+                    continue
+                scored = evaluate_canonical_kfold(
+                    feats, tag_masks, flavours, chunk_folds,
+                    penalties=spec.ridge_penalties, n_folds=args.n_folds,
+                )
+                record({"condition": name, "seed": seed, **scored})
+    else:
+        print("\nSkipping direct baselines (--skip-baselines requested).")
 
     # 2. Reservoir Operators
     for kind in args.operators:
@@ -328,22 +370,15 @@ def main() -> None:
                         states_by_gain[gain] = np.load(key)
                         continue
 
-                gain_spec = MultitagSpec(
-                    seeds=spec.seeds, steps_per_chunk=spec.steps_per_chunk, gain=gain,
-                    leak=spec.leak, input_scale=spec.input_scale,
+                states = simulate_image_reservoir(
+                    operator, block, projection,
+                    input_indices=populations.input_indices,
+                    readout_indices=readout,
+                    gain=gain,
+                    leak=spec.leak,
+                    steps=spec.steps_per_chunk,
+                    scale=calibration["mean"],
                 )
-                chunks_states = []
-                for i in range(n_samples):
-                    st = reservoir_states(
-                        operator, block[i:i+1], input_weights=projection,
-                        readout_indices=readout,
-                        input_indices=populations.input_indices,
-                        spec=gain_spec, scale=calibration["mean"],
-                    )[0]
-                    chunks_states.append(st)
-                    if (i + 1) % 250 == 0 or (i + 1) == n_samples:
-                        print(f"    simulated {i + 1}/{n_samples} samples (gain={gain})", flush=True)
-                states = np.vstack(chunks_states)
                 states_by_gain[gain] = states
                 if key is not None:
                     np.save(key, states)
