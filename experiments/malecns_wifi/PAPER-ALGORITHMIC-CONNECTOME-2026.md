@@ -248,16 +248,21 @@ Where the comparison is executed at two distinct levels:
 #### A. The Markov Transition Operator ($\mathcal{D}_{\text{Markov}}$)
 A neural circuit operating in noisy regime induces a continuous-time Markov jump process or a discrete transition matrix $\mathbf{T} \in \mathbb{R}^{K \times K}$ over discretized neural population states (metastable microstates / attractors).
 
-- **Joint Codebook / Shared Vector Quantization:**
-  To guarantee that operator divergence $\|\mathbf{T}_{\text{bio}} - \mathbf{T}_{\text{syn}}\|_F^2$ is mathematically well-defined, the $K$ discrete microstates must share identical identities and geometric boundaries across both biological and synthetic trajectories. Independent clustering assigns arbitrary permutation labels to clusters, rendering direct matrix subtraction meaningless. We therefore train a **joint vector quantizer (shared codebook $\mathcal{C}^*$)** on pooled latent trajectories from both the biological reference model and the synthetic surrogate:
-  $$\mathcal{C}^* = \arg\min_{\mathcal{C}} \sum_{\mathbf{x} \in \mathbf{X}_{\text{bio}} \cup \mathbf{X}_{\text{syn}}} \min_{c_k \in \mathcal{C}} \|\mathbf{x} - c_k\|_2^2$$
-  Discretizing continuous trajectories through $\mathcal{C}^*$ yields aligned state-sequence trajectories $\mathbf{s}_t^{\text{bio}}, \mathbf{s}_t^{\text{syn}} \in \{1, \dots, K\}$, enabling rigorous estimation of empirical transition probabilities:
+- **Frozen Biological Codebook Protocol:**
+  To guarantee that operator divergence $\|\mathbf{T}_{\text{bio}} - \mathbf{T}_{\text{syn}}\|_F^2$ is mathematically well-defined, the $K$ discrete microstates must share identical identities and geometric boundaries across both biological and synthetic trajectories. Independent clustering assigns arbitrary permutation labels to clusters, rendering direct matrix subtraction meaningless.
+  
+  To eliminate arbitrary degrees of freedom and ensure strict pre-registration, we establish a frozen projection protocol:
+  $$\text{fit } \mathcal{C}^*_{\text{bio}} \text{ on biological train} \longrightarrow \text{freeze } \mathcal{C}^*_{\text{bio}} \longrightarrow \text{encode } (\text{bio}, \text{syn}, \text{null}) \longrightarrow \text{estimate } \mathbf{T}, \boldsymbol{\pi} \longrightarrow \text{compare held-out transitions}$$
+  
+  Specifically, we train a vector quantizer $\mathcal{C}^*_{\text{bio}}$ strictly on latent trajectories from the biological reference model under training sensory drive:
+  $$\mathcal{C}^*_{\text{bio}} = \arg\min_{\mathcal{C}} \sum_{\mathbf{x} \in \mathbf{X}_{\text{bio}}^{\text{train}}} \min_{c_k \in \mathcal{C}} \|\mathbf{x} - c_k\|_2^2$$
+  The codebook $\mathcal{C}^*_{\text{bio}}$ is then **frozen**. Both held-out biological trajectories and synthetic surrogate trajectories are projected into these fixed microstate boundaries, yielding aligned state sequences $\mathbf{s}_t^{\text{bio}}, \mathbf{s}_t^{\text{syn}} \in \{1, \dots, K\}$:
   $$T_{ij} = P(\mathbf{s}_{t+1} = j \mid \mathbf{s}_t = i)$$
 
 - **Transition Operator Divergence:**
-  We evaluate operator divergence over the shared state space via:
+  We evaluate operator divergence over the shared, frozen state space via:
   $$\mathcal{D}_{\text{Markov}} = \|\mathbf{T}_{\text{bio}} - \mathbf{T}_{\text{syn}}\|_F^2 + D_{\text{JS}}(\boldsymbol{\pi}_{\text{bio}} \,\|\, \boldsymbol{\pi}_{\text{syn}})$$
-  where $\boldsymbol{\pi}$ is the empirical stationary distribution over the shared microstate codebook, and $D_{\text{JS}}$ is the symmetric Jensen-Shannon divergence.
+  where $\boldsymbol{\pi}$ is the empirical stationary distribution over the frozen microstate codebook, and $D_{\text{JS}}$ is the symmetric Jensen-Shannon divergence.
 - **Why Markov Operators are Superior to Video Games (FlyDoom):**
   - Completely analytical, deterministic, and computable in milliseconds via matrix operations.
   - Captures the exact probabilistic grammar of state switching, refractory periods, and attractor hopping without needing a 3D graphics or physics simulator in the loop.
@@ -302,24 +307,30 @@ To empirically validate and falsify the claims of this position paper, we establ
 - **Protocol:** Evaluate a frozen sample of 1,000 test chunks across `direct_raw`, `malecns`, `degree_null`, and intermediate rewiring points ($p \in \{0.10, 0.50\}$).
 - **Falsification Criterion:** If the performance gap between `degree_null` and `malecns` evaporates at scale ($\Delta \to 0$), the bottleneck was a sample-size artifact. If `degree_null` maintains its $\approx 2\times$ superiority across 62,000 documents and diverse EuroVoc topics, it firmly rules out small-corpus and drafting-formulaicity artifacts, establishing that domain-specific inductive bottlenecking is an inherent property of the biological connectome when driven by dense semantic embeddings.
 
-### 8.2 Experiment 2: The Neuropilar SBM Procedural Graph & Markov Transition Operator
-- **Objective:** Determine if a coarse $78 \times 78$ block-affinity traffic matrix between anatomical neuropils can replace 10 million individual empirical synapses, evaluated directly via analytical Markov Chain operator divergence without relying on external simulators.
+### 8.2 Experiment 2: The Neuropilar SBM Procedural Graph & Frozen Markov State Codebook
+- **Objective:** Determine if a coarse $78 \times 78$ block-affinity traffic matrix between anatomical neuropils can replace 10 million individual empirical synapses, evaluated directly via analytical Markov Chain operator divergence against a frozen biological state codebook without simulator overhead.
 - **Protocol:**
   1. Compute the empirical inter-neuropil transition probability matrix $\mathbf{M} \in [0, 1]^{78 \times 78}$ from `graph.npz`.
-  2. Sample synthetic adjacency graphs $\mathcal{G}_{\text{SBM}}$ parameterized by $\mathbf{M}$ and marginal in/out-degree sequences. Report both matrix-level parameter reduction (~1,640x) and full generative state description size (~30x with explicit nodal degree sequences; >1,000x when degrees follow neuropil-specific parametric distributions).
-  3. Drive both the in silico MaleCNS model and $\mathcal{G}_{\text{SBM}}$ with continuous sensory regimes. Pool their latent trajectory states to fit a **joint vector quantizer (shared $K=64$ codebook $\mathcal{C}^*$)**, establishing identical microstate identities for both systems before computing transition matrices $\mathbf{T}_{\text{bio}}$ and $\mathbf{T}_{\text{SBM}}$.
+  2. Sample synthetic adjacency graphs $\mathcal{G}_{\text{SBM}}$ conditioned on $\mathbf{M}$ and marginal in/out-degree sequences. We distinguish between *connectivity matrix compression* (~1,640× reduction, $78 \times 78 = 6,084$ inter-neuropil weights vs. $10^7$ edges) and *total generative state description* (~30× reduction if preserving explicit per-neuron degree sequences; >1,000× if nodal degrees are drawn from neuropil-specific parametric distributions).
+  3. **Markov Discretization and Freezing Pipeline:**
+     $$\text{fit shared codebook on bio train} \longrightarrow \text{freeze} \longrightarrow \text{encode bio/SBM/null} \longrightarrow \text{estimate } \mathbf{T}, \boldsymbol{\pi} \longrightarrow \text{compare held-out transitions}$$
+     - *Fit Biological Codebook:* Discretize continuous latent trajectories into $K = 64$ metastable attractors by training a vector quantizer $\mathcal{C}^*_{\text{bio}}$ strictly on biological training runs under continuous sensory regimes.
+     - *Freeze & Encode:* Freeze $\mathcal{C}^*_{\text{bio}}$ and project held-out trajectories of the empirical connectome model, $\mathcal{G}_{\text{SBM}}$, and degree-null baselines into the exact same microstate boundaries, guaranteeing identical state identities across all models without post-hoc alignment heuristics.
+     - *Estimate Transitions:* Compute empirical transition matrices ($\mathbf{T}_{\text{bio}}, \mathbf{T}_{\text{SBM}}, \mathbf{T}_{\text{null}}$) and stationary distributions ($\boldsymbol{\pi}_{\text{bio}}, \boldsymbol{\pi}_{\text{SBM}}, \boldsymbol{\pi}_{\text{null}}$) on held-out evaluation sets.
   4. Evaluate $\mathcal{G}_{\text{SBM}}$ across the dual criteria:
-     - **Dynamic Syntax Fidelity ($\mathcal{D}_{\text{Markov}}$):** $\mathcal{G}_{\text{SBM}}$ must closely match the empirical state-transition operator over the shared codebook ($\|\mathbf{T}_{\text{bio}} - \mathbf{T}_{\text{SBM}}\|_F \to 0$ and $D_{\text{JS}}(\boldsymbol{\pi}_{\text{bio}} \,\|\, \boldsymbol{\pi}_{\text{SBM}}) \approx 0$), whereas unstructured random nulls (`degree_null`) produce isotropic, divergent transitions.
+     - **Dynamic Syntax Fidelity ($\mathcal{D}_{\text{Markov}}$):** $\mathcal{G}_{\text{SBM}}$ must closely match the empirical state-transition operator over the frozen codebook ($\|\mathbf{T}_{\text{bio}} - \mathbf{T}_{\text{SBM}}\|_F \to 0$ and $D_{\text{JS}}(\boldsymbol{\pi}_{\text{bio}} \,\|\, \boldsymbol{\pi}_{\text{SBM}}) \approx 0$), whereas unstructured random nulls (`degree_null`) produce isotropic, divergent transitions.
      - **Semantic Bottleneck Replication (Text-Tagger):** $\mathcal{G}_{\text{SBM}}$ must preserve the domain-specific inductive bottleneck ($\text{macroAP} \in [0.11, 0.14]$).
-- **Significance:** Proves that the macroscopic neuropilar traffic alone accounts for both the temporal syntax of brain state switching and the semantic information bottleneck, eliminating 3D engine simulation overhead from procedural evaluation.
+- **Significance:** Establishes a rigorous, pre-registrable Markov ruler without free parameters: macroscopic neuropilar routing alone accounts for both the temporal syntax of brain state switching and the semantic information bottleneck.
 
 ### 8.3 Experiment 3: Cross-Species Procedural Transfer (Larva, Fly, Mouse)
 - **Objective:** Test if developmental procedural grammars extracted from one connectome can scale or transfer to another organism.
-- **Protocol:**
-  1. Extract SBM and distance-decay exponents from the *Drosophila* larva (3,000 neurons, 548k synapses) and *C. elegans* (302 neurons, 7,000 synapses).
-  2. Scale the procedural generator up to $N = 165,000$ neurons and evaluate its Markov transition divergence $\mathcal{D}_{\text{Markov}}$ against adult MaleCNS (using a joint vector quantizer fitted on pooled trajectory states).
-  3. Synthesize a hybrid connectome incorporating mammalian cortical laminar loops (MICrONS-derived) into the fly reservoir to test if laminar hierarchy breaks the semantic bottleneck.
-- **Prediction:** While unscaled random graphs fail catastrophically, conserved developmental rules maintain stable stationary distributions $\boldsymbol{\pi}$ and structured transition dynamics across scales.
+- **Protocol (Primary Transfer Hypothesis: Evo-Devo Grammar Scaling):**
+  1. Extract SBM neuropil-affinity structures and distance-decay exponents $\lambda$ from smaller connectomes: the *Drosophila* larva (3,000 neurons, 548k synapses) and *C. elegans* (302 neurons, 7,000 synapses).
+  2. Scale the developmental procedural generator up to $N = 165,000$ neurons and evaluate its Markov transition divergence $\mathcal{D}_{\text{Markov}}$ against adult MaleCNS (projected onto the frozen adult biological codebook $\mathcal{C}^*_{\text{bio}}$).
+  3. **Prediction:** While unscaled random graphs fail catastrophically, conserved developmental scaling rules maintain stable stationary distributions $\boldsymbol{\pi}$ and structured transition dynamics across scales.
+- **Protocol (Secondary Exploratory Ablation: Mammalian Laminar Insertion):**
+  - Distinct from phylogenetic grammar transfer, we perform an exploratory architectural ablation: graft mammalian cortical laminar microcircuit motifs (MICrONS-derived feedback loops) into the fly reservoir.
+  - Evaluate whether inserting columnar/laminar feedback can break the dense semantic bottleneck without destroying baseline sensorimotor coherence.
 
 ### 8.4 Experiment 4: Closed-Loop Autopoietic Neural Morphogenesis
 - **Objective:** Operational demonstration of a computational MaleCNS connectome model acting as the self-compiler of its own procedural surrogate.
