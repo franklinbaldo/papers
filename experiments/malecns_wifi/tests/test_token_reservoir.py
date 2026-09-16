@@ -250,6 +250,26 @@ def test_descending_pool_classifier_dopaminergic_reward_learning():
     assert clf.best_val_accuracy > 0.50
 
 
+def test_descending_pool_classifier_lateral_inhibition_and_emergent_mode():
+    """Emergent mode allows plastic reading across all descending neurons with lateral suppression."""
+    clf = tp.DescendingPoolClassifier(n_features=100, n_classes=10, mode="emergent", lateral_inhibition=0.3)
+    assert clf.weights.shape == (10, 100)
+    # Lateral inhibition suppresses competitor scores
+    X = np.ones((2, 100), dtype=np.float32)
+    scores_no_inh = clf.weights @ X[0] + clf.biases
+    scores_with_inh = clf.predict_scores(X)[0]
+    # Competitor subtraction should reduce positive activations compared to bare scores
+    assert np.all(scores_with_inh <= scores_no_inh + 1e-6)
+
+    # Test fit_probe dispatch with emergent_reward
+    rng = np.random.default_rng(0)
+    x = rng.normal(size=(200, 20)).astype(np.float32)
+    y = rng.integers(0, 5, size=200)
+    model, info, acc = tp.fit_probe(x[:100], y[:100], x[100:], y[100:], classifier="emergent_reward", epochs=3)
+    assert info["method"] == "emergent_reward"
+    assert model.mode == "emergent"
+
+
 def test_bio_conversion_and_span_metrics_perfect_match():
     names = ["O", "person", "location"]
     true = [np.array([0, 1, 1, 0, 2]), np.array([2, 2, 0])]

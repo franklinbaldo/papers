@@ -50,7 +50,8 @@ class DescendingPoolClassifier:
 
     n_features: int
     n_classes: int
-    mode: str = "regional"  # 'regional' (1314 params) or 'dense' (86k params)
+    mode: str = "emergent"  # 'emergent' (reads anywhere with pool priors), 'regional' (strictly within-pool), 'dense'
+    lateral_inhibition: float = 0.25  # competitive lateral suppression strength gamma
     pools: list[np.ndarray] | None = None
     weights: np.ndarray | None = None
     biases: np.ndarray | None = None
@@ -71,6 +72,7 @@ class DescendingPoolClassifier:
             if self.weights is None:
                 self.weights = np.ones(self.n_features, dtype=np.float32)
         else:
+            # 'emergent' or 'dense': reads across all descending neurons
             if self.weights is None:
                 self.weights = np.zeros((self.n_classes, self.n_features), dtype=np.float32)
                 for k, p in enumerate(self.pools):
@@ -89,8 +91,14 @@ class DescendingPoolClassifier:
                     scores[:, k] = Xw[:, p].sum(axis=1) + self.biases[k]
                 else:
                     scores[:, k] = self.biases[k]
-            return scores
-        return X @ self.weights.T + self.biases
+        else:
+            scores = X @ self.weights.T + self.biases
+
+        if self.lateral_inhibition > 0.0 and self.n_classes > 1:
+            relu_s = np.maximum(scores, 0.0)
+            comp_mean = (np.sum(relu_s, axis=1, keepdims=True) - relu_s) / float(self.n_classes - 1)
+            scores = scores - self.lateral_inhibition * comp_mean
+        return scores
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         return np.argmax(self.predict_scores(X), axis=1)
@@ -229,11 +237,16 @@ def fit_probe(
         keep = np.random.default_rng(seed).choice(len(train_x), size=max_train_rows, replace=False)
         train_x, train_y = train_x[keep], train_y[keep]
 
-    if classifier in ("pool_reward", "dense_reward"):
+    if classifier in ("emergent_reward", "pool_reward", "dense_reward"):
         n_classes = int(max(int(train_y.max()), int(val_y.max()))) + 1
         if label_names is not None:
             n_classes = max(n_classes, len(label_names))
-        mode = "regional" if classifier == "pool_reward" else "dense"
+        if classifier == "emergent_reward":
+            mode = "emergent"
+        elif classifier == "pool_reward":
+            mode = "regional"
+        else:
+            mode = "dense"
         model = DescendingPoolClassifier(
             n_features=int(train_x.shape[1]),
             n_classes=n_classes,

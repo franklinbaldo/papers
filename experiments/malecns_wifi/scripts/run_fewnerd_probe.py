@@ -40,10 +40,10 @@ def main() -> None:
     parser.add_argument("--variant", default="malecns")
     parser.add_argument(
         "--classifier",
-        choices=["pool_reward", "dense_reward", "logistic_regression"],
-        default="pool_reward",
-        help="probe classifier: 'pool_reward' (biological descending neuron pool WTA decoder), "
-             "'dense_reward' (dense dopaminergic RPE), or 'logistic_regression'",
+        choices=["emergent_reward", "pool_reward", "dense_reward", "logistic_regression"],
+        default="emergent_reward",
+        help="probe classifier: 'emergent_reward' (emergent regions across all DNs with pool priors and lateral inhibition), "
+             "'pool_reward' (strictly within-pool WTA), 'dense_reward' (dense dopaminergic RPE), or 'logistic_regression'",
     )
     parser.add_argument("--epochs", type=int, default=10, help="epochs for reward-driven classifiers")
     parser.add_argument("--learning-rate", type=float, default=0.01, help="learning rate")
