@@ -74,6 +74,7 @@ def evaluate_canonical_kfold(
         chosen_penalties.append(float(best_p))
         w_final = ridge_multioutput(features[train_mask], targets[train_mask], best_p)
         predictions[test_mask] = np.hstack([features[test_mask], np.ones((int(test_mask.sum()), 1))]) @ w_final
+        print(f"    fold {fold + 1}/{n_folds} done (penalty={best_p})", flush=True)
 
     per_tag = {}
     for index in range(flavours.shape[0]):
@@ -135,6 +136,7 @@ def evaluate_canonical_nested_kfold(
         chosen[str(fold)] = {"gain": float(best_g), "ridge": float(best_p)}
         w_final = ridge_multioutput(states_by_gain[best_g][train_mask], targets[train_mask], best_p)
         predictions[test_mask] = np.hstack([states_by_gain[best_g][test_mask], np.ones((int(test_mask.sum()), 1))]) @ w_final
+        print(f"    nested fold {fold + 1}/{n_folds} done (gain={best_g}, ridge={best_p})", flush=True)
 
     per_tag = {}
     for index in range(flavours.shape[0]):
@@ -330,15 +332,18 @@ def main() -> None:
                     seeds=spec.seeds, steps_per_chunk=spec.steps_per_chunk, gain=gain,
                     leak=spec.leak, input_scale=spec.input_scale,
                 )
-                states = np.vstack([
-                    reservoir_states(
+                chunks_states = []
+                for i in range(n_samples):
+                    st = reservoir_states(
                         operator, block[i:i+1], input_weights=projection,
                         readout_indices=readout,
                         input_indices=populations.input_indices,
                         spec=gain_spec, scale=calibration["mean"],
                     )[0]
-                    for i in range(n_samples)
-                ])
+                    chunks_states.append(st)
+                    if (i + 1) % 250 == 0 or (i + 1) == n_samples:
+                        print(f"    simulated {i + 1}/{n_samples} samples (gain={gain})", flush=True)
+                states = np.vstack(chunks_states)
                 states_by_gain[gain] = states
                 if key is not None:
                     np.save(key, states)
