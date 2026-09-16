@@ -1,3 +1,11 @@
+---
+type: "Companion Note"
+title: "Closed-loop embedding translation through a frozen MaleCNS — design note"
+description: "Engineering note for the closed-loop translation front: frozen sparse recurrence with a custom transpose backward, per-operator bulk-gain matching, the graded feedback channel, and the anisotropy calibration that forced InfoNCE and retrieval@1 over mean cosine."
+tags: [malecns, connectome, closed-loop, embedding-translation, lora, reservoir-computing]
+timestamp: 2026-09-16T20:00:00+00:00
+---
+
 # Closed-loop embedding translation through a frozen MaleCNS
 
 This front generalises the pattern the last week of MaleCNS work kept

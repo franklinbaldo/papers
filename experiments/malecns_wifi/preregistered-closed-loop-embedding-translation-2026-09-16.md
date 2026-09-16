@@ -1,3 +1,11 @@
+---
+type: "Protocol"
+title: "Closed-loop embedding translation through a frozen MaleCNS — preregistration"
+description: "Preregistered exploratory test of whether a frozen MaleCNS operator, wrapped in small trainable interfaces and run as a persistent state in a closed loop, can translate MiniLM embeddings into E5 space, against open-loop, degree-preserving-null, random-ESN, direct and centroid controls."
+tags: [malecns, drosophila, connectome, closed-loop, embedding-translation, reservoir-computing, preregistration]
+timestamp: 2026-09-16T20:00:00+00:00
+---
+
 # Preregistered exploratory test — closed-loop embedding translation through a frozen MaleCNS
 
 Date: 2026-09-16
