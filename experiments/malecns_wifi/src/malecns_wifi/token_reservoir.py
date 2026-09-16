@@ -2,23 +2,24 @@
 
 Unlike the MultiEURLEX document encoder, which pools a handful of text chunks
 into one embedding, this reservoir runs over the sentence's canonical UTF-8
-byte axis: every byte is a time step, driven by the same multiscale
-byte-synchronised semantic channels already established in
-``text_axis_channels.py`` and used by the flavour/food experiments -- window
-embeddings at several character scales, linearly interpolated to every byte
-position (not per-token hidden states from a tokenizer, which has no fixed
-place in this programme's channel convention). A readout is emitted at *every*
-byte, not just the last, so labels can be scored at the same resolution the
-channels are defined on. The only place a non-frozen parameter appears is a
-linear probe fit afterwards on the readout embeddings (``token_probe.py``) --
-the connectome, its input weights and its readout projection are exactly as
-frozen as in the document encoder.
+byte axis: every byte is a time step, driven by a mosaic of fixed-size,
+non-overlapping chunk embeddings at several scales (``fewnerd_cache``, built
+on ``text_axis_channels.fixed_chunks``) -- every byte inside a chunk carries
+that chunk's embedding verbatim, piecewise-constant, not smoothed across
+chunk boundaries (not per-token hidden states from a tokenizer, which has no
+fixed place in this programme's channel convention). A readout is emitted at
+*every* byte, not just the last, so labels can be scored at the same
+resolution the channels are defined on. The only place a non-frozen parameter
+appears is a linear probe fit afterwards on the readout embeddings
+(``token_probe.py``) -- the connectome, its input weights and its readout
+projection are exactly as frozen as in the document encoder.
 
-    text -> UTF-8 byte axis -> multiscale window embeddings (frozen MiniLM/E5)
-         -> interpolated to every byte, unit-normalised per (model, scale),
-            concatenated -> fixed Gaussian sensory projection (RMS-normalised
-            per byte) -> row-normalised MaleCNS recurrent step (gain, leak,
-            tanh) -> fixed sparse whole-brain readout at EVERY byte position
+    text -> UTF-8 byte axis -> per scale, non-overlapping fixed-size chunks,
+         each pooled once (frozen MiniLM/E5) and broadcast piecewise-constant
+         to its bytes -> unit-normalised per (model, scale), concatenated
+         -> fixed Gaussian sensory projection (RMS-normalised per byte)
+         -> row-normalised MaleCNS recurrent step (gain, leak, tanh)
+         -> fixed sparse whole-brain readout at EVERY byte position
          -> [sentence, byte, readout_width]
 """
 

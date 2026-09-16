@@ -27,18 +27,32 @@ class ProbeResult:
 
 def fit_probe(
     train_x: np.ndarray, train_y: np.ndarray, val_x: np.ndarray, val_y: np.ndarray,
-    *, candidate_C: tuple[float, ...] = (0.03, 0.1, 0.3, 1.0, 3.0), max_iter: int = 200,
+    *, candidate_C: tuple[float, ...] = (0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0), max_iter: int = 200,
     seed: int = 20260915,
-) -> tuple[Any, float]:
-    from sklearn.linear_model import LogisticRegression
+) -> tuple[Any, float, float]:
+    """Fit a multinomial probe, selecting ``C`` by validation macro-F1, not accuracy.
 
-    best_model, best_c, best_acc = None, None, -1.0
+    Few-NERD's label space is heavily skewed (``O`` is ~80% of bytes across 66
+    classes): plain accuracy is maximised by a model that predicts ``O``
+    everywhere, which recovers zero entity spans. This was found empirically --
+    accuracy-based selection collapsed to all-``O`` predictions (span F1
+    exactly 0) even with 4,000 training sentences. ``class_weight='balanced'``
+    plus macro-F1 selection lets minority entity types actually influence which
+    regularisation strength wins. Selection still uses only train/validation;
+    test labels never enter this function.
+    """
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.metrics import f1_score
+
+    best_model, best_c, best_f1, best_acc = None, None, -1.0, -1.0
     for c in candidate_C:
-        model = LogisticRegression(C=c, max_iter=max_iter, random_state=seed)
+        model = LogisticRegression(C=c, max_iter=max_iter, random_state=seed, class_weight="balanced")
         model.fit(train_x, train_y)
-        acc = float(model.score(val_x, val_y))
-        if acc > best_acc:
-            best_model, best_c, best_acc = model, c, acc
+        val_pred = model.predict(val_x)
+        macro_f1 = float(f1_score(val_y, val_pred, average="macro", zero_division=0))
+        if macro_f1 > best_f1:
+            best_model, best_c, best_f1 = model, c, macro_f1
+            best_acc = float(np.mean(val_pred == val_y))
     return best_model, best_c, best_acc
 
 

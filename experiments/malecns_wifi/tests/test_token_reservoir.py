@@ -104,6 +104,31 @@ def test_positional_reservoir_padding_freezes_state():
 
 # -- span metrics -------------------------------------------------------------
 
+def test_fit_probe_recovers_minority_class_on_imbalanced_labels():
+    """Regression test: plain-accuracy selection collapses to majority-only.
+
+    With an 80/20-ish class split and enough separable signal, a probe
+    selected by validation accuracy alone can legitimately settle on
+    predicting only the majority class (highest accuracy, zero minority
+    recall) -- this is exactly the failure observed empirically on Few-NERD
+    (span F1 stayed at 0.0 even with 4,000 training sentences). Selecting by
+    macro-F1 with class_weight='balanced' must recover the minority class
+    here, where it is linearly separable and plentiful enough to learn.
+    """
+    rng = np.random.default_rng(0)
+    n_majority, n_minority = 400, 100
+    majority = rng.normal(loc=0.0, scale=0.3, size=(n_majority, 2))
+    minority = rng.normal(loc=4.0, scale=0.3, size=(n_minority, 2))
+    x = np.concatenate([majority, minority])
+    y = np.concatenate([np.zeros(n_majority, dtype=np.int64), np.ones(n_minority, dtype=np.int64)])
+    order = rng.permutation(len(x))
+    x, y = x[order], y[order]
+    split = len(x) // 2
+    model, c, val_acc = tp.fit_probe(x[:split], y[:split], x[split:], y[split:])
+    pred = model.predict(x[split:])
+    assert 1 in set(pred.tolist()), "macro-F1 selection must not collapse to majority-only prediction"
+
+
 def test_bio_conversion_and_span_metrics_perfect_match():
     names = ["O", "person", "location"]
     true = [np.array([0, 1, 1, 0, 2]), np.array([2, 2, 0])]
@@ -195,6 +220,39 @@ def test_encode_unique_windows_and_assemble_channel_round_trip(monkeypatch, tmp_
 
     with pytest.raises(KeyError):
         encoder.lookup_many(["never seen this text before"])
+
+
+def test_assemble_channel_is_piecewise_constant_not_interpolated(monkeypatch, tmp_path):
+    """Adjacent chunks must jump, not blend -- this is a mosaic, not interpolation."""
+    import sentence_transformers
+
+    monkeypatch.setattr(sentence_transformers, "SentenceTransformer", _FakeSentenceTransformer)
+    text = "aaaabbbb"  # scale=4 tiles this into exactly two distinct chunks: "aaaa", "bbbb"
+    unique = fc.collect_unique_windows([text], scales=(4,))
+    embeddings, sorted_keys, _ = fc.encode_unique_windows("fake/minilm", unique, device="cpu", batch_size=8)
+    model_dir = tmp_path / "fake-minilm"
+    fc.write_dedup_table(model_dir, embeddings, sorted_keys)
+    keys = np.load(model_dir / "keys.npy")
+    mm = np.memmap(model_dir / "embeddings.f32", dtype=np.float32, mode="r", shape=(len(keys), 6))
+    encoder = fc.DedupEncoder(name="fake/minilm", base_dim=6, sorted_keys=keys, embeddings=mm)
+    cache = fc.FewnerdCache(manifest={"labels": {}}, directory=tmp_path, sentences=None,
+                            encoders={"fake/minilm": encoder}, scales=(4,))
+
+    channel = cache.assemble_channel(("fake/minilm",), text)
+    assert channel.shape == (8, 6)
+    # within each chunk, every byte is identical (constant, not interpolated)
+    assert np.array_equal(channel[0], channel[1]) and np.array_equal(channel[2], channel[3])
+    assert np.array_equal(channel[4], channel[5]) and np.array_equal(channel[6], channel[7])
+    # the two chunks ("aaaa" vs "bbbb") must differ -- no smoothing across the boundary
+    assert not np.allclose(channel[3], channel[4])
+
+
+def test_fixed_chunks_tiles_without_overlap_or_gaps():
+    text = "Ann met Bob"  # 11 chars
+    spans = tac.fixed_chunks(text, 4)
+    assert spans == [(0, 4), (4, 8), (8, 11)]
+    covered = "".join(text[a:b] for a, b in spans)
+    assert covered == text  # every byte covered exactly once, in order
 
 
 def test_build_sentence_records_and_write_sentences(tmp_path):

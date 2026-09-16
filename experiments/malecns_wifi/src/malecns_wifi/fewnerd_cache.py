@@ -1,24 +1,31 @@
 """Stage A: Few-NERD -> frozen, deduplicated, byte-synchronised multiscale channels.
 
-The channel construction follows this programme's established convention
-(``text_axis_channels.py``, ``smoke_concept_flavour_gpu.py``): for each scale in
-``spec.scales``, overlapping character windows are pooled by a frozen encoder,
-and the resulting anchor embeddings are linearly interpolated to *every* byte
-position of the sentence. There is no tokenizer, no subword pooling, and no
-per-token hidden state anywhere in this stage.
+For each scale in ``spec.scales``, the sentence is tiled into non-overlapping
+fixed-size chunks (``text_axis_channels.fixed_chunks``, a mosaic, not the
+overlapping sliding windows ``window_spans`` builds elsewhere in this
+programme); each chunk is pooled by a frozen encoder once and that embedding
+is applied verbatim (piecewise-constant) to every byte inside the chunk -- no
+interpolation or blending across chunk boundaries. A chunk longer than an
+encoder's practical context is truncated by that encoder; finer scales in the
+same fused channel already cover the detail a coarser, truncated scale drops,
+so truncation is a deliberate feature of the mosaic, not a bug to route
+around. There is no tokenizer, no subword pooling, and no per-token hidden
+state anywhere in this stage -- every encoder call is a normal pooled
+sentence-embedding call on a chunk of text.
 
-Persisting the byte-interpolated field directly does not scale: on the full
-Few-NERD supervised corpus (~25M bytes) it would be ~860 GB before compression
-and OOMs during construction (74M window occurrences held in memory at once).
-Measured on the real corpus, window text is enormously redundant at small
-scales (scale=1: 17,342x duplicate ratio; scale=2: 2,356x; scale=4: 50x) and
-mildly redundant even at scale=8 (2.9x); across all 12 scales combined, only
-**7.3M of 74.4M** window occurrences are textually unique. So this cache
-stores each **unique window text once** (keyed by a 16-byte BLAKE2b digest,
-model-independent), and stage B recomputes window spans deterministically
-(``window_spans`` is a pure function of text and scale) and looks embeddings
-up by hash -- the byte-resolution field is never written to disk, only
-assembled transiently, per sentence batch, inside the reservoir's forward pass.
+Persisting the byte-broadcast field directly does not scale: on the full
+Few-NERD supervised corpus (~25M bytes) it would be several hundred GB before
+compression and OOMs during construction if every chunk occurrence is held in
+memory before encoding. Measured on the real corpus, chunk text is enormously
+redundant at small scales (scale=1: >99% duplicate; scale=2, 4 similarly
+dominated by a small alphabet/vocabulary) and still meaningfully redundant at
+mid scales; across all scales combined only a fraction of chunk occurrences
+are textually unique. So this cache stores each **unique chunk text once**
+(keyed by a 16-byte BLAKE2b digest, model-independent), and stage B
+recomputes chunk spans deterministically (``fixed_chunks`` is a pure function
+of text and scale) and looks embeddings up by hash -- the byte-resolution
+field is never written to disk, only assembled transiently, per sentence
+batch, inside the reservoir's forward pass.
 
 This cache is not published (no Hub upload): it is a local intermediate,
 regenerated per experiment, kept in a raw memory-mappable layout instead of
@@ -49,13 +56,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from malecns_wifi.multieurlex_cache import MANIFEST_NAME, _sha, model_prefix, model_slug
-from malecns_wifi.text_axis_channels import (
-    char_spans_to_byte_spans,
-    interpolate_to_bytes,
-    span_centres,
-    utf8_byte_axis,
-    window_spans,
-)
+from malecns_wifi.text_axis_channels import char_spans_to_byte_spans, fixed_chunks, utf8_byte_axis
 
 SCHEMA = "papers/malecns-fewnerd-dedup-channel-cache-v1"
 CHUNKING_POLICY = "byte-synchronised-multiscale-dedup-v1"
@@ -224,11 +225,18 @@ def write_sentences(records: list[SentenceRecord], *, output_dir: Path) -> Path:
 
 
 def collect_unique_windows(texts: list[str], scales: tuple[int, ...]) -> dict[bytes, str]:
-    """Every distinct window text across all sentences and scales, keyed once."""
+    """Every distinct chunk text across all sentences and scales, keyed once.
+
+    Chunks are non-overlapping and fixed-size per scale (``fixed_chunks``), a
+    tiling/mosaic, not the overlapping sliding windows the name might suggest
+    elsewhere in this programme -- kept for continuity with the rest of this
+    module (``window_key``, ``collect_unique_windows``/``encode_unique_windows``
+    are otherwise agnostic to how a span was chosen).
+    """
     unique: dict[bytes, str] = {}
     for text in texts:
         for scale in scales:
-            for a, b in window_spans(text, scale):
+            for a, b in fixed_chunks(text, scale):
                 window = text[a:b]
                 key = window_key(window)
                 if key not in unique:
@@ -309,7 +317,7 @@ def build_cache(
     t0 = time.perf_counter()
     unique = collect_unique_windows(texts, spec.scales)
     dedup_seconds = time.perf_counter() - t0
-    total_occurrences = sum(len(window_spans(t, s)) for t in texts for s in spec.scales)
+    total_occurrences = sum(len(fixed_chunks(t, s)) for t in texts for s in spec.scales)
 
     manifest = {
         "schema": SCHEMA,
@@ -400,17 +408,29 @@ class FewnerdCache:
         return self.manifest["labels"]
 
     def assemble_channel(self, model_names: tuple[str, ...], text: str) -> np.ndarray:
-        """Byte-synchronised fused channel for one sentence: [byte_length, sum(base_dim)*len(scales)]."""
+        """Byte-synchronised fused channel for one sentence: [byte_length, sum(base_dim)*len(scales)].
+
+        Each scale tiles the sentence into non-overlapping fixed-size chunks
+        (``fixed_chunks``); every byte in a chunk gets that chunk's embedding
+        verbatim (piecewise-constant, no interpolation/blending across chunk
+        boundaries). A chunk longer than an encoder's practical context is
+        silently truncated by that encoder -- finer scales in the same fused
+        channel already cover the detail the truncated scale drops, so this is
+        a deliberate mosaic-of-scales design, not a bug.
+        """
         axis = utf8_byte_axis(text)
         pieces = []
         for name in model_names:
             enc = self.encoders[name]
             for scale in self.scales:
-                spans = window_spans(text, scale)
-                windows = [text[a:b] for a, b in spans]
-                anchors = enc.lookup_many(windows)
+                spans = fixed_chunks(text, scale)
+                chunks = [text[a:b] for a, b in spans]
+                anchors = enc.lookup_many(chunks)
                 byte_spans = char_spans_to_byte_spans(text, spans)
-                field = interpolate_to_bytes(anchors, span_centres(byte_spans), byte_length=axis.byte_length)
+                counts = (byte_spans[:, 1] - byte_spans[:, 0]).astype(np.int64)
+                field = np.repeat(anchors, counts, axis=0) if len(anchors) else np.zeros((0, anchors.shape[-1]), dtype=np.float32)
+                if field.shape[0] != axis.byte_length:
+                    raise AssertionError(f"chunk tiling covered {field.shape[0]} bytes, expected {axis.byte_length}")
                 norm = np.maximum(np.linalg.norm(field, axis=1, keepdims=True), 1e-12)
                 pieces.append((field / norm).astype(np.float32))
         return np.concatenate(pieces, axis=1) if len(pieces) > 1 else pieces[0]

@@ -71,6 +71,21 @@ def char_spans_to_byte_spans(text: str, char_spans: list[tuple[int, int]]) -> np
     )
 
 
+def fixed_chunks(text: str, size: int) -> list[tuple[int, int]]:
+    """Consecutive, non-overlapping ``[char_start, char_end)`` chunks of ``size``.
+
+    The final chunk may be shorter than ``size`` (never padded, never dropped).
+    Cuts are on character boundaries (safe for later UTF-8 byte conversion via
+    ``char_spans_to_byte_spans``), unlike ``window_spans``, which overlaps.
+    """
+    if size <= 0:
+        raise ValueError("size must be positive")
+    n = len(text)
+    if n == 0:
+        return [(0, 0)]
+    return [(start, min(start + size, n)) for start in range(0, n, size)]
+
+
 def span_centres(spans: np.ndarray) -> np.ndarray:
     """Centre byte coordinate for aligned ``[start, end)`` spans."""
     values = np.asarray(spans, dtype=np.float64)

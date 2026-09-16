@@ -51,14 +51,26 @@ convention, not a new one:
 ```
 sentence text (word-joined) -> UTF-8 byte axis
    -> for each scale in the power-of-two ladder {1, 2, 4, 8, ..., 2048} chars:
-      overlapping windows, pooled by a frozen encoder, interpolated to every
-      byte position (text_axis_channels.window_spans / interpolate_to_bytes)
+      tile the sentence into non-overlapping fixed-size chunks (a mosaic, not
+      a sliding window), pool each chunk once with a frozen encoder, and
+      broadcast that chunk's embedding verbatim (piecewise-constant, no
+      interpolation) to every byte inside it
+      (text_axis_channels.fixed_chunks)
    -> unit-normalised per (model, scale), concatenated -> fused byte channel
    -> fixed Gaussian sensory projection (RMS-normalised per byte)
    -> row-normalised MaleCNS recurrent step (gain, leak, tanh) -- one step per BYTE
    -> fixed sparse whole-brain readout emitted at EVERY byte position
    -> 256-d embedding per byte
 ```
+
+Corrected 2026-09-15 (2nd time): the first cache implementation used
+overlapping sliding windows (`window_spans`) linearly interpolated to every
+byte, mirroring the flavour/food experiments' convention. The intended design
+is a **mosaic of fixed, non-overlapping chunks per scale** instead --
+piecewise-constant, not smoothed across chunk boundaries. A chunk that
+exceeds an encoder's practical context (see below) is truncated by that
+encoder; this is accepted deliberately because a finer scale in the same
+fused channel already covers the detail the coarser, truncated scale drops.
 
 No pooling of the sequence into a single document vector at any point, and no
 tokenizer subword alignment anywhere. The connectome
@@ -74,10 +86,17 @@ Scale ladder decided 2026-09-15: `2**i` for `i` in `0..11` (1, 2, 4, 8, 16, 32,
 64, 128, 256, 512, 1024, 2048 characters) -- a full geometric sweep from
 single-character to whole-sentence context, rather than the 3-point ladder
 (`{8, 32, 128}`) other experiments in this programme use. Scales at or above a
-sentence's byte length collapse to one whole-sentence window
-(`window_spans`'s `n <= scale` branch), so the ladder saturates gracefully
+sentence's byte length collapse to one whole-sentence chunk
+(`fixed_chunks`'s final, shorter chunk), so the ladder saturates gracefully
 instead of erroring; per-scale channel count is fixed regardless of sentence
 length.
+
+Ladder ceiling, checked empirically against both encoders' real token limits
+on Few-NERD text: MiniLM's 128-token limit truncates at ~486 bytes; E5-small's
+512-token limit truncates at ~1,944 bytes. 2048 already exceeds both, so
+scales beyond 2048 would be truncated identically to 2048 by both encoders and
+add no information -- the ladder stops at 2048 for this reason, not
+arbitrarily.
 
 Frozen encoders: the same pair as MultiEURLEX --
 `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` and
@@ -106,9 +125,14 @@ any label's value.
   classifier the MTEB evaluator fits on top of a frozen sentence encoder for
   document classification -- not a claim that the encoder itself is
   supervised.
-- Regularisation strength (`C`) is selected by accuracy on `validation` only.
-  `test` labels never influence probe fitting, model selection, the
-  connectome, or any hyperparameter (gain/leak/target-RMS/readout width).
+- Regularisation strength (`C`) is selected on `validation` only, using
+  macro-F1, not accuracy, and the probe uses `class_weight="balanced"`.
+  Corrected 2026-09-15: plain-accuracy selection on this label space (`O` is
+  ~80% of bytes across 66 classes) collapsed to predicting `O` everywhere --
+  the highest-accuracy model, and a model with exactly zero entity-span
+  recall -- confirmed empirically at 4,000 training sentences, not just at
+  toy scale. `test` labels never influence probe fitting, model selection,
+  the connectome, or any hyperparameter (gain/leak/target-RMS/readout width).
 
 ## Metrics
 
