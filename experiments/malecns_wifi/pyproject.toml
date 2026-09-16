@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "malecns-wifi-experiment"
+version = "0.1.0"
+description = "Compile MaleCNS v1.0 and test it as a fixed sparse reservoir for Wi-Fi sensing experiments."
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2",
+  "pyarrow>=18",
+  "scipy>=1.14",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+# Training the adapter needs torch and a GPU. The ridge readout, the compiler and
+# the characterisation all run on CPU with numpy/scipy alone, so torch stays out
+# of the default install.
+train = ["torch>=2.4"]
+# The MultiEURLEX staged pipeline: official MTEB evaluator, frozen sentence encoders,
+# Hub publishing of the semantic cache.
+mteb = ["mteb==2.20.11", "sentence-transformers>=5,<6", "huggingface_hub>=0.30", "psutil>=6", "wandb>=0.18"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/malecns_wifi"]
