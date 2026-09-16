@@ -184,22 +184,22 @@ Our findings suggest a unified design methodology for brain-inspired computing:
 ### 6.2 Beyond Empirical Brute-Force Connectomics
 While high-resolution electron microscopy is indispensable for establishing initial anatomical baselines, running and scaling neuromorphic architectures on raw synaptic point-clouds is computationally intractable and conceptually limited. By identifying the procedural laws that generate functional neural topologies, we transition from *descriptive anatomy* to *generative neuro-engineering*.
 
-### 6.3 Cross-Species Connectome Transfer: Learning Universal Developmental Grammars
-A profound implication of algorithmic connectomics is **cross-species procedural generalization**:
-1. **The Organism Library:** Modern connectomics now provides full synaptic reconstructions across vastly distinct phylogenetic lineages:
-   - *Caenorhabditis elegans* (~302 neurons, ~7,000 synapses): The canonical dense reflex machine.
-   - *Platynereis dumerilii* (marine annelid larva): Primitive ciliary sensorimotor coordination.
-   - *Drosophila melanogaster* larva (~3,000 neurons, ~548,000 synapses) vs. adult MaleCNS (~165,000 neurons, ~10M synapses): An ontological trajectory of brain expansion.
-   - Mouse cortical micromodules (MICrONS, ~100,000 neurons, ~500M synapses): Mammalian laminar neocortex.
+### 6.3 Cross-Scale Procedural Conservation: Testing Common Topological Grammars
+A profound implication of the algorithmic connectome is investigating whether topological principles are conserved across phylogenetic lineages and developmental scales:
 
-2. **Extracting the Meta-Procedure ($\mathcal{P}^*$):**
-   Instead of fitting a procedural model solely to MaleCNS, we can fit a family of parameterized generators across *multiple* organismal connectomes:
-   $$\mathcal{P}_{\text{organism}} = \mathcal{G}(\boldsymbol{\alpha}_{\text{scale}}, \boldsymbol{\beta}_{\text{modularity}}, \boldsymbol{\gamma}_{\text{recurrence}})$$
-   - *Can a procedural grammar extracted from C. elegans or the Drosophila larva be scaled up to 165,000 neurons and match MaleCNS?*
-   - *Does the mouse visual cortex share the same distance-decay exponent $\lambda$ as the fly optic lobe, differing only in hierarchical depth?*
+1. **The Organism Library Across Scales:**
+   Modern automated electron microscopy and volumetric reconstructions now span distinct phylogenetic lineages across orders of magnitude in neuron count:
+   - *Caenorhabditis elegans* (~302 neurons, ~7,000 synapses): The canonical compact reflex circuit.
+   - *Drosophila melanogaster* larva (~3,016 neurons, ~548,000 synapses): Larval sensory-motor coordination.
+   - *Drosophila melanogaster* adult (MaleCNS v1.0 & FlyWire, ~139,000–165,000 neurons, ~10M synapses): The full adult central nervous system featuring rich-club organization, recurring motifs, and modular neuropilar highways.
+   - Mouse visual cortex (MICrONS, >200,000 reconstructed cells, ~500M synapses): Mammalian laminar neocortex bridging structural connectivity and functional response properties.
 
-3. **Phylogenetic Transfer for Neuromorphic Reservoirs:**
-   If procedural rules capture conserved evolutionary principles of energy minimization and information gating, we can "synthesize" artificial brains of arbitrary size (1M to 1B nodes) that inherit the computational efficiency of biology without requiring electron microscopy of mammalian brains. We do not copy the anatomy; we execute its generative grammar.
+2. **The Cross-Scale Procedural Conservation Hypothesis:**
+   We avoid claiming an untestable "universal law" and instead formulate a rigorous, falsifiable hypothesis:
+   > **Cross-scale procedural conservation hypothesis:** after coarse-graining each nervous system into its native mesoscopic compartments, a low-dimensional family of generative rules predicts held-out topological and dynamical observables across species better than matched null models, without organism-specific refitting of the rule family.
+
+3. **From Connectome Compression to a Generative Neural Language:**
+   Under this formulation, the *Algorithmic Connectome* transcends the narrow task of "compressing the fly connectome." It defines a **compact generative language capable of describing families of nervous systems across scales**. This reframing motivates the autopoietic question of Section 7: *can an in silico nervous system infer and synthesize its own minimal description within this shared generative language?*
 
 ---
 
@@ -322,15 +322,35 @@ To empirically validate and falsify the claims of this position paper, we establ
      - **Semantic Bottleneck Replication (Text-Tagger):** $\mathcal{G}_{\text{SBM}}$ must preserve the domain-specific inductive bottleneck ($\text{macroAP} \in [0.11, 0.14]$).
 - **Significance:** Establishes a rigorous, pre-registrable Markov ruler without free parameters: macroscopic neuropilar routing alone accounts for both the temporal syntax of brain state switching and the semantic information bottleneck.
 
-### 8.3 Experiment 3: Cross-Species Procedural Transfer (Larva, Fly, Mouse)
-- **Objective:** Test if developmental procedural grammars extracted from one connectome can scale or transfer to another organism.
-- **Protocol (Primary Transfer Hypothesis: Evo-Devo Grammar Scaling):**
-  1. Extract SBM neuropil-affinity structures and distance-decay exponents $\lambda$ from smaller connectomes: the *Drosophila* larva (3,000 neurons, 548k synapses) and *C. elegans* (302 neurons, 7,000 synapses).
-  2. Scale the developmental procedural generator up to $N = 165,000$ neurons and evaluate its Markov transition divergence $\mathcal{D}_{\text{Markov}}$ against adult MaleCNS (projected onto the frozen adult biological codebook $\mathcal{C}^*_{\text{bio}}$).
-  3. **Prediction:** While unscaled random graphs fail catastrophically, conserved developmental scaling rules maintain stable stationary distributions $\boldsymbol{\pi}$ and structured transition dynamics across scales.
-- **Protocol (Secondary Exploratory Ablation: Mammalian Laminar Insertion):**
-  - Distinct from phylogenetic grammar transfer, we perform an exploratory architectural ablation: graft mammalian cortical laminar microcircuit motifs (MICrONS-derived feedback loops) into the fly reservoir.
-  - Evaluate whether inserting columnar/laminar feedback can break the dense semantic bottleneck without destroying baseline sensorimotor coherence.
+### 8.3 Experiment 3: Testing Cross-Scale Procedural Conservation Across Species
+- **Objective:** Subject the *Cross-Scale Procedural Conservation Hypothesis* to strict empirical falsification by testing whether a low-dimensional generative grammar extracted from one nervous system predicts held-out topological and dynamical invariants in another without species-specific refitting.
+- **Experimental Protocol in Three Levels:**
+  1. **Level 1: Native Biologically Grounded Mesoscopic Partitioning:**
+     To avoid inventing artificial anatomical homologies (e.g. equating insect neuropils with mammalian cortical layers), each nervous system is partitioned strictly according to its native biological mesoscale:
+     - *C. elegans* (~302 neurons): functional ganglia and circuit modules.
+     - *Drosophila* larva (~3,016 neurons): larval neuropils, brain lobes, and VNC segments.
+     - *Drosophila* adult (MaleCNS & FlyWire, ~139k–165k neurons): 78 canonical neuropils.
+     - Mouse visual cortex (MICrONS, >200,000 cells): 6 cortical layers $\times$ retinotopic visual areas / columnar subvolumes.
+     *The formal generative grammar transfers across species; anatomical homologies do not.*
+
+  2. **Level 2: Dimensionless Scale-Invariant Representations & Power-Law Scaling:**
+     Transform each mesoscopic traffic matrix into a dimensionless row-stochastic routing operator:
+     $$\widehat{\mathbf{M}} = \mathbf{D}_{\text{out}}^{-1} \mathbf{M}, \quad \text{where } D_{\text{out}, ii} = \sum_j M_{ij}$$
+     We compare scale-invariant topological observables across three orders of magnitude in $N$:
+     - Spectral gap $\Delta \lambda = 1 - |\lambda_2|$, mixing time $\tau_{\text{mix}}$, and leading spectral density profile.
+     - Graph modularity $Q$, transition entropy rate $H(\mathbf{T})$, and effective embedding dimensionality.
+     - *Scaling Hypothesis Formulation:* Rather than imposing an ad-hoc normalizer such as $\log N$, we explicitly formulate and test scaling hypotheses as power laws $q(N) \propto N^\alpha$, evaluating curve collapse across pre-registered alternative normalizations.
+
+  3. **Level 3: Predictive Cross-Scale Transfer Without Refitting:**
+     We execute directional out-of-distribution transfer:
+     $$\mathcal{P}_{\text{larva}}(\boldsymbol{\theta}) \xrightarrow{\text{scale } N} \mathcal{G}_{\text{adult}}^{\text{pred}}$$
+     and evaluate whether the un-refitted predicted graph $\mathcal{G}_{\text{adult}}^{\text{pred}}$ matches empirical adult MaleCNS/FlyWire properties.
+     - *Strict Matched Null Controls:* Baselines include not only Erdős–Rényi graphs, but strictly constrained null models preserving degree sequences, density, block partitions, and spatial distance-decay kernels.
+     - *Falsification Criterion:* If the procedural grammar $\mathcal{P}_{\text{larva}}$ transferred to adult scale fails to predict held-out adult observables (spectral gap, modularity, and Markov stationary entropy $\boldsymbol{\pi}$) significantly better than the matched null controls, the Cross-Scale Procedural Conservation Hypothesis is rejected.
+
+- **Secondary Exploratory Ablation (Cortical Laminar Loop Insertion):**
+  - Treated as an independent architectural ablation rather than evidence of phylogenetic transfer: graft mammalian cortical laminar microcircuit motifs (MICrONS-derived feedback loops) into the fly reservoir.
+  - Test whether columnar/laminar feedback can break the dense semantic bottleneck without destabilizing baseline sensorimotor evasion dynamics.
 
 ### 8.4 Experiment 4: Closed-Loop Autopoietic Neural Morphogenesis
 - **Objective:** Operational demonstration of a computational MaleCNS connectome model acting as the self-compiler of its own procedural surrogate.
@@ -347,7 +367,9 @@ To empirically validate and falsify the claims of this position paper, we establ
 ## References
 
 1. Schlegel, P., et al. (2024). Whole-brain connectome of *Drosophila melanogaster*. *Nature*, 634, 139–152.
-2. Watts, D. J., & Strogatz, S. H. (1998). Collective dynamics of 'small-world' networks. *Nature*, 393(6684), 440–442.
-3. Jaeger, H. (2001). The "echo state" approach to analysing and training recurrent neural networks. *GMD Report 148*.
-4. Baldo, F. (2026). MaleCNS Reservoir — Compile, Control and Document-Task Protocol v1. *Papers / Experiments / MaleCNS*.
-5. Franke, K., et al. (2024). Universal principles of axonal wiring and developmental economy across insect central complexes. *Current Biology*.
+2. Dorkenwald, S., et al. (2024). Neuronal wiring diagram of an adult brain. *Nature*, 634, 124–138.
+3. Watts, D. J., & Strogatz, S. H. (1998). Collective dynamics of 'small-world' networks. *Nature*, 393(6684), 440–442.
+4. Jaeger, H. (2001). The "echo state" approach to analysing and training recurrent neural networks. *GMD Report 148*.
+5. Baldo, F. (2026). MaleCNS Reservoir — Compile, Control and Document-Task Protocol v1. *Papers / Experiments / MaleCNS*.
+6. Franke, K., et al. (2024). Universal principles of axonal wiring and developmental economy across insect central complexes. *Current Biology*.
+7. The MICrONS Consortium (2021). Functional connectomics spanning multiple areas of mouse visual cortex. *bioRxiv / Nature*.
