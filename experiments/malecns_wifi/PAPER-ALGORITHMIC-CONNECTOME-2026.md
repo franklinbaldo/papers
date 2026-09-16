@@ -206,10 +206,7 @@ A profound implication of algorithmic connectomics is **cross-species procedural
 The ultimate instantiation of this paradigm is an **autopoietic self-replacement loop**:  
 *Can the living MaleCNS connectome actively parameterize and control the procedural engine that synthesizes its own replacement, transferring its functional identity without behavioral loss?*
 
-The ultimate instantiation of this paradigm is an **autopoietic self-replacement loop**:  
-*Can the living MaleCNS connectome actively parameterize and control the procedural engine that synthesizes its own replacement, transferring its functional identity without behavioral loss?*
-
-Critically, **the primary continuous supervisor of this synthesis is not an external environment (FlyDoom), but the brain's own intrinsic neural activity manifold.** Simulation in an external behavioral simulator is computationally expensive and captures only low-dimensional outputs (steering, collisions). Instead, the synthetic connectome is continuously optimized to reproduce the **high-dimensional latent dynamics and representational geometry** of the real brain, with behavioral tasks evaluated only as sparse, downstream verification gates.
+Critically, **the primary continuous supervisor of this synthesis is not an external environment (FlyDoom), but the brain's own intrinsic neural activity manifold.** Simulation in an external behavioral simulator is computationally expensive and captures only low-dimensional outputs (steering, collisions). Instead, the synthetic connectome is continuously optimized to reproduce the **high-dimensional latent dynamics and stochastic transition operators** of the real brain, with behavioral tasks evaluated only as sparse, downstream verification gates.
 
 ```
                   ┌───────────────────────────────────────────────────────────┐
@@ -220,9 +217,8 @@ Critically, **the primary continuous supervisor of this synthesis is not an exte
              Latent Manifold    │                             │ Output Control
              Signature:         ▼                             ▼ θ_t = R(h_t)
             H_bio = {x_t} ──► [ DENSE CONTINUOUS ] ◄── H_syn  │
-                              [ MANIFOLD ARBITER ]            │
-                              [  (Wasserstein /  ]            │
-                              [     CKA / RSA)   ]            ▼
+                              [ MARKOV & MANIFOLD]            │
+                              [     ARBITER      ]            ▼
                                       │              ┌────────────────────────┐
                              Divergence Loss         │ Procedural Generator   │
                              ∇_θ L_intrinsic ──────► │ P(θ): SBM + Dist + Rew │
@@ -270,15 +266,63 @@ This decouples the optimization from simulation engine overhead:
 - **Optimization Loop:** 100% analytical Markov Chain and spectral divergence matching.
 - **Verification Gate:** Rare, sanity-check deployment in the sensorimotor world.
 
-
 ### 7.3 Epistemological Consequence: Neural Substrate Independence
 By using the brain's internal activity manifold as the arbiter, we decouple functional identity from both physical anatomy and specific environments:
 - The synthetic graph $\mathcal{G}^*$ does not copy synapses; it captures the **invariable dynamical manifold** that generates the organism's thoughts, reflexes, and states.
 - The MaleCNS acts as an **autopoietic compiler**: it compresses its own 10-million-synapse anatomy into a low-dimensional generative code $\boldsymbol{\theta}$, proves that its internal dynamics are preserved, and confirms survival in the external world.
 
 
-
 ---
+
+## 8. Experimental Roadmap: Four Concrete Designs
+
+To empirically validate and falsify the claims of this position paper, we establish four targeted experimental designs:
+
+```
+  ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+  │  EXPERIMENT 1   │       │  EXPERIMENT 2   │       │  EXPERIMENT 3   │       │  EXPERIMENT 4   │
+  │ Massive-Scale   ├──────►│ SBM Neuropil    ├──────►│ Markov Chain    ├──────►│ Autopoietic     │
+  │ MultiEURLEX 62k │       │ Procedural Graph│       │ Analytical Loss │       │ Closed Loop     │
+  │ (MTEB Benchmark)│       │ (1,600x Compress│       │ (T_bio vs T_syn)│       │ (Self-Compiler) │
+  └─────────────────┘       └─────────────────┘       └─────────────────┘       └─────────────────┘
+```
+
+### 8.1 Experiment 1: The Massive-Scale MultiEURLEX-21 Benchmark
+- **Objective:** Eliminate sample-size and corpus-formulaicity caveats by testing the biological bottleneck on a standardized international benchmark.
+- **Corpus & Scale:** MultiEURLEX Portuguese legal subset (`mteb/eurlex-multilingual`, cached at `franklinbaldo/multieurlex21-pt-semantic-cache`), comprising **62,370 documents**, **120,590 chunks**, and 21 EuroVoc labels. Precomputed 768-dimensional dual embeddings (MiniLM-L12-v2 + e5-small).
+- **Protocol:** Evaluate a frozen sample of 1,000 test chunks across `direct_raw`, `malecns`, `degree_null`, and intermediate rewiring points ($p \in \{0.10, 0.50\}$).
+- **Falsification Criterion:** If the performance gap between `degree_null` and `malecns` evaporates at scale ($\Delta \to 0$), the bottleneck was a sample-size artifact. If `degree_null` maintains its $\approx 2\times$ superiority, the Law of Topological Coupling is established as a general principle of dense semantic processing.
+
+### 8.2 Experiment 2: The Neuropilar SBM Procedural Graph (1,600x Compression)
+- **Objective:** Determine if a coarse $78 \times 78$ block-affinity traffic matrix between anatomical neuropils can replace 10 million individual empirical synapses without losing biological inductive biases.
+- **Protocol:**
+  1. Compute the empirical inter-neuropil transition probability matrix $\mathbf{M} \in [0, 1]^{78 \times 78}$ from `graph.npz`.
+  2. Sample synthetic adjacency graphs $\mathcal{G}_{\text{SBM}}$ parameterized solely by $\mathbf{M}$ and marginal in/out-degree sequences.
+  3. Evaluate $\mathcal{G}_{\text{SBM}}$ in parallel on:
+     - **Text-Tagger:** Must replicate the restricted dispersion ($\text{macroAP} \in [0.11, 0.14]$).
+     - **FlyDoom:** Must preserve closed-loop steering and surpass unstructured controls ($>90\%$ evasion).
+- **Significance:** Achieves a ~1,600-fold parameter compression, demonstrating that macroscopic compartment traffic accounts for the fly's behavioral competence and semantic bottleneck.
+
+### 8.3 Experiment 3: Analytical Markov Chain Operator Divergence
+- **Objective:** Eliminate the need for computationally heavy 3D physics engines (FlyDoom) by using the brain's internal stochastic jump process as the arbiter.
+- **Protocol:**
+  1. Drive both the empirical MaleCNS and candidate procedural graphs with identical pink-noise sensory streams across 10,000 steps.
+  2. Discretize neural population trajectories into $K = 64$ metastable microstates via spherical vector quantization.
+  3. Construct the empirical transition probability matrix $\mathbf{T}_{\text{bio}} \in \mathbb{R}^{64 \times 64}$ and stationary distribution $\boldsymbol{\pi}_{\text{bio}}$.
+  4. Measure divergence against candidate procedural topologies:
+     $$\mathcal{D}_{\text{Markov}} = \|\mathbf{T}_{\text{bio}} - \mathbf{T}_{\text{syn}}\|_F^2 + D_{\text{KL}}(\boldsymbol{\pi}_{\text{bio}} \,\|\, \boldsymbol{\pi}_{\text{syn}})$$
+- **Prediction:** While `degree_null` displays an isotropic, near-uniform transition matrix (high $\mathcal{D}_{\text{Markov}}$), biologically faithful procedural models (SBM + $\lambda$-decay) converge toward $\mathcal{D}_{\text{Markov}} \approx 0$, preserving the temporal syntax of brain states analytically in milliseconds.
+
+### 8.4 Experiment 4: Closed-Loop Autopoietic Neural Morphogenesis
+- **Objective:** Operational demonstration of a living connectome acting as the self-compiler of its own procedural successor.
+- **Protocol:**
+  1. Wire the 1,314 descending motor neurons of MaleCNS through a linear readout layer to parameterize the procedural compiler: $\boldsymbol{\theta}_t = \sigma(\mathbf{W}_{\text{readout}} \cdot \mathbf{h}_{\text{descending}})$.
+  2. $\boldsymbol{\theta}_t$ directly modulates the SBM matrix $\mathbf{M}$, spatial projection scale $\lambda$, and shortcut density $p$.
+  3. Optimize $\mathbf{W}_{\text{readout}}$ via evolution strategy (CMA-ES) to minimize:
+     $$\mathcal{L} = \mathcal{D}_{\text{Markov}}(\mathbf{T}_{\text{bio}}, \mathbf{T}^*(\boldsymbol{\theta})) + \beta \cdot \text{Cost}(\mathcal{G}^*)$$
+  4. Deploy the converged synthetic network $\mathcal{G}^*$ to the sparse behavioral verification gate (FlyDoom evasion $\ge 95\%$).
+- **Significance:** Demonstrates functional substrate independence: the organism actively compiles a minimal procedural specification of its own computational identity.
+
 
 ## References
 
