@@ -1,17 +1,16 @@
 ---
-type: "Research Paper / Proposal"
+type: "Scientific Position Paper"
 title: "The Algorithmic Connectome: Replacing Biological Neural Wiring with Procedural Topologies"
-subtitle: "From Empirical Electron Microscopy to Generative Developmental Rules in Whole-Brain Reservoirs"
-author: "Franklin Baldo"
-date: "2026-09-16"
-status: "Draft / Working Paper"
-tags: [connectomics, drosophila, malecns, procedural-generation, stochastic-block-model, small-world, reservoir-computing, inductive-bias]
+description: "Position paper deriving the Algorithmic Connectome hypothesis: substituting empirical electron-microscopy wiring matrices with compact parameterized developmental rules evaluated across native and reservoir tasks."
+tags: [malecns, drosophila, connectome, procedural-generation, stochastic-block-model, small-world, reservoir-computing, inductive-bias]
+timestamp: 2026-09-16T09:00:00-04:00
 ---
 
 # The Algorithmic Connectome: Replacing Biological Neural Wiring with Procedural Topologies
 
 **Franklin Baldo**  
 *September 2026*
+
 
 ---
 
@@ -81,11 +80,11 @@ This construction ensures that for all $p \in [0, 1]$:
 - At $p = 0.0$: $\mathbf{W}_{0} \equiv \mathbf{W}_{\text{malecns}}$ (intact biology).
 - At $p = 1.0$: $\mathbf{W}_{1} \equiv \mathbf{W}_{\text{degree\_null}}$ (configuration model).
 
-### 3.2 Empirical Trajectory ($p$-Sweep Results)
-Evaluating on the audited nested cross-validation benchmark (17 documents, 355 chunks, 9 legal semantic tags, 7-point gain grid $\rho \in [0.0, 4.0]$), we observe:
+### 3.2 Empirical Trajectory ($p$-Sweep Pilot)
+Evaluating on the audited nested cross-validation benchmark (17 documents, 355 chunks, 9 legal semantic tags, 7-point gain grid $\rho \in [0.0, 4.0]$, 3 paired seeds `0, 1, 2`, cached run hash `5aa49652c533ab74336d`, raw results in `artifacts/runtime-v1/rewiring-sweep-pilot.json`), we observe:
 
 | Rewiring Fraction ($p$) | State | Mean macroAP | sd | anyAUPRC | Recurrence Gain ($\Delta_{\text{rec}}$) |
-| :---: | :---: | :---: | :---: | :---: | :---: |
+| :---: | :--- | :---: | :---: | :---: | :---: |
 | **$p = 0.00$** | Pure MaleCNS | **0.120** | 0.037 | 0.413 | +0.086 |
 | **$p = 0.01$** | 1% Perturbation | **0.123** | 0.017 | 0.392 | +0.089 |
 | **$p = 0.05$** | 5% Small-World | **0.122** | 0.024 | 0.347 | +0.087 |
@@ -94,14 +93,19 @@ Evaluating on the audited nested cross-validation benchmark (17 documents, 355 c
 | **$p = 0.50$** | 50% Hybrid | **0.187** | 0.038 | 0.476 | +0.153 |
 | **$p = 1.00$** | Full Degree Null | **0.227** | 0.060 | 0.529 | **+0.193** |
 
-#### Crucial Finding: The Sigmoidal Transition of Biological Modularity
-Unlike idealized theoretical lattice networks where a tiny 5% rewiring fraction triggers an immediate collapse in characteristic path length (the classical Watts-Strogatz small-world transition), **the MaleCNS connectome shows total topological resilience up to $p = 0.10$**. 
+*Note on degree preservation:* As in the canonical configuration model, `partial_degree_preserving_null` strictly preserves degree multisets and presynaptic signs prior to CSR reconstruction; duplicate parallel edges created by random target assignment are merged additively (`merged_parallel_edges`), conserving outgoing synaptic mass per neuron.
 
-Its performance remains stubbornly pinned at $\approx 0.114 - 0.123$ with recurrence gain $\approx +0.08$. The functional transition is **sigmoidal and macroscopic**:
-- At $p \le 0.10$: The biological mesoscale compartments (neuropils) completely buffer and extinguish random shortcut dispersion.
-- At $p = 0.25$: Initial percolation begins ($\text{macroAP} = 0.130$).
-- At $p = 0.50$: A sharp phase transition occurs ($\text{macroAP} = 0.187$, recovering 70% of recurrence capacity).
-- At $p = 1.00$: Full unconstrained dispersion is unlocked ($\text{macroAP} = 0.227$, $\Delta_{\text{rec}} = +0.193$).
+#### Analysis: The Apparent Sigmoidal Transition of Biological Modularity
+Unlike idealized theoretical lattice networks where a tiny 5% rewiring fraction triggers an immediate collapse in characteristic path length (the classical Watts-Strogatz small-world transition), **the MaleCNS connectome exhibits functional buffering up to $p = 0.10$**. 
+
+Its performance remains stable at $\approx 0.114 - 0.123$ with recurrence gain $\approx +0.08$. The observed trajectory is consistent with a **sigmoidal transition**:
+- At $p \le 0.10$: The biological mesoscale compartments (neuropils) appear to buffer and extinguish random shortcut dispersion, maintaining the domain-specific bottleneck.
+- At $p = 0.25$: Initial percolation becomes detectable ($\text{macroAP} = 0.130$).
+- At $p = 0.50$: A substantial gain in dispersion emerges ($\text{macroAP} = 0.187$, recovering ~70% of recurrence capacity).
+- At $p = 1.00$: Unconstrained null dispersion is reached ($\text{macroAP} = 0.227$, $\Delta_{\text{rec}} = +0.193$).
+
+*Epistemic boundary:* While consistent with mesoscale compartmentalization, this pilot sweep identifies functional decoupling rather than direct anatomical causality. Confirmatory 10-seed expansion and targeted neuropil ablation remain necessary to isolate the specific anatomical tracts responsible for this buffering.
+
 
 
 ---
