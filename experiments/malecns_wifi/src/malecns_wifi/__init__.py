@@ -8,6 +8,14 @@ from .characterize import (
     spectral_radius,
     summary_table,
 )
+from .closed_loop_translation import (
+    FeedbackMode,
+    TranslationSpec,
+    build_substrate,
+    bulk_gain,
+    run_loop,
+    select_ports,
+)
 from .compiler import CompilePolicy, compile_connectome, source_spec
 from .tagger import (
     CLASSES,
@@ -21,9 +29,23 @@ from .tagger import (
     select_populations,
 )
 from .runtime import load_graph, smoke_reservoir
+from .translation_metrics import centroid_baseline, score_prediction, score_trajectory
+from .translation_pairs import build_cache, load_cache, split_indices
 
 __all__ = [
     "CLASSES",
+    "FeedbackMode",
+    "TranslationSpec",
+    "build_cache",
+    "build_substrate",
+    "bulk_gain",
+    "centroid_baseline",
+    "load_cache",
+    "run_loop",
+    "score_prediction",
+    "score_trajectory",
+    "select_ports",
+    "split_indices",
     "CharacterizeSpec",
     "CompilePolicy",
     "Document",

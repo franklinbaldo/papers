@@ -19,6 +19,9 @@ dev = ["pytest>=8"]
 # the characterisation all run on CPU with numpy/scipy alone, so torch stays out
 # of the default install.
 train = ["torch>=2.4"]
+# Closed-loop embedding translation: two frozen sentence encoders and a public
+# corpus to encode once. The connectome side needs nothing beyond `train`.
+translate = ["sentence-transformers>=5,<6", "datasets>=3", "huggingface_hub>=0.30"]
 # The MultiEURLEX staged pipeline: official MTEB evaluator, frozen sentence encoders,
 # Hub publishing of the semantic cache.
 mteb = ["mteb==2.20.11", "sentence-transformers>=5,<6", "huggingface_hub>=0.30", "psutil>=6", "wandb>=0.18"]
