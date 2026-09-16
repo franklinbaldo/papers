@@ -364,6 +364,79 @@ def degree_preserving_null(matrix: sp.csr_matrix, *, seed: int) -> tuple[sp.csr_
     return null, stats
 
 
+def partial_degree_preserving_null(
+    matrix: sp.csr_matrix, *, p: float, seed: int
+) -> tuple[sp.csr_matrix, dict]:
+    """Directed configuration model on a subset p of edges: rewire a fraction p of targets.
+
+    For p = 0.0, returns an exact copy of the input matrix.
+    For p = 1.0, is equivalent to :func:`degree_preserving_null`.
+    For 0 < p < 1, exactly floor(p * nnz) edges are randomly chosen and their
+    postsynaptic endpoints permuted among themselves. The remaining (1 - p) edges
+    remain untouched. Both in-degree and out-degree are preserved per neuron.
+    """
+    if not 0.0 <= p <= 1.0:
+        raise ValueError(f"rewiring fraction p must be in [0, 1], got {p}")
+
+    if p == 0.0:
+        stats = {
+            "kind": "partial degree-preserving null (p=0, identity)",
+            "p": 0.0,
+            "seed": seed,
+            "edges_before_merge": int(matrix.nnz),
+            "edges": int(matrix.nnz),
+            "rewired_edges": 0,
+            "merged_parallel_edges": 0,
+            "self_loops": int((matrix.diagonal() != 0).sum()),
+            "in_degree_preserved": True,
+            "out_degree_preserved": True,
+            "preserves": ["in_degree", "out_degree", "weight_multiset", "presynaptic_sign"],
+            "note": "no rewiring applied (p=0)",
+        }
+        return matrix.copy(), stats
+
+    coo = matrix.tocoo()
+    nnz = coo.nnz
+    rng = np.random.default_rng(seed)
+
+    k = int(round(p * nnz))
+    k = max(0, min(nnz, k))
+
+    rewired_rows = coo.row.copy()
+    if k > 0:
+        perm_subset_idx = rng.choice(nnz, size=k, replace=False)
+        subset_rows = rewired_rows[perm_subset_idx]
+        rewired_rows[perm_subset_idx] = rng.permutation(subset_rows)
+
+    self_loops = int((rewired_rows == coo.col).sum())
+    null = sp.csr_matrix((coo.data, (rewired_rows, coo.col)), shape=matrix.shape, dtype=np.float32)
+    null.sum_duplicates()
+
+    n = matrix.shape[0]
+    in_degree_preserved = bool(
+        np.array_equal(np.bincount(coo.row, minlength=n), np.bincount(rewired_rows, minlength=n))
+    )
+    stats = {
+        "kind": f"partial degree-preserving null (p={p:.4f})",
+        "p": float(p),
+        "seed": seed,
+        "edges_before_merge": int(coo.nnz),
+        "edges": int(null.nnz),
+        "rewired_edges": k,
+        "merged_parallel_edges": int(coo.nnz - null.nnz),
+        "self_loops": self_loops,
+        "in_degree_preserved": in_degree_preserved,
+        "out_degree_preserved": True,
+        "preserves": ["in_degree", "out_degree", "weight_multiset", "presynaptic_sign"],
+        "note": (
+            f"Rewired {k}/{nnz} edges ({p*100:.2f}%). Degrees are exact before rebuild; "
+            "merged_parallel_edges counts pairs that landed on the same (post, pre) cell."
+        ),
+    }
+    return null, stats
+
+
+
 def random_esn(matrix: sp.csr_matrix, *, seed: int) -> tuple[sp.csr_matrix, dict]:
     """Random sparse operator with the same density and the same weight multiset.
 
