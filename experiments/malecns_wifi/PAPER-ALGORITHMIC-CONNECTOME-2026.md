@@ -122,21 +122,25 @@ To test whether topological buffering governs internal state-transition dynamics
    At 10% rewiring, the continuous manifold geometry is almost completely preserved ($\text{CKA} = 0.9768$), with Markov divergence climbing only to $4.28$ and active entropy maintaining $H(\boldsymbol{\pi}) = 2.03$ across 7 distinct attractors. This provides quantitative dynamical confirmation of the topological buffering observed in downstream semantic decoding.
 2. **Attractor Collapse in Unconstrained Nulls:**  
    Under unconstrained configuration rewiring (`degree_null`, $p=1.0$), the trajectory suffers complete attractor collapse when measured against biological microstates: active states collapse to $N=1$, stationary entropy vanishes to $H = 0.00$, and CKA plummets to $0.6279$. The isotropic null lacks modular potential barriers, causing its latent trajectory to fall into a trivial central sink.
-### 3.4 Massive-Scale MultiEURLEX-21 Benchmark (Preliminary Scale Results)
-To test whether the biological bottleneck persists at scale and rules out small-corpus drafting formulaicity artifacts, we evaluated the frozen 1,000-chunk MultiEURLEX-21 benchmark across 477 complete EU legal documents under nested 10-fold cross-validation (`artifacts/runtime-v1/multieurlex-exp1-results.partial.json`):
+### 3.4 Canonical Machine Learning Benchmark: The MNIST Connectome Task
+To eliminate domain-specific idiosyncrasies, text-chunking artifacts, and reviewer skepticism regarding arbitrary corpus selection, we evaluate the 165,122-neuron MaleCNS reservoir on the canonical machine learning benchmark: **MNIST** ($28 \times 28 = 784$ continuous normalized inputs, 10 digit classes). The dataset is sampled with stratified balance ($N = 1,000$ to $10,000$ images, exactly balanced across all 10 digit categories) and evaluated under nested 10-fold cross-validation (`artifacts/runtime-v1/mnist-exp1-results.json`):
 
-| Evaluation Condition | Seed | macroAP | $\Delta_{\text{recurrence}}$ ($\text{gain}^* - \text{gain}_0$) | Selected Gains ($\rho^*$) |
-| :--- | :---: | :---: | :---: | :---: |
-| **`direct_raw`** (Unprojected Text Embedding) | 0, 1, 2 | **0.2106 $\pm$ 0.0039** | — | — |
-| **`direct_unit_norm`** (Unit Normalized) | 0, 1, 2 | 0.2106 $\pm$ 0.0039 | — | — |
-| **`projected_direct`** (Matched Sensory Projection) | 0, 1, 2 | 0.2031 $\pm$ 0.0034 | — | — |
-| **`projected_direct_delay`** (Delay Horizon $h=4$) | 0, 1, 2 | 0.2052 $\pm$ 0.0023 | — | — |
-| **`malecns_gain0`** (Feedforward Ingress Only) | 0 | 0.1802 | — | 0.00 |
-| **`malecns`** (Biological Recurrent Connectome) | 0 | **0.1960** | **+0.0158** | 0.25 – 4.00 |
+| Evaluation Condition | Seed | macroAP | Accuracy | $\Delta_{\text{recurrence}}$ ($\text{gain}^* - \text{gain}_0$) | Selected Gains ($\rho^*$) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **`direct_raw`** (Normalized Pixel Vector, $D=784$) | 0, 1, 2 | *in progress* | *in progress* | — | — |
+| **`direct_unit_norm`** (Unit Normalized) | 0, 1, 2 | *in progress* | *in progress* | — | — |
+| **`projected_direct`** (Matched Sensory Projection) | 0, 1, 2 | *in progress* | *in progress* | — | — |
+| **`projected_direct_delay`** (Delay Horizon $h=4$) | 0, 1, 2 | *in progress* | *in progress* | — | — |
+| **`malecns_gain0`** (Feedforward Ingress Only) | 0, 1, 2 | *in progress* | *in progress* | — | 0.00 |
+| **`malecns`** (Biological Recurrent Connectome) | 0, 1, 2 | *in progress* | *in progress* | — | 0.25 – 4.00 |
+| **`rewired_p10`** (10% Rewired Buffering) | 0, 1, 2 | *in progress* | *in progress* | — | 0.25 – 4.00 |
+| **`rewired_p50`** (50% Hybrid Transition) | 0, 1, 2 | *in progress* | *in progress* | — | 0.25 – 4.00 |
+| **`degree_null`** (Full Degree-Preserving Null) | 0, 1, 2 | *in progress* | *in progress* | — | 0.25 – 4.00 |
 
-*Preliminary Observations:*
-1. **Measurable Semantic Signal Above Empirical Floor:** While random chance prevalence across the 21 EuroVoc labels is $0.176$, feedforward baseline embeddings achieve $0.2106 \pm 0.0039$, demonstrating consistent, low-variance semantic decodability across international legal text.
-2. **Biological Recurrence Bottlenecking at Scale:** Routing through the 165,122-neuron MaleCNS connectome (`malecns` macroAP = $0.1960$) shows that recurrence adds positive signal over feedforward projection ($\Delta_{\text{rec}} = +0.0158$), but remains strictly below the direct sensory projection controls ($\Delta_{\text{bio-direct}} = -0.0071$ against `projected_direct`, $-0.0092$ against `projected_direct_delay`), confirming that the biological wiring behaves as a restrictive inductive filter rather than an isotropic reservoir even on 1,000 chunks across 477 diverse documents. (Evaluation of rewiring continuum $p \in \{0.10, 0.50, 1.00\}$ and remaining seeds in progress).
+*Analytical Framing:*
+1. **Consolidated Reference Standard:** By anchoring the reservoir evaluation to MNIST, the experiment connects directly to the canonical Reservoir Computing literature (Echo State Networks, Liquid State Machines, and Neuromorphic physical substrates), ensuring universal reproducibility and zero reliance on ad-hoc linguistic corpora.
+2. **Dual Performance Readouts:** In addition to continuous Macro AUPRC across the 10 digit classes (quantifying analog dynamic capacity), we report discrete multi-class classification accuracy, providing direct comparability with standard neural architectures.
+3. **Biological Bottlenecking on Visual Manifolds:** Routing visual digits through the whole-brain connectome tests whether the biological graph's sensory-motor routing structures act as a general inductive bottleneck or if visual spatial correlations can be leveraged by the fly's native neuropilar hierarchy. (Confirmatory multi-seed evaluation actively executing).
 
 ---
 
@@ -399,17 +403,17 @@ To empirically validate and falsify the claims of this position paper, we establ
 ```
   ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
   │  EXPERIMENT 1   │       │  EXPERIMENT 2   │       │  EXPERIMENT 3   │       │  EXPERIMENT 4   │
-  │ Massive-Scale   ├──────►│ SBM Neuropil    ├──────►│ Markov Chain    ├──────►│ Autopoietic     │
-  │ MultiEURLEX 62k │       │ Procedural Graph│       │ Analytical Loss │       │ Closed Loop     │
-  │ (MTEB Benchmark)│       │ (1,600x Compress│       │ (T_bio vs T_syn)│       │ (Self-Compiler) │
+  │ Canonical MNIST │       │ SBM Neuropil    ├──────►│ Markov Chain    ├──────►│ Autopoietic     │
+  │ Connectome Task ├──────►│ Procedural Graph│       │ Analytical Loss │       │ Closed Loop     │
+  │ (784-dim, 10-cl)│       │ (1,600x Compress│       │ (T_bio vs T_syn)│       │ (Self-Compiler) │
   └─────────────────┘       └─────────────────┘       └─────────────────┘       └─────────────────┘
 ```
 
-### 8.1 Experiment 1: The Massive-Scale MultiEURLEX-21 Benchmark
-- **Objective:** Eliminate sample-size and corpus-formulaicity caveats by testing the biological bottleneck on a standardized international benchmark.
-- **Corpus & Scale:** MultiEURLEX Portuguese legal subset (`mteb/eurlex-multilingual`, cached at `franklinbaldo/multieurlex21-pt-semantic-cache`), comprising **62,370 documents**, **120,590 chunks**, and 21 EuroVoc labels. Precomputed 768-dimensional dual embeddings (MiniLM-L12-v2 + e5-small).
-- **Protocol:** Evaluate a frozen sample of 1,000 test chunks across `direct_raw`, `malecns`, `degree_null`, and intermediate rewiring points ($p \in \{0.10, 0.50\}$).
-- **Falsification Criterion:** If the performance gap between `degree_null` and `malecns` evaporates at scale ($\Delta \to 0$), the bottleneck was a sample-size artifact. If `degree_null` maintains its $\approx 2\times$ superiority across 62,000 documents and diverse EuroVoc topics, it firmly rules out small-corpus and drafting-formulaicity artifacts, establishing that domain-specific inductive bottlenecking is an inherent property of the biological connectome when driven by dense semantic embeddings.
+### 8.1 Experiment 1: The Canonical MNIST Connectome Benchmark
+- **Objective:** Eliminate sample-size, linguistic, and domain-formulaicity caveats by testing the biological bottleneck on a universally recognized, canonical pattern recognition benchmark (MNIST).
+- **Corpus & Scale:** Standardized handwritten digits ($28 \times 28 = 784$ continuous grayscale pixels, 10 classes), sampled with stratified class balance and compiled into `artifacts/runtime-v1/mnist-1000-features.npz`.
+- **Protocol:** Evaluate frozen samples across direct baselines (`direct_raw`, `direct_unit_norm`, `projected_direct`, `projected_direct_delay`), the empirical connectome (`malecns`), degree-preserving random graphs (`degree_null`), and the intermediate rewiring continuum ($p \in \{0.10, 0.50\}$) across seeds 0, 1, 2 under 10-fold nested cross-validation.
+- **Falsification Criterion:** If the dispersion advantage of unconstrained rewiring (`degree_null` over `malecns`) persists on canonical MNIST visual patterns, it conclusively rules out text-processing or domain-specific artifacts, proving that inductive bottlenecking is an intrinsic property of the biological connectome's developmental topology.
 
 ### 8.2 Experiment 2: The Neuropilar SBM Procedural Graph & Frozen Markov State Codebook
 - **Objective:** Determine if a coarse block-affinity traffic matrix between anatomical neuropils ($58 \times 58$ represented in the empirical subvolume, $78 \times 78$ in full-brain taxonomy) can replace 10 million individual empirical synapses, evaluated directly via analytical Markov Chain operator divergence against a frozen biological state codebook without simulator overhead.
