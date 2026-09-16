@@ -1,5 +1,5 @@
 ---
-type: "Handoff Note"
+type: "Companion Note"
 title: "Handoff Operacional — MultiEURLEX Exp. 1 & Algorithmic Morphogenesis"
 description: "Transição de contexto operacional e metodológico para continuação da execução do Experimento 1 em outra máquina."
 tags: [malecns, handoff, multieurlex, exp1, algorithmic-connectome]
