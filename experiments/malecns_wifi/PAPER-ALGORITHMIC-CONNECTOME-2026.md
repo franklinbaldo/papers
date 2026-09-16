@@ -293,25 +293,24 @@ To empirically validate and falsify the claims of this position paper, we establ
 - **Protocol:** Evaluate a frozen sample of 1,000 test chunks across `direct_raw`, `malecns`, `degree_null`, and intermediate rewiring points ($p \in \{0.10, 0.50\}$).
 - **Falsification Criterion:** If the performance gap between `degree_null` and `malecns` evaporates at scale ($\Delta \to 0$), the bottleneck was a sample-size artifact. If `degree_null` maintains its $\approx 2\times$ superiority, the Law of Topological Coupling is established as a general principle of dense semantic processing.
 
-### 8.2 Experiment 2: The Neuropilar SBM Procedural Graph (1,600x Compression)
-- **Objective:** Determine if a coarse $78 \times 78$ block-affinity traffic matrix between anatomical neuropils can replace 10 million individual empirical synapses without losing biological inductive biases.
+### 8.2 Experiment 2: The Neuropilar SBM Procedural Graph & Markov Transition Operator
+- **Objective:** Determine if a coarse $78 \times 78$ block-affinity traffic matrix between anatomical neuropils can replace 10 million individual empirical synapses, evaluated directly via analytical Markov Chain operator divergence without relying on external simulators.
 - **Protocol:**
   1. Compute the empirical inter-neuropil transition probability matrix $\mathbf{M} \in [0, 1]^{78 \times 78}$ from `graph.npz`.
-  2. Sample synthetic adjacency graphs $\mathcal{G}_{\text{SBM}}$ parameterized solely by $\mathbf{M}$ and marginal in/out-degree sequences.
-  3. Evaluate $\mathcal{G}_{\text{SBM}}$ in parallel on:
-     - **Text-Tagger:** Must replicate the restricted dispersion ($\text{macroAP} \in [0.11, 0.14]$).
-     - **FlyDoom:** Must preserve closed-loop steering and surpass unstructured controls ($>90\%$ evasion).
-- **Significance:** Achieves a ~1,600-fold parameter compression, demonstrating that macroscopic compartment traffic accounts for the fly's behavioral competence and semantic bottleneck.
+  2. Sample synthetic adjacency graphs $\mathcal{G}_{\text{SBM}}$ parameterized solely by $\mathbf{M}$ and marginal in/out-degree sequences (a ~1,600-fold parameter compression).
+  3. Drive both the empirical MaleCNS and $\mathcal{G}_{\text{SBM}}$ with continuous sensory regimes and discretize trajectories into $K = 64$ metastable states to compute their respective transition matrices $\mathbf{T}_{\text{bio}}$ and $\mathbf{T}_{\text{SBM}}$.
+  4. Evaluate $\mathcal{G}_{\text{SBM}}$ across the dual criteria:
+     - **Dynamic Syntax Fidelity ($\mathcal{D}_{\text{Markov}}$):** $\mathcal{G}_{\text{SBM}}$ must closely match the empirical state-transition operator ($\|\mathbf{T}_{\text{bio}} - \mathbf{T}_{\text{SBM}}\|_F \to 0$ and $\text{KL}(\boldsymbol{\pi}_{\text{bio}} \,\|\, \boldsymbol{\pi}_{\text{SBM}}) \approx 0$), whereas unstructured random nulls (`degree_null`) produce isotropic, divergent transitions.
+     - **Semantic Bottleneck Replication (Text-Tagger):** $\mathcal{G}_{\text{SBM}}$ must preserve the domain-specific inductive bottleneck ($\text{macroAP} \in [0.11, 0.14]$).
+- **Significance:** Proves that the macroscopic neuropilar traffic alone accounts for both the temporal syntax of brain state switching and the semantic information bottleneck, eliminating 3D engine simulation overhead from procedural evaluation.
 
-### 8.3 Experiment 3: Analytical Markov Chain Operator Divergence
-- **Objective:** Eliminate the need for computationally heavy 3D physics engines (FlyDoom) by using the brain's internal stochastic jump process as the arbiter.
+### 8.3 Experiment 3: Cross-Species Procedural Transfer (Larva, Fly, Mouse)
+- **Objective:** Test if developmental procedural grammars extracted from one connectome can scale or transfer to another organism.
 - **Protocol:**
-  1. Drive both the empirical MaleCNS and candidate procedural graphs with identical pink-noise sensory streams across 10,000 steps.
-  2. Discretize neural population trajectories into $K = 64$ metastable microstates via spherical vector quantization.
-  3. Construct the empirical transition probability matrix $\mathbf{T}_{\text{bio}} \in \mathbb{R}^{64 \times 64}$ and stationary distribution $\boldsymbol{\pi}_{\text{bio}}$.
-  4. Measure divergence against candidate procedural topologies:
-     $$\mathcal{D}_{\text{Markov}} = \|\mathbf{T}_{\text{bio}} - \mathbf{T}_{\text{syn}}\|_F^2 + D_{\text{KL}}(\boldsymbol{\pi}_{\text{bio}} \,\|\, \boldsymbol{\pi}_{\text{syn}})$$
-- **Prediction:** While `degree_null` displays an isotropic, near-uniform transition matrix (high $\mathcal{D}_{\text{Markov}}$), biologically faithful procedural models (SBM + $\lambda$-decay) converge toward $\mathcal{D}_{\text{Markov}} \approx 0$, preserving the temporal syntax of brain states analytically in milliseconds.
+  1. Extract SBM and distance-decay exponents from the *Drosophila* larva (3,000 neurons, 548k synapses) and *C. elegans* (302 neurons, 7,000 synapses).
+  2. Scale the procedural generator up to $N = 165,000$ neurons and evaluate its Markov transition divergence $\mathcal{D}_{\text{Markov}}$ against adult MaleCNS.
+  3. Synthesize a hybrid connectome incorporating mammalian cortical laminar loops (MICrONS-derived) into the fly reservoir to test if laminar hierarchy breaks the semantic bottleneck.
+- **Prediction:** While unscaled random graphs fail catastrophically, conserved developmental rules maintain stable stationary distributions $\boldsymbol{\pi}$ and structured transition dynamics across scales.
 
 ### 8.4 Experiment 4: Closed-Loop Autopoietic Neural Morphogenesis
 - **Objective:** Operational demonstration of a living connectome acting as the self-compiler of its own procedural successor.
@@ -322,6 +321,7 @@ To empirically validate and falsify the claims of this position paper, we establ
      $$\mathcal{L} = \mathcal{D}_{\text{Markov}}(\mathbf{T}_{\text{bio}}, \mathbf{T}^*(\boldsymbol{\theta})) + \beta \cdot \text{Cost}(\mathcal{G}^*)$$
   4. Deploy the converged synthetic network $\mathcal{G}^*$ to the sparse behavioral verification gate (FlyDoom evasion $\ge 95\%$).
 - **Significance:** Demonstrates functional substrate independence: the organism actively compiles a minimal procedural specification of its own computational identity.
+
 
 
 ## References
