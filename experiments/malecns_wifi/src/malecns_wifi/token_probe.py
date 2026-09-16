@@ -116,6 +116,7 @@ class DescendingPoolClassifier:
         class_weight: str | None = "balanced",
         weight_decay: float = 1e-4,
         seed: int = 20260915,
+        span_reward_multiplier: float = 1.5,
         val_true_seqs: list[np.ndarray] | None = None,
         label_names: list[str] | None = None,
     ) -> DescendingPoolClassifier:
@@ -126,7 +127,14 @@ class DescendingPoolClassifier:
             for c in range(self.n_classes):
                 cnt = max(int(counts[c]), 1)
                 cw[c] = float(len(train_y) / (self.n_classes * cnt))
+            cw = np.clip(cw, 0.1, 15.0)
             cw = cw * (len(cw) / float(np.sum(cw)))
+
+        # Temporal span reward shaping: amplify dopamine signal for continuous multi-byte entity spans
+        span_mult = np.ones(len(train_y), dtype=np.float32)
+        if span_reward_multiplier != 1.0 and len(train_y) > 1:
+            entity_cont = (train_y[1:] > 0) & (train_y[1:] == train_y[:-1])
+            span_mult[1:][entity_cont] = span_reward_multiplier
 
         mw = np.zeros_like(self.weights)
         vw = np.zeros_like(self.weights)
@@ -152,7 +160,7 @@ class DescendingPoolClassifier:
 
                 T = np.zeros_like(probs)
                 T[np.arange(len(yb)), yb] = 1.0
-                sample_w = cw[yb][:, None]
+                sample_w = (cw[yb] * span_mult[b_idx])[:, None]
                 delta = (T - probs) * sample_w
 
                 grad_b = -delta.mean(axis=0)
@@ -221,6 +229,7 @@ def fit_probe(
     batch_size: int = 256,
     seed: int = 20260915,
     max_train_rows: int | None = None,
+    span_reward_multiplier: float = 1.5,
     val_true_seqs: list[np.ndarray] | None = None,
     label_names: list[str] | None = None,
 ) -> tuple[Any, Any, float]:
@@ -261,6 +270,7 @@ def fit_probe(
             lr=lr,
             batch_size=batch_size,
             seed=seed,
+            span_reward_multiplier=span_reward_multiplier,
             val_true_seqs=val_true_seqs,
             label_names=label_names,
         )

@@ -54,6 +54,12 @@ def main() -> None:
         default=0,
         help="cap on training BYTE rows used to fit the probe (0 disables the cap).",
     )
+    parser.add_argument(
+        "--span-reward-multiplier",
+        type=float,
+        default=1.5,
+        help="reward multiplier for contiguous multi-byte entity tokens",
+    )
     args = parser.parse_args()
     max_train_rows = args.max_train_rows or None
 
@@ -84,6 +90,7 @@ def main() -> None:
         lr=args.learning_rate,
         batch_size=args.batch_size,
         max_train_rows=max_train_rows,
+        span_reward_multiplier=args.span_reward_multiplier,
         val_true_seqs=val_true_seqs if val_true_seqs else None,
         label_names=label_names,
     )
