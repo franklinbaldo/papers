@@ -21,11 +21,18 @@ from .tagger import (
     select_populations,
 )
 from .runtime import load_graph, smoke_reservoir
+from .cache_spmv import (
+    CompactOperator4Bit,
+    CompactOperatorInt8,
+    make_pruned_matrix,
+)
 
 __all__ = [
     "CLASSES",
     "CharacterizeSpec",
     "CompilePolicy",
+    "CompactOperator4Bit",
+    "CompactOperatorInt8",
     "Document",
     "DriveSpec",
     "ReservoirSpec",
@@ -37,6 +44,7 @@ __all__ = [
     "label_noise",
     "load_corpus",
     "load_graph",
+    "make_pruned_matrix",
     "memory_capacity",
     "random_esn",
     "run_experiment",

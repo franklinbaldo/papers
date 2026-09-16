@@ -1,0 +1,44 @@
+// FlatBuffers Schema for MaleCNS Cache-Resident Connectome Model
+namespace MaleCNS;
+
+enum WeightFormat : byte {
+  Ternary158 = 0,
+  BitNet2Bit = 1,
+  Codebook4Bit = 2,
+  Int8Exact = 3,
+  TwoTierHybrid = 4
+}
+
+table ConnectomeModel {
+  version: string;
+  num_neurons: uint32;
+  total_edges: uint32;
+  format: WeightFormat;
+  threshold: uint32;
+
+  // Row offsets & scale normalisation
+  row_offsets: [uint32];
+  row_scales: [float32];
+
+  // Primary compact streams (Zero-Copy arrays)
+  deltas: [uint16];
+  weights_data: [uint8];
+  lut: [float32];
+
+  // Two-Tier Highway Projections
+  hw_offsets: [uint32];
+  hw_cols: [uint32];
+  hw_weights: [int8];
+
+  // Functional populations
+  input_indices: [uint32];
+  readout_indices: [uint32];
+
+  // Permutation mapping (Anatomical locality)
+  perm: [uint32];
+  inv_perm: [uint32];
+}
+
+root_type ConnectomeModel;
+file_identifier "MCNS";
+file_extension "mcns";
