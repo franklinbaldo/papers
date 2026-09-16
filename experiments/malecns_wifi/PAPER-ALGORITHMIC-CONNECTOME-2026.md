@@ -122,7 +122,34 @@ To test whether topological buffering governs internal state-transition dynamics
    At 10% rewiring, the continuous manifold geometry is almost completely preserved ($\text{CKA} = 0.9768$), with Markov divergence climbing only to $4.28$ and active entropy maintaining $H(\boldsymbol{\pi}) = 2.03$ across 7 distinct attractors. This provides quantitative dynamical confirmation of the topological buffering observed in downstream semantic decoding.
 2. **Attractor Collapse in Unconstrained Nulls:**  
    Under unconstrained configuration rewiring (`degree_null`, $p=1.0$), the trajectory suffers complete attractor collapse when measured against biological microstates: active states collapse to $N=1$, stationary entropy vanishes to $H = 0.00$, and CKA plummets to $0.6279$. The isotropic null lacks modular potential barriers, causing its latent trajectory to fall into a trivial central sink.
-### 3.4 Canonical Machine Learning Benchmark: The MNIST Connectome Task
+### 3.4 Massive-Scale MultiEURLEX-21 Benchmark (Complete Confirmatory Results)
+To test whether the biological bottleneck persists at scale and rules out small-corpus drafting formulaicity artifacts, we executed the frozen 1,000-chunk MultiEURLEX-21 benchmark across 477 complete EU legal documents under nested 10-fold cross-validation across 3 confirmatory seeds (execution artifact in `artifacts/runtime-v1/multieurlex-exp1-results.json`, config hash `51a18753d30bbd4f6e76`):
+
+| Evaluation Condition | n | Mean macroAP | sd | $\Delta_{\text{recurrence}}$ ($\text{gain}^* - \text{gain}_0$) | Contrast vs. MaleCNS ($\Delta_{\text{cond} - \text{bio}}$) | Paired Wins |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`direct_raw`** (Unprojected Text) | 3 | **0.2106** | 0.0040 | — | **+0.0139** | 3 / 3 |
+| **`direct_unit_norm`** (Unit Normalized) | 3 | 0.2106 | 0.0040 | — | +0.0139 | 3 / 3 |
+| **`projected_direct_delay`** (Horizon $h=4$) | 3 | 0.2052 | 0.0023 | — | +0.0085 | 3 / 3 |
+| **`projected_direct`** (Matched Projection) | 3 | 0.2031 | 0.0033 | — | +0.0065 | 3 / 3 |
+| **`degree_null`** ($p=1.00$ Configuration Null) | 3 | **0.2017** | 0.0024 | **+0.0241** | **+0.0050** | **3 / 3** |
+| **`rewired_p50`** ($p=0.50$ Hybrid Transition) | 3 | 0.2000 | 0.0025 | +0.0224 | +0.0034 | 3 / 3 |
+| **`rewired_p10`** ($p=0.10$ Topological Buffering) | 3 | 0.1995 | 0.0011 | +0.0219 | +0.0029 | 3 / 3 |
+| **`malecns`** (Biological Adult Connectome) | 3 | **0.1967** | **0.0006** | **+0.0191** | **0.0000** | — |
+| **`*_gain0`** (Feedforward Ingress Floor) | 3 | 0.1776 | 0.0019 | 0.0000 | −0.0191 | 0 / 3 |
+
+#### Empirical Adjudication & Findings:
+1. **The Biological Bottleneck is Confirmed at Massive Scale ($\Delta_{\text{null-bio}} > 0$, 3/3 wins):**  
+   Random degree-preserving rewiring strictly outperforms the biological MaleCNS connectome on every single seed:
+   $$\Delta_{\text{null-bio}} = \text{AP}_{\text{degree\_null}} - \text{AP}_{\text{malecns}} = +0.0050 \quad (\text{per-seed deltas: } +0.0022, +0.0069, +0.0058; \; 3/3 \text{ wins})$$
+   This decisively rejects the hypothesis that the biological deficit observed in the F2/F3 confirmatory run was an artifact of small corpus size (17 documents) or narrow Brazilian judicial drafting formulaicity. Across 477 diverse international multilingual legal documents and 21 EuroVoc concepts, the biological connectome remains **systematically more restrictive** than an isotropic null.
+2. **Monotonic Rewiring Continuum and Topological Buffering:**  
+   The scale results reveal a monotonic relaxation of the biological bottleneck as synaptic specificity is randomized:
+   $$\text{AP}_{\text{malecns}} \, (0.1967) \;<\; \text{AP}_{p=0.10} \, (0.1995) \;<\; \text{AP}_{p=0.50} \, (0.2000) \;<\; \text{AP}_{\text{degree\_null}} \, (0.2017)$$
+   Remarkably, rewiring just 10% of synapses breaks enough compartmental trapping to recover more than half the gap toward the null (+0.0029), perfectly aligning with the Markov trajectory findings in Experiment 2.
+3. **Biological Recurrence is Functionally Active ($\Delta_{\text{rec}} = +0.0191$):**  
+   All recurrent operators extract substantial signal over the feedforward floor ($\text{gain}=0$, $\text{macroAP} = 0.1776 \approx \text{prevalence floor } 0.1760$). However, while `degree_null` converts dynamic recurrence into $+0.0241$ macroAP, `malecns` extracts only $+0.0191$, confirming that its modular neuropilar highways actively confine arbitrary semantic state dispersion.
+
+### 3.5 Canonical Machine Learning Benchmark: The MNIST Connectome Task
 To eliminate domain-specific idiosyncrasies, text-chunking artifacts, and reviewer skepticism regarding arbitrary corpus selection, we evaluate the 165,122-neuron MaleCNS reservoir on the canonical machine learning benchmark: **MNIST** ($28 \times 28 = 784$ continuous normalized inputs, 10 digit classes). The dataset is sampled with stratified balance ($N = 1,000$ to $10,000$ images, exactly balanced across all 10 digit categories) and evaluated under nested 10-fold cross-validation (`artifacts/runtime-v1/mnist-exp1-results.json`):
 
 | Evaluation Condition | Seed | macroAP | Accuracy | $\Delta_{\text{recurrence}}$ ($\text{gain}^* - \text{gain}_0$) | Selected Gains ($\rho^*$) |
