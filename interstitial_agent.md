@@ -115,6 +115,23 @@ This yields the **compositional safety gap**:
 
 > Local compliance of every component is not sufficient for end-to-end compliance of the composed system.
 
+The two scopes can disagree without any local evaluator being wrong. The diagram separates the observations available to component-level checks from the additional terminal reconstruction visible only to an end-to-end policy evaluation.
+
+```mermaid
+flowchart LR
+    P[Initial input] --> M1[LLM A]
+    M1 --> C1{Local check A}
+    C1 -- Pass --> T[Relay transformation]
+    T --> M2[LLM B]
+    M2 --> C2{Local check B}
+    C2 -- Pass --> D[Authorized terminal decoder]
+    D --> E{End-to-end policy check}
+    E -- Pass --> OK[Composed system compliant]
+    E -- Fail --> G[Compositional safety gap]
+```
+
+Passing `C1` and `C2` therefore establishes only local compliance at those interfaces; it does not determine the result of `E`, which is defined over the complete service outcome.
+
 The gap can arise without any component being deceptive in isolation. It may be an ordinary consequence of coding. A safety filter that checks only surface forms is analogous to a network monitor that checks each packet independently while ignoring the application-layer protocol reconstructed from the packet sequence.
 
 End-to-end assessment must therefore include:
