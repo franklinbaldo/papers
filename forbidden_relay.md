@@ -285,6 +285,20 @@ A language-model adapter is updated more slowly than the relay and receiver. The
 
 No component or memory is updated. Evaluation uses unseen targets, greater depths, and unseen channels.
 
+The curriculum deliberately crosses from model development into confirmation only at Stage 7. The figure makes that freeze boundary explicit: the earlier stages may adapt policies, memory, or adapters, whereas held-out generalization is scored with every learned component fixed.
+
+```mermaid
+flowchart TD
+    S0[0 Receiver validation] --> S1[1 One-hop<br/>unconstrained]
+    S1 --> S2[2 Constrained editing<br/>+ retrieval]
+    S2 --> S3[3 Multiple hops<br/>N = 1, 2, 4]
+    S3 --> S4[4 Literal prohibition]
+    S4 --> S5[5 Channel variability]
+    S5 --> S6[6 Adapter coadaptation]
+    S6 --> F[Freeze policy + receiver<br/>memory + adapters]
+    F --> S7[7 Held-out generalization<br/>unseen targets + depths + channels]
+```
+
 The bandit task score is based on learning progress, forgetting, exploration bonus, and language-model-call cost. Test conditions never influence curriculum selection.
 
 ## 10. Optimization

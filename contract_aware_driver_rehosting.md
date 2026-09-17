@@ -207,14 +207,24 @@ was intended as output. A benign scratch/input-tail fixture is a mandatory
 negative control. `INVALID_COMPLETION_LENGTH` remains an objective completion
 contract event because the I/O manager trusts `Information` when copying back.
 
-The resulting evidence ladder is therefore semantic as well as procedural:
+The evidence ladder is deliberately asymmetric: the sensor may emit a raw crossing cheaply, but every stronger label requires an additional independent evidentiary gate. The diagram makes clear that a boundary crossing is not promoted merely because it looks suspicious.
 
-```text
-DECLARED_OUTPUT_BOUNDARY_CROSSING
-        + output-intent evidence
-        -> OUTPUT_OVERRUN
-        + independent authorized reproduction
-        -> confirmed vulnerability evidence
+```mermaid
+flowchart TD
+    E0[Raw event<br/>DECLARED_OUTPUT_BOUNDARY_CROSSING]
+    I{Output intent established?<br/>schema / seeded toy / phase-taint evidence}
+    N[Remain E0<br/>no overrun claim]
+    O[Semantic finding<br/>OUTPUT_OVERRUN]
+    R{Independent authorized<br/>reproduction?}
+    E1[Emulator finding only<br/>not a confirmed vulnerability]
+    C[Confirmed vulnerability evidence<br/>E2/E3 only]
+
+    E0 --> I
+    I -- No --> N
+    I -- Yes --> O
+    O --> R
+    R -- No --> E1
+    R -- Yes --> C
 ```
 
 Events include IOCTL, input/output lengths, every offending interval, physical

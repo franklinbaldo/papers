@@ -12,20 +12,16 @@ timestamp: 2026-08-01T23:12:00Z
 
 ## 1. Why these papers form one programme
 
-The open papers study different stages of one causal loop:
+The open papers study different stages of one causal loop. The figure separates the forward interaction path from the slower feedback by which accepted outputs alter later knowledge and curricula; it does not imply that any one paper explains the entire cycle.
 
-```text
-teacher or environment
-        ↓
-structured observations and demonstrations
-        ↓
-learner constructs representations and a protocol
-        ↓
-representations pass through agents, channels, and memories
-        ↓
-terminal competence, reconstruction, or discovery
-        ↓
-accepted outputs alter the knowledge and curriculum available later
+```mermaid
+flowchart TD
+    T[Teacher or environment] --> O[Structured observations<br/>and demonstrations]
+    O --> L[Learner constructs<br/>representations + protocol]
+    L --> C[Agents, channels,<br/>memories, and relays]
+    C --> R[Terminal competence,<br/>reconstruction, or discovery]
+    R --> K[Accepted outputs enter<br/>public knowledge / curriculum]
+    K -. "changes later inputs" .-> T
 ```
 
 No paper should be read as claiming the whole loop. Their value comes from keeping the levels separate while specifying how results at one level become assumptions or measurements at another.
