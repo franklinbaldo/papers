@@ -78,6 +78,22 @@ championship comparison achieve tractability under the abstraction
 instruction, as assessed by the Phase 3 calibration protocol
 (§2.7)?
 
+The three questions share one corpus but use different experimental slices and endpoints:
+
+```mermaid
+flowchart TD
+    C[TJRO corpus<br/>200 decisions / 5 subject clusters] --> R[RPPS subset<br/>30 decisions]
+    C --> F[Full corpus<br/>200 decisions]
+    R --> Q1[Q1: Pipeline vs simple vs elaborated LLM]
+    R --> Q2[Q2: Validity × persuasiveness diagnostic]
+    F --> Q3[Q3: ESHTR intra- vs cross-cluster comparison]
+    Q1 --> E1[Endpoint: procedural-validity difference]
+    Q2 --> E2[Endpoint: high-P / low-V pathology rate]
+    Q3 --> E3[Endpoints: κ shift + Phase 3 calibration]
+```
+
+This figure prevents the three preregistered claims from being conflated: Q1/Q2 use the same RPPS subset for pleading evaluation, whereas Q3 tests ranking reliability on the full heterogeneous corpus.
+
 ---
 
 ## 2. Experimental Design
