@@ -166,6 +166,19 @@ Concealment occurs when information is transformed so that no recovery path is s
 
 This taxonomy prevents a premature rule that all arbitrary identifiers or opaque codes are invalid. A free identifier can be part of a legitimate pedagogical language if its role becomes inferable through interaction. The relevant question is not whether the code looks arbitrary locally, but whether its structure is recoverable and useful for the learner within the teaching horizon.
 
+The taxonomy is operational rather than visual metaphor: the same initially unexplained event can move from "unresolved" to temporary opacity only when later evidence produces held-out predictive or task gain. The following decision path summarizes the tests that distinguish the categories under a stated horizon.
+
+```mermaid
+flowchart TD
+    A[Observed irregularity] --> B{Later structure yields held-out<br/>predictive or task gain?}
+    B -- Yes --> C[Temporary opacity<br/>structured signal]
+    B -- No --> D{Variation tracks a controlled<br/>channel intervention?}
+    D -- Yes --> E[Exogenous noise]
+    D -- No --> F{Pattern survives new samples,<br/>permutations, or probes?}
+    F -- No --> G[Accidental pattern]
+    F -- Yes --> H[Unresolved or concealed<br/>under the stated horizon]
+```
+
 ---
 
 ## 5. Progressive Decodability
