@@ -391,12 +391,13 @@ O mecanismo proposto é mais estreito do que uma substituição geral de reputa�
 ```mermaid
 flowchart TD
     Q[Qualidade argumentativa<br/>parcialmente latente] --> D[Verificação direta]
-    P[Proxies observáveis<br/>afiliação · histórico · titulação · network] --> R[Reputação esperada]
+    P[Proxies observáveis<br/>afiliação · histórico · titulação · network] --> W[Peso atribuído<br/>ao canal reputacional]
+    W --> R[Reputação esperada]
     D --> R
     R --> T[Atenção, confiança e resposta<br/>na interação jurídica]
 
     C[Redução tecnológica do custo<br/>de verificações textuais identificáveis] --> D
-    C -. pode reduzir peso relativo .-> P
+    C -. pode reduzir .-> W
     D --> L[Qualidade observada repetidamente<br/>no canal local]
     L --> R
     F[Sorteio · rodízio · assessoria] -. limita acumulação .-> L

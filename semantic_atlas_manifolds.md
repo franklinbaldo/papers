@@ -60,7 +60,7 @@ flowchart LR
     C --> Y[Lexical generation]
 ```
 
-The split is load-bearing: the SRF locates conceptual regions globally, while chart coordinates and support geometry describe motion inside them. Neither branch is claimed to be sufficient by itself, and the original point-space Atlas remains the matched baseline.
+The split is load-bearing: the SRF locates conceptual regions globally, while chart coordinates and support geometry describe motion inside them. Neither branch is claimed to be sufficient by itself; the testable object is their coordinated contribution to prediction, routing, and control.
 
 The original point-space Atlas is retained as a baseline throughout. If manifold structure does not improve prediction, compression, routing, or control, the extension should be rejected while the broader Semantic Atlas programme remains intact.
 

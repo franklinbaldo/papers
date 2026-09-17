@@ -226,8 +226,8 @@ flowchart LR
     E --> V[Version space V_H(E)]
     V --> X[Quotient by structural<br/>equivalence ~]
     X --> G{How many equivalence<br/>classes survive?}
-    G -- One: [A] --> I[Target identified up to ~]
-    G -- More than one --> U[Structurally unresolved]
+    G -->|One target class| I[Target identified up to ~]
+    G -->|Multiple classes| U[Structurally unresolved]
 ```
 
 The diagram also locates the observational-equivalence barrier proved below: if a non-equivalent competitor cannot be separated by any query in \(\mathcal Q\), no choice of \(E\subseteq\mathcal Q\) can remove its class before the quotient.
