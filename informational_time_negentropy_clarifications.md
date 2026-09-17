@@ -355,19 +355,15 @@ that history, but it remains an observer-relative representational instrument;
 symmetry identifies candidate invariants, and primitive prediction tests whether
 the inferred causal scale continues to earn its explanatory role.
 
-The resulting progression is:
+The resulting progression is an **evidential** progression, not a causal chain: each arrow denotes the extra evidence needed to justify a more structured explanatory model.
 
-$$
-\text{maximum-entropy null}
-\rightarrow
-\text{local fluctuation}
-\rightarrow
-\text{persistent structured law}
-\rightarrow
-\text{agent-level causal organization}
-\rightarrow
-\text{recognition of another agent}.
-$$
+```mermaid
+flowchart LR
+    M[Maximum-entropy null] -->|local order observed| F[Local fluctuation]
+    F -->|persistence + held-out prediction| L[Persistent structured law]
+    L -->|agent model beats complexity-matched law<br/>prospectively / under intervention| A[Agent-level causal organization]
+    A -->|advantage remains stable| R[Recognition of another agent<br/>at this causal scale]
+```
 
 Agency is the relational interpretation earned at the final step, not a synonym
 for order, predictability, or compressibility. The framework leaves open which

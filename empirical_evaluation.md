@@ -78,24 +78,25 @@ championship comparison achieve tractability under the abstraction
 instruction, as assessed by the Phase 3 calibration protocol
 (§2.7)?
 
-The three questions share one corpus, but their controls, comparison units, and endpoints differ. The figure makes those experimental boundaries explicit rather than treating Q1–Q3 as three labels on the same analysis.
+The three questions share one corpus, but their experimental units and manipulated contrasts differ. The figure makes the controls explicit: Q1–Q2 hold the judgment, blinding regime, rubric, and judge panel fixed while generation method changes; Q3 instead varies pair type and the Phase 2/Phase 3 instruction on the full corpus.
 
 ```mermaid
 flowchart TD
-    C[TJRO corpus<br/>200 decisions / 5 subject clusters] --> R[RPPS subset<br/>30 decisions]
-    C --> F[Full corpus<br/>200 decisions]
+    C[TJRO corpus<br/>200 decisions / 5 subject clusters] --> A[Arm A — Q1/Q2<br/>same 30 RPPS decisions]
+    C --> B[Arm B — Q3<br/>full 200 decisions]
 
-    R --> G[Generate 3 blinded conditions<br/>Pipeline / LLM-simple / LLM-elaborated]
-    G --> J[Heterogeneous blinded<br/>LLM judge panel]
-    J --> Q1[Q1: compare procedural validity<br/>across generation conditions]
-    J --> Q2[Q2: compare validity × persuasiveness<br/>within the same judged pleadings]
-    Q1 --> E1[Endpoint: Δ procedural validity]
-    Q2 --> E2[Endpoint: high-P / low-V rate]
+    A --> G[For each decision: generate 3 pleadings<br/>Pipeline / LLM-simple / LLM-elaborated]
+    G --> K[Held constant<br/>judgment + blinding + rubric + judge panel]
+    K --> Q1[Q1 manipulated contrast<br/>generation method]
+    K --> Q2[Q2 diagnostic contrast<br/>validity × persuasiveness]
+    Q1 --> E1[Endpoint<br/>Δ procedural validity]
+    Q2 --> E2[Endpoint<br/>high-P / low-V rate]
 
-    F --> CL[Embed + HDBSCAN clustering]
-    CL --> PA[100 intra-cluster +<br/>100 cross-cluster pairs]
-    PA --> Q3[Q3: pairwise judge agreement<br/>+ Phase 3 abstraction test]
-    Q3 --> E3[Endpoints: κ_intra vs κ_cross<br/>and M1 / M2 / M3 calibration]
+    B --> CL[Embed + HDBSCAN clustering]
+    CL --> PA[Pair type<br/>100 intra-cluster + 100 cross-cluster]
+    PA --> K3[Held constant<br/>judge panel + pairwise task]
+    K3 --> Q3[Q3 manipulated contrasts<br/>pair type + Phase 2/3 instruction]
+    Q3 --> E3[Endpoints<br/>κ_intra vs κ_cross + M1/M2/M3]
 ```
 
 Q1 and Q2 therefore share the RPPS pleading-generation experiment and blinding regime, while Q3 is a separate ranking-reliability experiment on the full heterogeneous corpus. The diagram also keeps design parameters distinct from results that have not yet been collected.
