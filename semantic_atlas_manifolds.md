@@ -45,12 +45,12 @@ The resulting architecture has two measurement scales that meet in the atlas rat
 ```mermaid
 flowchart LR
     H[Language-model activations] --> F[Concept-manifold featurizer]
-    F --> L[Local state\nactive charts + intrinsic coordinates]
-    H --> G[Global state\ncalibrated SRF position]
-    Q[Semantic quasars\nreference geometry] --> G
+    F --> L[Local state<br/>active charts + intrinsic coordinates]
+    H --> G[Global state<br/>calibrated SRF position]
+    Q[Semantic quasars<br/>reference geometry] --> G
     L --> A[Manifold-aware Semantic Atlas]
     G --> A
-    A --> S[Support graph + diffusion\n+ spectral observables]
+    A --> S[Support graph + diffusion<br/>+ spectral observables]
     A --> R[Inter-manifold route]
     A --> P[Intra-manifold path]
     S --> R

@@ -296,10 +296,10 @@ flowchart TD
     D[Órgão inferior diante de precedente vinculante] --> A{Afasta o precedente?}
     A -- Não --> AP[Aplica com demonstração de aderência]
     A -- Sim --> R{Expõe razões de distinção ou superação?}
-    R -- Não --> V[Vício de fundamentação\nart. 489 §1º VI]
+    R -- Não --> V[Vício de fundamentação<br/>art. 489 §1º VI]
     R -- Sim --> C[Reclamação leva as razões ao STF]
     C --> E{STF enfrenta as razões expostas?}
-    E -- Não --> O[Novo déficit de fundamentação\nna tese do artigo]
+    E -- Não --> O[Novo déficit de fundamentação<br/>na tese do artigo]
     E -- Sim --> M{Razões convencem no mérito?}
     M -- Não --> F[STF refuta e preserva o precedente]
     M -- Sim --> X[STF distingue ou revê o entendimento]

@@ -221,11 +221,11 @@ The definition is easiest to read as two successive reductions. Evidence removes
 
 ```mermaid
 flowchart LR
-    H[Hypothesis class H\ncandidate structures] --> E[Filter by sound evidence E ⊆ Q]
-    Q[Admissible invariant\nquery family Q] --> E
+    H[Hypothesis class H<br/>candidate structures] --> E[Filter by sound evidence E ⊆ Q]
+    Q[Admissible invariant<br/>query family Q] --> E
     E --> V[Version space V_H(E)]
-    V --> X[Quotient by structural\nequivalence ~]
-    X --> G{How many equivalence\nclasses survive?}
+    V --> X[Quotient by structural<br/>equivalence ~]
+    X --> G{How many equivalence<br/>classes survive?}
     G -- One: [A] --> I[Target identified up to ~]
     G -- More than one --> U[Structurally unresolved]
 ```

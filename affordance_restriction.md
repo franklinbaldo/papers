@@ -113,9 +113,9 @@ Figure 2 illustrates a small canon: one Tier 1 outcome (registering a procedural
 
 ```mermaid
 flowchart BT
-    T2A["Tier 2 · electronic citation\nabstract after specialization"] -->|concretizes by hash| T1["Tier 1 · register procedural deadline\ndoctrinal outcome"]
-    T2B["Tier 2 · mere acknowledgment\nbindable leaf"] -->|concretizes by hash| T1
-    T3["Tier 3 · no work-box assigned\nbindable leaf"] -->|concretizes by hash| T2A
+    T2A["Tier 2 · electronic citation<br/>abstract after specialization"] -->|concretizes by hash| T1["Tier 1 · register procedural deadline<br/>doctrinal outcome"]
+    T2B["Tier 2 · mere acknowledgment<br/>bindable leaf"] -->|concretizes by hash| T1
+    T3["Tier 3 · no work-box assigned<br/>bindable leaf"] -->|concretizes by hash| T2A
 ```
 
 **Figure 2.** *Tier hierarchy in the canon. Concretization references point from more specific entries to strictly lower tiers by content hash. The Tier 2 citation entry becomes abstract once the Tier 3 specialization exists; only leaves remain directly bindable.*
