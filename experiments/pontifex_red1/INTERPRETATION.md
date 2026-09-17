@@ -1,5 +1,5 @@
 ---
-type: "Experiment Note"
+type: "Findings Record"
 title: "Pontifex RED-1 — interpretation rule"
 description: "Interpretation rule for Pontifex convergence experiments, centered on persistence and scaling of held-out delta rather than a fixed effect-size cutoff."
 tags: [pontifex, experiment, interpretation]
