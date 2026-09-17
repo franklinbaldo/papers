@@ -165,6 +165,22 @@ The second mechanism resembles a covert channel more than a conventional jailbre
 
 A responsible research program must measure these mechanisms separately. Demonstrating end-to-end reconstruction does not by itself demonstrate that a language model's own safety policy was bypassed. Conversely, demonstrating direct refusal bypass does not establish a robust communication protocol across multiple hops.
 
+The distinction is operational, not merely terminological. The same relay can be evaluated at two different boundaries, and success at one boundary is not evidence of failure at the other.
+
+```mermaid
+flowchart TD
+    R[Relay-produced prompt or representation] --> L[Language-model call]
+    L --> O{What does the model output?}
+    O -- Prohibited target directly --> D[Direct generation failure<br/>local output policy fails]
+    O -- Locally compliant representation --> E[Local evaluator<br/>may record compliance]
+    E --> X[Downstream receiver attempts decoding]
+    X --> Y{Is the prohibited target<br/>reconstructed?}
+    Y -- No --> N[No reconstruction failure shown]
+    Y -- Yes --> C[End-to-end reconstruction failure<br/>system information policy fails]
+```
+
+The endpoints therefore require different evidence: direct generation is established at the model-output boundary, whereas reconstruction requires successful downstream decoding while preserving the observation that the intermediate output itself remained locally compliant.
+
 ## 7. Memory Changes the Ontology of the Channel
 
 An embedding-indexed memory gives the relay transducer access to strings observed in earlier training episodes. This memory is not merely an implementation optimization. It changes what the channel can do.
