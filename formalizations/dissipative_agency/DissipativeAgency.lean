@@ -131,7 +131,7 @@ def branchControl (c : ControlSignal) : CounterfactualBranch → Option ControlS
   | .free => none
 
 /-- Both branches inherit the same initial matter and the same exogenous noise. -/
-def branchState {α : Type}
+noncomputable def branchState {α : Type}
     (pair : PairedCounterfactual α)
     (branch : CounterfactualBranch) : List α :=
   step pair.members (branchControl pair.control branch) pair.noise
