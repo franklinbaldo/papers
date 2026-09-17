@@ -109,3 +109,50 @@ def test_memory_capacity_rejects_washout_shorter_than_max_lag() -> None:
     )
     with pytest.raises(ValueError, match="washout"):
         characterize_operator("bad", _cyclic_delay_line(8), spec)
+
+
+def test_partial_degree_preserving_null_preserves_degrees_and_scales_rewiring() -> None:
+    from malecns_wifi.characterize import partial_degree_preserving_null
+    import pytest
+
+    matrix = _random_sparse(n=100, density=0.1, seed=42)
+
+    # p = 0: identical
+    null_0, stats_0 = partial_degree_preserving_null(matrix, p=0.0, seed=1)
+    assert stats_0["rewired_edges"] == 0
+    assert (null_0 != matrix).nnz == 0
+
+    # p = 1: all edges rewired
+    null_1, stats_1 = partial_degree_preserving_null(matrix, p=1.0, seed=1)
+    assert stats_1["in_degree_preserved"]
+    assert stats_1["out_degree_preserved"]
+    assert stats_1["rewired_edges"] == matrix.nnz
+
+    # intermediate p values: degree preservation and monotonic rewiring
+    null_small, stats_small = partial_degree_preserving_null(matrix, p=0.10, seed=1)
+    null_large, stats_large = partial_degree_preserving_null(matrix, p=0.50, seed=1)
+
+    assert stats_small["in_degree_preserved"]
+    assert stats_small["out_degree_preserved"]
+    assert stats_large["in_degree_preserved"]
+    assert stats_large["out_degree_preserved"]
+
+    # column sums (out-degree mass) preserved exactly
+    assert np.allclose(_column_sums(matrix), _column_sums(null_small), atol=1e-4)
+    assert np.allclose(_column_sums(matrix), _column_sums(null_large), atol=1e-4)
+
+    # Overlap with original matrix should decrease as p increases
+    overlap_0 = (matrix != 0).multiply(null_0 != 0).nnz
+    overlap_small = (matrix != 0).multiply(null_small != 0).nnz
+    overlap_large = (matrix != 0).multiply(null_large != 0).nnz
+    overlap_1 = (matrix != 0).multiply(null_1 != 0).nnz
+
+    assert overlap_0 == matrix.nnz
+    assert overlap_0 > overlap_small > overlap_large > overlap_1
+
+    # invalid p values raise ValueError
+    with pytest.raises(ValueError, match="rewiring fraction p"):
+        partial_degree_preserving_null(matrix, p=-0.1, seed=1)
+    with pytest.raises(ValueError, match="rewiring fraction p"):
+        partial_degree_preserving_null(matrix, p=1.1, seed=1)
+
