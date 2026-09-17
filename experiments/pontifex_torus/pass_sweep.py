@@ -141,7 +141,7 @@ def main():
     args = ap.parse_args()
 
     texts = make_texts(args.texts, args.field_seed)
-    rows = build_rows(texts, args.positions, args.field_seed)
+    rows = load_rows(args.field_store) if args.field_store else build_rows(texts, args.positions, args.field_seed)
 
     records = []
     for seed in args.seeds:
