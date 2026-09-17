@@ -112,6 +112,21 @@ history that follows it. Evidence accumulates when the structure:
 4. maintains, repairs, reproduces, or transforms its organization;
 5. continues to yield out-of-sample predictive gain as new interaction arrives.
 
+The evidential logic is temporal: one organized observation is compatible with a rare fluctuation, whereas persistence, prediction, and intervention-sensitive response progressively stress that account.
+
+```mermaid
+flowchart LR
+    O[Observed local order] --> F[Fluctuation account remains viable]
+    F --> H[Observe continuation]
+    H --> P{Persistence and<br/>out-of-sample prediction?}
+    P -- No --> F
+    P -- Yes --> I{Structured response<br/>to interventions?}
+    I -- No --> S[Continuing structured source<br/>favored over isolated fluctuation]
+    I -- Yes --> R[Responsive continuing source<br/>strongly supported]
+```
+
+The figure does not equate responsiveness with agency; it only shows how a continuing-source explanation can earn support before the separate agent-versus-structured-law comparison in §4.
+
 This is an evidential distinction, not an absolute logical proof. No finite
 transcript is impossible under every sufficiently broad stochastic model. Agent
 recognition is therefore a warranted change of model, not a metaphysical
