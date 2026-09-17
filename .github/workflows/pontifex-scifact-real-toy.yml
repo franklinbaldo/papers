@@ -1,0 +1,50 @@
+name: Pontifex SciFact real toy
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_red1/scifact_real_toy.py"
+      - ".github/workflows/pontifex-scifact-real-toy.yml"
+  workflow_dispatch:
+    inputs:
+      queries:
+        description: "Number of eligible SciFact test queries"
+        required: false
+        default: "96"
+
+jobs:
+  toy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run real-data toy
+        env:
+          N_QUERIES: ${{ github.event.inputs.queries || '96' }}
+        run: |
+          uv run experiments/pontifex_red1/scifact_real_toy.py \
+            --queries "$N_QUERIES" \
+            --seed 7 \
+            --output /tmp/pontifex-scifact-real-toy.json
+
+      - name: Publish summary
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-scifact-real-toy.json ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/pontifex-scifact-real-toy.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-scifact-real-toy
+          path: /tmp/pontifex-scifact-real-toy.json
+          if-no-files-found: warn
