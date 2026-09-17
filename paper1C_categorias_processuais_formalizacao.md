@@ -218,6 +218,30 @@ prejudicialidade determina a ordem de julgamento e pode tornar
 o segundo pedido logicamente prejudicado se o primeiro for
 resolvido de determinado modo.
 
+Para formalização, a diferença central entre essas categorias é a
+**regra de ativação do exame**. O diagrama abaixo não representa mérito
+ou probabilidade de êxito; representa quando cada pedido precisa entrar
+no espaço de julgamento.
+
+```mermaid
+flowchart TD
+    Q[Dois ou mais pedidos no processo] --> T{Relação estrutural}
+    T --> C[Cumulados<br/>examinar todos independentemente]
+    T --> A[Alternativos<br/>qualquer prestação admissível satisfaz]
+    T --> S[Subsidiários<br/>examinar P2 só se P1 for rejeitado]
+    T --> U[Sucessivos<br/>examinar P2 só se P1 for acolhido]
+    T --> P[Prejudiciais<br/>resolver a questão logicamente anterior]
+    C --> G[Congruência delimita os provimentos legítimos]
+    A --> G
+    S --> G
+    U --> G
+    P --> G
+```
+
+Essa distinção de controle evita um erro comum em formalizações: tratar
+pedidos que compartilham o mesmo processo como se todos tivessem a mesma
+condição de julgamento.
+
 ### 2.3 O princípio da congruência como limite
 
 O art. 492 do CPC estabelece que "é vedado ao juiz proferir
