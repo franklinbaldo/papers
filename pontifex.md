@@ -259,7 +259,26 @@ measurement; Section 5 specifies the falsification threshold.
 
 We propose a four-phase plan, each phase with an explicit exit
 criterion. Phases are sequential by design: each unlocks the next
-only if its predictions hold.
+only if its predictions hold. The roadmap is therefore a sequence of
+scientific gates rather than a simple implementation checklist.
+
+```mermaid
+flowchart LR
+    P1[Phase 1<br/>text-only prototype] --> G1{Stable saliency<br/>across 3+ languages?}
+    G1 -- Yes --> P2[Phase 2<br/>multi-space + learned head]
+    G1 -- No --> X1[Stop or redesign]
+    P2 --> G2{Cross-lingual threshold met<br/>and head beats mean aggregator?}
+    G2 -- Yes --> P3[Phase 3<br/>cross-modal extension]
+    G2 -- No --> X2[Stop or redesign]
+    P3 --> G3{Localized disagreement<br/>precision threshold met?}
+    G3 -- Yes --> P4[Phase 4<br/>efficiency + release]
+    G3 -- No --> X3[Stop or redesign]
+    P4 --> G4{Latency target met<br/>and clean reproduction succeeds?}
+    G4 -- Yes --> R[Release candidate]
+    G4 -- No --> X4[Optimize or redesign]
+```
+
+The figure makes the falsifiability of the roadmap explicit: advancement requires the exit criterion of the current phase, so failure blocks later claims instead of being hidden by continued feature expansion.
 
 ### 4.1 Phase 1 — Minimal text-only prototype
 
