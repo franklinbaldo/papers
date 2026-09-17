@@ -73,21 +73,19 @@ Text is encoded directly as UTF-8 bytes. Character-based source annotations are 
 
 The initial pipeline is:
 
-```text
-UTF-8 bytes
-    ↓
-trainable embedding (64d)
-    ↓
-linear projection
-    ↓
-64 reservoir input neurons
-    ↓
-frozen recurrent reservoir
-    ↓
-linear readout per byte
-    ↓
-O | resultado
+```mermaid
+flowchart LR
+    B[UTF-8 bytes] --> E[Trainable embedding<br/>64 dimensions]
+    E --> P[Linear projection]
+    P --> I[64 reservoir input neurons]
+    I --> R[Frozen recurrent reservoir<br/>512 neurons]
+    R --> O[Linear readout per byte]
+    O --> Y[O or resultado]
+
+    style R stroke-width:3px
 ```
+
+The diagram separates the trainable text interface from the frozen recurrent substrate: gradients update the embedding, projection, and readout, while the MaleCNS-derived recurrent operator remains fixed.
 
 ## 4. MaleCNS reservoir
 
@@ -140,6 +138,29 @@ The control preserves:
 - optimizer and evaluation procedure.
 
 It destroys much of the higher-order organization of the MaleCNS wiring. This makes MaleCNS-versus-shuffled the primary topology comparison.
+
+The experimental logic is easier to read as a paired-control graph:
+
+```mermaid
+flowchart TD
+    D[Same legal windows<br/>same seed and optimizer] --> A[Same trainable byte interface]
+    A --> M[MaleCNS topology<br/>frozen recurrence]
+    A --> S[Degree-preserving shuffle<br/>frozen recurrence]
+    A --> B[Byte-only baseline<br/>no recurrence]
+
+    M --> FM[Validation F1]
+    S --> FS[Validation F1]
+    B --> FB[Validation F1]
+
+    FM --> T{What does the comparison test?}
+    FS --> T
+    FB --> T
+
+    T --> C1[MaleCNS vs shuffled:<br/>higher-order topology]
+    T --> C2[Recurrent models vs byte-only:<br/>value of recurrence]
+```
+
+This figure makes the causal contrast explicit: the MaleCNS-versus-shuffled comparison isolates topology more narrowly than a MaleCNS-versus-byte-only comparison, which also changes the presence of recurrence itself.
 
 ### 5.2 Byte-only baseline
 
