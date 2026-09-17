@@ -30,17 +30,24 @@ The paper develops a vocabulary for reasoning about these systems: relay transdu
 
 ## 1. The Missing Object of Analysis
 
-A conventional language-model interaction has a visible boundary:
+A conventional language-model interaction exposes one obvious safety boundary, but a composed system inserts policy-bearing transformations between model calls. The figure makes the change in unit of analysis explicit: local model-call evaluation sees only individual prompt/output boundaries, while end-to-end evaluation must include the learned transducers between them.
 
-```text
-prompt -> model -> output
+```mermaid
+flowchart LR
+    subgraph LOCAL[Single model-call boundary]
+        P[Prompt] --> M[Language model] --> O[Output]
+    end
+
+    subgraph COMPOSED[Composed causal path]
+        P0[Prompt 0] --> M0[LLM 0] --> Y0[Output 0]
+        Y0 --> T0[Learned transducer]
+        T0 --> P1[Prompt 1] --> M1[LLM 1] --> Y1[Output 1]
+        Y1 --> T1[Learned transducer]
+        T1 --> PN[Later prompt] --> MN[LLM N] --> ON[Terminal output]
+    end
 ```
 
-Safety evaluation is naturally attached to that boundary. Did the model refuse? Did it disclose disallowed content? Did the answer satisfy the system instruction? This framing becomes incomplete when model calls are composed:
-
-```text
-LLM_0 -> learned transducer -> LLM_1 -> learned transducer -> ... -> LLM_N
-```
+Safety evaluation is naturally attached to the single-call boundary. Did the model refuse? Did it disclose disallowed content? Did the answer satisfy the system instruction? This framing becomes incomplete when model calls are composed.
 
 The intermediate transducer is external to every language model. It may operate only on discrete text. Nevertheless, it observes a state, selects an action, changes the next prompt, and receives delayed reward from a terminal outcome. It is therefore not merely plumbing. It is a policy-bearing component.
 
