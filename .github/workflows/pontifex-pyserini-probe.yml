@@ -1,10 +1,6 @@
 name: Pontifex Pyserini probe
 
 on:
-  pull_request:
-    paths:
-      - "experiments/pontifex_red1/pyserini_index_probe.py"
-      - ".github/workflows/pontifex-pyserini-probe.yml"
   workflow_dispatch:
     inputs:
       index:
