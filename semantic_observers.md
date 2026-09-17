@@ -133,6 +133,22 @@ The predicate must be defined **before** examining the observer under test. Othe
 
 For observer \(m\), let \(\widehat P_{m,\alpha}(u,s)\) be the corresponding estimate obtained from its representation using a frozen estimator and matched data budget.
 
+The measurement contract for one observer is deliberately stricter than visual similarity: the predicate, estimator, data budget, and null calibration are fixed before the observer's resolution is scored.
+
+```mermaid
+flowchart LR
+    X[Held-out semantic stimuli] --> O[Observer m<br/>representation Z_m]
+    O --> E[Frozen estimator<br/>matched data budget]
+    E --> P[Estimated predicate<br/>P_hat_m,alpha(u,s)]
+    T[Preregistered target predicate<br/>P_alpha(u,s)] --> S[Calibrated held-out score]
+    P --> S
+    N[Permutation or matched null] --> S
+    S --> R[Resolution<br/>R_m(u,s,alpha)]
+    R --> F[Observer fingerprint<br/>and threshold s*_m]
+```
+
+This pipeline makes the observer metaphor falsifiable: resolution is earned by recovery of a preregistered structure above a matched null, not by post-hoc inspection of an embedding plot.
+
 ### 3.2 Resolution profile
 
 Define the observer's resolution for predicate \(\alpha\) as

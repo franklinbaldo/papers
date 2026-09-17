@@ -310,6 +310,27 @@ $$
 
 Compression changes how efficiently the past is described. It does not retroactively shorten the path that occurred.
 
+The distinction is easiest to see as two layers: the upper path is the sequence that actually occurred; the lower path is a reversible description of that already-completed history.
+
+```mermaid
+flowchart TD
+    subgraph C[Causal history that actually occurred]
+        S0[State S0] -->|c1| S1[State S1]
+        S1 -->|c2| S2[State S2]
+        S2 -->|further counted events| SN[Observer-updated state Sn]
+    end
+    SN --> H[Ordered history H]
+    H --> E[Proof-preserving encode<br/>under registry R']
+    E --> T[Short symbolic index<br/>for H]
+    T --> X[expand under R']
+    X --> H2[Same ordered history H]
+    H -.-> CT[Causal time and depth<br/>set by traversed events]
+    T -.-> ST[Symbolic length L_R'(H)<br/>may be smaller]
+```
+
+The token can reduce symbolic time because it is an index with an expansion proof; it does not erase any counted event from the causal path.
+
+
 ---
 
 ## 6. Symmetry as a Tokenization Mechanism

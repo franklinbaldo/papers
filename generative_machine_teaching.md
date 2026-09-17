@@ -219,6 +219,22 @@ $$
 R_t=\operatorname{register}(R_{t-1},i,j,w,\pi).
 $$
 
+The registration turn has one consequential branch: a new expansion receives a stable identity, while an already-known expansion accumulates another proof without changing identity. The diagram separates construction, identity, and proof reuse.
+
+```mermaid
+flowchart LR
+    A[Available registry entries<br/>r_i and r_j] --> B[Resolve stored expansions]
+    B --> C[Concatenate<br/>w = concat(value_i, value_j)]
+    C --> D{w already registered?}
+    D -- No --> E[Allocate stable ID<br/>store construction proof]
+    D -- Yes --> F[Keep stable ID<br/>add alternative proof]
+    E --> G[Updated registry R_t]
+    F --> G
+    G --> H[Future procedures may<br/>reference the stable ID]
+```
+
+The figure makes the registry invariant explicit: proof knowledge may improve over time, but references remain attached to a permanent token identity.
+
 The compact instruction proposed for the benchmark is:
 
 $$
