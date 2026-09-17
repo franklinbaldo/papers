@@ -94,14 +94,16 @@ isolation, or vulnerability discovery.
 
 The proposed execution pipeline is:
 
-```text
-driver.sys
-  -> read-only PE inspection and relocation
-  -> minimal allowlisted NT ABI
-  -> synthetic DRIVER_OBJECT / DEVICE_OBJECT / IRP
-  -> instrumented memory and declared-boundary shadow state
-  -> captured output and trapped operations
+```mermaid
+flowchart LR
+    D[driver.sys] --> P[Read-only PE inspection<br/>and relocation]
+    P --> A[Minimal allowlisted<br/>NT ABI]
+    A --> O[Synthetic driver / device<br/>objects and IRP]
+    O --> M[Instrumented memory +<br/>declared-boundary shadow state]
+    M --> C[Captured output +<br/>trapped operations]
 ```
+
+The figure shows the proposed transformation boundary without implying that the stages are already demonstrated: the current evidence supports the LiteBox substrate, while `.sys` loading, the synthetic ABI, and shadow checking remain gated artifacts to be validated independently.
 
 That pipeline does not impose a demonstration dependency. Every boundary has a
 typed, serializable fixture so that each module can be exercised without the
