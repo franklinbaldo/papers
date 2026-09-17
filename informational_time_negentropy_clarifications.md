@@ -156,24 +156,21 @@ search, and fitted parameters are charged. High predictability, concentration,
 or deterministic limiting observables can therefore establish structure without
 establishing agency.
 
-The comparative recognition test is easier to see as model competition rather than a progression from mere order to agency:
+The recognition test has two distinct evidential gates. First, the observer must earn a model of an external continuing source over fluctuation and self-generation. Only then does it ask whether an agent-level model earns its additional commitments over a structured non-agent law.
 
 ```mermaid
 flowchart TD
-    D[Observed interaction history] --> M[Compare complexity-charged models]
-    M --> X[Maximum-entropy / fluctuation]
-    M --> S[Self-generated order]
-    M --> L[Structured non-agent law]
-    M --> A[Agent-level model]
-    X --> C{Best description + held-out prediction?}
-    S --> C
-    L --> C
-    A --> C
-    C -->|Agent model does not win| N[Do not attribute agency]
-    C -->|Agent model wins and persists| R[Recognize another agent at this causal scale]
+    D[Observed interaction history] --> G1{External continuing source<br/>beats fluctuation and self?}
+    G1 -- No --> N1[No external-other recognition]
+    G1 -- Yes --> E[External structured source supported]
+    E --> G2{Agent-level model beats the best<br/>structured non-agent law?}
+    G2 -- No --> L[Recognize external structure<br/>without attributing agency]
+    G2 -- Yes --> P{Advantage persists on held-out<br/>prediction or interventions?}
+    P -- No --> U[Agency attribution not yet earned]
+    P -- Yes --> R[Recognize another agent<br/>at this causal scale]
 ```
 
-The figure makes explicit that local order is not itself an agency signal: the agent-level account must outperform fluctuation, self-generation, and a complexity-matched structured-law alternative on the same observation interface.
+The two-gate figure prevents a common category error: evidence for an external organized source is weaker than evidence for agency, because the latter still has to beat a complexity-matched structured-law account prospectively.
 
 Intervention is especially informative. If changing $A$'s actions produces
 structured responses that cannot be derived from $A$ alone, the evidence for an
