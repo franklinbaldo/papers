@@ -30,15 +30,21 @@ the repository's [affordance-restriction framework](affordance_restriction.md);
 it is intentionally distinct from LiteBox's capability-based access registry.
 
 The primary technical proposal is a fixture-driven SystemBuffer Shadow Checker
-for synthetic `METHOD_BUFFERED` requests. It records writes that cross the
-declared output boundary while remaining inside the shared physical allocation.
-Because that allocation also contains input, such a crossing is an E0 shadow
-event, not automatically a Windows-contract violation. Promotion to a confirmed
-output overrun requires an IOCTL-specific schema, source-known toy, or execution
-phase that establishes output intent. By contrast,
-`IoStatus.Information > OutputBufferLength` is a distinct invalid-completion
-event. The trace checker is demonstrable without loading or executing a `.sys`;
-typed serializable fixtures decouple it from the PE loader and synthetic NT ABI.
+for synthetic `METHOD_BUFFERED` requests. Its contribution is not merely driver
+rehosting, but **contract-aware semantic checking**: observing accesses that are
+physically memory-safe yet cross a logical boundary declared by the calling
+contract. The rehosting harness is the experimental vehicle that makes those
+otherwise implicit boundaries cheap to instrument and replay.
+
+The checker records writes that cross the declared output boundary while
+remaining inside the shared physical allocation. Because that allocation also
+contains input, such a crossing is an E0 shadow event, not automatically a
+Windows-contract violation. Promotion to a confirmed output overrun requires an
+IOCTL-specific schema, source-known toy, or execution phase that establishes
+output intent. By contrast, `IoStatus.Information > OutputBufferLength` is a
+distinct invalid-completion event. The trace checker is demonstrable without
+loading or executing a `.sys`; typed serializable fixtures decouple it from the
+PE loader and synthetic NT ABI.
 
 A PE loader, minimal NT ABI, instrumented allocator, explicit IRQL state,
 isolation, calibration, abandonment, and coordinated-disclosure gates support
@@ -173,23 +179,43 @@ output length 8, a 32-byte write may remain inside the allocation while crossing
 the declared output boundary. A trailing guard page alone cannot observe that
 crossing.
 
+This distinction motivates a broader semantic-safety view. Conventional memory
+instrumentation asks whether an access remains inside the allocation. Contract-
+aware shadow checking additionally asks whether a physically valid access
+crosses a boundary declared by the API contract. The latter is not itself proof
+of a bug; it is a separately observable event that can be promoted only when
+operation-specific evidence establishes the semantic role of the write.
+
 The checker records every write interval `W_i = [o_i, o_i + s_i)` using checked
 arithmetic and computes `H = max_i(o_i + s_i)`. It emits three distinct raw
 events:
 
-- `WRITE_PAST_DECLARED_OUTPUT` when `H > OutputBufferLength` but `H <= N`;
+- `DECLARED_OUTPUT_BOUNDARY_CROSSING` when
+  `H > OutputBufferLength` but `H <= N`;
 - `PHYSICAL_OVERFLOW` when any interval exceeds `N`; and
 - `INVALID_COMPLETION_LENGTH` when
   `IoStatus.Information > OutputBufferLength`.
 
-The first event is intentionally E0. Microsoft documents that `SystemBuffer`
+The first event is intentionally E0. Its name describes only what the sensor
+knows: a write crossed the caller-declared output-length boundary while
+remaining inside the shared allocation. Microsoft documents that `SystemBuffer`
 represents both input and output and is allocated to the larger length; those
 facts do not by themselves prove that every write in the consumed-input tail is
-an output overrun. Promotion to `UNBOUNDED_WRITE` requires an IOCTL-specific
+an output overrun. Promotion to `OUTPUT_OVERRUN` requires an IOCTL-specific
 output schema, a source-known seeded toy, or phase/taint evidence that the write
 was intended as output. A benign scratch/input-tail fixture is a mandatory
 negative control. `INVALID_COMPLETION_LENGTH` remains an objective completion
 contract event because the I/O manager trusts `Information` when copying back.
+
+The resulting evidence ladder is therefore semantic as well as procedural:
+
+```text
+DECLARED_OUTPUT_BOUNDARY_CROSSING
+        + output-intent evidence
+        -> OUTPUT_OVERRUN
+        + independent authorized reproduction
+        -> confirmed vulnerability evidence
+```
 
 Events include IOCTL, input/output lengths, every offending interval, physical
 bound, high-water mark, completion length, operation phase, and available
@@ -327,13 +353,14 @@ An emulator event is not a vulnerability. Evidence levels are:
 - **E3:** vendor-confirmed security defect.
 
 Only E2/E3 may be called a confirmed vulnerability. A raw
-`WRITE_PAST_DECLARED_OUTPUT` remains E0 until output intent is independently
-established. Third-party E0/E1 evidence remains private. The repository-level
-disclosure workflow is tracked in LiteBox issue #11 [24]. Microsoft-driver
-findings go to MSRC; third-party findings go
-to the vendor's security contact or `security.txt`; multivendor or unresponsive
-cases may require MSRC/MSVR or a CERT. LiteBox findings follow its private
-repository security process.
+`DECLARED_OUTPUT_BOUNDARY_CROSSING` remains E0 until output intent is
+independently established; even after semantic promotion to `OUTPUT_OVERRUN`, it
+remains an emulator finding until independently reproduced. Third-party E0/E1
+evidence remains private. The repository-level disclosure workflow is tracked
+in LiteBox issue #11 [24]. Microsoft-driver findings go to MSRC; third-party
+findings go to the vendor's security contact or `security.txt`; multivendor or
+unresponsive cases may require MSRC/MSVR or a CERT. LiteBox findings follow its
+private repository security process.
 
 A report identifies product, binary version/signer/source/SHA-256, Windows and
 token conditions, deterministic reproduction and rate, expected/observed
@@ -387,9 +414,12 @@ not evidence that the proposed checker is superior.
 
 Windows Driver Verifier is the kernel-realistic baseline for memory and IRQL
 checks, not something this artifact replaces. The proposed contribution is a
-contract-aware, process-local sensor. Claims that it is earlier or cheaper are
-pending RQ1/RQ2b measurements and remain qualified until independent
-reproduction.
+contract-aware, process-local sensor for semantic boundary violations that may
+remain physically memory-safe. Rehosting is the experimental mechanism that
+makes the sensor cheap to instrument and replay; the scientific contribution
+does not depend on broad or arbitrary `.sys` compatibility. Claims that it is
+earlier or cheaper are pending RQ1/RQ2b measurements and remain qualified until
+independent reproduction.
 
 ## 11. Limitations
 
@@ -424,12 +454,21 @@ Empirical results must revise this paper rather than be implied retroactively.
 Privilege and practical affordance are non-identical. Driver rehosting may keep
 a non-admin host token unchanged while making selected driver logic easier to
 execute, observe, and test, even though the matched native baseline may use
-different guest privileges. The proposal responds with narrow claims and strong
-gates: read-only inspection, fixture-independent modules, toy-first execution,
-fail-closed ABI, declared-boundary shadow events, explicit confirmation before
-calling an event a violation, bounded execution, abandonment criteria, and no
-vulnerability claim without independent reproduction or vendor confirmation.
-If calibration fails, read-only inspection is the honest endpoint.
+different guest privileges. The stronger methodological contribution is
+contract-aware semantic checking: turning an API boundary that can lie inside a
+physically valid allocation into an explicit, testable signal without calling
+that signal a vulnerability before operation-specific evidence justifies the
+promotion.
+
+Rehosting is therefore a vehicle rather than the scientific endpoint. The
+proposal responds with narrow claims and strong gates: read-only inspection,
+fixture-independent modules, toy-first execution, fail-closed ABI,
+declared-boundary shadow events, explicit confirmation before calling an event
+a violation, bounded execution, abandonment criteria, and no vulnerability
+claim without independent reproduction or vendor confirmation. If broad driver
+rehosting proves impractical but the standalone M5 sensor calibrates, the core
+contract-aware contribution survives. If calibration fails, read-only
+inspection is the honest endpoint.
 
 # Citations
 
