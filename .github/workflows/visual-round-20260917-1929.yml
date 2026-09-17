@@ -36,7 +36,6 @@ jobs:
                   raise SystemExit(f"anchor not found in {path}: {anchor[:80]!r}")
               p.write_text(text.replace(anchor, anchor + addition, 1), encoding="utf-8")
 
-          # 1) STT: separate the offline/frozen semantic interface from the trainable model and grounded decoder.
           insert_after(
               "semantic_tokenization_transformers.md",
               "Our method consists of three main stages: (1) offline semantic tokenization to create the codebook and convert the corpus, (2) Transformer pre-training on semantic codes, and (3) faithful decoding for text reconstruction. We describe each stage in detail.\n\n",
@@ -60,7 +59,6 @@ jobs:
               "The architecture is easiest to audit when the fixed semantic interface",
           )
 
-          # 2) Structured Irregularity: operationalize retrospective interpretation as an ablation test.
           insert_after(
               "pedagogical_signal_extraction.md",
               "This captures layered knowledge formation: first the learner acquires the protocol, then the protocol unlocks the code, and the decoded layer supports acquisition of the target function.\n\n",
@@ -78,10 +76,9 @@ jobs:
               "Retrospective interpretation is therefore an operational claim",
           )
 
-          # 3) Driver rehosting: make the two distinct SystemBuffer boundaries visible.
           insert_after(
               "contract_aware_driver_rehosting.md",
-              "With input length 64 and output length 8, a 32-byte write may remain inside the allocation while crossing\nthe declared output boundary. A trailing guard page alone cannot observe that\ncrossing.\n\n",
+              "With input length 64 and\noutput length 8, a 32-byte write may remain inside the allocation while crossing\nthe declared output boundary. A trailing guard page alone cannot observe that\ncrossing.\n\n",
               "The two bounds answer different questions. The physical allocation answers whether the write is memory-safe in the synthetic buffer; the caller-declared output length answers whether the write crosses the semantic output boundary. The example below shows why those predicates can disagree without yet proving an overrun.\n\n"
               "```mermaid\n"
               "flowchart LR\n"
@@ -98,7 +95,6 @@ jobs:
               "The two bounds answer different questions.",
           )
 
-          # 4) ESHTR: isolate the Semantic Proximity Hypothesis as a matched experimental contrast.
           insert_after(
               "embedding_seeded_tournament.md",
               "**Hypothesis test:** We expect κ_intracluster > κ_crosscorpus\n(supporting the Semantic Proximity Hypothesis), with the\ndifference most pronounced for semantically distant cluster\npairs.\n\n",
@@ -120,7 +116,6 @@ jobs:
               "The hypothesis is testable as a matched contrast rather than",
           )
 
-          # 5) Argumentative costs: expose why the low-quality equilibrium survives unilateral cooperation.
           insert_after(
               "paper1E_custos_argumentativos.md",
               "A assimetria de benefícios e custos mantém o equilíbrio (β, β)\nmesmo que todos os agentes reconheçam que (α, α) seria melhor\npara o sistema.\n\n",
@@ -138,7 +133,6 @@ jobs:
               "A estabilidade desse equilíbrio depende do custo do **desvio unilateral**",
           )
 
-          # Basic documentation/diagram sanity checks.
           targets = [
               "semantic_tokenization_transformers.md",
               "pedagogical_signal_extraction.md",
