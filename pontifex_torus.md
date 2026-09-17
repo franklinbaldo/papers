@@ -288,7 +288,137 @@ The strongest completed toy result is the local-to-global cross-space experiment
 
 A separate MS MARCO experiment opens the public 8.84-million-vector TCT-ColBERT FAISS index by mmap and extracts a deterministic 1,000-PID sample into a ~2.86 MB feature store without re-encoding. This establishes a route to large-scale tests while materializing only selected points.
 
-## 13. Immediate evaluation ladder
+
+
+## 13. Efficiency and continual-learning comparison protocol
+
+The sequential shared-geometry experiments now create a direct comparison point with
+online continual learning. The comparison must not use raw accuracy or RMSE numbers
+across unrelated datasets. Instead, methods should be compared under a common stream
+and normalized resource budget.
+
+The closest established families are:
+
+- **episodic-memory / replay methods**, including GEM and experience replay, which
+  preserve or revisit earlier examples and explicitly measure backward transfer;
+- **efficient rehearsal policies**, which optimize what to replay and how many update
+  iterations to spend;
+- **regularization methods** such as EWC, which protect prior knowledge without
+  retaining a full replay buffer;
+- **parameter-isolation / progressive methods**, which avoid forgetting by preserving
+  old parameters and adding capacity;
+- **test-time / online adaptation**, where repeated updates trade additional compute
+  for adaptation quality.
+
+These are not yet empirical competitors to Pontifex Torus because the published
+benchmarks use different tasks and models. The immediate requirement is therefore to
+run their simplest representative mechanisms on the **same Pontifex response-field
+stream**.
+
+### 13.1 Common-budget baselines
+
+For a fixed stream of texts and a fixed validation/test split, compare:
+
+1. **single-pass online SGD** — one update per text, no replay;
+2. **fixed repeated SGD** — the current Pontifex protocol at 2/4/8/16/32/... passes;
+3. **uniform replay** — retain previous text response rows and mix a fixed replay
+   budget with the current text;
+4. **best-checkpoint rollback** — save each geometry and restore the best
+   validation geometry when a later update degrades it;
+5. **adaptive-pass policy** — stop revisiting the current text when validation
+   improvement or geometry change falls below a frozen threshold;
+6. **EWC-like regularization** — penalize changes to parameters estimated as important
+   to earlier texts;
+7. **frozen-history / progressive control** — preserve previous geometry components
+   and allocate new parameters to later texts;
+8. **offline upper bound** — fit the same low-capacity model jointly on all available
+   training response rows.
+
+The first comparison should deliberately keep the same low-capacity torus feature
+basis. This isolates the learning rule rather than confounding continual-learning
+strategy with model size.
+
+### 13.2 Efficiency ledger
+
+Every run should report the following quantities:
+
+| axis | metric |
+|---|---|
+| predictive quality | held-out RMSE and downstream task metric when available |
+| retention | mean change on previously seen texts after learning a new text |
+| backward transfer | performance change on an old text after learning later texts |
+| forward transfer | performance on a new text before versus after prior texts |
+| update cost | number of optimizer steps / partial-fit calls |
+| sample exposure | total response rows consumed by updates |
+| encoder cost | number of expensive encoder evaluations, reported separately from cached-field learning |
+| wall time | cold-start and warm-cache runtime |
+| trainable state | number of trainable parameters and bytes |
+| replay memory | stored examples/response rows and bytes |
+| geometry memory | number and total bytes of saved geometry checkpoints |
+| efficiency | improvement per 1k row-exposures and per second |
+| stability | variance across seeds and worst-seed regression |
+
+The current torus learner has a particularly small trainable geometry: the v0
+interaction basis has ten coefficients plus an intercept. For the sequential
+T1..T11 protocol with 8 positions and four occlusion sizes, each text contributes
+32 response rows. At 16 passes per text, eleven texts therefore produce 176
+`partial_fit` calls and 5,632 row-exposures before the optional return to T1.
+This accounting should be used instead of calling the method "cheap" qualitatively.
+
+Encoder work must be amortized separately. Once the MiniLM/BGE response field is
+materialized, pass-count, replay, rollback, and return experiments operate on the
+same cached field and should not be charged repeated encoder inference. A cold run
+and a warm-cache run must both be reported.
+
+### 13.3 Backward-transfer result to compare
+
+The first five-seed T1..T11 experiment already exposes a continual-learning metric.
+After T1 received 16 passes, its mean RMSE was `0.05688`. After ten different texts
+were learned, without showing T1 again, its mean RMSE was `0.04230`.
+Expressed as an error-based backward-transfer score,
+
+\[
+BWT_{RMSE}=RMSE(T_1\text{ after first exposure})-
+RMSE(T_1\text{ after later texts}),
+\]
+
+the mean is approximately `+0.01458`: positive backward transfer in all five seeds.
+This is a toy result and must not be numerically compared with classification BWT
+reported on MNIST, CIFAR, ImageNet, or language-model benchmarks. What is comparable
+is the **sign, robustness, update budget, memory budget, and mechanism**.
+
+Returning to T1 for another 16 passes yields additional specialization but also mild
+average interference with T2..T11. That makes the stability-plasticity trade-off
+directly measurable and creates a useful comparison against replay and
+regularization methods.
+
+### 13.4 External reference points
+
+The benchmark should explicitly include these reference families:
+
+- Lopez-Paz & Ranzato, **Gradient Episodic Memory for Continual Learning** (NeurIPS
+  2017): finite episodic memory, forgetting metrics, and positive backward transfer.
+- Davalas et al., **A rehearsal framework for computational efficiency in online
+  continual learning** (Applied Intelligence, 2024): compares rehearsal schedules
+  and emphasizes training-iteration count as computational cost; its ER-50 control
+  illustrates that more repeated updates can improve accuracy while increasing cost
+  and overfitting risk.
+- Harun et al., **GRASP: A Rehearsal Policy for Efficient Online Continual Learning**
+  (CoLLAs/PMLR, 2025): reports matching uniform-replay performance with fewer updates,
+  making update efficiency a natural comparator.
+- Online continual-learning empirical surveys and replay baselines such as MIR/GDumb
+  should be used to avoid comparing only against elaborate methods.
+- Test-time training/adaptation work should be treated as an adjacent comparison for
+  repeated per-example updates, not as the same continual-learning problem.
+
+The scientific target is not to show that Pontifex Torus beats methods trained on
+unrelated benchmark tasks. It is to determine whether **saved shared geometry plus
+selective revisitation** reaches an equivalent retention/generalization frontier
+with fewer updates, less replay memory, or more positive backward transfer under the
+same response-field stream.
+
+
+## 14. Immediate evaluation ladder
 
 1. replicate torus/lens, active selection, and context-lens effects across seeds and real corpora;
 2. add explicit left-to-right/right-to-left text traversal and quantify directional asymmetry;
@@ -303,7 +433,7 @@ A separate MS MARCO experiment opens the public 8.84-million-vector TCT-ColBERT 
 
 The strongest useful result need not be a globally superior alignment algorithm. A system that reaches useful rich-space predictive quality with substantially fewer expensive observations, carries local uncertainty, or predicts unobserved scales/directions would already justify the cartographic formulation.
 
-## 14. Reproducibility
+## 15. Reproducibility
 
 Code and live findings are under:
 
