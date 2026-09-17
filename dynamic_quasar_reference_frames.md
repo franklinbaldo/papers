@@ -281,6 +281,21 @@ These are properties of the measuring field. They are not claims of literal flui
 
 The **Dynamic Gauge Compression Test (DGCT)** is the foundational experiment. Downstream steering and reachability experiments are secondary until a gauge shows evidence of compression.
 
+The first DGCT must make the anti-leakage boundary visible: model-selection information may choose and freeze the gauge, whereas evaluation-model transitions may fit only the preregistered low-capacity amplitude before residual complexity is measured.
+
+```mermaid
+flowchart LR
+    C[Model-selection / control data] --> G[Choose field family<br/>geometry + hyperparameters]
+    B[Preregistered candidate set<br/>including matched baselines] --> G
+    G --> F[FROZEN reference field<br/>V_Q]
+    E[Evaluation-model transitions<br/>F_M] --> A[Fit only low-capacity<br/>amplitude a_M]
+    F --> A
+    A --> R[Residual field<br/>r_M = F_M - a_M V_Q]
+    R --> M[DGCT held-out vector<br/>energy / rank / sample complexity<br/>OOD stability / cross-model concordance]
+```
+
+A positive result therefore means that a gauge fixed without evaluation dynamics leaves a simpler held-out residual; it is not permission to tune the ruler until the measured object looks simple.
+
 ### 5.1 Candidate fields
 
 Let the preregistered candidate set be

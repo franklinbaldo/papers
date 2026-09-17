@@ -459,6 +459,34 @@ $$
 K_{t+1}=U(K_t,a).
 $$
 
+The three definitions form a staged classification rather than one binary label. The figure shows which gates establish an accepted epistemic transition, which evidence attributes machine contribution, and which later test establishes recursive productivity.
+
+```mermaid
+flowchart TD
+    A[Candidate artifact<br/>a = claim + certificate + provenance + scope] --> G1{Admissible?}
+    G1 -- No --> X[Discovery event not established<br/>at this gate]
+    G1 -- Yes --> G2{Certified?}
+    G2 -- No --> X
+    G2 -- Yes --> G3{Snapshot-novel<br/>under frozen audit?}
+    G3 -- No --> X
+    G3 -- Yes --> G4{Provenance sufficient<br/>for claimed contribution?}
+    G4 -- No --> X
+    G4 -- Yes --> G5{Public uptake into K?}
+    G5 -- No --> X
+    G5 -- Yes --> U[Accepted discovery<br/>K_t -> K_t+1]
+    U --> C{Machine contribution on<br/>an essential path?}
+    C -- No --> GE[Accepted epistemic expansion<br/>without stronger machine-origin claim]
+    C -- Yes --> MA[Machine-assisted]
+    MA --> O{Machine essential to first generation<br/>under disclosed ablation family?}
+    O -- Yes --> MO[Machine-originated]
+    O -- No --> AO[Machine-assisted<br/>not machine-originated]
+    U --> R{Improves later learners<br/>under preregistered budget?}
+    R -- Yes --> RP[Recursively productive]
+    R -- No --> NR[Discovery remains accepted<br/>without recursive productivity]
+```
+
+This prevents correctness, novelty, machine credit, and downstream fertility from collapsing into a single impressive-output judgment.
+
 ### Definition 2: Machine-assisted and machine-originated discovery
 
 An accepted discovery is **machine-assisted** when at least one machine contribution lies on an essential path in $\mu$.
