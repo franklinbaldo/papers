@@ -45,7 +45,6 @@ jobs:
             echo "texts=${{ github.event.inputs.texts || '200' }}" >> "$GITHUB_OUTPUT"
             echo "positions=${{ github.event.inputs.positions || '12' }}" >> "$GITHUB_OUTPUT"
           else
-            # Larger than the first smoke, while remaining cheap enough for PR CI.
             echo "texts=120" >> "$GITHUB_OUTPUT"
             echo "positions=8" >> "$GITHUB_OUTPUT"
           fi
@@ -75,15 +74,27 @@ jobs:
             --seed 7 \
             --output /tmp/pontifex-context-v0.json
 
+      - name: Run sequential shared-space experiments
+        run: |
+          uv run experiments/pontifex_torus/sequential_shared.py \
+            --texts "${{ steps.size.outputs.texts }}" \
+            --positions "${{ steps.size.outputs.positions }}" \
+            --seed 17 \
+            --output /tmp/pontifex-sequential-shared.json
+
       - name: Publish results
         if: always()
         run: |
-          for f in /tmp/pontifex-torus-v0.json /tmp/pontifex-active-v0.json /tmp/pontifex-context-v0.json; do
+          for f in \
+            /tmp/pontifex-torus-v0.json \
+            /tmp/pontifex-active-v0.json \
+            /tmp/pontifex-context-v0.json \
+            /tmp/pontifex-sequential-shared.json; do
             if [ -f "$f" ]; then
               echo "## $(basename "$f")" >> "$GITHUB_STEP_SUMMARY"
-              echo '```json' >> "$GITHUB_STEP_SUMMARY"
+              echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
               cat "$f" >> "$GITHUB_STEP_SUMMARY"
-              echo '```' >> "$GITHUB_STEP_SUMMARY"
+              echo '~~~' >> "$GITHUB_STEP_SUMMARY"
             fi
           done
 
@@ -96,4 +107,5 @@ jobs:
             /tmp/pontifex-torus-v0.json
             /tmp/pontifex-active-v0.json
             /tmp/pontifex-context-v0.json
+            /tmp/pontifex-sequential-shared.json
           if-no-files-found: warn
