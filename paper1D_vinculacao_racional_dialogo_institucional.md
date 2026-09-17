@@ -78,7 +78,7 @@ of reclamação constitucional and for the evolution of STF
 jurisprudence.
 
 **Keywords**: binding precedents; binding súmula; rational binding;
-institutional dialogue; reclamação constitucional; judicial reasoning;
+institutional dialogue; reclamação constitutional; judicial reasoning;
 art. 489 CPC; art. 103-A CF; Supreme Court; special courts.
 
 ---
@@ -418,6 +418,34 @@ compromete a ratio.
 precedente — sobre a aplicação da súmula ao tipo de caso levantado
 pelo órgão inferior, ou sobre a revisão da súmula. Esse precedente
 alimenta o sistema para casos futuros.
+
+O fluxo proposto pode ser lido como um protocolo de ida e volta de
+razões. As setas abaixo representam trânsito processual e resposta
+argumentativa; não afirmam que esse diálogo ocorra empiricamente em
+toda reclamação.
+
+```mermaid
+sequenceDiagram
+    participant I as Órgão inferior
+    participant R as Reclamação
+    participant S as STF
+    I->>I: Identifica distinção ou erro e expõe razões
+    I->>R: Afastamento fundamentado chega ao canal de controle
+    R->>S: Submete razões e decisão reclamada
+    S->>S: Enfrenta as razões expostas
+    alt Razões insuficientes
+        S-->>I: Refuta e preserva o entendimento vigente
+    else Distinção genuína
+        S-->>I: Reconhece a distinção e delimita o alcance
+    else Erro ou descompasso convincente
+        S-->>I: Revisa ou supera o precedente
+    end
+    S-->>R: Julgamento gera orientação para casos futuros
+```
+
+A simetria central é visível no desenho: o órgão inferior deve dar
+razões para afastar, e o STF deve dar razões para responder; a hierarquia
+define quem decide por último, não uma dispensa de fundamentação.
 
 ### 4.3 A obrigação simétrica como condição do diálogo
 
