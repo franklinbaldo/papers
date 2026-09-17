@@ -29,7 +29,7 @@ import numpy as np
 from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_squared_error
 
-from run import build_rows, features, make_texts
+from run import build_rows, features, load_rows, make_texts
 
 
 def rows_for_ids(rows, ids):
