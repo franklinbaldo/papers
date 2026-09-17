@@ -188,6 +188,20 @@ Pontifex is a function from an input `x` (a UTF-8 byte string, or a
 multimodal record containing one) to a saliency map plus a
 multi-encoder agreement profile. It has four stages.
 
+The architecture is easiest to read as a sequence of representation boundaries. The encoders remain separate: Pontifex compares scalar similarity responses to the same perturbation instead of learning a shared embedding space. Only the convergence head learns how to combine those per-encoder responses.
+
+```mermaid
+flowchart LR
+    X[UTF-8 input x] --> P[Byte-span perturbations P_i]
+    P --> T[For each span:<br/>x, x_L, x_R]
+    T --> E[Independent encoders<br/>E_1 ... E_K]
+    E --> S[Similarity tensor S_i<br/>K × 3: LR / LO / RO]
+    S --> C[Trainable convergence head C]
+    C --> Y[Byte saliency +<br/>agreement profile]
+```
+
+The figure therefore isolates the distinctive methodological bet: cross-encoder structure is learned over similarity patterns after each encoder has produced its own measurements, not by aligning the encoder representations themselves.
+
 ### 3.1 Byte-level occlusion
 
 Given an input of length `N` bytes, Pontifex generates a set of
