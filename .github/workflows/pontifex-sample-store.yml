@@ -1,11 +1,6 @@
 name: Pontifex sampled feature store
 
 on:
-  pull_request:
-    paths:
-      - "experiments/pontifex_red1/sample_manifest.py"
-      - "experiments/pontifex_red1/extract_sample_store.py"
-      - ".github/workflows/pontifex-sample-store.yml"
   workflow_dispatch:
     inputs:
       index:
@@ -37,13 +32,8 @@ jobs:
         id: cfg
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "size=${{ github.event.inputs.sample_size }}" >> "$GITHUB_OUTPUT"
-            echo "index=${{ github.event.inputs.index }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "size=1000" >> "$GITHUB_OUTPUT"
-            echo "index=msmarco-v1-passage.tct_colbert-v2-hnp" >> "$GITHUB_OUTPUT"
-          fi
+          echo "size=${{ github.event.inputs.sample_size }}" >> "$GITHUB_OUTPUT"
+          echo "index=${{ github.event.inputs.index }}" >> "$GITHUB_OUTPUT"
 
       - name: Generate fixed PID manifest
         run: |
