@@ -99,19 +99,23 @@ It is not a general test of teaching, intelligence, agency, discovery, or safety
 
 ## 3. Dependency graph
 
-```text
-#236 Generative machine teaching ─────┐
-                                     ├──> #244 RL relay transducers ──> #245 Forbidden Relay
-#241 Pedagogical signal extraction ──┤                 ↑
-                                     │                 │
-#238 Informational time ─────────────┼──> #243 Interstitial agent
-          │                          │                 │
-          └──> #240 Clarifications ──┘                 │
-                                                       │
-#242 Machine discovery <──────── provenance and terminal artifacts
+The programme is not a linear dependency chain: several papers supply concepts or constraints to the relay mechanism, while Forbidden Relay is the bounded empirical instrument that receives those inputs. The graph below makes those scientific roles explicit without implying source-control ordering.
+
+```mermaid
+flowchart LR
+    GMT[Generative machine teaching<br/>protocol acquisition] --> RLT[RL relay transducers<br/>mechanism]
+    PSE[Pedagogical signal extraction<br/>opacity vs noise] --> RLT
+    IT[Informational time<br/>causal depth] --> IA[Interstitial agent<br/>agency and safety ontology]
+    IT --> NC[Negentropy clarification<br/>null models]
+    NC --> IA
+    NC --> RLT
+    IA --> RLT
+    RLT --> FR[Forbidden Relay<br/>bounded empirical test]
+    MD[Machine discovery<br/>provenance and uptake] -. constrains terminal artifact accounting .-> FR
+    FR -. distributed provenance evidence .-> MD
 ```
 
-The arrows mean “supplies concepts, constraints, or measurements,” not “must merge first.” The Git branches remain separated where possible so that conceptual relatedness does not become unnecessary source-control coupling.
+Solid arrows mean “supplies concepts, constraints, or measurements”; dashed arrows mark the two-way provenance relation with Machine Discovery. None of the arrows means “must merge first.”
 
 ## 4. Shared terms and controlled boundaries
 
