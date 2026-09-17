@@ -25,7 +25,7 @@ from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
 
-from run import build_rows, features, make_texts
+from run import build_rows, features, load_rows, make_texts
 
 
 def rmse(y: np.ndarray, pred: np.ndarray) -> float:
@@ -67,7 +67,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--texts", type=int, default=100)
     ap.add_argument("--positions", type=int, default=8)
-    ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument("--seed", type=int, default=7)\n    ap.add_argument("--field-store", type=Path, default=None)
     ap.add_argument("--random-repeats", type=int, default=8)
     ap.add_argument("--output", type=Path, default=Path("pontifex-active.json"))
     args = ap.parse_args()
