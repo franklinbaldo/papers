@@ -309,6 +309,30 @@ que invoca e depois não adota nenhuma das quatro saídas — que aplica
 parcialmente e silenciosamente — não está na quinta saída: está fora
 do espaço legítimo.
 
+A taxonomia fica mais clara se se separar a decisão de **invocar** o
+precedente das quatro respostas substantivas que essa invocação abre.
+A quinta saída ocorre antes desse compromisso; a aplicação parcial
+silenciosa, ao contrário, surge depois da invocação e por isso não pode
+ser confundida com abstenção.
+
+```mermaid
+flowchart TD
+    P[Precedente vinculante disponível] --> I{O tribunal o invoca?}
+    I -- Não --> A[5. Abstenção da invocação<br/>decide por outro fundamento]
+    I -- Sim --> R[Identificar ratio integral<br/>inclusive ressalvas]
+    R --> Q{Como a ratio se relaciona<br/>com o caso e o estado do direito?}
+    Q --> AP[1. Aplicação correta<br/>ratio + ajuste demonstrado]
+    Q --> DI[2. Distinção fundamentada<br/>diferença substantiva]
+    Q --> SS[3. Superação superveniente<br/>reconhecida no tribunal-fonte]
+    Q --> SR[4. Superação racional<br/>erro na ratio explicitado]
+    R -. seleciona só a porção favorável .-> X[Aplicação parcial silenciosa<br/>vício, não sexta saída]
+```
+
+O diagrama é uma taxonomia normativa proposta pelo artigo, não uma
+afirmação de que a admissibilidade da quarta saída seja pacífica; as
+objeções e a indeterminação estrutural dessa tese são enfrentadas nas
+seções 4 e 7.
+
 ---
 
 ## 4. A superação racional e o caráter racional da vinculação
