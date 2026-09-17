@@ -23,11 +23,8 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Reclaim runner disk
-        run: |
-          df -h /
-          sudo rm -rf /usr/local/lib/android /opt/ghc /usr/share/dotnet || true
-          df -h /
+      - name: Runner disk before probe
+        run: df -h /
 
       - name: Probe prebuilt FAISS artifact
         env:
