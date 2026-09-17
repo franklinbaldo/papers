@@ -174,6 +174,18 @@ so
 Q=\frac{0.319519}{0.928384}=0.344167.
 \]
 
+The terminal contrast is easier to interpret on a common zero-based scale. The bar chart compares the cross-observer agreement directly with both same-observer stability references at the same N.
+
+```mermaid
+xychart-beta
+    title "Observer-specific gap at N = 100,000"
+    x-axis ["Cross-observer", "Qwen self", "MiniLM self"]
+    y-axis "Agreement / stability" 0 --> 1.0
+    bar [0.3195, 0.9284, 0.9289]
+```
+
+The large vertical separation makes clear that the observer-specific conclusion is not a small residual around an almost universal neighborhood graph: cross-observer overlap is roughly one third of the available same-observer stability.
+
 This is well below the preregistered upper bound of 0.80. The terminal classification is therefore `observer_specific_gap_survives`.
 
 The result is stronger than saying that two models are imperfectly correlated. The same texts, same gallery, same metric family, exact neighbor search, and stable within-observer neighborhoods still produce substantially different discrete local neighborhoods across observers.
