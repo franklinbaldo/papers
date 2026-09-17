@@ -118,6 +118,16 @@ Q(100{,}000) \le 0.80.
 | 50,000 | 0.3260 | [0.3245, 0.3280] | 0.9290 | 0.9290 |
 | 100,000 | 0.3195 | [0.3190, 0.3202] | 0.9284 | 0.9289 |
 
+The primary visual question is whether calibrated cross-observer agreement collapses as the gallery grows. The plot keeps the axis anchored at zero and shows the full preregistered gallery schedule; the corresponding scale gate remains `S(100k) >= 0.20` with retention `R >= 0.75`.
+
+```mermaid
+xychart-beta
+    title "Calibrated cross-observer mKNN@5 across gallery scale"
+    x-axis "Gallery size N" [1k, 2.5k, 5k, 10k, 25k, 50k, 100k]
+    y-axis "Calibrated mKNN" 0 --> 0.45
+    line [0.4065, 0.3815, 0.3637, 0.3504, 0.3348, 0.3260, 0.3195]
+```
+
 The curve declines monotonically but smoothly. It does not show the rapid collapse expected if the pilot overlap were mainly a small-gallery coincidence.
 
 At the two preregistered endpoints,
