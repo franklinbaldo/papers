@@ -177,27 +177,27 @@ appellate court's reasoning has a foundational gap. The reasoning
 defect may be curable by Embargos de Declaração if it manifests
 as omission, contradiction, or obscurity.
 
-The load-bearing transition is the key object to audit: a claim can be harmlessly contingent in its source yet become structurally decisive when reused downstream. The diagram separates the source-document status from the later document's use, which prevents provenance from being conflated with argumentative weight.
+The load-bearing transition is the key object to audit: a claim can be harmlessly contingent in its source yet become structurally decisive when reused downstream. The diagram now answers one question only — when does downstream reuse create a contingent-to-necessary mismatch? Provenance (`fonte_declarada`, `fonte_inferida`, and related values) remains orthogonal metadata used to justify how the source status was established.
 
 ```mermaid
 flowchart LR
-    subgraph S[Source document]
-        N[Necessary claim<br/>load-bearing]
-        C[Contingent claim<br/>not load-bearing]
-        P[Pending status<br/>not yet determined]
-    end
+    S[Claim in source document] --> A{Source status}
+    A -- necessaria --> N[Necessary]
+    A -- contingente --> C[Contingent]
+    A -- pendente --> P[Pending]
 
-    N --> R[Claim reused downstream]
-    C --> R
-    P --> A[Regressive provenance audit]
-    R --> U{How is the claim used<br/>in the later document?}
-    U -- Non-load-bearing --> K[Status preserved in context]
-    U -- Load-bearing --> A
-    A --> V{Source status verified?}
+    N --> U[Claim reused downstream]
+    C --> U
+    P --> U
+    U --> L{Load-bearing in later document?}
+    L -- No --> R[Record reuse<br/>no mismatch established]
+    L -- Yes --> V{Source status verified?}
     V -- Necessary --> OK[No contingent-to-necessary mismatch]
-    V -- Contingent --> F[Contingent-to-necessary<br/>propagation flagged]
-    V -- Unresolved --> Q[Keep status pending]
+    V -- Contingent --> F[Flag propagation mismatch]
+    V -- Pending --> Q[Carry uncertainty forward]
 ```
+
+This makes the evidentiary asymmetry explicit: only a verified contingent source claim that becomes load-bearing downstream earns the propagation flag; an unresolved source remains `pendente` rather than being silently upgraded.
 
 ---
 
