@@ -206,26 +206,20 @@ quality evaluation has not been proposed.
 ## 3. Method: Embedding-Seeded Hierarchical Tournament Ranking
 
 ESHTR proceeds in three phases. Figure 1 provides a schematic
-overview.
+overview. The key design constraint is that semantic clustering changes which decisions are compared early; it does not itself assign quality.
 
+```mermaid
+flowchart TD
+    D[Judicial decisions D1...Dn] --> E[Dense embeddings]
+    E --> C[Phase 1: semantic clusters C1...Ck]
+    C --> P[Phase 2: within-cluster<br/>LLM-panel pairwise tournaments]
+    P --> R[Cluster rankings R1...Rk]
+    R --> W[Winners w1...wk]
+    W --> H[Phase 3: cross-cluster<br/>championship tournament]
+    H --> G[Global ranking G<br/>and champion c*]
 ```
-Phase 1: Embedding and Clustering
-   decisions D₁...Dₙ
-      ↓ dense embedding model
-   embedding vectors e₁...eₙ
-      ↓ clustering algorithm (k-means, HDBSCAN, or spectral)
-   clusters C₁...Cₖ (k determined automatically or by domain)
 
-Phase 2: Intra-Cluster Ranking
-   for each cluster Cᵢ:
-      ↓ LLM panel pairwise tournament
-   ranked list Rᵢ; winner wᵢ selected
-
-Phase 3: Cross-Cluster Championship
-   {w₁, w₂, ..., wₖ}
-      ↓ LLM panel pairwise tournament
-   global ranking G; champion c* selected
-```
+The figure makes the hierarchy explicit: embedding geometry seeds comparable groups, quality judgments are made by the panel within those groups, and only the winners are exposed to the semantically heterogeneous championship stage.
 
 ### 3.1 Phase 1: Embedding and Clustering
 
