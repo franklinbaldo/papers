@@ -69,6 +69,10 @@ Position papers and working drafts.
 
 - `empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
 
+## Eixo sistemas complexos / agência dissipativa
+
+- `sparse_intelligence_dissipative_universe.md` — metodologia pré-registrada para testar agência recursiva em substrato estocástico: física local exata + Barnes-Hut distante, inteligência esparsa, poda causal contrafactual, turnover de Teseu, histerese de ignição/extinção e formalização companion em Lean 4; MaleCNS entra apenas como surrogate substituível de inteligência
+
 ## Eixo física matemática / fusão
 
 - `vortex_cumulation_fusion.md` — agenda falsificável que testa se a cumulação anisotrópica de vórtice do blow-up de Navier–Stokes pode sobreviver, em regime pré-singular, à passagem para MHD compressível e produzir thermalização útil em hotspots de MTF/MagLIF; inclui a derivação negativa de que a energia do núcleo incompressível tende a zero
