@@ -190,6 +190,20 @@ A assimetria de benefícios e custos mantém o equilíbrio (β, β)
 mesmo que todos os agentes reconheçam que (α, α) seria melhor
 para o sistema.
 
+A estabilidade desse equilíbrio depende do custo do **desvio unilateral**: se apenas um lado passa a investir em argumentação robusta, ele internaliza o custo presente sem capturar sozinho o benefício sistêmico da coordenação. A figura separa essa tese qualitativa da hipótese posterior, na seção 4, de que a redução tecnológica de custos pode alterar os payoffs.
+
+```mermaid
+flowchart TD
+    B[Equilíbrio atual β,β<br/>baixo esforço dos dois lados]
+    B --> I[Órgão inferior muda sozinho para α<br/>custo concentrado + benefício incerto]
+    B --> S[STF muda sozinho para α<br/>custo presente + pouco retorno<br/>se a aplicação segue mecânica]
+    I --> RI[Incentivo individual<br/>a retornar para β]
+    S --> RS[Incentivo institucional<br/>a retornar para β]
+    B -. coordenação ou payoffs alterados .-> A[Estado α,α<br/>diálogo racional]
+```
+
+O diagrama não atribui valores numéricos aos payoffs; ele explicita apenas a estrutura de incentivos defendida nesta seção e deixa para a seção 4 a questão de quando a redução de custos pode deslocar o equilíbrio.
+
 ### 2.3 A estratégia de sinalização e seu fracasso
 
 Há um mecanismo teórico que poderia romper o equilíbrio sem redução

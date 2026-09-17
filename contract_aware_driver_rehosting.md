@@ -179,6 +179,22 @@ output length 8, a 32-byte write may remain inside the allocation while crossing
 the declared output boundary. A trailing guard page alone cannot observe that
 crossing.
 
+The two bounds answer different questions. The physical allocation answers whether the write is memory-safe in the synthetic buffer; the caller-declared output length answers whether the write crosses the semantic output boundary. The example below shows why those predicates can disagree without yet proving an overrun.
+
+```mermaid
+flowchart LR
+    I[InputBufferLength = 64] --> N[SystemBuffer allocation<br/>N = max(input, output) = 64]
+    O[OutputBufferLength = 8] --> N
+    W[Observed write<br/>interval 0..32] --> P{Within physical allocation<br/>0..64?}
+    P -- No --> F[PHYSICAL_OVERFLOW]
+    P -- Yes --> D{Within declared output<br/>0..8?}
+    D -- Yes --> K[Within both bounds]
+    D -- No --> E[DECLARED_OUTPUT_BOUNDARY_CROSSING<br/>E0 sensor event]
+    N --> P
+```
+
+A guard page can detect the `PHYSICAL_OVERFLOW` branch, but not the E0 branch; promotion of E0 to `OUTPUT_OVERRUN` still requires the independent output-intent evidence described below.
+
 This distinction motivates a broader semantic-safety view. Conventional memory
 instrumentation asks whether an access remains inside the allocation. Contract-
 aware shadow checking additionally asks whether a physically valid access
