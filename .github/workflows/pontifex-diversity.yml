@@ -11,11 +11,6 @@ on:
         options:
           - smoke
           - full
-  pull_request:
-    paths:
-      - "experiments/pontifex_red1/diversity.py"
-      - "experiments/pontifex_red1/run.py"
-      - ".github/workflows/pontifex-diversity.yml"
 
 jobs:
   diversity:
@@ -38,7 +33,7 @@ jobs:
             pontifex-red1-${{ runner.os }}-
 
       - name: Run smoke diversity study
-        if: github.event_name == 'pull_request' || inputs.mode == 'smoke'
+        if: inputs.mode == 'smoke'
         run: |
           uv run experiments/pontifex_red1/diversity.py \
             --examples 480 \
@@ -48,7 +43,7 @@ jobs:
             --output /tmp/pontifex-diversity.json
 
       - name: Run full diversity study
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'full'
+        if: inputs.mode == 'full'
         run: |
           uv run experiments/pontifex_red1/diversity.py \
             --examples 1920 \
