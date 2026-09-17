@@ -1,3 +1,11 @@
+---
+type: "Experiment Note"
+title: "Pontifex RED-1 — interpretation rule"
+description: "Interpretation rule for Pontifex convergence experiments, centered on persistence and scaling of held-out delta rather than a fixed effect-size cutoff."
+tags: [pontifex, experiment, interpretation]
+timestamp: 2026-09-17T13:05:00-04:00
+---
+
 # Pontifex RED-1 — interpretation rule
 
 The original harness encoded a `+0.05 macro AUPRC` pass/fail threshold. That threshold was introduced during implementation and was **not an agreed scientific criterion**. It must not be used to classify the Pontifex convergence claim as surviving or falsified.
