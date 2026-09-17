@@ -104,6 +104,26 @@ The preregistered observer-specific gate at N=100,000 is
 Q(100{,}000) \le 0.80.
 \]
 
+The two gates answer different scientific questions and should not be collapsed into one score. The design below shows how the same frozen galleries feed a scale-robustness test and, separately, a comparison against the stability available when observer identity is held fixed.
+
+```mermaid
+flowchart TD
+    F[Frozen corpus +<br/>two frozen observers] --> G[32 stratified galleries<br/>at each preregistered N]
+    G --> K[Exact cosine kNN<br/>primary k = 5]
+    K --> C[Permutation-calibrated<br/>cross-observer S(N)]
+    K --> U[Same-observer stability<br/>ceiling U(N)]
+
+    C --> SG{Scale gate<br/>R >= 0.75 and S(100k) >= 0.20?}
+    C --> Q[Q(100k) = C(100k) / U(100k)]
+    U --> Q
+    Q --> OG{Observer-specific gate<br/>Q <= 0.80?}
+
+    SG --> I[Static interpretation]
+    OG --> I
+```
+
+Passing the scale gate supports persistence of calibrated cross-observer locality over the tested gallery range; passing the observer-specific gate supports a remaining gap from same-observer stability. Neither gate identifies a causal mechanism for that gap.
+
 ## 3. Results
 
 ### 3.1 Primary k=5 curve
