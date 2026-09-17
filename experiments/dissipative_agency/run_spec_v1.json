@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "experiment": "sparse-intelligence-dissipative-agency-v1",
+  "status": "preregistered-not-run",
+  "paper": "sparse_intelligence_dissipative_universe.md",
+  "seeds": [42, 1337, 2026],
+  "substrate": {
+    "n_entities_max": 150000,
+    "domain_size": [1000.0, 1000.0],
+    "dimensions": 2,
+    "dt0": 0.005,
+    "r_local": 2.5,
+    "theta_bh": 0.6,
+    "performance_target_only": "10^5+ entities; no FPS claim until benchmarked"
+  },
+  "physics": {
+    "gamma_damping": 0.1,
+    "sigma_noise": 0.35,
+    "lambda_0_sweep": {
+      "min": 0.0,
+      "max": 120.0,
+      "rate": 0.05,
+      "direction": ["up", "down"],
+      "interpretation": "candidate influx control parameter; ignition and extinction thresholds are measured outcomes"
+    }
+  },
+  "entity_lifecycle": {
+    "theta_birth": 0.78,
+    "theta_death": 0.42,
+    "tau_birth_ticks": 150,
+    "tau_death_ticks": 80,
+    "requires_hysteresis": true,
+    "controller_energy_must_be_positive": true,
+    "note": "coherence/lifecycle gates determine persistence eligibility but do not by themselves certify agency"
+  },
+  "agency_certificate": {
+    "definition": "paired counterfactual pruning of reachable future volume",
+    "paired_noise_required": true,
+    "controlled_condition": "ReachableVolume(step(members, some(control), xi), some(control), xi)",
+    "free_condition": "ReachableVolume(step(members, none, xi), none, xi)",
+    "success_relation": "controlled < free",
+    "crystal_guard": "passive coherence without strict counterfactual future-volume contraction does not count as agency"
+  },
+  "multirate_clocks": {
+    "base_dt": 0.005,
+    "level_multipliers": {
+      "0": 1,
+      "1": 2,
+      "2": 4,
+      "3": 8
+    },
+    "status": "engineering baseline, not biological law"
+  },
+  "metabolism": {
+    "e0_endowment": 10.0,
+    "kappa_base": 0.05,
+    "kappa_action": 0.02,
+    "eta_harvest": 0.12
+  },
+  "universes": [
+    {
+      "id": "A_passive",
+      "controller": null,
+      "recursive_promotion": false
+    },
+    {
+      "id": "B_detection_only",
+      "controller": "null_passive_cluster",
+      "recursive_promotion": false
+    },
+    {
+      "id": "C_shallow",
+      "controller": "malecns",
+      "max_controller_level": 1,
+      "recursive_promotion": false
+    },
+    {
+      "id": "D_recursive",
+      "controller": "malecns",
+      "recursive_promotion": true
+    }
+  ],
+  "controller_ablations": [
+    "malecns",
+    "degree_preserving_shuffled_malecns",
+    "random_recurrent_reservoir",
+    "compact_ctrnn",
+    "linear_controller",
+    "random_action_controller",
+    "none"
+  ],
+  "split_world": {
+    "eligibility": {
+      "minimum_level": 2,
+      "max_original_material_retention": 0.01,
+      "minimum_theseus_index": 10.0
+    },
+    "branches": [
+      "intact",
+      "severed",
+      "matched_noise",
+      "temporally_shuffled"
+    ],
+    "same_exogenous_noise_stream": true,
+    "shock": "standardized momentum impulse J_shock",
+    "horizon_base_ticks": 500,
+    "measure": [
+      "reachable_future_volume",
+      "coherence",
+      "survival",
+      "recovery_time",
+      "energy",
+      "turnover",
+      "causal_signature"
+    ]
+  },
+  "theseus": {
+    "material_retention_metric": "S0",
+    "turnover_metric": "Theta_k",
+    "full_replacement_requires": [
+      "disjoint_initial_and_current_members",
+      "controller_instance_replaced",
+      "causal_signature_distance_below_epsilon"
+    ]
+  },
+  "figure_1": {
+    "panel_A": "D_max(lambda_0) upward vs downward sweep",
+    "panel_B": "G_k with neutral line G=1",
+    "panel_C": "Theta_k and S0 material retention",
+    "panel_D": "split-world intervention recovery curves"
+  },
+  "numerical_gates": {
+    "compare_barnes_hut_to_exact_small_n": true,
+    "trajectory_level_validation": true,
+    "repeat_key_results_with_stricter_theta_bh": true,
+    "exact_short_range_self_exclusion": true,
+    "no_emergence_claim_before_numerical_validation": true
+  },
+  "primary_outcomes": [
+    "lambda_ignite",
+    "lambda_extinguish",
+    "hysteresis_gap",
+    "D_max",
+    "G_k",
+    "Theta_k",
+    "S0",
+    "causal_signature_similarity",
+    "split_world_survival_difference"
+  ]
+}
