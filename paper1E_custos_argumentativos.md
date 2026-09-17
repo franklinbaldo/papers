@@ -426,6 +426,28 @@ inferiores investir em qualidade.
 O novo equilíbrio — (α, α) ou ao menos equilíbrio próximo —
 corresponde ao ciclo de diálogo racional que o CPC 2015 pressupõe.
 
+A figura explicita que o deslocamento de equilíbrio é uma **hipótese
+mecanicista do artigo**, não um resultado empírico já demonstrado. O
+ponto decisivo é o limiar: reduzir custos só muda o comportamento do STF
+se elevar suficientemente o custo relativo de não engajar.
+
+```mermaid
+flowchart LR
+    C[Menor custo de produzir e auditar<br/>argumento qualificado] --> O[Mais agentes marginais<br/>adotam estratégia α]
+    O --> Q[Mais reclamações com<br/>argumentação auditável]
+    Q --> K[Maior custo institucional<br/>de não enfrentar]
+    K --> G{Custo de não enfrentar<br/>supera o benefício?}
+    G -- Não --> B[Equilíbrio β,β<br/>pode persistir]
+    G -- Sim --> S[STF enfrenta melhor<br/>os argumentos]
+    S --> V[Benefício esperado de α<br/>para órgãos inferiores sobe]
+    V --> O
+    N[Ruído, limiar endógeno,<br/>cultura e custos contextuais] -. podem bloquear .-> G
+```
+
+O loop mostra também por que a redução tecnológica de custo é condição
+insuficiente: os próprios limites desenvolvidos a seguir podem impedir
+a travessia do limiar ou deslocá-lo.
+
 ### 4.4 O que a redução de custos não faz
 
 É importante ser preciso sobre o que a redução de custos
