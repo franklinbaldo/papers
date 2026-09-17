@@ -99,23 +99,40 @@ It is not a general test of teaching, intelligence, agency, discovery, or safety
 
 ## 3. Dependency graph
 
-The programme is not a linear dependency chain: several papers supply concepts or constraints to the relay mechanism, while Forbidden Relay is the bounded empirical instrument that receives those inputs. The graph below makes those scientific roles explicit without implying source-control ordering.
+The programme is not a linear dependency chain: papers at the top supply different kinds of scientific objects—protocol acquisition, diagnostics, causal-scale definitions, null models, and provenance rules. Those objects meet in the relay mechanism and safety ontology; Forbidden Relay is the bounded empirical instrument. The layered graph makes those roles explicit without implying source-control ordering.
 
 ```mermaid
-flowchart LR
-    GMT[Generative machine teaching<br/>protocol acquisition] --> RLT[RL relay transducers<br/>mechanism]
-    PSE[Pedagogical signal extraction<br/>opacity vs noise] --> RLT
-    IT[Informational time<br/>causal depth] --> IA[Interstitial agent<br/>agency and safety ontology]
-    IT --> NC[Negentropy clarification<br/>null models]
-    NC --> IA
-    NC --> RLT
-    IA --> RLT
-    RLT --> FR[Forbidden Relay<br/>bounded empirical test]
-    MD[Machine discovery<br/>provenance and uptake] -. constrains terminal artifact accounting .-> FR
-    FR -. distributed provenance evidence .-> MD
+flowchart TD
+    subgraph C[Concepts, nulls, and measurement]
+        GMT[Generative machine teaching<br/>protocol acquisition]
+        PSE[Pedagogical signal extraction<br/>opacity vs noise]
+        IT[Informational time<br/>causal depth]
+        NC[Negentropy clarification<br/>null models]
+        MD[Machine discovery<br/>provenance + public uptake]
+    end
+
+    subgraph M[Mechanism and system-level interpretation]
+        IA[Interstitial agent<br/>agency + safety ontology]
+        RLT[RL relay transducers<br/>trainable mechanism]
+    end
+
+    FR[Forbidden Relay<br/>bounded empirical instrument]
+
+    GMT -->|teaches / seeds protocol| RLT
+    PSE -->|supplies diagnostics| RLT
+    IT -->|defines causal depth| IA
+    IT -->|defines trajectory measures| RLT
+    NC -->|supplies non-agent baselines| IA
+    NC -->|constrains interpretation| RLT
+    IA -->|defines end-to-end safety questions| RLT
+    RLT -->|implements hypotheses| FR
+    PSE -->|tests progressive decodability| FR
+    IT -->|measures depth and survival| FR
+    MD -.->|requires auditable provenance| RLT
+    FR -.->|produces distributed provenance evidence| MD
 ```
 
-Solid arrows mean “supplies concepts, constraints, or measurements”; dashed arrows mark the two-way provenance relation with Machine Discovery. None of the arrows means “must merge first.”
+Solid arrows now name the specific scientific object transferred between papers; dashed arrows isolate the provenance feedback with Machine Discovery. None of the arrows means “must merge first,” and the graph does not claim that a positive Forbidden Relay result validates every upstream theory.
 
 ## 4. Shared terms and controlled boundaries
 
