@@ -92,6 +92,17 @@ jobs:
             --passes 1 2 4 8 16 32 64 128 256 500 \
             --output /tmp/pontifex-pass-sweep.json
 
+      - name: Run 11-text accumulation and return to T1
+        run: |
+          uv run experiments/pontifex_torus/return_first_text.py \
+            --texts "${{ steps.size.outputs.texts }}" \
+            --positions "${{ steps.size.outputs.positions }}" \
+            --field-seed 17 \
+            --passes 16 \
+            --seeds 0 1 2 3 4 \
+            --heldout-count 30 \
+            --output /tmp/pontifex-return-t1.json
+
       - name: Publish results
         if: always()
         run: |
@@ -100,7 +111,8 @@ jobs:
             /tmp/pontifex-active-v0.json \
             /tmp/pontifex-context-v0.json \
             /tmp/pontifex-sequential-shared.json \
-            /tmp/pontifex-pass-sweep.json; do
+            /tmp/pontifex-pass-sweep.json \
+            /tmp/pontifex-return-t1.json; do
             if [ -f "$f" ]; then
               echo "## $(basename "$f")" >> "$GITHUB_STEP_SUMMARY"
               echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
@@ -120,4 +132,5 @@ jobs:
             /tmp/pontifex-context-v0.json
             /tmp/pontifex-sequential-shared.json
             /tmp/pontifex-pass-sweep.json
+            /tmp/pontifex-return-t1.json
           if-no-files-found: warn
