@@ -26,7 +26,7 @@ import numpy as np
 from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_squared_error
 
-from run import build_rows, features, make_texts
+from run import build_rows, features, load_rows, make_texts
 
 
 def rows_for_ids(rows, ids):
@@ -124,7 +124,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--texts", type=int, default=120)
     ap.add_argument("--positions", type=int, default=8)
-    ap.add_argument("--field-seed", type=int, default=17)
+    ap.add_argument("--field-seed", type=int, default=17)\n    ap.add_argument("--field-store", type=Path, default=None)
     ap.add_argument("--seeds", type=int, nargs="+", default=list(range(10)))
     ap.add_argument(
         "--passes",
