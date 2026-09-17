@@ -89,7 +89,8 @@ jobs:
             /tmp/pontifex-torus-v0.json \
             /tmp/pontifex-active-v0.json \
             /tmp/pontifex-context-v0.json \
-            /tmp/pontifex-sequential-shared.json; do
+            /tmp/pontifex-sequential-shared.json \\
+            /tmp/pontifex-pass-sweep.json; do
             if [ -f "$f" ]; then
               echo "## $(basename "$f")" >> "$GITHUB_STEP_SUMMARY"
               echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
@@ -108,4 +109,5 @@ jobs:
             /tmp/pontifex-active-v0.json
             /tmp/pontifex-context-v0.json
             /tmp/pontifex-sequential-shared.json
+            /tmp/pontifex-pass-sweep.json
           if-no-files-found: warn
