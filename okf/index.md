@@ -9,6 +9,7 @@ every pull request.
 # Specification
 
 * [SPEC.md](SPEC.md) - vendored copy of OKF v0.1, the version this repository targets.
+* [paper-lifecycle.md](paper-lifecycle.md) - producer-side lifecycle schema for research documents (`active`, `historical`, `superseded`, `deprecated`) and successor metadata. This is a repository extension; it does not modify the vendored upstream OKF spec.
 
 # Types
 
@@ -30,8 +31,19 @@ every pull request.
 * [Session Log](types/session-log.md) - superseded precursor to Session Log Entry.
 * [Index](types/catalog-index.md) - human-facing catalog and reading guide (this repository's `README.md`).
 * [Reference](types/reference.md) - vendored external material, mirrored into this repository so its OKF adoption does not depend on that material staying reachable (`okf/SPEC.md`).
-* [OKF Type Spec](types/okf-type-spec.md) - a document that specifies how one type should be used (this list's own entries).
+* [OKF Type Spec](types/okf-type-spec.md) - a document that specifies how one type should be used (this list's own entries and repository-level schema extensions).
+
+# Shared producer fields
+
+All concept types may use the lifecycle extension documented in
+[`paper-lifecycle.md`](paper-lifecycle.md):
+
+* `lifecycle_status` — `active | historical | superseded | deprecated`; omitted means `active`.
+* `lifecycle_reason` — required for every non-active state.
+* `superseded_by` — list of existing repository-relative `.md` paths; required for `superseded`, optional for `historical`/`deprecated` when a successor exists.
+
+These fields are orthogonal to document `type`, publication/review status, and scientific or interest tier.
 
 # Tooling
 
-* [validate.py](validate.py) - conformance checker; also runs in CI on every pull request.
+* [validate.py](validate.py) - conformance checker; also runs in CI on every pull request. In addition to baseline OKF and the closed type vocabulary, it validates the lifecycle enum and its cross-field/path invariants.
