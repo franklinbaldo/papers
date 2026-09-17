@@ -1,0 +1,75 @@
+name: Pontifex diversity study
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Study size"
+        required: true
+        default: full
+        type: choice
+        options:
+          - smoke
+          - full
+  pull_request:
+    paths:
+      - "experiments/pontifex_red1/diversity.py"
+      - "experiments/pontifex_red1/run.py"
+      - ".github/workflows/pontifex-diversity.yml"
+
+jobs:
+  diversity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Cache Hugging Face models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: pontifex-diversity-${{ runner.os }}-${{ hashFiles('experiments/pontifex_red1/diversity.py') }}
+          restore-keys: |
+            pontifex-diversity-${{ runner.os }}-
+            pontifex-red1-${{ runner.os }}-
+
+      - name: Run smoke diversity study
+        if: github.event_name == 'pull_request' || inputs.mode == 'smoke'
+        run: |
+          uv run experiments/pontifex_red1/diversity.py \
+            --examples 480 \
+            --families 12 24 \
+            --encoder-counts 3 \
+            --seeds 0 1 \
+            --output /tmp/pontifex-diversity.json
+
+      - name: Run full diversity study
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'full'
+        run: |
+          uv run experiments/pontifex_red1/diversity.py \
+            --examples 1920 \
+            --families 12 24 48 96 \
+            --encoder-counts 3 5 8 \
+            --seeds 0 1 2 3 4 5 6 7 8 9 \
+            --output /tmp/pontifex-diversity.json
+
+      - name: Publish diversity summary
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-diversity.md ]; then
+            cat /tmp/pontifex-diversity.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload diversity artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-diversity-result
+          path: |
+            /tmp/pontifex-diversity.json
+            /tmp/pontifex-diversity.md
+          if-no-files-found: warn
