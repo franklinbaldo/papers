@@ -184,6 +184,19 @@ All six confidence gates passed.
 
 The contrast is especially informative because both stance and permission were perfectly decodable by a supervised centroid while remaining effectively absent from the first spectral mode. Linear decodability and graph bottleneck topology are therefore not interchangeable observables even on the same states.
 
+The divergence is easier to see when the registered held-out accuracies are placed side by side. The chart uses only values reported in Sections 4, 6, and 9; it is not a re-analysis.
+
+```mermaid
+xychart-beta
+    title "Held-out semantic accuracy: Fiedler mode vs supervised centroid"
+    x-axis [Initial, Stance, Confidence, Permission, Fresh135, Fresh360]
+    y-axis "Accuracy" 0 --> 1
+    bar [0.5625, 0.5000, 0.9375, 0.5000, 0.7500, 0.5000]
+    line [0.7500, 1.0000, 0.9375, 1.0000, 0.9375, 0.8750]
+```
+
+Bars are the label-blind Fiedler result; the line is the supervised centroid baseline. The persistent gaps in several conditions make the paper's central negative result visual: information can remain highly decodable while failing to become the graph's first connectivity bottleneck.
+
 ## 7. Confidence transfers beyond explicit certainty vocabulary
 
 The prospective confidence result motivated a harder realization-shift test. The training graph used exactly the 96 explicit-confidence training examples from the previous confirmation. The test set consisted of 24 new evidence descriptions in which confidence was implied through replication behavior and measurement agreement rather than directly named.

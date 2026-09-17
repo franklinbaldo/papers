@@ -237,18 +237,19 @@ The latter is more informative for legal verification.
 
 ### 4.1 Overview
 
-```
-Phase 0: Source documents (judgment, appeal, precedents)
-    ↓
-Phase 1: Argdown (argument decomposition and topology)
-    ↓
-Phase 2: Lean (formalization — LLM-formalizer)
-    ↓
-Phase 3: Subjective legal analysis ⇄ Phase 2 (iterative)
-    ↓
-Phase 4: Resolutive synthesis (defeat table with cross-references)
-    ↓
-Phase 5: Forensic translation (the actual legal pleading)
+The workflow has two distinct gates. Compilation checks deductive consequence under declared axioms; the later legal-analysis gate checks whether those axioms are actually acceptable representations of the record and law. A theorem that compiles but fails the legal-analysis gate loops back for reformulation rather than being promoted to a defeated argument.
+
+```mermaid
+flowchart LR
+    S[Phase 0<br/>source documents] --> A[Phase 1<br/>Argdown topology]
+    A --> L[Phase 2<br/>Lean formalization]
+    L --> C{Compiles?}
+    C -- No --> A
+    C -- Yes --> J[Phase 3<br/>subjective legal analysis]
+    J --> G{Axioms adequately<br/>anchored and fair?}
+    G -- No --> L
+    G -- Yes --> R[Phase 4<br/>resolutive synthesis]
+    R --> F[Phase 5<br/>forensic translation]
 ```
 
 The pipeline separates identification (Phases 1–2) from resolution
