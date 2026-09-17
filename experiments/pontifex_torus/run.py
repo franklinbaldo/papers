@@ -99,6 +99,20 @@ def build_rows(texts: list[str], positions_per_text: int, seed: int) -> list[Row
     return [Row(t, p, s, float(a), float(b)) for (t, p, s), a, b in zip(meta, da, db)]
 
 
+def load_rows(path: Path) -> list[Row]:
+    data = np.load(path, allow_pickle=False)
+    return [
+        Row(int(t), float(p), int(s), float(a), float(b))
+        for t, p, s, a, b in zip(
+            data["text_id"],
+            data["pos"],
+            data["size"],
+            data["response_a"],
+            data["response_b"],
+        )
+    ]
+
+
 def features(rows: list[Row], mode: str) -> np.ndarray:
     out: list[list[float]] = []
     for r in rows:
@@ -155,11 +169,11 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--texts", type=int, default=120)
     ap.add_argument("--positions", type=int, default=8)
-    ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument("--seed", type=int, default=7)\n    ap.add_argument("--field-store", type=Path, default=None)
     ap.add_argument("--output", type=Path, default=Path("pontifex-torus.json"))
     args = ap.parse_args()
 
-    rows = build_rows(make_texts(args.texts, args.seed), args.positions, args.seed)
+    rows = load_rows(args.field_store) if args.field_store else build_rows(make_texts(args.texts, args.seed), args.positions, args.seed)
     rng = np.random.default_rng(args.seed)
     ids = np.arange(args.texts)
     rng.shuffle(ids)
