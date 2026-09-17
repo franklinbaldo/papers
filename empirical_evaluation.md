@@ -78,21 +78,27 @@ championship comparison achieve tractability under the abstraction
 instruction, as assessed by the Phase 3 calibration protocol
 (§2.7)?
 
-The three questions share one corpus but use different experimental slices and endpoints:
+The three questions share one corpus, but their controls, comparison units, and endpoints differ. The figure makes those experimental boundaries explicit rather than treating Q1–Q3 as three labels on the same analysis.
 
 ```mermaid
 flowchart TD
     C[TJRO corpus<br/>200 decisions / 5 subject clusters] --> R[RPPS subset<br/>30 decisions]
     C --> F[Full corpus<br/>200 decisions]
-    R --> Q1[Q1: Pipeline vs simple vs elaborated LLM]
-    R --> Q2[Q2: Validity × persuasiveness diagnostic]
-    F --> Q3[Q3: ESHTR intra- vs cross-cluster comparison]
-    Q1 --> E1[Endpoint: procedural-validity difference]
-    Q2 --> E2[Endpoint: high-P / low-V pathology rate]
-    Q3 --> E3[Endpoints: κ shift + Phase 3 calibration]
+
+    R --> G[Generate 3 blinded conditions<br/>Pipeline / LLM-simple / LLM-elaborated]
+    G --> J[Heterogeneous blinded<br/>LLM judge panel]
+    J --> Q1[Q1: compare procedural validity<br/>across generation conditions]
+    J --> Q2[Q2: compare validity × persuasiveness<br/>within the same judged pleadings]
+    Q1 --> E1[Endpoint: Δ procedural validity]
+    Q2 --> E2[Endpoint: high-P / low-V rate]
+
+    F --> CL[Embed + HDBSCAN clustering]
+    CL --> PA[100 intra-cluster +<br/>100 cross-cluster pairs]
+    PA --> Q3[Q3: pairwise judge agreement<br/>+ Phase 3 abstraction test]
+    Q3 --> E3[Endpoints: κ_intra vs κ_cross<br/>and M1 / M2 / M3 calibration]
 ```
 
-This figure prevents the three preregistered claims from being conflated: Q1/Q2 use the same RPPS subset for pleading evaluation, whereas Q3 tests ranking reliability on the full heterogeneous corpus.
+Q1 and Q2 therefore share the RPPS pleading-generation experiment and blinding regime, while Q3 is a separate ranking-reliability experiment on the full heterogeneous corpus. The diagram also keeps design parameters distinct from results that have not yet been collected.
 
 ---
 
