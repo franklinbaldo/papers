@@ -464,7 +464,7 @@ The three definitions form a staged classification rather than one binary label.
 ```mermaid
 flowchart TD
     A[Candidate artifact<br/>a = claim + certificate + provenance + scope] --> G1{Admissible?}
-    G1 -- No --> X[Candidate only<br/>not accepted discovery]
+    G1 -- No --> X[Discovery event not established<br/>at this gate]
     G1 -- Yes --> G2{Certified?}
     G2 -- No --> X
     G2 -- Yes --> G3{Snapshot-novel<br/>under frozen audit?}
@@ -474,10 +474,12 @@ flowchart TD
     G4 -- Yes --> G5{Public uptake into K?}
     G5 -- No --> X
     G5 -- Yes --> U[Accepted discovery<br/>K_t -> K_t+1]
-    U --> C{Machine contribution<br/>under disclosed ablations?}
-    C -- Essential path --> MA[Machine-assisted]
-    C -- Essential to first generation --> MO[Machine-originated]
-    C -- Neither established --> GE[Accepted epistemic expansion<br/>without stronger machine-origin claim]
+    U --> C{Machine contribution on<br/>an essential path?}
+    C -- No --> GE[Accepted epistemic expansion<br/>without stronger machine-origin claim]
+    C -- Yes --> MA[Machine-assisted]
+    MA --> O{Machine essential to first generation<br/>under disclosed ablation family?}
+    O -- Yes --> MO[Machine-originated]
+    O -- No --> AO[Machine-assisted<br/>not machine-originated]
     U --> R{Improves later learners<br/>under preregistered budget?}
     R -- Yes --> RP[Recursively productive]
     R -- No --> NR[Discovery remains accepted<br/>without recursive productivity]
