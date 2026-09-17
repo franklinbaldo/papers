@@ -1,10 +1,6 @@
 name: Pontifex torus return-to-T1
 
 on:
-  pull_request:
-    paths:
-      - "experiments/pontifex_torus/return_first_text.py"
-      - ".github/workflows/pontifex-torus-return-t1.yml"
   workflow_dispatch:
 
 jobs:
