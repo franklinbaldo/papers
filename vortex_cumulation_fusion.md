@@ -316,6 +316,21 @@ The trajectory can be chosen so that rotational/shear effects do not trigger Kel
 
 ## 7. Minimal computational programme
 
+The decisive comparison holds target inventory and driver work fixed and manipulates the drive trajectory. That isolates the scientific question from the visually dramatic but irrelevant fact that the proposed trajectory contains stronger local shear.
+
+```mermaid
+flowchart TD
+    I[Same target inventory<br/>mass, EOS, seed field] --> W[Fix total driver work W_driver]
+    W --> B[Control<br/>ordinary compression]
+    W --> T[Treatment<br/>vortex-cumulation-inspired drive]
+    B --> MB[Measure final hotspot state]
+    T --> MT[Measure final hotspot state]
+    MB --> C[Compare endpoints<br/>eta_hot, density/confinement,<br/>instability growth]
+    MT --> C
+```
+
+A positive result therefore requires better hotspot coupling at matched input work, not merely a larger peak velocity or shear rate.
+
 ### Stage 0 — Reproduce the mathematical scaling
 
 Before adding plasma physics, reproduce the released Navier–Stokes leading-order scaling numerically over the resolvable pre-singular range. Measure:

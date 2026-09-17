@@ -270,6 +270,22 @@ Utility should be conditioned on model family, checkpoint, hop depth, relay role
 
 All functional keys, utility estimates, and rankings are frozen during held-out evaluation. They may be updated between training episodes, but never through a globally writable store during an evaluation trajectory. Every rollout records the retriever, key-table, and utility-model versions so that improvements in candidate delivery remain auditable and cannot become an undeclared side channel.
 
+The retrieval path is therefore deliberately asymmetric: semantic recall is fixed and reproducible, while utility and action selection can learn from downstream reward during training. The dashed feedback paths below disappear as update paths during held-out evaluation because the learned components are frozen.
+
+```mermaid
+flowchart LR
+    U[Input span u_t] --> E[Frozen semantic encoder]
+    E --> K[Top-K candidate pool<br/>frozen semantic keys]
+    K --> R[Trainable reranker<br/>functional key + utility + cost]
+    R --> P[Relay policy<br/>accept / reject / commit]
+    P --> C[Black-box LM channel]
+    C --> Z[Terminal receiver / reward]
+    Z -. training advantage .-> R
+    Z -. training advantage .-> P
+```
+
+This separation makes two controls explicit: downstream reward may shape retrieval policy during training, but it cannot rewrite the semantic recall space or a globally shared memory during evaluation.
+
 ### 4.3 Memory provenance
 
 Each entry should record at least:

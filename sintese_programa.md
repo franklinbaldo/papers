@@ -287,6 +287,21 @@ de precedentes brasileiro. É que a tecnologia altera os parâmetros
 do jogo de um modo que torna o equilíbrio superior — o diálogo
 racional — mais acessível do que era.
 
+O ponto vulnerável da tese está entre o efeito operacional mensurável e a consequência institucional longitudinal. O diagrama separa o que o programa pode testar diretamente do mecanismo que ainda precisa de evidência própria.
+
+```mermaid
+flowchart LR
+    T[Ferramentas de auditabilidade] --> C[Custo de produzir e verificar<br/>argumentos auditáveis]
+    C --> O[Endpoint operacional<br/>tempo, qualidade, rastreabilidade]
+    O -. hipótese institucional .-> I[Incentivos de litigantes e tribunais]
+    I -. hipótese institucional .-> R[Peso relativo de proxies reputacionais]
+    R -. hipótese institucional .-> D[Diálogo racional mais acessível]
+    H[1G: path dependence e habitus] -. restrição .-> I
+    H -. restrição .-> D
+```
+
+As setas sólidas representam a cadeia operacional que pode ser medida em uso controlado das ferramentas; as tracejadas representam hipóteses sobre comportamento institucional. Essa separação impede que uma melhora de produtividade ou auditabilidade seja tratada, por si só, como evidência de mudança do equilíbrio jurídico.
+
 ---
 
 ## 5. Contribuições autônomas
