@@ -386,6 +386,24 @@ especializada, bases de jurisprudência anotadas por autoria) que este
 artigo não desenvolve. A seção 4.3 discute, além disso, obstáculos
 estruturais à própria acumulação do canal local no contexto brasileiro.
 
+O mecanismo proposto é mais estreito do que uma substituição geral de reputação por auditoria. Ele prevê mudança de peso entre dois canais de informação justamente nos contextos em que parte da qualidade argumentativa se torna verificável a baixo custo.
+
+```mermaid
+flowchart TD
+    Q[Qualidade argumentativa\nparcialmente latente] --> D[Verificação direta]
+    P[Proxies observáveis\nafiliação · histórico · titulação · network] --> R[Reputação esperada]
+    D --> R
+    R --> T[Atenção, confiança e resposta\nna interação jurídica]
+
+    C[Redução tecnológica do custo\nde verificações textuais identificáveis] --> D
+    C -. pode reduzir peso relativo .-> P
+    D --> L[Qualidade observada repetidamente\nno canal local]
+    L --> R
+    F[Sorteio · rodízio · assessoria] -. limita acumulação .-> L
+```
+
+As setas pontilhadas registram hipóteses e limites, não efeitos já medidos: o artigo não demonstra democratização reputacional em rede, e os obstáculos organizacionais podem enfraquecer até o canal local.
+
 ### 4.2 A resistência à recalibração
 
 A recalibração encontra resistência estrutural dos agentes que

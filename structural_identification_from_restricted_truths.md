@@ -217,6 +217,21 @@ V_{\mathcal H}(E)/{\sim}
 \{[\mathcal A]\}.
 \]
 
+The definition is easiest to read as two successive reductions. Evidence removes candidates that fail an admissible truth; structural equivalence then quotients away multiple presentations that count as the same answer. Identification occurs only when one equivalence class remains.
+
+```mermaid
+flowchart LR
+    H[Hypothesis class H\ncandidate structures] --> E[Filter by sound evidence E ⊆ Q]
+    Q[Admissible invariant\nquery family Q] --> E
+    E --> V[Version space V_H(E)]
+    V --> X[Quotient by structural\nequivalence ~]
+    X --> G{How many equivalence\nclasses survive?}
+    G -- One: [A] --> I[Target identified up to ~]
+    G -- More than one --> U[Structurally unresolved]
+```
+
+The diagram also locates the observational-equivalence barrier proved below: if a non-equivalent competitor cannot be separated by any query in \(\mathcal Q\), no choice of \(E\subseteq\mathcal Q\) can remove its class before the quotient.
+
 ---
 
 ## 4. Elementary laws of structural version spaces

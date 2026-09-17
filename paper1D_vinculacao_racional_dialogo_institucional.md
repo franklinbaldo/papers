@@ -289,6 +289,24 @@ substancialmente. A resposta "a súmula vinculante assim determina"
 não é fundamentação; é circularidade que o art. 489, §1º, IV,
 proíbe expressamente.
 
+A simetria defendida aqui pode ser lida como uma sequência de ônus argumentativos, não como garantia de que o afastamento será mantido. O ponto do diagrama é separar a suficiência formal das razões do seu mérito e mostrar onde o dever de enfrentamento reaparece na reclamação.
+
+```mermaid
+flowchart TD
+    D[Órgão inferior diante de precedente vinculante] --> A{Afasta o precedente?}
+    A -- Não --> AP[Aplica com demonstração de aderência]
+    A -- Sim --> R{Expõe razões de distinção ou superação?}
+    R -- Não --> V[Vício de fundamentação\nart. 489 §1º VI]
+    R -- Sim --> C[Reclamação leva as razões ao STF]
+    C --> E{STF enfrenta as razões expostas?}
+    E -- Não --> O[Novo déficit de fundamentação\nna tese do artigo]
+    E -- Sim --> M{Razões convencem no mérito?}
+    M -- Não --> F[STF refuta e preserva o precedente]
+    M -- Sim --> X[STF distingue ou revê o entendimento]
+```
+
+A figura não transforma a tese dogmática em descrição empírica da prática do STF: ela explicita a estrutura normativa que o artigo sustenta e os pontos distintos em que forma e mérito são avaliados.
+
 **Objeção antecipada: conformidade e mérito na reclamação.** A objeção
 mais precisa ao argumento desta seção sustenta que o dever de
 fundamentação do art. 489, §1º, IV, não alcança o julgamento de
