@@ -383,6 +383,28 @@ não consequência necessária. O que é necessário é apenas a sanação
 do vício; a modificação decorre, ou não, da natureza do vício
 sanado e da integração realizada.
 
+A figura abaixo comprime as duas teses operacionais do artigo: o cabimento
+é definido pela modalidade do vício, não por ele recair sobre matéria
+processual ou de mérito; e a modificação do dispositivo só aparece depois
+da integração, como consequência contingente, sem constituir pedido
+subsidiário autônomo.
+
+```mermaid
+flowchart TD
+    D[Decisão impugnada] --> V{Há omissão, contradição,<br/>obscuridade ou erro material?}
+    V -- Não --> J[Erro de julgamento puro<br/>via recursal própria]
+    V -- Sim --> E[Embargos: integrar a decisão<br/>ponto processual ou de mérito]
+    E --> I[Sanar o vício identificado]
+    I --> M{A integração implica<br/>resultado diferente?}
+    M -- Não --> P[Dispositivo preservado]
+    M -- Sim --> R[Dispositivo modificado<br/>como consequência da integração]
+    R --> C[Contraditório e efeitos recursais<br/>art. 1.024, §§3º-4º]
+```
+
+A figura classifica o instrumento e sua consequência processual; ela não
+resolve a questão cognitiva examinada no §5.6 sobre quanto de julgamento
+novo uma integração específica pode exigir.
+
 ---
 
 ## 4. Ilustração
