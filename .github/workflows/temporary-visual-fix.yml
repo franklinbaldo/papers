@@ -1,0 +1,38 @@
+name: temporary-visual-fix
+
+on:
+  push:
+    branches:
+      - docs/visual-round-2026-09-17-b
+
+permissions:
+  contents: write
+
+jobs:
+  fix-machine-discovery-diagram:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: docs/visual-round-2026-09-17-b
+      - name: Correct classification semantics
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("machine_discovery.md")
+          text = p.read_text(encoding="utf-8")
+          old = """    A[Candidate artifact<br/>a = claim + certificate + provenance + scope] --> G1{Admissible?}\n    G1 -- No --> X[Candidate only<br/>not accepted discovery]\n    G1 -- Yes --> G2{Certified?}\n    G2 -- No --> X\n    G2 -- Yes --> G3{Snapshot-novel<br/>under frozen audit?}\n    G3 -- No --> X\n    G3 -- Yes --> G4{Provenance sufficient<br/>for claimed contribution?}\n    G4 -- No --> X\n    G4 -- Yes --> G5{Public uptake into K?}\n    G5 -- No --> X\n    G5 -- Yes --> U[Accepted discovery<br/>K_t -> K_t+1]\n    U --> C{Machine contribution<br/>under disclosed ablations?}\n    C -- Essential path --> MA[Machine-assisted]\n    C -- Essential to first generation --> MO[Machine-originated]\n    C -- Neither established --> GE[Accepted epistemic expansion<br/>without stronger machine-origin claim]\n    U --> R{Improves later learners<br/>under preregistered budget?}\n"""
+          new = """    A[Candidate artifact<br/>a = claim + certificate + provenance + scope] --> G1{Admissible?}\n    G1 -- No --> X[Discovery event not established<br/>at this gate]\n    G1 -- Yes --> G2{Certified?}\n    G2 -- No --> X\n    G2 -- Yes --> G3{Snapshot-novel<br/>under frozen audit?}\n    G3 -- No --> X\n    G3 -- Yes --> G4{Provenance sufficient<br/>for claimed contribution?}\n    G4 -- No --> X\n    G4 -- Yes --> G5{Public uptake into K?}\n    G5 -- No --> X\n    G5 -- Yes --> U[Accepted discovery<br/>K_t -> K_t+1]\n    U --> C{Machine contribution on<br/>an essential path?}\n    C -- No --> GE[Accepted epistemic expansion<br/>without stronger machine-origin claim]\n    C -- Yes --> MA[Machine-assisted]\n    MA --> O{Machine essential to first generation<br/>under disclosed ablation family?}\n    O -- Yes --> MO[Machine-originated]\n    O -- No --> AO[Machine-assisted<br/>not machine-originated]\n    U --> R{Improves later learners<br/>under preregistered budget?}\n"""
+          if text.count(old) != 1:
+              raise SystemExit(f"expected one target block, found {text.count(old)}")
+          p.write_text(text.replace(old, new, 1), encoding="utf-8")
+          Path(".github/workflows/temporary-visual-fix.yml").unlink()
+          PY
+          python okf/validate.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add machine_discovery.md .github/workflows/temporary-visual-fix.yml
+          git commit -m "docs: preserve nested machine-discovery classification"
+          git push origin HEAD:docs/visual-round-2026-09-17-b
