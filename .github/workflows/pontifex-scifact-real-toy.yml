@@ -1,10 +1,6 @@
 name: Pontifex SciFact real toy
 
 on:
-  pull_request:
-    paths:
-      - "experiments/pontifex_red1/scifact_real_toy.py"
-      - ".github/workflows/pontifex-scifact-real-toy.yml"
   workflow_dispatch:
     inputs:
       queries:
