@@ -1,0 +1,107 @@
+name: temporary-visual-round
+
+on:
+  push:
+    branches:
+      - docs/visual-round-2026-09-17-b
+
+permissions:
+  contents: write
+
+jobs:
+  edit-papers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: docs/visual-round-2026-09-17-b
+
+      - name: Add five scientific diagrams
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def insert_before(path: str, anchor: str, addition: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              if addition.strip() in text:
+                  raise SystemExit(f"{path}: diagram already present")
+              if text.count(anchor) != 1:
+                  raise SystemExit(f"{path}: expected one anchor, found {text.count(anchor)}")
+              p.write_text(text.replace(anchor, addition + anchor, 1), encoding="utf-8")
+
+          def insert_after(path: str, anchor: str, addition: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              if addition.strip() in text:
+                  raise SystemExit(f"{path}: diagram already present")
+              if text.count(anchor) != 1:
+                  raise SystemExit(f"{path}: expected one anchor, found {text.count(anchor)}")
+              p.write_text(text.replace(anchor, anchor + addition, 1), encoding="utf-8")
+
+          insert_before(
+              "generative_machine_teaching.md",
+              "The compact instruction proposed for the benchmark is:",
+              """The registration turn has one consequential branch: a new expansion receives a stable identity, while an already-known expansion accumulates another proof without changing identity. The diagram separates construction, identity, and proof reuse.\n\n```mermaid\nflowchart LR\n    A[Available registry entries<br/>r_i and r_j] --> B[Resolve stored expansions]\n    B --> C[Concatenate<br/>w = concat(value_i, value_j)]\n    C --> D{w already registered?}\n    D -- No --> E[Allocate stable ID<br/>store construction proof]\n    D -- Yes --> F[Keep stable ID<br/>add alternative proof]\n    E --> G[Updated registry R_t]\n    F --> G\n    G --> H[Future procedures may<br/>reference the stable ID]\n```\n\nThe figure makes the registry invariant explicit: proof knowledge may improve over time, but references remain attached to a permanent token identity.\n\n""",
+          )
+
+          insert_before(
+              "dynamic_quasar_reference_frames.md",
+              "### 5.1 Candidate fields",
+              """The first DGCT must make the anti-leakage boundary visible: model-selection information may choose and freeze the gauge, whereas evaluation-model transitions may fit only the preregistered low-capacity amplitude before residual complexity is measured.\n\n```mermaid\nflowchart LR\n    C[Model-selection / control data] --> G[Choose field family<br/>geometry + hyperparameters]\n    B[Preregistered candidate set<br/>including matched baselines] --> G\n    G --> F[FROZEN reference field<br/>V_Q]\n    E[Evaluation-model transitions<br/>F_M] --> A[Fit only low-capacity<br/>amplitude a_M]\n    F --> A\n    A --> R[Residual field<br/>r_M = F_M - a_M V_Q]\n    R --> M[DGCT held-out vector<br/>energy / rank / sample complexity<br/>OOD stability / cross-model concordance]\n```\n\nA positive result therefore means that a gauge fixed without evaluation dynamics leaves a simpler held-out residual; it is not permission to tune the ruler until the measured object looks simple.\n\n""",
+          )
+
+          insert_before(
+              "machine_discovery.md",
+              "### Definition 2: Machine-assisted and machine-originated discovery",
+              """The three definitions form a staged classification rather than one binary label. The figure shows which gates establish an accepted epistemic transition, which evidence attributes machine contribution, and which later test establishes recursive productivity.\n\n```mermaid\nflowchart TD\n    A[Candidate artifact<br/>a = claim + certificate + provenance + scope] --> G1{Admissible?}\n    G1 -- No --> X[Candidate only<br/>not accepted discovery]\n    G1 -- Yes --> G2{Certified?}\n    G2 -- No --> X\n    G2 -- Yes --> G3{Snapshot-novel<br/>under frozen audit?}\n    G3 -- No --> X\n    G3 -- Yes --> G4{Provenance sufficient<br/>for claimed contribution?}\n    G4 -- No --> X\n    G4 -- Yes --> G5{Public uptake into K?}\n    G5 -- No --> X\n    G5 -- Yes --> U[Accepted discovery<br/>K_t -> K_t+1]\n    U --> C{Machine contribution<br/>under disclosed ablations?}\n    C -- Essential path --> MA[Machine-assisted]\n    C -- Essential to first generation --> MO[Machine-originated]\n    C -- Neither established --> GE[Accepted epistemic expansion<br/>without stronger machine-origin claim]\n    U --> R{Improves later learners<br/>under preregistered budget?}\n    R -- Yes --> RP[Recursively productive]\n    R -- No --> NR[Discovery remains accepted<br/>without recursive productivity]\n```\n\nThis prevents correctness, novelty, machine credit, and downstream fertility from collapsing into a single impressive-output judgment.\n\n""",
+          )
+
+          insert_after(
+              "informational_time.md",
+              "Compression changes how efficiently the past is described. It does not retroactively shorten the path that occurred.",
+              """\n\nThe distinction is easiest to see as two layers: the upper path is the sequence that actually occurred; the lower path is a reversible description of that already-completed history.\n\n```mermaid\nflowchart TD\n    subgraph C[Causal history that actually occurred]\n        S0[State S0] -->|c1| S1[State S1]\n        S1 -->|c2| S2[State S2]\n        S2 -->|further counted events| SN[Observer-updated state Sn]\n    end\n    SN --> H[Ordered history H]\n    H --> E[Proof-preserving encode<br/>under registry R']\n    E --> T[Short symbolic index<br/>for H]\n    T --> X[expand under R']\n    X --> H2[Same ordered history H]\n    H -.-> CT[Causal time and depth<br/>set by traversed events]\n    T -.-> ST[Symbolic length L_R'(H)<br/>may be smaller]\n```\n\nThe token can reduce symbolic time because it is an index with an expansion proof; it does not erase any counted event from the causal path.\n""",
+          )
+
+          insert_before(
+              "semantic_observers.md",
+              "### 3.2 Resolution profile",
+              """The measurement contract for one observer is deliberately stricter than visual similarity: the predicate, estimator, data budget, and null calibration are fixed before the observer's resolution is scored.\n\n```mermaid\nflowchart LR\n    X[Held-out semantic stimuli] --> O[Observer m<br/>representation Z_m]\n    O --> E[Frozen estimator<br/>matched data budget]\n    E --> P[Estimated predicate<br/>P_hat_m,alpha(u,s)]\n    T[Preregistered target predicate<br/>P_alpha(u,s)] --> S[Calibrated held-out score]\n    P --> S\n    N[Permutation or matched null] --> S\n    S --> R[Resolution<br/>R_m(u,s,alpha)]\n    R --> F[Observer fingerprint<br/>and threshold s*_m]\n```\n\nThis pipeline makes the observer metaphor falsifiable: resolution is earned by recovery of a preregistered structure above a matched null, not by post-hoc inspection of an embedding plot.\n\n""",
+          )
+
+          # The temporary workflow must not remain in the paper repository.
+          Path(".github/workflows/temporary-visual-round.yml").unlink()
+          PY
+
+      - name: Validate OKF and diagram presence
+        shell: bash
+        run: |
+          python okf/validate.py
+          python - <<'PY'
+          from pathlib import Path
+          targets = [
+              "generative_machine_teaching.md",
+              "dynamic_quasar_reference_frames.md",
+              "machine_discovery.md",
+              "informational_time.md",
+              "semantic_observers.md",
+          ]
+          for path in targets:
+              text = Path(path).read_text(encoding="utf-8")
+              if text.count("```mermaid") < 1:
+                  raise SystemExit(f"{path}: expected a Mermaid block")
+              if text.count("```mermaid") > text.count("```", 0):
+                  raise SystemExit(f"{path}: malformed fenced block count")
+          print("visual checks: OK (5 target papers)")
+          PY
+
+      - name: Commit paper-only changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add generative_machine_teaching.md dynamic_quasar_reference_frames.md machine_discovery.md informational_time.md semantic_observers.md .github/workflows/temporary-visual-round.yml
+          git commit -m "docs: add scientific diagrams across five papers"
+          git push origin HEAD:docs/visual-round-2026-09-17-b
