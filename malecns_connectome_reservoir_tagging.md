@@ -286,6 +286,25 @@ This experiment answers a diagnostic question: was the v1 comparison materially 
 
 Because validation F1 determines checkpoint selection, v2 remains exploratory/model-selection evidence. It cannot serve as the final held-out performance estimate.
 
+The evidence ladder matters because each stage licenses a different claim. The baseline can motivate a training diagnostic; the validation-selected diagnostic can choose a regime; only a subsequently frozen run on untouched test data can adjudicate the topology claim.
+
+```mermaid
+flowchart TD
+    V1[v1 baseline<br/>5 paired seeds, 3 epochs] --> R1[No topology advantage observed]
+    R1 --> V2[v2 training-regime diagnostic<br/>validation-selected, exploratory]
+    V2 --> G{Materially training-limited?}
+    G -- Yes --> F1[Freeze improved training regime]
+    G -- No --> F2[Freeze current regime<br/>or redesign interface/dynamics]
+    F1 --> T[Untouched test split<br/>confirmatory run]
+    F2 --> T
+    T --> O{Held-out pattern}
+    O -- MaleCNS beats shuffled<br/>and sequential controls --> A[Topology advantage supported]
+    O -- MaleCNS ≈ shuffled<br/>but recurrence helps --> B[Recurrence advantage only]
+    O -- No useful gain --> C[No useful reservoir signal]
+```
+
+The diagram prevents validation-driven model selection from being visually conflated with confirmation: v2 can change what is frozen for the terminal experiment, but it cannot itself upgrade the biological-topology claim.
+
 ## 10. Planned confirmatory design
 
 A confirmatory run should freeze the selected training regime before touching `test.jsonl`.
