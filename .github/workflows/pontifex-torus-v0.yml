@@ -3,7 +3,9 @@ name: Pontifex torus v0
 on:
   pull_request:
     paths:
-      - "experiments/pontifex_torus/**"
+      - "experiments/pontifex_torus/run.py"
+      - "experiments/pontifex_torus/active.py"
+      - "experiments/pontifex_torus/context_scale.py"
       - ".github/workflows/pontifex-torus-v0.yml"
   workflow_dispatch:
     inputs:
