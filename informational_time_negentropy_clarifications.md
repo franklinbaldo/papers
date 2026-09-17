@@ -171,21 +171,22 @@ search, and fitted parameters are charged. High predictability, concentration,
 or deterministic limiting observables can therefore establish structure without
 establishing agency.
 
-The recognition test has two distinct evidential gates. First, the observer must earn a model of an external continuing source over fluctuation and self-generation. Only then does it ask whether an agent-level model earns its additional commitments over a structured non-agent law.
+The recognition test has two distinct evidential gates. First, the observer must earn a model of an external continuing source over fluctuation and self-generation. Only then does it compare agent and non-agent structured models on the same held-out interface, with the agent model charged for its extra descriptive machinery.
 
 ```mermaid
 flowchart TD
-    D[Observed interaction history] --> G1{External continuing source<br/>beats fluctuation and self?}
+    D[Observed interaction history] --> G1{External source beats<br/>maximum entropy + self?}
     G1 -- No --> N1[No external-other recognition]
     G1 -- Yes --> E[External structured source supported]
-    E --> G2{Agent-level model beats the best<br/>structured non-agent law?}
+    E --> C[Compare best structured-law and agent models<br/>same held-out observations / interventions]
+    C --> G2{Agent advantage survives full cost of<br/>model + registry + search + parameters?}
     G2 -- No --> L[Recognize external structure<br/>without attributing agency]
-    G2 -- Yes --> P{Advantage persists on held-out<br/>prediction or interventions?}
+    G2 -- Yes --> P{Advantage persists prospectively<br/>under held-out prediction or intervention?}
     P -- No --> U[Agency attribution not yet earned]
     P -- Yes --> R[Recognize another agent<br/>at this causal scale]
 ```
 
-The two-gate figure prevents a common category error: evidence for an external organized source is weaker than evidence for agency, because the latter still has to beat a complexity-matched structured-law account prospectively.
+The revised figure makes the complexity charge and matched prospective comparison load-bearing: evidence for an external organized source is weaker than evidence for agency, and an agent account does not win merely by being a more flexible model class.
 
 Intervention is especially informative. If changing $A$'s actions produces
 structured responses that cannot be derived from $A$ alone, the evidence for an

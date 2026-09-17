@@ -21,6 +21,21 @@ timestamp: 2026-07-09T12:12:59+00:00
 > ineditismo do Pontifex. Uma verificação independente de prior art
 > permanece pendente.
 
+A figura abaixo separa o que este arquivo efetivamente oferece do passo que ainda falta. O ponto científico é de proveniência: uma saída de sessão pode gerar hipóteses de prior art, mas não atravessa sozinha o gate de verificação independente.
+
+```mermaid
+flowchart LR
+    D[Draft Pontifex] --> S[AI browsing session]
+    S --> C[Candidate prior-art claims]
+    C --> R[Raw companion note<br/>this file]
+    R --> G{Independent search<br/>with reproducible queries?}
+    G -- No --> E[Exploratory evidence only<br/>no originality conclusion]
+    G -- Yes --> A[Audited prior-art record]
+    A --> V{Claims survive<br/>source-by-source review?}
+    V -- No --> U[Revise novelty claim]
+    V -- Yes --> P[Originality claim may be supported]
+```
+
 ---
 
 **Bottom line:** _Pontifex is genuinely new._

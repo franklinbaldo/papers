@@ -71,6 +71,38 @@ dogmáticos são a especificação que os módulos Lean implementam; os
 módulos Lean são a operacionalização computacional do que os papers
 dogmáticos estabelecem.
 
+A arquitetura do programa é uma cadeia de especificação, operacionalização e teste, mas não uma prova automática da hipótese institucional. O diagrama mostra também o papel de 1G como freio explícito contra inferir mudança sistêmica apenas porque a tecnologia reduz custos argumentativos.
+
+```mermaid
+flowchart LR
+    subgraph D[Eixo dogmático]
+        A12[1A–1B<br/>regras processuais]
+        C[1C<br/>especificação para formalização]
+        SYS[1D–1F<br/>diálogo, custos e reputação]
+        HIST[1G<br/>restrição histórico-institucional]
+    end
+
+    subgraph T[Eixo metodológico-formal]
+        PIPE[Lean 4 + Argdown<br/>auditabilidade]
+        PROV[Proveniência de claims<br/>necessário / contingente]
+        ESHTR[ESHTR<br/>avaliação comparativa]
+    end
+
+    EMP[Avaliação empírica TJRO<br/>desenho pré-registrado]
+
+    A12 --> C
+    C --> PIPE
+    C --> PROV
+    PIPE --> EMP
+    PROV --> EMP
+    ESHTR --> EMP
+    SYS -->|gera hipóteses institucionais testáveis| EMP
+    HIST -.->|limita a inferência de mudança| SYS
+    EMP -.->|pode corroborar, qualificar ou refutar| SYS
+```
+
+As setas sólidas indicam dependências de especificação ou método; as tracejadas indicam relações de crítica e retorno empírico. Em particular, o desenho do TJRO testa componentes operacionais do programa, mas não demonstra por si só a tese longitudinal de mudança de equilíbrio institucional de 1E–1G.
+
 ---
 
 ## 2. O eixo dogmático
