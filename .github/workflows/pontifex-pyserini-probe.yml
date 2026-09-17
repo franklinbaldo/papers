@@ -27,7 +27,6 @@ jobs:
         run: |
           df -h /
           sudo rm -rf /usr/local/lib/android /opt/ghc /usr/share/dotnet || true
-          sudo docker image prune --all --force || true
           df -h /
 
       - name: Probe prebuilt FAISS artifact
