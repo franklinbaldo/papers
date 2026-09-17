@@ -2,10 +2,6 @@ name: Pontifex scale study
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - "experiments/pontifex_red1/**"
-      - ".github/workflows/pontifex-scale.yml"
 
 jobs:
   scale:
@@ -29,19 +25,11 @@ jobs:
 
       - name: Run scale study
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            uv run experiments/pontifex_red1/scale.py \
-              --sizes 100 300 1000 3000 \
-              --seeds 0 1 2 3 4 5 6 7 8 9 \
-              --corruption 0 0.25 0.5 1 \
-              --output /tmp/pontifex-scale.json
-          else
-            uv run experiments/pontifex_red1/scale.py \
-              --sizes 100 300 1000 \
-              --seeds 0 1 2 3 4 \
-              --corruption 0 0.5 1 \
-              --output /tmp/pontifex-scale.json
-          fi
+          uv run experiments/pontifex_red1/scale.py \
+            --sizes 100 300 1000 3000 \
+            --seeds 0 1 2 3 4 5 6 7 8 9 \
+            --corruption 0 0.25 0.5 1 \
+            --output /tmp/pontifex-scale.json
 
       - name: Publish scale summary
         if: always()
