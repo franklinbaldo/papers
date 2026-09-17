@@ -223,6 +223,20 @@ where $M_t^{-z_i}$ is trained or inferred from the same history with $z_i$ remov
 
 This captures layered knowledge formation: first the learner acquires the protocol, then the protocol unlocks the code, and the decoded layer supports acquisition of the target function.
 
+Retrospective interpretation is therefore an operational claim about the later model, not a visual judgment that an earlier event merely looks meaningful in hindsight. The decisive test removes the earlier observation only after the later decoding structure exists and asks whether held-out performance worsens.
+
+```mermaid
+flowchart LR
+    Z[Earlier observation z_i<br/>little immediate gain] --> H[Later demonstrations]
+    H --> R[Protocol or representation<br/>becomes available]
+    R --> A[Ablate z_i from the<br/>same completed history]
+    A --> G{Held-out loss increases<br/>without z_i?}
+    G -- Yes --> O[Retrospective gain R_i,t > 0<br/>temporary opacity supported]
+    G -- No --> U[No retrospective support<br/>noise / coincidence / unresolved]
+```
+
+The figure keeps the evidentiary direction explicit: later structure licenses a new test of earlier evidence, but does not by itself relabel that evidence as signal.
+
 ---
 
 ## 6. Structured Irregularity

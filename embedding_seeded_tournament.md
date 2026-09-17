@@ -541,6 +541,24 @@ ESHTR can be tested by us or by independent researchers.*
 difference most pronounced for semantically distant cluster
 pairs.
 
+The hypothesis is testable as a matched contrast rather than as a comparison of two different judging systems. Corpus, judge panel, rubric, randomization policy, and comparison budget remain fixed; only the semantic relationship of the sampled pair changes. Fleiss' κ is the primary endpoint, with non-transitive-cycle incidence as a secondary diagnostic.
+
+```mermaid
+flowchart TD
+    C[Same held-out judicial corpus] --> I[Sample intra-cluster pairs]
+    C --> X[Sample cross-cluster pairs]
+    K[Held constant:<br/>judge panel + rubric +<br/>position randomization + budget] --> I
+    K --> X
+    I --> MI[Measure κ_intra<br/>and cycle incidence]
+    X --> MX[Measure κ_cross<br/>and cycle incidence]
+    MI --> T{Pre-registered contrast}
+    MX --> T
+    T --> S[Support SPH if<br/>κ_intra > κ_cross]
+    T --> F[No support / falsification if<br/>κ_intra ≤ κ_cross after controls]
+```
+
+This design prevents clustering quality itself from being mistaken for judicial quality: clustering determines the comparison regime, while the unchanged panel supplies the quality judgments.
+
 ---
 
 ## 7. Discussion

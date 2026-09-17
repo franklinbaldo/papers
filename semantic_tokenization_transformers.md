@@ -129,6 +129,26 @@ Our faithful decoding method combines aspects of both: we use retrieval of real 
 
 Our method consists of three main stages: (1) offline semantic tokenization to create the codebook and convert the corpus, (2) Transformer pre-training on semantic codes, and (3) faithful decoding for text reconstruction. We describe each stage in detail.
 
+The architecture is easiest to audit when the fixed semantic interface is separated from the trainable sequence model and from the reconstruction path. The figure shows where information is transformed, which components are fit offline or frozen, and how predicted codes return to text through corpus-grounded exemplars rather than unconstrained generation.
+
+```mermaid
+flowchart LR
+    D[Raw documents] --> C[Overlapping chunks]
+    C --> T[Teacher embedding model<br/>pre-trained and frozen]
+    T --> Q[RVQ quantizer<br/>fit offline]
+    Q --> S[Semantic code sequences]
+    Q --> M[Medoid index<br/>real corpus chunks]
+    S --> X[Semantic Transformer<br/>trainable]
+    X --> P[Predicted semantic codes]
+    P --> R[Retrieve medoid candidates]
+    M --> R
+    R --> V[Path selection +<br/>overlap merge]
+    V --> N[Disciplined normalization<br/>surface editing only]
+    N --> O[Reconstructed text]
+```
+
+This separation is scientifically load-bearing: sequence compression and code prediction can be evaluated independently of reconstruction quality, while reconstruction errors can be localized to retrieval, path selection, merging, or normalization.
+
 ### 3.1 Offline Semantic Tokenization (Encoding)
 
 #### 3.1.1 Chunking Strategy
