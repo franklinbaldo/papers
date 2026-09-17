@@ -1,5 +1,5 @@
 ---
-type: "Experiment Note"
+type: "Findings Record"
 title: "Pontifex RED-1 — learned convergence vs trivial aggregation"
 description: "Synthetic held-out ablation harness for testing whether learned multi-space convergence adds signal beyond a single encoder or simple mean."
 tags: [pontifex, experiment, interpretability]
