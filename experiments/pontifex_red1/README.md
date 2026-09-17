@@ -82,10 +82,44 @@ The diversity study can use, in order:
 The purpose is not merely to increase K, but to test whether the benefit changes
 as the representation bank becomes less redundant.
 
+## MS MARCO sampled feature stores
+
+For large prebuilt Pyserini indexes, the project now uses a fixed sampled-PID
+workflow instead of trying to materialize an entire 8.8M-passage embedding bank in
+RAM.
+
+`sample_manifest.py` defines a deterministic, encoder-independent sample over the
+8,841,823 MS MARCO Passage v1 PIDs using a full-cycle modular walk. The sample is
+specified by `start`, `step`, corpus size, and a SHA-256 of the ordered PID list.
+This guarantees that TCT-ColBERT, BGE, ANCE, and later encoders extract **the same
+PID sequence** without relying on internal FAISS ordering or RNG state.
+
+`extract_sample_store.py` then:
+
+1. downloads a Pyserini prebuilt FAISS artifact;
+2. scans its companion `docid` file to resolve the real internal position of every sampled PID;
+3. opens the full FAISS index read-only via mmap;
+4. reconstructs only the sampled vectors;
+5. writes a compact `.npz` containing `pids`, `positions`, and `embeddings`, plus JSON provenance metadata.
+
+The intended ladder is:
+
+- **1k PIDs** — automatic smoke/provenance check;
+- **10k PIDs** — default research sample;
+- **100k PIDs** — first larger stability study after the multi-encoder extraction path is proven.
+
+For a 768-dimensional float32 encoder, 10k raw vectors are only about 30.7 MB
+before compression, so even an 8-encoder bank remains easy to manipulate after
+one-time extraction from the large source indexes.
+
+The workflow `Pontifex sampled feature store` runs 1k automatically on PR changes
+and exposes 10k (or another size) through `workflow_dispatch`. Its default source
+is the official `msmarco-v1-passage.tct_colbert-v2-hnp` Pyserini FAISS index.
+
 ## Features
 
-For each candidate span and each encoder, the harness computes only within-space
-cosine similarities:
+For each candidate span and each encoder, the synthetic harness computes only
+within-space cosine similarities:
 
 1. original vs span-masked sentence;
 2. left context vs original;
@@ -137,6 +171,23 @@ uv run experiments/pontifex_red1/diversity.py \
   --encoder-counts 3 5 8 \
   --seeds 0 1 2 3 4 5 6 7 8 9 \
   --output pontifex-diversity.json
+```
+
+Create a fixed 10k PID manifest:
+
+```bash
+uv run experiments/pontifex_red1/sample_manifest.py \
+  --size 10000 \
+  --output msmarco-sample-10k.json
+```
+
+Extract the same 10k PIDs from a prebuilt TCT-ColBERT index:
+
+```bash
+uv run experiments/pontifex_red1/extract_sample_store.py \
+  --index msmarco-v1-passage.tct_colbert-v2-hnp \
+  --size 10000 \
+  --output msmarco-tct-sample-10k.npz
 ```
 
 The GitHub workflow `Pontifex diversity study` runs a small smoke configuration
