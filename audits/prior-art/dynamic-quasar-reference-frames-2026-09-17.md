@@ -28,7 +28,7 @@ The paper itself first became public in commit [`438c118817ce6cf5dd276b98a514d2e
 
 The present central claim was introduced in the next public commit, [`70b382726b11ef4eced8ce1fa6b31bf734e63fdc`](https://github.com/franklinbaldo/papers/commit/70b382726b11ef4eced8ce1fa6b31bf734e63fdc), **2026-09-09 01:26:01 UTC**, whose commit message is `research: make dynamic gauge compression the primary DQRF claim`. Its diff introduces the frozen-gauge decomposition, the residual-complexity framing and DGCT as the foundational experiment.
 
-**Claim-specific cutoff: 2026-09-09 01:26:01 UTC.** Material first made public after that instant is not prior art against this audited claim.
+**Claim-specific cutoff: 2026-09-09 01:26:01 UTC.** Material first made public after this instant is not prior art against this audited claim.
 
 ## 2. Search protocol
 
@@ -46,9 +46,11 @@ This round searched the exact composition and its components under older termino
 - `cross-session shared latent dynamical system alignment`
 - `minimum description length dynamical system reconstruction`
 - `frozen reference vector field residual complexity`
+- `reference vector field residual neural ODE`
+- `nominal vector field learned residual dynamics`
 - `dynamic gauge embeddings language models`
 
-Sources checked included arXiv, PNAS, Nature/Communications Physics, bioRxiv, Physical Review E and public GitHub/repository search. Candidate dates were checked against primary preprint or publisher records where available. Searches also decomposed the claim so that older work need not use the words “gauge”, “quasar” or “Semantic Atlas”.
+Sources checked included arXiv, PNAS, Nature/Communications Physics, bioRxiv, Physical Review E, MDPI/Mathematics and public GitHub/repository search. Candidate dates were checked against primary preprint or publisher records where available. Searches also decomposed the claim so that older work need not use the words “gauge”, “quasar” or “Semantic Atlas”.
 
 ## 3. Findings before our cutoff
 
@@ -151,6 +153,24 @@ Molkov et al., **“Using the minimum description length principle for global re
 
 This does not anticipate DQRF's shared gauge, but it prevents treating description-length or complexity-based selection of dynamical representations as a new ingredient.
 
+### 3.8 Fixed nominal vector fields plus learned residual dynamics are also established
+
+**Classification:** strong `partial_prior_art` for the fixed-field-plus-residual architecture.
+
+Bachar, **“Deep Learning-Based Residual Augmentation of Neural ODE Approximations: Rollout Error Propagation, Contraction Diagnostics, and CRN Case Study”**, *Mathematics* 14(12), 2147, published **2026-06-15**, uses the explicit residual parameterization
+
+\[
+\widehat f(x)=f(x)+h_\theta(x),
+\]
+
+where `f` is a nominal mechanistic vector field and `h_θ` is a learned residual correction identified from trajectory data. The paper then evaluates rollout reliability and stability of the augmented dynamics.
+
+- <https://doi.org/10.3390/math14122147>
+
+This finding matters because it is closer to DQRF's **frozen reference component + fitted remainder** logic than shared-latent-dynamics work alone. It rules out novelty for the generic architecture of retaining a fixed/known vector field and learning only what remains unexplained.
+
+**Difference from DQRF:** the nominal field in residual Neural ODE augmentation is a mechanistic model intended to approximate the target system itself; it is not an arbitrary external ruler shared across independently calibrated observers. DQRF also fits only a low-capacity amplitude on the frozen gauge and makes held-out residual complexity, matched alternative gauges and cross-model concordance central endpoints rather than merely learning a correction that improves prediction.
+
 ## 4. Novelty boundary after this round
 
 The broad components of DQRF are substantially less novel than the paper name can initially suggest:
@@ -159,6 +179,7 @@ The broad components of DQRF are substantially less novel than the paper name ca
 - shared latent dynamics across systems are established (`partial_prior_art`);
 - shared representations/components can improve transfer and sample efficiency across systems (`partial_prior_art`);
 - shared vector field + unit-specific deviation is established (`partial_prior_art`);
+- fixed nominal vector field + learned residual correction is established (`partial_prior_art`);
 - semantic reference frames, semantic trajectories and trajectory compressibility existed in language-model work before our cutoff (`partial_prior_art`).
 
 This round **did not locate** a pre-2026-09-09 01:26:01 UTC source combining all of the following:
@@ -184,16 +205,17 @@ This is only a negative search result. If a later source appears, chronology and
 
 ## 6. Consequence for the paper's Related Work and novelty language
 
-A future paper revision should explicitly position DQRF against at least four distinct antecedent families instead of only steering/vector-field analogies:
+A future paper revision should explicitly position DQRF against at least five distinct antecedent families instead of only steering/vector-field analogies:
 
 1. **sparsifying coordinates / system identification** — SINDy and normal-form traditions;
 2. **shared multi-system dynamics** — learned correspondence and MIDST-style shared representations;
 3. **mixed-effect vector fields** — MEGPODE's shared population field plus subject-specific deviation;
-4. **semantic reference frames** — SemRF's fixed anchors, semantic trajectories and compressibility.
+4. **residual dynamical models** — fixed nominal vector field plus learned correction;
+5. **semantic reference frames** — SemRF's fixed anchors, semantic trajectories and compressibility.
 
 A cautious summary sentence supported by this audit would be:
 
-> Coordinate choices that simplify dynamics, shared latent dynamics across related systems, common-plus-individual vector-field decompositions, and semantic reference frames for language-model trajectories all predate DQRF. The narrower hypothesis tested here is whether an **externally frozen dynamic gauge**, chosen without evaluation-model transition data, can lower preregistered held-out residual-complexity measures across independently calibrated model observers better than matched alternative fields.
+> Coordinate choices that simplify dynamics, shared latent dynamics across related systems, common-plus-individual vector-field decompositions, fixed-field residual augmentation, and semantic reference frames for language-model trajectories all predate DQRF. The narrower hypothesis tested here is whether an **externally frozen dynamic gauge**, chosen without evaluation-model transition data, can lower preregistered held-out residual-complexity measures across independently calibrated model observers better than matched alternative fields.
 
 ## 7. Next search frontier
 
