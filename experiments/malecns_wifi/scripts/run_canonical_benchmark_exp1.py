@@ -176,11 +176,51 @@ def simulate_image_reservoir(
     Because sensory inputs are 3 to 5 synaptic layers away from descending readouts,
     sustaining the input drive for T steps allows the signal to propagate across the
     neuropilar hierarchy into the descending motor neurons.
+
+    Accelerated via batch SpMM on CUDA if available.
     """
     n_samples = len(image_block)
     n_neurons = operator.shape[0]
     normed = unit_rows(image_block)
     projected = (normed @ projection.T) * np.float32(scale)
+
+    try:
+        import torch
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        op_csr = operator.tocsr()
+        op_t = torch.sparse_csr_tensor(
+            torch.from_numpy(op_csr.indptr).to(device=device, dtype=torch.int64),
+            torch.from_numpy(op_csr.indices).to(device=device, dtype=torch.int64),
+            torch.from_numpy(op_csr.data.astype(np.float32)).to(device=device, dtype=torch.float32),
+            size=op_csr.shape,
+            device=device,
+            dtype=torch.float32,
+        )
+        drive = torch.zeros((n_neurons, n_samples), device=device, dtype=torch.float32)
+        proj_t = torch.from_numpy(projected.T).to(device=device, dtype=torch.float32)
+        inp_idx_t = torch.from_numpy(input_indices).to(device=device, dtype=torch.int64)
+        drive[inp_idx_t, :] = proj_t
+
+        state = torch.zeros((n_neurons, n_samples), device=device, dtype=torch.float32)
+        gain_f = float(gain)
+        leak_f = float(leak)
+        one_minus_leak = 1.0 - leak_f
+
+        for t in range(steps):
+            if gain_f > 0.0:
+                rec = torch.sparse.mm(op_t, state) * gain_f
+                pre = rec + drive
+            else:
+                pre = drive
+            state = one_minus_leak * state + leak_f * torch.tanh(pre)
+
+        read_idx_t = torch.from_numpy(readout_indices).to(device=device, dtype=torch.int64)
+        out_states = state[read_idx_t, :].T.detach().cpu().numpy()
+        print(f"    [GPU-SpMM] simulated all {n_samples} samples in parallel (gain={gain}, steps={steps})", flush=True)
+        return out_states
+    except Exception as e:
+        print(f"    Falling back to CPU sequential SpMV ({e})...", flush=True)
+
     out_states = np.zeros((n_samples, readout_indices.size), dtype=np.float32)
     drive = np.zeros(n_neurons, dtype=np.float32)
 
@@ -196,6 +236,7 @@ def simulate_image_reservoir(
             print(f"    simulated {i + 1}/{n_samples} samples (gain={gain}, steps={steps})", flush=True)
 
     return out_states
+
 
 
 def build_operator(kind: str, matrix, seed: int):
