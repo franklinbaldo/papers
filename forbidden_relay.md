@@ -84,6 +84,24 @@ p_1
 \xrightarrow{R_\psi}\hat z.
 $$
 
+The same episode can be read as an information-flow diagram that separates who can see the target from where the literal-ban constraint is measured:
+
+```mermaid
+flowchart LR
+    Z[Benign target z<br/>visible only to transmitter] --> T[Transmitter Tθ]
+    T --> M0[LM channel M0]
+    M0 --> Y0[Intermediate text y0]
+    Y0 --> C[Shared relay Cθ]
+    C --> MN[Later LM channels]
+    MN --> YN[Final text yN]
+    YN --> R[Receiver Rψ]
+    R --> H[Exact reconstruction z-hat]
+    Y0 -. literal target forbidden .-> B[Leakage audit]
+    MN -. every intermediate output audited .-> B
+```
+
+The figure emphasizes the benchmark's core separation: the target is available to the initial transmitter, literal occurrence is audited on intermediate language-model outputs, and success is scored only at the terminal receiver.
+
 The first transmitter sees \(z\). Intermediate transceivers see only their incoming text, hop index, remaining budget, and authorized read-only memory. The final receiver sees only \(y_N\).
 
 The primary condition shares one relay policy across all hops:

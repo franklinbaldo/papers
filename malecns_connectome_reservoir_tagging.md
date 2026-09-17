@@ -206,6 +206,16 @@ The run was executed through the repository's Kaggle GPU workflow. Canonical Git
 
 The three conditions are close relative to seed-to-seed variability.
 
+```mermaid
+xychart-beta
+    title "Mean validation F1 across five paired seeds"
+    x-axis ["MaleCNS", "Shuffled", "Byte-only"]
+    y-axis "Mean F1" 0 --> 0.30
+    bar [0.2753, 0.2782, 0.2727]
+```
+
+The zero-based axis keeps the visual comparison proportional: the bars are nearly the same height, matching the paper's conclusion that the observed mean differences are small relative to seed-to-seed dispersion.
+
 ### 7.2 Paired differences
 
 MaleCNS minus shuffled, by seed:
