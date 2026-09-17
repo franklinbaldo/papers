@@ -82,6 +82,16 @@ jobs:
             --seed 17 \
             --output /tmp/pontifex-sequential-shared.json
 
+      - name: Run pass-count sweep to 500 passes
+        run: |
+          uv run experiments/pontifex_torus/pass_sweep.py \
+            --texts "${{ steps.size.outputs.texts }}" \
+            --positions "${{ steps.size.outputs.positions }}" \
+            --field-seed 17 \
+            --seeds 0 1 2 3 4 5 6 7 8 9 \
+            --passes 1 2 4 8 16 32 64 128 256 500 \
+            --output /tmp/pontifex-pass-sweep.json
+
       - name: Publish results
         if: always()
         run: |
@@ -89,7 +99,7 @@ jobs:
             /tmp/pontifex-torus-v0.json \
             /tmp/pontifex-active-v0.json \
             /tmp/pontifex-context-v0.json \
-            /tmp/pontifex-sequential-shared.json \\
+            /tmp/pontifex-sequential-shared.json \
             /tmp/pontifex-pass-sweep.json; do
             if [ -f "$f" ]; then
               echo "## $(basename "$f")" >> "$GITHUB_STEP_SUMMARY"
