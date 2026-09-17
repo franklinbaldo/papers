@@ -156,6 +156,25 @@ search, and fitted parameters are charged. High predictability, concentration,
 or deterministic limiting observables can therefore establish structure without
 establishing agency.
 
+The comparative recognition test is easier to see as model competition rather than a progression from mere order to agency:
+
+```mermaid
+flowchart TD
+    D[Observed interaction history] --> M[Compare complexity-charged models]
+    M --> X[Maximum-entropy / fluctuation]
+    M --> S[Self-generated order]
+    M --> L[Structured non-agent law]
+    M --> A[Agent-level model]
+    X --> C{Best description + held-out prediction?}
+    S --> C
+    L --> C
+    A --> C
+    C -->|Agent model does not win| N[Do not attribute agency]
+    C -->|Agent model wins and persists| R[Recognize another agent at this causal scale]
+```
+
+The figure makes explicit that local order is not itself an agency signal: the agent-level account must outperform fluctuation, self-generation, and a complexity-matched structured-law alternative on the same observation interface.
+
 Intervention is especially informative. If changing $A$'s actions produces
 structured responses that cannot be derived from $A$ alone, the evidence for an
 external continuing source increases.
