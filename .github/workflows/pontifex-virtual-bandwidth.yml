@@ -54,24 +54,10 @@ jobs:
               --output "/tmp/pontifex-virtual-H${H}.json"
           done
 
-      - name: Publish compact summaries
+      - name: Publish result paths
         if: always()
         run: |
-          for H in 4 8 16 32; do
-            if [ -f "/tmp/pontifex-virtual-H${H}.json" ]; then
-              echo "## Harmonics ${H}" >> "$GITHUB_STEP_SUMMARY"
-              python - "/tmp/pontifex-virtual-H${H}.json" <<'PY' >> "$GITHUB_STEP_SUMMARY"
-import json, sys
-d=json.load(open(sys.argv[1]))
-for k,v in d["summary"].items():
-    if k.startswith("torus_region_backprojection"):
-        print(k,
-              "cos=", round(v["cosine_similarity"]["mean"],6),
-              "nbr=", round(v["neighbor_overlap"]["mean"],6),
-              "top1=", round(v["retrieval_top1"]["mean"],6))
-PY
-            fi
-          done
+          ls -lh /tmp/pontifex-virtual-H*.json || true
 
       - name: Upload results
         if: always()
