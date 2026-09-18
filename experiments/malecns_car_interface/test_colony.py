@@ -1,0 +1,42 @@
+import unittest
+
+from colony import (
+    SpecialistReport,
+    confidence_weighted_value,
+    disagreement,
+    median_value,
+)
+
+
+class ColonyTests(unittest.TestCase):
+    def test_confidence_is_bounded(self):
+        with self.assertRaises(ValueError):
+            SpecialistReport("imu-1", "imu", 0.2, 1.1)
+
+    def test_median_is_robust_to_one_bad_specialist(self):
+        reports = [
+            SpecialistReport("a", "yaw", 0.10, 0.9),
+            SpecialistReport("b", "yaw", 0.12, 0.8),
+            SpecialistReport("bad", "yaw", 5.0, 0.1),
+        ]
+        self.assertAlmostEqual(median_value(reports), 0.12)
+
+    def test_confidence_weighting_downweights_bad_specialist(self):
+        reports = [
+            SpecialistReport("a", "danger", 0.2, 1.0),
+            SpecialistReport("b", "danger", 0.3, 1.0),
+            SpecialistReport("bad", "danger", 1.0, 0.0),
+        ]
+        self.assertAlmostEqual(confidence_weighted_value(reports), 0.25)
+
+    def test_disagreement_detects_conflict(self):
+        calm = [
+            SpecialistReport("a", "speed", 10.0, 1.0),
+            SpecialistReport("b", "speed", 10.1, 1.0),
+        ]
+        conflict = calm + [SpecialistReport("c", "speed", 30.0, 1.0)]
+        self.assertGreater(disagreement(conflict), disagreement(calm))
+
+
+if __name__ == "__main__":
+    unittest.main()
