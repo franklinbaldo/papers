@@ -3,7 +3,7 @@ type: "Technical Paper"
 title: "The Schmidhuber Meter: A Claim-Level Citation Debt Index"
 description: "A practical, auditable framework for measuring public temporal priority, substantive overlap, discoverability, missing bibliographic credit, and the consequence of that deficit at the level of scientific claims."
 tags: [schmidhuber-meter, citation-debt, bibliometrics, prior-art, scientific-credit]
-timestamp: 2026-09-18T21:30:00Z
+timestamp: 2026-09-19T00:00:00Z
 ---
 
 # The Schmidhuber Meter: A Claim-Level Citation Debt Index
@@ -11,471 +11,412 @@ timestamp: 2026-09-18T21:30:00Z
 **Franklin Silveira Baldo**  
 Independent Researcher
 
-> **Methodology paper.** This paper proposes a claim-level bibliometric index for citation credit deficit. It does not infer plagiarism, copying, intent, negligence, or causal derivation from temporal priority and overlap alone. The operational definition is intentionally restricted to public, auditable evidence.
+> **Methodology paper.** This paper proposes a claim-level bibliometric index for citation credit deficit. It does not infer plagiarism, copying, intent, negligence, or causal derivation from temporal priority and overlap alone. The operational definition is intentionally restricted to public, auditable evidence. A claim-specific prior-art audit is maintained at [`audits/prior-art/schmidhuber-meter-2026-09-19.md`](audits/prior-art/schmidhuber-meter-2026-09-19.md).
 
 ## Abstract
 
-Citation counts measure recognition received, not recognition plausibly missing. This paper proposes the **Schmidhuber Meter (SM)**, a claim-level Citation Debt Index designed to quantify a narrower phenomenon: a later work materially overlaps an earlier public claim, the earlier claim was discoverable through public scholarly infrastructure, yet the later work gives little or no bibliographic credit to it.
+Citation counts measure recognition received, not recognition plausibly missing. This paper proposes the **Schmidhuber Meter (SM)**, a claim-level Citation Debt Index for a narrower question: when a later work materially overlaps an earlier public claim, how strong is the observable combination of public priority, substantive overlap, historical discoverability, and missing bibliographic credit?
 
-The method is built around five requirements. First, priority is reconstructed at the level of the **specific claim**, using the earliest verifiable public appearance rather than the date of the current paper or repository. Second, overlap is decomposed into concept, mechanism, experiment, distinctive prediction/result, and rare conjunction rather than approximated by abstract-level semantic similarity. Third, discoverability is estimated only from historical public proxies such as indexing, public full text, keyword retrievability, bibliographic proximity, and venue visibility. Fourth, received credit is measured from citation and acknowledgment context. Fifth, scientific impact is kept separate from the base score because later success cannot retroactively make a citation more obligatory; impact instead measures the consequence of a credit deficit.
+Prior work already establishes several components of this problem. Citation gaps have been defined as under-citation relative to expected rates; reviewer-identified missing citations have been formalized as a recommendation task; attribution gaps have been quantified as relevant sources consumed but not credited; simultaneous discoveries can be identified systematically from public data; and the downstream rewards of scientific priority have been estimated empirically [4–10]. Accordingly, this paper does **not** claim novelty for missing citations, under-citation, priority effects, citation-credit allocation, or independent rediscovery in isolation.
 
-For an earlier claim (A) and later work (B), version 0.1 defines
+The proposed contribution is the operational conjunction. First, priority is reconstructed at the level of the **specific claim**, using its earliest verifiable public appearance. Second, overlap is decomposed into concept, mechanism, experiment, distinctive prediction/result, and rare conjunction rather than reduced to abstract-level semantic similarity. Third, discoverability is reconstructed from historical public proxies. Fourth, received credit is inspected in citation context. Fifth, scientific impact is kept outside the base score because later success cannot retroactively change the historical citation situation; impact instead measures the later consequence of a deficit. Finally, dependency evidence is represented separately so that timing plus overlap plus non-citation is never silently converted into a copying claim.
 
-[
-SM_{base}(A,B)=10,P,O,D,(1-C),
-]
+For an earlier claim \(A\) and later work \(B\), version 0.1 defines:
 
-where (P) is priority confidence, (O) substantive overlap, (D) historical discoverability, and (C) received credit, all normalized to ([0,1]). The model is deliberately deterministic and inspectable. A future calibrated model may replace the product after sufficient expert-labelled data exist, but the raw components are intended to remain stable and versioned.
+$$
+SM_{base}(A,B)=10\,P\,O\,D\,(1-C),
+$$
 
-The method is designed for practical application by reading the compared works and verifying publicly available bibliographic and repository evidence. It therefore excludes private mental states, unverifiable reading histories, and inferred motives from the main score.
+where \(P\) is priority confidence, \(O\) substantive overlap, \(D\) historical discoverability, and \(C\) received credit, each normalized to \([0,1]\). The model is deliberately deterministic and inspectable. A future calibrated model may replace this product after sufficient expert-labelled data exist, while preserving the raw components and formula version used by earlier audits.
 
 ## 1. Motivation
 
-Scientific credit is distributed through many mechanisms, but citations remain one of its most visible traces. Existing bibliometrics measures how often papers are cited, how recognition evolves over time, and how prestige or visibility can compound. Yet these measures do not directly answer a different question:
+Scientific credit is distributed through many mechanisms, but citation remains one of its most visible traces. Existing scientometrics measures citation accumulation, delayed recognition, inequality in citation allocation, priority rewards, and numerous biases in citation practice. Yet these literatures do not directly collapse into a practical answer to a pairwise historical question:
 
-> Given a specific earlier claim and a specific later work, how strong is the observable evidence that bibliographic credit is missing?
+> Given a specific earlier claim and a specific later work, how strong is the publicly auditable evidence that bibliographic credit is missing?
 
-This problem appears in several familiar forms. Some papers remain obscure for years and later become highly recognized, the phenomenon studied as **sleeping beauties**. Ke et al. introduced the beauty coefficient as a parameter-free measure of delayed recognition over citation trajectories [1]. The **Matthew effect** describes cumulative advantage in scientific recognition [2]. **Obliteration by incorporation** describes the opposite-looking case in which an idea becomes so canonical that the original source ceases to be explicitly cited [3].
+That question is intentionally weaker than “who copied whom?” and stronger than “are these papers semantically similar?”
 
-These are related to citation debt, but they are not the same problem.
+It also differs from several neighboring phenomena. A **sleeping beauty** asks when a work begins receiving recognition [1]. The **Matthew effect** concerns cumulative advantage in recognition [2]. **Obliteration by incorporation** concerns cases in which a contribution becomes sufficiently canonical that explicit citation of its source disappears [3]. A citation-debt audit instead asks whether a particular later work, under a particular historical information environment, exhibits an observable deficit of credit to a particular earlier claim.
 
-A sleeping beauty asks when recognition arrives. Citation debt asks whether a later overlapping work plausibly omitted credit to an earlier claim.
+## 2. Prior art and the narrowed novelty claim
 
-The distinction matters because an earlier work can remain obscure forever while a later, overlapping work becomes canonical. The original work never "awakens"; the scientific credit accrues elsewhere.
+A reproducible audit conducted on 2026-09-19 materially narrowed the contribution claimed here [12]. The following ideas predate this work and must not be represented as inventions of the Schmidhuber Meter.
 
-## 2. Why priority must be claim-level
+### 2.1 Expected-versus-observed citation gaps are established
 
-Papers are poor atomic units for priority.
+Teich et al. define a citation gap as under-citation relative to expected rates, coupled with over-citation elsewhere, and estimate expected citation rates with a model that excludes the demographic variable under study [5]. This is clear prior art for the generic move from raw citation counts to a **deficit relative to an expectation**.
 
-Modern scientific work often evolves through arXiv revisions, public Git commits, pull requests, repositories, conference drafts, notebooks, blog posts, datasets, and later manuscript revisions. A paper first made public in January may acquire its central technical claim in August.
+The distinction is one of unit and evidence. Their analysis concerns group-level citation inequality. The present framework concerns an earlier-claim × later-work pair and conditions the score on public temporal priority, technical overlap, and historical discoverability.
 
-Let (A) denote a concrete claim. Its provenance record is:
+### 2.2 Missed citations are already a computational task
 
-[
-Pi(A)=(t_A, a_A, v_A, e_A),
-]
+Long et al. define **Recommending Missed Citations (RMC)** and construct CitationR from citations that peer reviewers explicitly identified as missing from submitted papers [4]. This is material prior art for the idea that omitted citations can be operationalized, expert-labelled, and predicted rather than treated only as anecdote.
 
-where:
+CitationR is therefore not merely a convenient future calibration dataset. It also constrains the novelty claim of this paper.
 
-- (t_A) is the earliest verified public timestamp;
-- (a_A) is the public artifact containing the claim;
-- (v_A) is the exact version;
-- (e_A) is the evidence that establishes that provenance.
+### 2.3 Attribution gaps have already been quantified from observable traces
 
-The relevant cutoff is therefore the first public version containing the specific audited claim.
+Strauss et al. define an **attribution gap** for search-enabled LLMs as the difference between relevant web sources consumed and sources actually cited [6]. Their setting differs from scientific priority, but the structure is important: relevant input sources can be observed, credited sources can be observed, and the gap can be quantified.
+
+Indeed, observed source visitation is stronger evidence of exposure than the discoverability proxies available in ordinary scholarly-history reconstruction. The present framework therefore does not claim the generic concept of a measurable attribution deficit.
+
+### 2.4 Independent simultaneous discovery is an empirical phenomenon, not a residual excuse
+
+Bikard systematizes identification of **simultaneous discoveries** from openly available scientific sources and produces a large collection of “idea twins” [7]. That literature is central to the epistemic posture of the present index: material overlap and temporal proximity do not establish derivation.
+
+A citation-debt score can be high while causal dependency remains unknown.
+
+### 2.5 Priority has measurable downstream rewards
+
+Hill and Stein construct priority races among independently and concurrently pursued structural-biology projects and estimate a sizeable priority premium: scooped projects are less likely to publish in top journals and receive fewer citations [8]. Their design also distinguishes races where trailing teams could versus could not have learned from the first release.
+
+This is prior art for treating **priority and its downstream recognition consequences** as measurable objects. It also motivates separating the historical deficit from later consequence.
+
+### 2.6 Visibility and citation-age biases matter
+
+Wahle et al. document a broad decline in the citation of older work across a very large corpus and call the phenomenon “citation age recession” [9]. Any citation-debt system that ignores the historical visibility of an antecedent risks treating ordinary retrieval failure as intentional omission.
+
+### 2.7 Citation-credit allocation itself is already auditable
+
+CITECHOICE, released four days before the public cutoff of the Schmidhuber Meter concept, experimentally shows that document presentation can redistribute visible citation credit within frozen agentic-search transcripts [10]. This is adjacent but important prior art: citation allocation is partly a property of retrieval and presentation systems, not a transparent readout of intellectual contribution.
+
+### 2.8 Omitted prior work is recognized as a priority problem
+
+Wakeling et al.’s survey of 2,648 corresponding authors reports that respondents identify non-citation as a problem, with a particularly serious case being priority or discovery claims that omit work capable of countering those claims [11]. Earlier ethics literature likewise discusses omission of relevant work as a source of unfair loss of priority [13].
+
+### 2.9 Surviving contribution after the audit
+
+No pre-cutoff source located in the documented searches was found to instantiate the complete conjunction used here:
+
+1. claim-specific public temporal provenance;
+2. decomposed substantive technical overlap;
+3. reconstructible historical discoverability;
+4. observed claim-level credit;
+5. explicit separation of dependency evidence;
+6. explicit separation of later impact from the base historical-deficit score;
+7. a versioned, recomputable claim-pair audit record.
+
+The bounded search also did not locate the exact v0.1 product \(10POD(1-C)\). These are **search results, not proofs of uniqueness or firstness**. The paper therefore claims a proposed operational synthesis, not discovery of the underlying citation phenomena.
+
+## 3. Why the unit of analysis is the claim
+
+Papers are poor atomic units for priority. Modern scientific work evolves through preprints, Git commits, pull requests, proceedings, notebooks, datasets, blog posts, and revised manuscripts. A paper first made public in January may acquire the audited technical claim in August.
+
+Let \(A\) denote a concrete claim. Its provenance record is:
+
+$$
+\Pi(A)=(t_A,a_A,v_A,e_A),
+$$
+
+where \(t_A\) is the earliest verified public timestamp, \(a_A\) the public artifact, \(v_A\) the exact version, and \(e_A\) the evidence establishing that provenance.
 
 Repository creation dates, current file timestamps, and the first version of a paper are insufficient whenever the claim entered later.
 
-This rule is central because a work published before (t_A) cannot owe historical citation debt to (A).
+## 4. Temporal eligibility
 
-## 3. Temporal eligibility
+For candidate work \(B\), let \(t_B\) be its earliest verified public date. Define:
 
-For a candidate work (B), let (t_B) be its earliest verified public date.
+$$
+\Delta t=t_B-t_A.
+$$
+
+If \(\Delta t\le 0\), no citation debt from \(B\) to \(A\) is scored in \(A\)'s favor. The relationship may instead be `prior_art`, `partial_prior_art`, `adjacent_prior_work`, contemporaneous work, or an uncertain chronology.
+
+This temporal gate prevents a category error: a paper cannot owe historical credit to a claim that was not yet public.
+
+## 5. Priority confidence
 
 Define:
 
-[
-Delta t=t_B-t_A.
-]
+$$
+P\in[0,1]
+$$
 
-If (Delta tleq 0), no citation debt from (B) to (A) is scored.
+as **priority confidence**, reflecting the strength of public evidence for the ordering.
 
-The relationship may instead be:
+Strong evidence includes arXiv v1 timestamps, DOI online-first records, proceedings, public releases, inspectable public Git commits, and public pull requests containing the relevant claim. Retrospective recollection or an undated private manuscript receives little or no weight because the metric is about **public priority**, not private conception.
 
-- prior art;
-- partial prior art;
-- adjacent prior work;
-- contemporaneous or uncertain chronology.
+## 6. Substantive overlap
 
-This temporal gate prevents a common category error: treating later similarity as evidence that an earlier paper should have cited work that did not yet exist.
+Semantic similarity between abstracts is insufficient. Similar words can hide different mechanisms, while different terminology can describe materially equivalent machinery.
 
-## 4. Priority confidence
+We therefore decompose substantive overlap:
 
-Not all timestamps deserve equal confidence.
+$$
+O_c,O_m,O_e,O_p,O_r\in[0,1].
+$$
 
-We define:
+- **Conceptual overlap \(O_c\):** materially the same central idea or relation.
+- **Mechanistic overlap \(O_m\):** the same or materially equivalent mechanism.
+- **Experimental overlap \(O_e\):** unusually similar design, controls, interventions, datasets, or evaluation procedure.
+- **Prediction/result overlap \(O_p\):** the same distinctive prediction or empirical consequence.
+- **Rare-conjunction overlap \(O_r\):** the same uncommon combination of otherwise known components.
 
-[
-Pin[0,1]
-]
+For formula version 0.1:
 
-as **priority confidence**, reflecting the quality of the public evidence for the ordering.
-
-Strong evidence includes:
-
-- arXiv v1 timestamps;
-- DOI online-first records;
-- proceedings;
-- public releases;
-- inspectable public Git commits;
-- public pull requests containing the relevant text.
-
-Weak evidence includes retrospective recollection, undated PDFs, or claims that a private manuscript existed.
-
-The score is intentionally about **public priority**, not private conception.
-
-## 5. Substantive overlap
-
-A practical citation-debt index cannot rely on semantic similarity alone. Similar language may conceal different mechanisms, while different terminology may describe the same technical idea.
-
-We therefore decompose overlap into five observable dimensions:
-
-[
-O_c, O_m, O_e, O_p, O_r in [0,1].
-]
-
-### 5.1 Conceptual overlap (O_c)
-
-Do the two works make materially the same central claim or propose the same scientific relation?
-
-### 5.2 Mechanistic overlap (O_m)
-
-Do they instantiate the claim through the same or materially equivalent mechanism?
-
-Mechanistic overlap is often more diagnostic than topic similarity.
-
-### 5.3 Experimental overlap (O_e)
-
-Do they make unusually similar choices of experimental design, controls, interventions, datasets, or evaluation procedure?
-
-### 5.4 Prediction/result overlap (O_p)
-
-Do they derive or report the same distinctive prediction or empirical consequence?
-
-### 5.5 Rare-conjunction overlap (O_r)
-
-Do several individually known but uncommon components appear together in the same configuration?
-
-This term matters because combinations differ dramatically in specificity. "Reinforcement learning plus memory" is common. A frozen semantic key plus a separately trainable functional key updated toward or away from a query according to downstream advantage is far more distinctive.
-
-For version 0.1:
-
-[
-O=operatorname{mean}(O_c,O_m,O_e,O_p,O_r),
-]
+$$
+O=\operatorname{mean}(O_c,O_m,O_e,O_p,O_r),
+$$
 
 using only components that can actually be assessed. Missing components are not silently imputed.
 
-## 6. Historical discoverability
+The rare-conjunction term prevents generic overlap from dominating. “Reinforcement learning plus memory” is weak evidence. A highly specific conjunction of unusual architectural choices can be much more informative.
 
-Temporal priority alone does not imply that later authors could reasonably have encountered an earlier claim.
+## 7. Historical discoverability
 
-A public but effectively invisible Git commit is different from an indexed paper returned by ordinary literature search.
+Temporal priority does not imply practical findability. A public but effectively invisible repository commit is not equivalent to an indexed article returned by ordinary literature search.
 
-We therefore define:
+Define:
 
-[
-Din[0,1]
-]
+$$
+D\in[0,1]
+$$
 
-as **historical discoverability**, reconstructed only from public proxies available before or around publication of (B).
+as **historical discoverability**, reconstructed from public proxies available before or around publication of \(B\).
 
-Suitable evidence includes:
+Useful evidence includes:
 
-- whether (A) was indexed before (B);
-- whether full text was publicly accessible;
-- whether natural keywords for the claim retrieved (A);
-- whether (A) was bibliographically near sources cited by (B);
-- whether sources cited by (B) themselves cited (A);
-- whether (A) appeared in a visible venue, repository, or preprint server.
+- indexing before \(B\);
+- public full-text availability;
+- natural keyword retrievability;
+- bibliographic proximity, including whether \(B\) cites works that cite \(A\);
+- venue/repository visibility;
+- terminology correspondence available at that historical time.
 
-This is deliberately not an estimate of what the authors of (B) actually read.
+This does not estimate what the authors of \(B\) actually knew or read. Private reading history is excluded from the base score.
 
-Private reading history is excluded from the base score.
-
-## 7. Credit received
+## 8. Credit received
 
 Let:
 
-[
-Cin[0,1]
-]
+$$
+C\in[0,1]
+$$
 
-represent the credit actually visible in (B).
+represent publicly visible claim-level acknowledgment of \(A\) by \(B\).
 
-Examples include:
+A direct and substantively appropriate citation can approach 1. Partial or indirect acknowledgment may receive an intermediate value. No located acknowledgment is 0.
 
-- direct and substantively appropriate citation;
-- partial recognition;
-- indirect acknowledgment;
-- citation to an earlier version;
-- acknowledgment without formal reference;
-- no located acknowledgment.
+Citation context matters. Citing \(A\) for an unrelated fact is not automatically full credit for the overlapping claim. Conversely, a legitimate citation to a canonical predecessor or an earlier version may provide substantial credit even without exact title matching.
 
-Citation context matters. A paper can cite an earlier work for an unrelated fact while failing to credit the overlapping claim.
+## 9. The base Schmidhuber Meter
 
-The problem of reviewer-identified missing citations is already computationally tractable enough to have produced a dedicated benchmark. Long et al. define the task of **Recommending Missed Citations Identified by Reviewers** and release CitationR, built from papers that reviewers explicitly recommended adding [4]. Their dataset provides a promising future calibration source for citation-expectation models.
+For a temporally eligible pair, version 0.1 defines:
 
-## 8. The base Schmidhuber Meter
-
-The first operational version favors transparency over statistical sophistication.
-
-For a temporally eligible pair:
-
-[
-B=P,O,D,(1-C),
-]
+$$
+B=P\,O\,D\,(1-C),
+$$
 
 and:
 
-[
-oxed{
-SM_{base}=10,P,O,D,(1-C)
-}
-]
+$$
+\boxed{SM_{base}=10\,P\,O\,D\,(1-C)}.
+$$
 
-The score lies in ([0,10]).
+The multiplicative form is intentionally severe. Weak temporal evidence, weak overlap, low discoverability, or substantial received credit suppresses the score.
 
-The multiplicative form encodes four gates:
+This functional form is **provisional**. It is chosen for transparency and recomputability, not because it has already been statistically validated as optimal.
 
-1. weak temporal evidence suppresses the score;
-2. weak substantive overlap suppresses the score;
-3. poor discoverability suppresses the score;
-4. received credit suppresses the score.
+## 10. Why impact is separate
 
-This is not claimed to be the uniquely correct functional form. It is the **version 0.1 auditable baseline**.
+A later paper does not become more obligated to cite an antecedent because it later becomes famous. Impact mostly occurs after the original citation decision.
 
-Its value is practical: every term can be inspected and recomputed from public evidence.
+Therefore later influence is not part of \(SM_{base}\).
 
-## 9. Why impact is not in the base score
+A separate \(SM_{impact}\) may summarize the **consequence** of the same deficit using dated public measures such as field- and age-normalized citation impact, downstream reuse, benchmark adoption, or software adoption.
 
-A tempting formula is:
+The distinction is:
 
-[
-	ext{similarity}	imes	ext{citations of later paper}.
-]
+$$
+\text{citation deficit}\ne\text{consequence of citation deficit}.
+$$
 
-That is conceptually wrong.
+Hill and Stein’s priority-premium results [8] strengthen the case for this separation: priority order can affect the later distribution of recognition, but those downstream consequences are analytically distinct from the evidence available when a bibliography was assembled.
 
-A paper does not become more obligated to cite an antecedent because it later becomes famous.
-
-Impact occurs after the original citation decision and therefore measures a different quantity: the **consequence** of any missing credit.
-
-Accordingly, later influence is kept outside (SM_{base}).
-
-A separate:
-
-[
-SM_{impact}
-]
-
-may combine the base deficit with dated public impact measures such as:
-
-- field- and age-normalized citation percentile;
-- downstream reuse;
-- benchmark adoption;
-- software reuse;
-- repository adoption where scientifically relevant.
-
-The impact transform must be versioned and reported with an observation date.
-
-Thus:
-
-[
-	ext{citation deficit}
-
-eq
-	ext{consequence of citation deficit}.
-]
-
-## 10. Dependency evidence is separate
+## 11. Dependency evidence is separate
 
 A high Schmidhuber Meter does not prove copying.
 
-Let dependency evidence be represented separately as a categorical variable:
+Dependency evidence is represented separately as a categorical state, for example:
 
-[
-Gin
-{
-	ext{unknown},
-	ext{evidence of independence},
-	ext{positive exposure evidence},
-	ext{positive derivation evidence}
-}.
-]
+- `unknown`;
+- `evidence_of_independence`;
+- `positive_exposure_evidence`;
+- `positive_derivation_evidence`.
 
-The default is **unknown**.
+The default is `unknown`.
 
-Temporal priority plus high overlap does not establish derivation.
+Temporal priority plus high overlap does not establish derivation. Temporal priority plus no citation does not establish derivation. Even a score near 10 does not establish plagiarism.
 
-Temporal priority plus no citation does not establish derivation.
+Positive causal claims require independent evidence such as explicit public discussion, documented reuse, acknowledged access, copied distinctive errors, or another verifiable connection. The simultaneous-discovery literature [7] is a direct reason to keep this field outside the score.
 
-Even a score near 10 does not establish plagiarism.
+## 12. Interpretation bands
 
-Positive causal claims require independent evidence such as explicit public discussion, documented reuse, acknowledged access, copied distinctive errors, or another verifiable link.
-
-## 11. Interpretation bands
-
-For communication, version 0.1 proposes the following descriptive bands:
+For communication, version 0.1 proposes descriptive—not misconduct—bands:
 
 - **0–2 — ordinary convergence:** weak citation expectation or low overlap.
 - **2–4 — plausible reinvention:** an antecedent exists, but specificity or discoverability is limited.
 - **4–6 — citation eyebrow raised:** clear public antecedence and meaningful overlap.
 - **6–8 — Schmidhuber territory:** distinctive, discoverable antecedent with little or no located credit.
 - **8–9.5 — full Schmidhuber:** unusually strong observable citation deficit.
-- **9.5–10 — exceptional public-evidence case:** reserved for extremely strong observable conditions; the score still does not itself establish misconduct.
+- **9.5–10 — exceptional public-evidence case:** extreme observable conditions; still not proof of misconduct.
 
-The labels are intentionally memorable, but they are not misconduct categories.
+## 13. Practical audit protocol
 
-## 12. Practical audit protocol
+A useful index must be independently reproducible. A minimal assessment for \(A\times B\) records:
 
-The index is useful only if an independent reader can reproduce it.
-
-A minimal assessment for (A	imes B) records:
-
-1. exact text or normalized statement of claim (A);
-2. first public artifact containing (A);
-3. exact cutoff (t_A) and evidence;
-4. earliest public version of (B);
+1. exact text or normalized statement of claim \(A\);
+2. first public artifact containing \(A\);
+3. exact cutoff \(t_A\) and evidence;
+4. earliest public version of \(B\);
 5. temporal classification;
 6. each overlap component with textual or technical evidence;
-7. discoverability proxies reconstructible at the historical cutoff;
-8. direct and indirect credit in (B);
+7. discoverability proxies reconstructed at the historical cutoff;
+8. direct and indirect credit in \(B\);
 9. important search queries and databases consulted;
 10. negative searches that materially constrain the conclusion;
-11. score components and formula version;
+11. raw component values and formula version;
 12. impact data and observation date, if used;
 13. dependency evidence, normally unknown;
 14. uncertainty and revision history.
 
-This record should be stored independently from raw search output.
+The accompanying OKF concept and `Citation Debt Assessment` type implement this structure for machine- and human-readable audits.
 
-The accompanying OKF concept and `Citation Debt Assessment` type in this repository implement this structure for machine- and human-readable audits.
+## 14. Calibration strategy
 
-## 13. Why a deterministic v0.1 is preferable
+A probabilistic quantity such as
 
-A probabilistic quantity such as:
+$$
+P(\text{citation expected}\mid X)
+$$
 
-[
-P(	ext{citation expected}mid X)
-]
+is theoretically attractive, but an uncalibrated probability can conceal subjective judgment behind false precision.
 
-is theoretically attractive.
+Version 0.1 therefore uses a deterministic index whose inputs can be inspected directly. A future version should be calibrated from data rather than intuition.
 
-But an uncalibrated probability is worse than a transparent index: it presents subjective weights as probabilistic knowledge.
-
-Version 0.1 therefore uses a deterministic score whose inputs are directly inspectable.
-
-A future version can be learned from data once a sufficient calibration corpus exists.
-
-Possible sources include:
+Promising calibration sources include:
 
 - reviewer-identified missing citations such as CitationR [4];
 - controlled expert annotation of claim pairs;
 - known corrections or post-publication citation disputes;
-- negative controls involving generic overlap, reversed chronology, or low discoverability.
+- negative controls involving generic overlap, reversed chronology, canonical/common-knowledge claims, and low discoverability;
+- simultaneous-discovery datasets [7], which are valuable controls against converting overlap into derivation.
 
-The raw components should survive such calibration even if the aggregation formula changes.
+The raw components should remain stable enough that future formulas can be applied retrospectively without destroying the original evidence record.
 
-## 14. Relation to neighboring bibliometric phenomena
+## 15. Relationship to neighboring scientometrics
 
-### 14.1 Sleeping beauties
+### 15.1 Sleeping beauties
 
-Ke et al. quantify delayed recognition with a beauty coefficient derived from citation trajectories [1].
+Sleeping-beauty metrics measure delayed recognition over citation trajectories [1]. The earlier work in a citation-debt case need never awaken; a later overlapping work may accumulate the recognition instead.
 
-The Schmidhuber Meter asks a different question. The earlier work need never awaken. The later overlapping paper can accumulate the recognition instead.
+### 15.2 Matthew effect
 
-### 14.2 Matthew effect
+The Matthew effect concerns cumulative advantage and path-dependent recognition [2]. Citation debt can coexist with it, but a pairwise score does not identify the social cause of unequal recognition.
 
-Merton's Matthew effect concerns cumulative advantage in scientific recognition [2].
+### 15.3 Obliteration by incorporation
 
-Citation debt may coexist with such dynamics, but a high score does not identify their social cause.
+A contribution may become so canonical that later authors legitimately use it without repeatedly citing its original source [3]. This is a crucial negative control: a well-known textbook fact should not acquire a large citation-debt score merely because its historical origin is absent from every modern bibliography.
 
-### 14.3 Obliteration by incorporation
+### 15.4 Citation inequity and expected citation gaps
 
-A foundational contribution can become so embedded in common knowledge that explicit citation becomes unnecessary or is replaced by eponymic reference. This phenomenon, described in the bibliometric tradition as obliteration by incorporation, is a crucial negative control [3].
+Expected-versus-observed citation analysis already has a mature literature [5]. The Schmidhuber Meter is not a replacement for demographic or field-level citation-gap analysis; it adopts a different unit of analysis and additional temporal/technical evidence requirements.
 
-A canonical elementary fact should not receive a large citation-debt score merely because its original source is absent from every modern bibliography.
+### 15.5 Missed-citation recommendation
 
-Historical discoverability is therefore not enough; the audit must also interpret the actual technical specificity of the claim and citation context.
+RMC/CitationR [4] directly formalizes omitted scholarly references as an expert-labelled recommendation problem. It is the closest computational antecedent located for the “should this reference be here?” subproblem.
 
-## 15. Paper-level summaries
+### 15.6 Attribution and citation allocation in search systems
 
-The natural unit of the index is a claim pair, not an author.
+Attribution-gap work [6] and CITECHOICE [10] show that source credit can be quantified and causally affected by retrieval/presentation systems. These results caution against interpreting citation presence as a pure function of intellectual relevance.
 
-A paper may nevertheless have many audited claims.
+### 15.7 Priority races and simultaneous discovery
 
-We recommend reporting distributions rather than naively summing scores:
+Idea-twin and scooping research [7,8] shows both that independent convergence is common enough to study systematically and that priority order changes later rewards. Those findings motivate the explicit separation between temporal priority, causal dependency, and downstream impact.
 
-- maximum (SM_{base});
+## 16. Paper-level summaries
+
+The natural unit is a claim pair, not an author. For a paper with many audited claims, reporting distributions is preferable to naive summation:
+
+- maximum \(SM_{base}\);
 - median score among eligible later works;
 - number of high-confidence priority cases;
 - number of `later_non_citing` pairs;
 - number of pairs above a preregistered threshold;
-- impact-weighted consequence statistics separately.
+- impact-weighted consequence statistics reported separately.
 
-An author-level ranking should be treated with particular caution because it can easily turn an evidence audit into a reputational leaderboard.
+Author-level rankings require particular caution because an evidence audit can otherwise turn into a reputational leaderboard detached from the uncertainty of individual claim pairs.
 
-## 16. Limitations
+## 17. Limitations
 
-The framework has several limitations.
+The framework has significant limitations.
 
-First, scholarly citation norms vary by field.
+First, scholarly citation norms vary by field. Second, historical search behavior is difficult to reconstruct. Third, oral communication and private circulation leave incomplete public records. Fourth, independent rediscovery is common. Fifth, technical-overlap assessment can be disputed. Sixth, citation counts and venue prestige are imperfect measures of consequence. Seventh, the v0.1 product and its equal-weight overlap mean are not yet empirically calibrated. Eighth, a memorable eponym can encourage people to read the score as accusation rather than audit.
 
-Second, historical search-engine behavior is imperfectly reconstructible.
+For these reasons the method is conservative about causality, requires provenance for every important judgment, and treats negative searches as bounded evidence rather than proof of nonexistence.
 
-Third, oral communication and private drafts leave incomplete records.
+## 18. Why “Schmidhuber”?
 
-Fourth, independent rediscovery is common.
-
-Fifth, expert assessment of technical overlap can disagree.
-
-Sixth, citation counts and venue prestige are imperfect measures of scientific consequence.
-
-Seventh, the memorable name can invite misuse as an accusation score.
-
-For those reasons, the index is deliberately conservative about causality and aggressively explicit about provenance.
-
-## 17. Why "Schmidhuber"?
-
-The name refers to a familiar cultural pattern in artificial intelligence: after a celebrated result appears, Jürgen Schmidhuber has often publicly argued that substantially related ideas appeared earlier in his own or adjacent work.
+The name refers to a recognizable cultural pattern in artificial-intelligence history: Jürgen Schmidhuber has repeatedly published arguments that celebrated later developments have antecedents in earlier work by himself or others. Those historical claims are themselves empirical propositions and should be evaluated case by case under the same rules as any other priority claim.
 
 The eponym is rhetorical, not evidentiary.
 
-Individual historical priority claims involving Schmidhuber remain separate empirical questions and should be audited under the same rules as anyone else's.
+The method aims to replace:
 
-The metric is intended to replace:
-
-> "We did this first."
+> “We did this first.”
 
 with:
 
-> "Here is the claim, here is its first public version, here is the later work, here is the overlap, here is how discoverable the antecedent was, here is the observed credit, and here is the exact score calculation."
+> “Here is the claim, its earliest public version, the compared work, the technical overlap, the historical discoverability evidence, the observed credit, the uncertainty, and the exact score calculation.”
 
-## 18. Conclusion
+## 19. Conclusion
 
-Citation counts measure recognition that occurred.
-
-The Schmidhuber Meter measures a different object: **observable citation credit deficit at the claim level**.
+Citation counts measure recognition that occurred. The Schmidhuber Meter proposes a different object: **observable citation credit deficit at the claim level**.
 
 Its design principles are:
 
-1. priority belongs to specific claims, not automatically to whole papers;
-2. only public, verifiable provenance enters the score;
-3. technical overlap must be decomposed beyond semantic similarity;
-4. historical discoverability must be reconstructed rather than assumed;
-5. received credit must be checked in context;
-6. impact measures consequence, not retrospective obligation;
-7. dependency and misconduct remain separate questions;
-8. every aggregate score must remain reconstructible from raw evidence.
+1. reconstruct priority from the first public appearance of the specific claim;
+2. distinguish technical overlap from superficial semantic similarity;
+3. reconstruct historical discoverability rather than assume it;
+4. inspect received credit in context;
+5. keep impact as a later consequence rather than a retroactive obligation multiplier;
+6. keep causal dependency separate from bibliometric overlap;
+7. preserve raw evidence so every aggregate score can be recomputed or challenged.
 
-The resulting metric is deliberately less dramatic than its name.
+The 2026-09-19 prior-art audit narrows the proposal further: missing citations, expected citation gaps, attribution gaps, priority rewards, simultaneous discovery, citation amnesia, and citation-credit allocation all have antecedents. The proposed contribution is the **integration of those concerns into a public, claim-pair, versioned audit protocol and score**, not invention of the component phenomena.
 
-That is a feature.
-
-A useful scientometric instrument should make disputes narrower, not louder.
+A useful scientometric instrument should make priority disputes narrower, more reproducible, and easier to revise when better evidence appears.
 
 ---
 
 ## References
 
-[1] Qing Ke, Emilio Ferrara, Filippo Radicchi, and Alessandro Flammini. "Defining and identifying Sleeping Beauties in science." *Proceedings of the National Academy of Sciences* 112(24), 7426–7431, 2015. DOI: 10.1073/pnas.1424329112. https://pubmed.ncbi.nlm.nih.gov/26015563/
+[1] Qing Ke, Emilio Ferrara, Filippo Radicchi & Alessandro Flammini. “Defining and identifying Sleeping Beauties in science.” *Proceedings of the National Academy of Sciences* 112(24), 7426–7431 (2015). DOI: `10.1073/pnas.1424329112`.
 
-[2] Robert K. Merton. "The Matthew Effect in Science." *Science* 159, 56–63, 1968.
+[2] Robert K. Merton. “The Matthew Effect in Science.” *Science* 159, 56–63 (1968).
 
-[3] Eugene Garfield. "The 'Obliteration Phenomenon' in Science—and the Advantage of Being Obliterated." Reprinted in *Essays of an Information Scientist*, Vol. 1, 1977. The concept is discussed in the bibliometric literature as obliteration by incorporation.
+[3] Eugene Garfield. “The ‘Obliteration Phenomenon’ in Science—and the Advantage of Being Obliterated.” *Essays of an Information Scientist*, Vol. 1 (1977).
 
-[4] Kehan Long, Shasha Li, Pancheng Wang, Chenlong Bao, Jintao Tang, and Ting Wang. "Recommending Missed Citations Identified by Reviewers: A New Task, Dataset and Baselines." *LREC-COLING 2024*, pp. 13699–13711. https://aclanthology.org/2024.lrec-main.1196/
+[4] Kehan Long, Shasha Li, Pancheng Wang, Chenlong Bao, Jintao Tang & Ting Wang. “Recommending Missed Citations Identified by Reviewers: A New Task, Dataset and Baselines.” *LREC-COLING 2024*, 13699–13711. <https://aclanthology.org/2024.lrec-main.1196/>.
+
+[5] Erin G. Teich et al. “Citation inequity and gendered citation practices in contemporary physics.” *Nature Physics* 18, 1161–1170 (2022). DOI: `10.1038/s41567-022-01770-1`; arXiv: `2112.09047`.
+
+[6] Ilan Strauss, Jangho Yang, Tim O’Reilly, Sruly Rosenblat & Isobel Moure. “The Attribution Crisis in LLM Search Results.” arXiv: `2508.00838` (v1, 2025-06-27).
+
+[7] Michaël Bikard. “Idea twins: Simultaneous discoveries as a research tool.” *Strategic Management Journal* 41(8), 1528–1543 (2020). DOI: `10.1002/smj.3162`.
+
+[8] Ryan Hill & Carolyn Stein. “Scooped! Estimating Rewards for Priority in Science.” *Journal of Political Economy* 133(3), 793–845 (2025). DOI: `10.1086/733398`.
+
+[9] Jan Philip Wahle, Terry Ruas, Mohamed Abdalla, Bela Gipp & Saif M. Mohammad. “Citation Amnesia: On The Recency Bias of NLP and Other Academic Fields.” arXiv: `2402.12046` (2024).
+
+[10] Sriram Selvam & Anneswa Ghosh. “CITECHOICE: A Causal Audit of How Document Presentation Redistributes Citation Credit in Agentic Search.” arXiv: `2609.15164` (v1, 2026-09-14).
+
+[11] Simon Wakeling, Monica Lestari Paramita & Stephen Pinfield. “How do authors perceive the way their work is cited? Findings from a large-scale survey on quotation accuracy.” *Journal of the Association for Information Science and Technology* 76(10), 1396–1410 (2025). DOI: `10.1002/asi.70000`.
+
+[12] Franklin Silveira Baldo. “Schmidhuber Meter prior-art audit — 2026-09-19.” [`audits/prior-art/schmidhuber-meter-2026-09-19.md`](audits/prior-art/schmidhuber-meter-2026-09-19.md).
+
+[13] Marco Cosentino, Franca Marino & Georges J. M. Maestroni. “Disregarded Conflicting Results with Prior Research: A Case Report in a Leading Biomedical Journal.” *Journal of Academic Ethics* 12(3), 245–249 (2014). DOI: `10.1007/s10805-014-9213-3`.
 
 ## Repository specification
 
