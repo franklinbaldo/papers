@@ -1,0 +1,59 @@
+name: Zenodo publication
+
+on:
+  workflow_dispatch:
+    inputs:
+      paper:
+        description: "Repository-relative paper path (for example semantic_atlas.md)"
+        required: true
+        type: string
+      publish:
+        description: "Publish immediately after creating the Zenodo draft"
+        required: true
+        default: false
+        type: boolean
+      concept:
+        description: "Existing Zenodo concept record ID for a new version; leave blank for a new concept"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  zenodo:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install preparation dependencies
+        run: python -m pip install --disable-pip-version-check pyyaml markdown
+
+      - name: Prepare reproducible Zenodo deposit
+        id: prepare
+        run: python scripts/zenodo_prepare.py --paper "${{ inputs.paper }}"
+
+      - name: Preserve prepared deposit as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zenodo-${{ github.sha }}
+          path: dist/zenodo/
+          if-no-files-found: error
+
+      - name: Create Zenodo draft (and publish only when explicitly requested)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+        uses: zenodraft/action@b39422abb9c4cbc200c789504e0b0ca0ca1c8c50
+        with:
+          metadata: ${{ steps.prepare.outputs.metadata_path }}
+          filenames: ${{ steps.prepare.outputs.filenames }}
+          publish: ${{ inputs.publish }}
+          sandbox: false
+          concept: ${{ inputs.concept }}
+          verbose: true
