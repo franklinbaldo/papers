@@ -9,6 +9,7 @@ every pull request.
 # Specification
 
 * [SPEC.md](SPEC.md) - vendored copy of OKF v0.1, the version this repository targets.
+* [publication.md](publication.md) - repository-local `publication` frontmatter state machine and external-publication provenance records.
 
 # Types
 
