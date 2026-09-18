@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "experiments/pontifex_torus/double_slit.py"
+      - "experiments/pontifex_torus/seam_rotation.py"
       - "experiments/pontifex_torus/build_field_store.py"
       - ".github/workflows/pontifex-double-slit.yml"
   workflow_dispatch:
@@ -54,10 +55,26 @@ jobs:
             --seeds 0 1 2 3 4 5 6 7 8 9 \
             --output /tmp/pontifex-double-slit.json
 
-      - name: Upload result
+      - name: Run cyclic seam-rotation equivariance test
+        run: |
+          uv run experiments/pontifex_torus/seam_rotation.py \
+            --field-store "$FIELD_STORE" \
+            --texts 120 \
+            --shift-fractions 0.25 0.5 \
+            --output /tmp/pontifex-seam-rotation.json
+
+      - name: Upload double-occlusion result
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pontifex-double-slit
           path: /tmp/pontifex-double-slit.json
+          if-no-files-found: error
+
+      - name: Upload seam-rotation result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-seam-rotation
+          path: /tmp/pontifex-seam-rotation.json
           if-no-files-found: error
