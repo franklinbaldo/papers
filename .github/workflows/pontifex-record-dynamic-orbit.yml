@@ -1,0 +1,152 @@
+name: Record Pontifex dynamic orbit results
+
+on:
+  push:
+    branches: [experiment/pontifex-red-1]
+    paths:
+      - .github/workflows/pontifex-record-dynamic-orbit.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-paper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: experiment/pontifex-red-1
+      - name: Patch paper with completed dynamic-orbit evidence
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("pontifex_torus.md")
+          text = path.read_text(encoding="utf-8")
+
+          marker = "### 12.18 First scale ladder: fixed regional capacity does not scale automatically"
+          assert marker in text
+          assert "### 12.17.1 Dynamic toroidal wraparound orbit" not in text
+
+          section = r'''### 12.17.1 Dynamic toroidal wraparound orbit
+
+          The static pair experiment was extended into the explicitly periodic motion required
+          by the Torus hypothesis. For each text and each available circular separation
+          `Delta`, two size-1 occlusions advance together by one raw intervention position:
+
+          \[
+          i(t+1)=(i(t)+1)\bmod N,
+          \qquad
+          j(t+1)=(j(t)+1)\bmod N.
+          \]
+
+          Thus the leading occlusion does not stop at the last position: on its next movement
+          it wraps immediately to position zero while the other occlusion continues modulo
+          `N`. Across 120 held-out-text candidates this generated 6,278 oriented orbit states.
+
+          Two tests were used. First, a seam-continuity diagnostic compares the absolute
+          step-to-step change in the non-additive interaction residual at wrap transitions with
+          ordinary non-wrap transitions. Second, held-out whole-text Ridge models predict
+          `I_B` using the same A-side scalar information while changing only the coordinate
+          representation: no position geometry, a matched non-periodic raw/polynomial
+          geometry, or explicit periodic toroidal features.
+
+          The continuity result is mixed:
+
+          | space | mean abs step at wrap | mean abs step away from wrap | pooled wrap/non-wrap ratio |
+          |---|---:|---:|---:|
+          | A / MiniLM | 0.04478 | 0.02789 | 1.606 |
+          | B / BGE | 0.02066 | 0.02471 | 0.836 |
+
+          In A, wrap transitions are substantially larger on average than ordinary steps; in B
+          they are slightly smaller. Looking only at the transition where the **leading**
+          occlusion wraps gives mean absolute changes of `0.02950` in A and `0.01731` in B.
+          Therefore the current evidence does **not** support the strong claim that the learned
+          semantic response itself is seam-free merely because the intervention coordinate is
+          periodic. The circular motion is now implemented correctly, but one of the two
+          spaces still exposes a measurable coordinate seam under this simple residual.
+
+          Held-out prediction is also adverse to a stronger toroidal-geometry claim:
+
+          | features for predicting B interaction | overall RMSE | RMSE after leading occlusion wrapped | Pearson |
+          |---|---:|---:|---:|
+          | A-side scalar interaction only | 0.02436 | 0.02421 | 0.292 |
+          | + non-periodic raw/polynomial pair coordinates | **0.02311** | **0.02142** | **0.420** |
+          | + periodic toroidal pair coordinates | 0.02370 | 0.02262 | 0.365 |
+
+          The periodic representation loses `0.00059` RMSE overall to the matched raw-coordinate
+          control and `0.00120` on states after the leading occlusion has wrapped. This is useful
+          negative evidence: **correct toroidal motion is a structural rule of the intervention
+          process, but the current Fourier/circular coordinate features have not yet earned a
+          predictive advantage for pair interactions.**
+
+          A stronger next test should separate the coordinate seam from text-boundary semantics:
+          randomize the choice of where phase zero is placed, repeat the same physical pair
+          states under several seam rotations, and require predictions to be equivariant to that
+          arbitrary phase choice. That is a cleaner test of toroidal representation than simply
+          rewarding a periodic basis at the natural text boundary.
+
+          The completed run is
+          `https://github.com/franklinbaldo/papers/actions/runs/35306211464`.
+
+          '''.replace("          ", "")
+          text = text.replace(marker, section + marker)
+
+          old = '''The next double-occlusion experiment must explicitly move both occlusions through a
+complete orbit including the wraparound transition at the end of the text. The
+current 3,840-pair experiment establishes non-additive transferable pair information
+but did not yet test this continuous orbit.'''
+          new = '''A completed follow-up now moves both occlusions through complete orbits including the
+wraparound transition at the end of the text. The intervention dynamics therefore
+satisfy the toroidal rule operationally. However, the first held-out control does not
+show a predictive advantage for the current periodic feature basis over matched raw
+coordinates, and MiniLM interaction residuals remain more discontinuous at the
+natural wrap seam. Section 12.17.1 reports the negative result. Periodicity is thus
+part of the intervention contract; seamless semantic geometry remains an empirical
+question rather than an assumption.'''
+          assert old in text
+          text = text.replace(old, new)
+
+          old = "2. **dynamic double occlusion:** move two simultaneous occlusions through complete toroidal orbits with explicit wraparound and map `I(theta,Delta)`;"
+          new = "2. **seam-rotation control:** repeat complete double-occlusion orbits under multiple arbitrary phase-zero rotations and test whether pair-interaction prediction is equivariant to seam placement before attributing value to toroidal coordinates;"
+          assert old in text
+          text = text.replace(old, new)
+
+          old = '''**Completed evidence:** pairwise response-field alignment; scale/context lenses;
+active k-center sampling; repeated-pass/backward-transfer toy results; inverse
+regional reconstruction; learned regional reflectance; fixed-real-probe versus
+virtual-resolution separation; one static simultaneous-double-occlusion interaction
+experiment; and the 500/1k/2k fixed-capacity scale ladder.'''
+          new = '''**Completed evidence:** pairwise response-field alignment; scale/context lenses;
+active k-center sampling; repeated-pass/backward-transfer toy results; inverse
+regional reconstruction; learned regional reflectance; fixed-real-probe versus
+virtual-resolution separation; static simultaneous-double-occlusion interaction;
+complete dynamic double-occlusion orbits with explicit modulo wraparound (including
+an adverse periodic-vs-raw coordinate control); and the 500/1k/2k fixed-capacity
+scale ladder.'''
+          assert old in text
+          text = text.replace(old, new)
+
+          old = '''held-out-teacher generalization; a sparse student entering a frozen Assembly on
+disjoint text; tokenizer-free byte-level inference; true long-context inference
+without a full-text teacher reference; dynamic wraparound double-occlusion orbits;
+and any external long-document retrieval advantage.'''
+          new = '''held-out-teacher generalization; a sparse student entering a frozen Assembly on
+disjoint text; tokenizer-free byte-level inference; true long-context inference
+without a full-text teacher reference; seam-rotation equivariance of the dynamic
+multi-occlusion field; and any external long-document retrieval advantage.'''
+          assert old in text
+          text = text.replace(old, new)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+      - name: Commit paper result
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pontifex_torus.md
+          git diff --cached --check
+          git commit -m "paper: record toroidal wraparound control"
+          git push origin HEAD:experiment/pontifex-red-1
