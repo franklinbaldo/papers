@@ -67,6 +67,31 @@ The initial token system should be an internal simulation credit, not a real cry
 
 The simulator must also retain non-communication baselines and adversarial controls: message dropout, deceptive peers, identity reset/Sybil-like behavior, unequal initial credit allocation and communication latency.
 
+### On-device YOLO perception channel
+
+The dashboard phone may run a compact object detector locally and expose its detections as a separate derived sensory channel while preserving the raw camera feed.
+
+This channel should contain only outputs that a real phone could compute from its own camera, for example:
+
+- class id / semantic label;
+- confidence;
+- bounding box coordinates normalized to the image;
+- optional object track id when produced by a real tracking stage;
+- optional coarse velocity estimated from frame-to-frame motion.
+
+The agent must still receive the raw camera independently. YOLO is therefore an optional perceptual transducer, not a replacement for vision and not simulator ground truth.
+
+The important experiment is the ablation:
+
+- raw camera only;
+- YOLO channel only;
+- raw camera + YOLO;
+- raw camera + YOLO + other cheap sensors.
+
+This distinguishes whether MaleCNS benefits from pre-digested symbolic perception or learns more useful structure directly from the visual stream.
+
+Mobile deployment should target a small model exported for an on-device runtime such as LiteRT/TFLite or NCNN. The exact detector version and device profile must be pinned per experiment.
+
 ### Optional local language-model transducer
 
 A local LLM is a qualitatively different component: it is not a sensor but an expensive semantic transducer. It may convert approved raw or structured inputs into a low-bandwidth semantic channel for MaleCNS.
@@ -182,9 +207,11 @@ Each competence experiment should retain at least:
 6. no active echolocation;
 7. no LiDAR;
 8. no ambient RF / Wi-Fi context;
-9. no local-LLM transducer;
-10. shuffled or delayed bodily feedback;
-11. a simple controller / conventional RL baseline appropriate to that stage.
+9. no on-device YOLO channel;
+10. YOLO-only versus raw-camera-only versus combined perception;
+11. no local-LLM transducer;
+12. shuffled or delayed bodily feedback;
+13. a simple controller / conventional RL baseline appropriate to that stage.
 
 The aim is not merely to make the car move. It is to identify what the frozen MaleCNS contributes and which thin adapters or sensor buses are actually necessary.
 
