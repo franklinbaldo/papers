@@ -53,7 +53,7 @@ def cos_distance(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     return 1.0 - np.sum(a * b, axis=1)
 
 
-def build_arrays(texts: int, positions: int, seed: int):
+def build_arrays(texts: int, positions: int, seed: int, sizes=SIZES):
     corpus = make_texts(texts, seed)
     model_a = SentenceTransformer(ENCODER_A)
     model_b = SentenceTransformer(ENCODER_B)
@@ -68,7 +68,7 @@ def build_arrays(texts: int, positions: int, seed: int):
         starts = np.arange(max_start) if positions >= max_start else np.sort(rng.choice(max_start, size=positions, replace=False))
         for start in starts:
             pos = float(start) / max(1, len(toks) - 1)
-            for size in SIZES:
+            for size in sizes:
                 masked.append(mask_tokens(toks, int(start), int(size)))
                 meta.append((text_id, pos, int(size)))
 
@@ -95,16 +95,20 @@ def main():
     ap.add_argument("--texts", type=int, required=True)
     ap.add_argument("--positions", type=int, required=True)
     ap.add_argument("--seed", type=int, required=True)
+    ap.add_argument("--sizes", type=int, nargs="+", default=list(SIZES))
     ap.add_argument("--output", type=Path, required=True)
     args = ap.parse_args()
 
-    arrays = build_arrays(args.texts, args.positions, args.seed)
+    sizes = tuple(sorted(set(int(x) for x in args.sizes)))
+    if not sizes or any(x < 1 for x in sizes):
+        raise ValueError("--sizes must contain positive integers")
+    arrays = build_arrays(args.texts, args.positions, args.seed, sizes=sizes)
     meta = {
         "texts": args.texts,
         "positions": args.positions,
         "seed": args.seed,
         "encoders": {"A": ENCODER_A, "B": ENCODER_B},
-        "sizes": list(SIZES),
+        "sizes": list(sizes),
         "rows": int(len(arrays["text_id"])),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
