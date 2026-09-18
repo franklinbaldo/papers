@@ -13,12 +13,15 @@ identifiers:
   - scheme: "github"
     value: "franklinbaldo"
     url: "https://github.com/franklinbaldo"
+  - scheme: "academia"
+    value: "FranklinBaldo"
+    url: "https://unir.academia.edu/FranklinBaldo"
 aliases:
   - "Franklin Baldo"
 affiliations:
   - name: "Independent Researcher"
     kind: "publication"
-timestamp: 2026-09-18T13:20:00-04:00
+timestamp: 2026-09-18T13:32:00-04:00
 ---
 
 # Franklin Silveira Baldo
