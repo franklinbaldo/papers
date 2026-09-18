@@ -122,6 +122,12 @@ def main():
     ap.add_argument("--positions", type=int, default=6)
     ap.add_argument("--seed", type=int, default=17)
     ap.add_argument(
+        "--field-store",
+        type=Path,
+        default=None,
+        help="Optional cached response-field NPZ produced by build_field_store.py.",
+    )
+    ap.add_argument(
         "--heldout-frac",
         type=float,
         default=0.25,
@@ -137,8 +143,18 @@ def main():
     if not 0.1 <= args.heldout_frac <= 0.5:
         raise SystemExit("--heldout-frac must be between 0.1 and 0.5")
 
-    texts = make_texts(args.texts, args.seed)
-    rows = build_rows(texts, args.positions, args.seed)
+    if args.field_store:
+        rows = load_rows(args.field_store)
+        observed_ids = sorted({int(r.text_id) for r in rows})
+        expected_ids = list(range(args.texts))
+        if observed_ids != expected_ids:
+            raise SystemExit(
+                "cached field/text-count mismatch: "
+                f"expected ids 0..{args.texts - 1}, got {len(observed_ids)} ids"
+            )
+    else:
+        texts = make_texts(args.texts, args.seed)
+        rows = build_rows(texts, args.positions, args.seed)
 
     rng = np.random.default_rng(args.seed)
     ids = np.arange(args.texts)
@@ -164,6 +180,7 @@ def main():
             "no optical/cavity interpretation."
         ),
         "texts": args.texts,
+        "field_store": str(args.field_store) if args.field_store else None,
         "training_sequence_texts": len(sequence_ids),
         "heldout_texts": len(heldout_ids),
         "positions_per_text": args.positions,
