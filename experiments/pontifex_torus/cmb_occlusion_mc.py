@@ -474,6 +474,8 @@ def main() -> None:
     ap.add_argument("--field-index", type=int, default=0)
     ap.add_argument("--samples", type=int, default=2000)
     ap.add_argument("--null-maps", type=int, default=8)
+    ap.add_argument("--refine-top", type=int, default=20)
+    ap.add_argument("--refine-null-maps", type=int, default=64)
     ap.add_argument("--seed", type=int, default=20260918)
     ap.add_argument("--ny", type=int, default=192)
     ap.add_argument("--nx", type=int, default=384)
@@ -532,15 +534,82 @@ def main() -> None:
             }
         )
 
+    # Adaptive second stage: spend the larger null budget only on the most
+    # extreme first-pass candidates. This is diagnostic refinement after
+    # selection, not an independent significance test.
+    candidates = sorted(
+        [r for r in rows if np.isfinite(r["z_matched_null"])],
+        key=lambda x: abs(x["z_matched_null"]),
+        reverse=True,
+    )[: min(args.refine_top, len(rows))]
+
+    refine_maps = [
+        make_null(
+            field,
+            np.random.default_rng(args.seed + 50_000_017 + 1_000_003 * (i + 1)),
+        )
+        for i in range(args.refine_null_maps)
+    ]
+    for rank, r in enumerate(candidates, start=1):
+        theta = Theta(
+            sample=int(r["sample"]),
+            center_a=float(r["center_a"]),
+            center_b=float(r["center_b"]),
+            radius=float(r["radius"]),
+            depth=float(r["depth"]),
+            phase=float(r["phase"]),
+            aspect=float(r["aspect"]),
+            geometry=str(r["geometry"]),
+            occlusion=str(r["occlusion"]),
+        )
+        mu, sd, vals = matched_null_stats(
+            refine_maps, theta, args.seed + 90_000_001, args.mode, nside
+        )
+        obs = float(r["score"])
+        refined_excess = obs - mu
+        refined_z = (
+            refined_excess / sd
+            if np.isfinite(sd) and sd > 1e-12
+            else float("nan")
+        )
+        arr = np.asarray(vals, dtype=float)
+        med = float(np.median(arr))
+        observed_dev = abs(obs - med)
+        null_dev = np.abs(arr - med)
+        empirical_p = float((1 + np.count_nonzero(null_dev >= observed_dev)) / (len(arr) + 1))
+        familywise_bound = float(min(1.0, empirical_p * args.samples))
+        r["refine_rank"] = rank
+        r["refined_null_n"] = len(vals)
+        r["refined_null_mean_same_theta"] = mu
+        r["refined_null_std_same_theta"] = sd
+        r["refined_excess_same_theta"] = refined_excess
+        r["refined_z_matched_null"] = float(refined_z)
+        r["refined_empirical_p_selected"] = empirical_p
+        r["refined_familywise_p_bound"] = familywise_bound
+
+    candidate_ids = {int(r["sample"]) for r in candidates}
+    for r in rows:
+        if int(r["sample"]) not in candidate_ids:
+            r["refine_rank"] = ""
+            r["refined_null_n"] = ""
+            r["refined_null_mean_same_theta"] = ""
+            r["refined_null_std_same_theta"] = ""
+            r["refined_excess_same_theta"] = ""
+            r["refined_z_matched_null"] = ""
+            r["refined_empirical_p_selected"] = ""
+            r["refined_familywise_p_bound"] = ""
+
     scores = np.asarray([r["score"] for r in rows], dtype=float)
     excess = np.asarray([r["excess_same_theta"] for r in rows], dtype=float)
     z = np.asarray([r["z_matched_null"] for r in rows], dtype=float)
 
     top = sorted(
-        [r for r in rows if np.isfinite(r["z_matched_null"])],
-        key=lambda x: abs(x["z_matched_null"]),
+        candidates,
+        key=lambda x: abs(float(x["refined_z_matched_null"]))
+        if x["refined_z_matched_null"] != ""
+        else -1.0,
         reverse=True,
-    )[:25]
+    )
     plot_files = plots(rows, args.plots)
 
     phase_active = [
@@ -579,8 +648,47 @@ def main() -> None:
         },
         "matched_null_excess": finite_summary(excess),
         "matched_null_z": finite_summary(z),
+        "adaptive_refinement": {
+            "selected": len(candidates),
+            "refined_null_maps": args.refine_null_maps,
+            "selection_rule": "largest absolute first-pass matched-null z",
+            "refined_z": finite_summary(
+                np.asarray(
+                    [
+                        float(r["refined_z_matched_null"])
+                        for r in candidates
+                        if r["refined_z_matched_null"] != ""
+                    ],
+                    dtype=float,
+                )
+            ),
+            "survive_abs_z_3": int(
+                sum(
+                    abs(float(r["refined_z_matched_null"])) >= 3.0
+                    for r in candidates
+                    if r["refined_z_matched_null"] != ""
+                    and np.isfinite(float(r["refined_z_matched_null"]))
+                )
+            ),
+            "survive_abs_z_5": int(
+                sum(
+                    abs(float(r["refined_z_matched_null"])) >= 5.0
+                    for r in candidates
+                    if r["refined_z_matched_null"] != ""
+                    and np.isfinite(float(r["refined_z_matched_null"]))
+                )
+            ),
+            "familywise_bound_below_0_05": int(
+                sum(
+                    float(r["refined_familywise_p_bound"]) < 0.05
+                    for r in candidates
+                    if r["refined_familywise_p_bound"] != ""
+                )
+            ),
+            "warning": "refinement follows selection on the same run; empirical p is diagnostic and the familywise bound is conservative, not a discovery claim",
+        },
         "phase_active_first_harmonic_abs_corr": phase_corr,
-        "top_abs_z_parameter_samples": top,
+        "top_refined_parameter_samples": top,
         "rows_csv": str(args.rows),
         "plots": plot_files,
         "interpretation_contract": {
@@ -588,7 +696,8 @@ def main() -> None:
             "phase_contract": "phase rotates anisotropic lesion orientation and the adjacency mapping for adjacency_phase; it is no longer a plotted-but-unused parameter",
             "monte_carlo_budget": "spent primarily on intervention parameters; null-map count is intentionally much smaller than theta count",
             "null_role": "matched-theta calibration; production HEALPix nulls must use C_l-matched synfast or a_lm phase randomization",
-            "no_detection_claim": "large |z(theta)| is only a follow-up candidate until replicated across independent maps and stronger nulls",
+            "no_detection_claim": "large |z(theta)| is only a follow-up candidate; adaptive refinement is post-selection and cannot by itself establish significance",
+            "adaptive_rule": "refine only first-pass extremes with a larger matched-theta null ensemble, then require survival before any real-data escalation",
             "next_step": "validate this harness on synthetic nulls, then run Planck with C_l-matched null skies and replicate surviving regions on ACT+Planck",
         },
     }
