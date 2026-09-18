@@ -8,6 +8,9 @@ on:
       - ".github/workflows/pontifex-double-slit.yml"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   double-slit:
     runs-on: ubuntu-latest
@@ -61,3 +64,133 @@ jobs:
           name: pontifex-double-slit
           path: /tmp/pontifex-double-slit.json
           if-no-files-found: error
+
+  patch-paper:
+    needs: double-slit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: experiment/pontifex-red-1
+      - name: Record completed toroidal-orbit control
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("pontifex_torus.md")
+          text = path.read_text(encoding="utf-8")
+          marker = "### 12.18 First scale ladder: fixed regional capacity does not scale automatically"
+          if "### 12.17.1 Dynamic toroidal wraparound orbit" not in text:
+              assert marker in text
+              section = r'''### 12.17.1 Dynamic toroidal wraparound orbit
+
+              The static pair experiment was extended into the explicitly periodic motion required
+              by the Torus hypothesis. For each text and each available circular separation
+              `Delta`, two size-1 occlusions advance together by one raw intervention position:
+
+              \[
+              i(t+1)=(i(t)+1)\bmod N,
+              \qquad
+              j(t+1)=(j(t)+1)\bmod N.
+              \]
+
+              Thus the leading occlusion does not stop at the last position: on its next movement
+              it wraps immediately to position zero while the other occlusion continues modulo
+              `N`. Across 120 texts this generated 6,278 oriented orbit states.
+
+              A seam-continuity diagnostic compares the absolute step-to-step change in the
+              non-additive interaction residual at wrap transitions with ordinary non-wrap
+              transitions. The result is mixed:
+
+              | space | mean abs step at wrap | mean abs step away from wrap | pooled wrap/non-wrap ratio |
+              |---|---:|---:|---:|
+              | A / MiniLM | 0.04478 | 0.02789 | 1.606 |
+              | B / BGE | 0.02066 | 0.02471 | 0.836 |
+
+              In A, wrap transitions are substantially larger on average than ordinary steps; in B
+              they are slightly smaller. Looking only at the transition where the **leading**
+              occlusion wraps gives mean absolute changes of `0.02950` in A and `0.01731` in B.
+              The current evidence therefore does **not** support the strong claim that the learned
+              response itself is seam-free merely because the intervention coordinate is periodic.
+
+              A second held-out whole-text test predicts `I_B` using the same A-side scalar
+              interaction information while changing only the coordinate representation:
+
+              | features for predicting B interaction | overall RMSE | RMSE after leading occlusion wrapped | Pearson |
+              |---|---:|---:|---:|
+              | A-side scalar interaction only | 0.02436 | 0.02421 | 0.292 |
+              | + non-periodic raw/polynomial pair coordinates | **0.02311** | **0.02142** | **0.420** |
+              | + periodic toroidal pair coordinates | 0.02370 | 0.02262 | 0.365 |
+
+              The periodic representation loses `0.00059` RMSE overall to the matched raw-coordinate
+              control and `0.00120` on states after the leading occlusion has wrapped. This is useful
+              negative evidence: **correct toroidal motion is a structural rule of the intervention
+              process, but the current circular feature basis has not yet earned a predictive
+              advantage for pair interactions.**
+
+              A cleaner next test is seam-rotation equivariance: move phase zero to several arbitrary
+              positions while keeping the same physical pair states, and require predictions not to
+              depend on that arbitrary coordinate choice.
+
+              Completed run:
+              `https://github.com/franklinbaldo/papers/actions/runs/35306211464`.
+
+              '''.replace("              ", "")
+              text = text.replace(marker, section + marker)
+
+          old = '''The next double-occlusion experiment must explicitly move both occlusions through a
+          complete orbit including the wraparound transition at the end of the text. The
+          current 3,840-pair experiment establishes non-additive transferable pair information
+          but did not yet test this continuous orbit.'''.replace("          ", "")
+          new = '''A completed follow-up now moves both occlusions through complete orbits including the
+          wraparound transition at the end of the text. The intervention dynamics therefore
+          satisfy the toroidal rule operationally. However, the first held-out control does not
+          show a predictive advantage for the current periodic feature basis over matched raw
+          coordinates, and MiniLM interaction residuals remain more discontinuous at the natural
+          wrap seam. Section 12.17.1 reports this negative result. Periodicity is part of the
+          intervention contract; seamless semantic geometry remains an empirical question.'''.replace("          ", "")
+          if old in text:
+              text = text.replace(old, new)
+
+          old = "2. **dynamic double occlusion:** move two simultaneous occlusions through complete toroidal orbits with explicit wraparound and map `I(theta,Delta)`;"
+          new = "2. **seam-rotation control:** repeat complete double-occlusion orbits under multiple arbitrary phase-zero rotations and test whether pair-interaction prediction is equivariant to seam placement before attributing value to toroidal coordinates;"
+          if old in text:
+              text = text.replace(old, new)
+
+          old = '''**Completed evidence:** pairwise response-field alignment; scale/context lenses;
+          active k-center sampling; repeated-pass/backward-transfer toy results; inverse
+          regional reconstruction; learned regional reflectance; fixed-real-probe versus
+          virtual-resolution separation; one static simultaneous-double-occlusion interaction
+          experiment; and the 500/1k/2k fixed-capacity scale ladder.'''.replace("          ", "")
+          new = '''**Completed evidence:** pairwise response-field alignment; scale/context lenses;
+          active k-center sampling; repeated-pass/backward-transfer toy results; inverse
+          regional reconstruction; learned regional reflectance; fixed-real-probe versus
+          virtual-resolution separation; static simultaneous-double-occlusion interaction;
+          complete dynamic double-occlusion orbits with explicit modulo wraparound (including
+          an adverse periodic-vs-raw coordinate control); and the 500/1k/2k fixed-capacity
+          scale ladder.'''.replace("          ", "")
+          if old in text:
+              text = text.replace(old, new)
+
+          old = '''held-out-teacher generalization; a sparse student entering a frozen Assembly on
+          disjoint text; tokenizer-free byte-level inference; true long-context inference
+          without a full-text teacher reference; dynamic wraparound double-occlusion orbits;
+          and any external long-document retrieval advantage.'''.replace("          ", "")
+          new = '''held-out-teacher generalization; a sparse student entering a frozen Assembly on
+          disjoint text; tokenizer-free byte-level inference; true long-context inference
+          without a full-text teacher reference; seam-rotation equivariance of the dynamic
+          multi-occlusion field; and any external long-document retrieval advantage.'''.replace("          ", "")
+          if old in text:
+              text = text.replace(old, new)
+          path.write_text(text, encoding="utf-8")
+          PY
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pontifex_torus.md
+          if git diff --cached --quiet; then
+            echo "Paper already up to date"
+            exit 0
+          fi
+          git commit -m "paper: record toroidal wraparound control"
+          git push origin HEAD:experiment/pontifex-red-1
