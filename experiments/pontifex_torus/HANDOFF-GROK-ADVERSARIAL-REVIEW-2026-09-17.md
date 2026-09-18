@@ -1,3 +1,11 @@
+---
+type: "Companion Note"
+title: "Handoff — Grok adversarial review of Pontifex Torus"
+description: "Operational handoff for an adversarial scientific review of the Pontifex Torus evidence, claim boundary, artifacts, and discriminating next experiments."
+tags: [pontifex, adversarial-review, handoff]
+timestamp: 2026-09-17T00:00:00-04:00
+---
+
 # Handoff — Grok adversarial review of Pontifex Torus
 
 Date: 2026-09-17 (America/Porto_Velho)
