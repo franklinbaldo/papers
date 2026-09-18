@@ -885,58 +885,58 @@ separation and compare against non-periodic pair-coordinate controls.
 
 ### 12.17.1 Dynamic toroidal wraparound orbit
 
-    The static pair experiment was extended into the explicitly periodic motion required
-    by the Torus hypothesis. For each text and each available circular separation
-    `Delta`, two size-1 occlusions advance together by one raw intervention position:
+The static pair experiment was extended into the explicitly periodic motion required
+by the Torus hypothesis. For each text and each available circular separation
+`Delta`, two size-1 occlusions advance together by one raw intervention position:
 
-    \[
-    i(t+1)=(i(t)+1)\bmod N,
-    \qquad
-    j(t+1)=(j(t)+1)\bmod N.
-    \]
+\[
+i(t+1)=(i(t)+1)\bmod N,
+\qquad
+j(t+1)=(j(t)+1)\bmod N.
+\]
 
-    Thus the leading occlusion does not stop at the last position: on its next movement
-    it wraps immediately to position zero while the other occlusion continues modulo
-    `N`. Across 120 texts this generated 6,278 oriented orbit states.
+Thus the leading occlusion does not stop at the last position: on its next movement
+it wraps immediately to position zero while the other occlusion continues modulo
+`N`. Across 120 texts this generated 6,278 oriented orbit states.
 
-    A seam-continuity diagnostic compares the absolute step-to-step change in the
-    non-additive interaction residual at wrap transitions with ordinary non-wrap
-    transitions. The result is mixed:
+A seam-continuity diagnostic compares the absolute step-to-step change in the
+non-additive interaction residual at wrap transitions with ordinary non-wrap
+transitions. The result is mixed:
 
-    | space | mean abs step at wrap | mean abs step away from wrap | pooled wrap/non-wrap ratio |
-    |---|---:|---:|---:|
-    | A / MiniLM | 0.04478 | 0.02789 | 1.606 |
-    | B / BGE | 0.02066 | 0.02471 | 0.836 |
+| space | mean abs step at wrap | mean abs step away from wrap | pooled wrap/non-wrap ratio |
+|---|---:|---:|---:|
+| A / MiniLM | 0.04478 | 0.02789 | 1.606 |
+| B / BGE | 0.02066 | 0.02471 | 0.836 |
 
-    In A, wrap transitions are substantially larger on average than ordinary steps; in B
-    they are slightly smaller. Looking only at the transition where the **leading**
-    occlusion wraps gives mean absolute changes of `0.02950` in A and `0.01731` in B.
-    The current evidence therefore does **not** support the strong claim that the learned
-    response itself is seam-free merely because the intervention coordinate is periodic.
+In A, wrap transitions are substantially larger on average than ordinary steps; in B
+they are slightly smaller. Looking only at the transition where the **leading**
+occlusion wraps gives mean absolute changes of `0.02950` in A and `0.01731` in B.
+The current evidence therefore does **not** support the strong claim that the learned
+response itself is seam-free merely because the intervention coordinate is periodic.
 
-    A second held-out whole-text test predicts `I_B` using the same A-side scalar
-    interaction information while changing only the coordinate representation:
+A second held-out whole-text test predicts `I_B` using the same A-side scalar
+interaction information while changing only the coordinate representation:
 
-    | features for predicting B interaction | overall RMSE | RMSE after leading occlusion wrapped | Pearson |
-    |---|---:|---:|---:|
-    | A-side scalar interaction only | 0.02436 | 0.02421 | 0.292 |
-    | + non-periodic raw/polynomial pair coordinates | **0.02311** | **0.02142** | **0.420** |
-    | + periodic toroidal pair coordinates | 0.02370 | 0.02262 | 0.365 |
+| features for predicting B interaction | overall RMSE | RMSE after leading occlusion wrapped | Pearson |
+|---|---:|---:|---:|
+| A-side scalar interaction only | 0.02436 | 0.02421 | 0.292 |
+| + non-periodic raw/polynomial pair coordinates | **0.02311** | **0.02142** | **0.420** |
+| + periodic toroidal pair coordinates | 0.02370 | 0.02262 | 0.365 |
 
-    The periodic representation loses `0.00059` RMSE overall to the matched raw-coordinate
-    control and `0.00120` on states after the leading occlusion has wrapped. This is useful
-    negative evidence: **correct toroidal motion is a structural rule of the intervention
-    process, but the current circular feature basis has not yet earned a predictive
-    advantage for pair interactions.**
+The periodic representation loses `0.00059` RMSE overall to the matched raw-coordinate
+control and `0.00120` on states after the leading occlusion has wrapped. This is useful
+negative evidence: **correct toroidal motion is a structural rule of the intervention
+process, but the current circular feature basis has not yet earned a predictive
+advantage for pair interactions.**
 
-    A cleaner next test is seam-rotation equivariance: move phase zero to several arbitrary
-    positions while keeping the same physical pair states, and require predictions not to
-    depend on that arbitrary coordinate choice.
+A cleaner next test is seam-rotation equivariance: move phase zero to several arbitrary
+positions while keeping the same physical pair states, and require predictions not to
+depend on that arbitrary coordinate choice.
 
-    Completed run:
-    `https://github.com/franklinbaldo/papers/actions/runs/35306211464`.
+Completed run:
+`https://github.com/franklinbaldo/papers/actions/runs/35306211464`.
 
-    ### 12.18 First scale ladder: fixed regional capacity does not scale automatically
+### 12.18 First scale ladder: fixed regional capacity does not scale automatically
 
 A one-lens scale ladder increased the same synthetic grammar from 120 texts to
 500, 1,000, and 2,000 texts while keeping the current regional reconstruction
