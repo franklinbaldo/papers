@@ -208,6 +208,8 @@ def main():
     ap.add_argument("--train-frac", type=float, default=0.7)
     ap.add_argument("--anchors", type=int, default=16)
     ap.add_argument("--budgets", type=int, nargs="+", default=[1, 2, 4, 8])
+    ap.add_argument("--grid-points", type=int, default=8)
+    ap.add_argument("--lens-sizes", type=int, nargs="+", default=None)
     ap.add_argument("--output", type=Path, default=Path("pontifex-inverse-backprojection.json"))
     args = ap.parse_args()
 
@@ -215,7 +217,14 @@ def main():
     if "original_b" not in data.files:
         raise RuntimeError("field store lacks original_b")
 
-    ids, keys, a_field, _ = load_profiles(args.field_store)
+    ids, keys, a_field, _ = load_profiles(args.field_store, grid_points=args.grid_points)
+    if args.lens_sizes is not None:
+        wanted = set(int(x) for x in args.lens_sizes)
+        keep = np.asarray([int(size) in wanted for _, size in keys], dtype=bool)
+        keys = [k for k, ok in zip(keys, keep) if ok]
+        a_field = a_field[:, keep]
+        if not keys:
+            raise RuntimeError(f"no requested lens sizes present: {sorted(wanted)}")
     b_embed = data["original_b"].astype(float)
     positions, _ = center_groups(keys)
 
@@ -295,6 +304,7 @@ def main():
         "texts": int(len(ids)),
         "positions": positions,
         "lens_sizes": sorted(set(int(s) for _, s in keys)),
+        "grid_points": int(args.grid_points),
         "anchors": args.anchors,
         "train_fraction": args.train_frac,
         "seeds": args.seeds,
