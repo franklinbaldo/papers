@@ -1,0 +1,66 @@
+name: Pontifex CMB empirical matched-null ladder
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_empirical_null_ladder.py"
+      - "experiments/pontifex_torus/cmb_occlusion_mc.py"
+      - ".github/workflows/pontifex-cmb-empirical-null-ladder.yml"
+  workflow_dispatch:
+    inputs:
+      skies:
+        description: "Independent synthetic skies"
+        required: false
+        default: "6"
+      samples_per_sky:
+        description: "Theta samples per sky"
+        required: false
+        default: "48"
+
+jobs:
+  empirical-null-ladder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run empirical null ladder
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SKIES=6
+            SAMPLES=48
+          else
+            SKIES="${{ github.event.inputs.skies || '6' }}"
+            SAMPLES="${{ github.event.inputs.samples_per_sky || '48' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_empirical_null_ladder.py \
+            --skies "$SKIES" \
+            --samples-per-sky "$SAMPLES" \
+            --null-counts 32 64 128 \
+            --ny 64 --nx 128 \
+            --scores /tmp/pontifex-cmb-empirical-null-scores.jsonl \
+            --output /tmp/pontifex-cmb-empirical-null-ladder.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-empirical-null-ladder.json ]; then
+            echo "## CMB empirical matched-null ladder" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-empirical-null-ladder.json")); print(json.dumps(x["rows"], indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-empirical-null-ladder
+          path: |
+            /tmp/pontifex-cmb-empirical-null-ladder.json
+            /tmp/pontifex-cmb-empirical-null-scores.jsonl
+          if-no-files-found: warn
