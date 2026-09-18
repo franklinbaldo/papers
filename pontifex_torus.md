@@ -827,6 +827,60 @@ The practical decomposition is therefore:
 with `M` arbitrarily refinable in principle, but `K` controlling how much new
 information enters the reconstruction.
 
+### 12.17 Simultaneous double occlusion: a semantic "double slit"
+
+A first pairwise-intervention experiment applies two distinct size-1 occlusions
+simultaneously. To avoid importing quantum-mechanical claims into a semantic model,
+"interference" is defined operationally as the failure of scalar response
+superposition:
+
+\[
+I_E(p,q)
+=
+R_E(p,q)-R_E(p)-R_E(q).
+\]
+
+Across 3,840 paired interventions from 120 texts, the interaction term is clearly
+nonzero in both spaces, although it has different marginal structure:
+
+- A mean interference: `-0.0597`, mean absolute `0.0618`;
+- B mean interference: `+0.00692`, mean absolute `0.01985`;
+- cross-space `I_A` vs `I_B`: Pearson `0.229`, Spearman `0.232`;
+- raw B additive prediction `R_B(p)+R_B(q)` has RMSE `0.02682` against the true
+  simultaneous B response.
+
+The central held-out-text test asks whether observing the simultaneous perturbation in
+A adds transferable information about B beyond the two individual A perturbations.
+
+| A-side information used | mean B-joint RMSE | mean Pearson |
+|---|---:|---:|
+| two single responses | 0.03698 | 0.614 |
+| singles + toroidal pair geometry | 0.03028 | 0.764 |
+| singles + simultaneous A response | 0.03355 | 0.697 |
+| **singles + simultaneous A response + toroidal pair geometry** | **0.02786** | **0.805** |
+
+Thus the simultaneous A measurement improves on the matched singles+geometry control
+by about 8% RMSE, and the full pair representation is the strongest tested
+cross-space predictor. It approaches the error of the unfair target-space additive
+reference (`0.02682`), which has direct access to the two true B singleton responses.
+
+A separate test predicts B's non-additive residual itself. Using A's interference
+plus pair geometry gives RMSE `0.02327` and Pearson `0.453`, versus RMSE
+`0.02698` for the zero-interference null, about a 14% reduction in error. This
+supports the existence of a transferable pair-interaction signal in this toy.
+
+The result should **not** be described as quantum interference. Cosine-distance
+responses are nonlinear quantities, so non-additivity is not surprising by itself.
+The scientifically relevant result is narrower: the non-additive effect observed
+under a simultaneous intervention in A contains held-out information about the
+non-additive response in B that is not fully recoverable from the two singleton
+responses alone.
+
+Absolute pair separation does not explain the effect simply: correlation between
+separation and `|I_A|` is only `0.040`, and with `|I_B|` is `-0.132`.
+Future tests should map interaction as a two-dimensional function of midpoint and
+separation and compare against non-periodic pair-coordinate controls.
+
 ## 13. Efficiency and continual-learning comparison protocol
 
 The sequential shared-geometry experiments now create a direct comparison point with
@@ -985,6 +1039,8 @@ Code and live findings are under:
 - `experiments/pontifex_torus/terrain_reflectance.py`
 - `experiments/pontifex_torus/inverse_backprojection.py`
 - `experiments/pontifex_torus/virtual_resolution.py`
+- `experiments/pontifex_torus/double_slit.py`
+- `.github/workflows/pontifex-double-slit.yml`
 - `.github/workflows/pontifex-virtual-resolution.yml`
 - `.github/workflows/pontifex-virtual-bandwidth.yml`
 - `.github/workflows/pontifex-real-probe-frontier.yml`
