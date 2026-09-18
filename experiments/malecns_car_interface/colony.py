@@ -45,6 +45,39 @@ def confidence_weighted_value(reports: Iterable[SpecialistReport]) -> float:
     return sum(report.value * report.confidence for report in items) / weight_sum
 
 
+def consensus_weighted_value(
+    reports: Iterable[SpecialistReport],
+    *,
+    mad_scale: float = 3.0,
+    min_radius: float = 0.15,
+) -> float:
+    """Fuse confidence only inside a robust consensus neighborhood.
+
+    Specialist self-reported confidence can itself fail. This baseline first
+    finds the channel median, estimates median absolute deviation (MAD), rejects
+    reports outside ``max(min_radius, mad_scale * MAD)``, then confidence-weights
+    only the remaining reports. It uses no simulator truth and is intentionally
+    simple enough that a learned MaleCNS coordinator should be expected to beat
+    it.
+    """
+
+    items = list(reports)
+    if not items:
+        raise ValueError("at least one specialist report is required")
+    if mad_scale < 0.0 or min_radius < 0.0:
+        raise ValueError("mad_scale and min_radius must be non-negative")
+
+    center = median_value(items)
+    mad = float(median(abs(report.value - center) for report in items))
+    radius = max(min_radius, mad_scale * mad)
+    inliers = [report for report in items if abs(report.value - center) <= radius]
+
+    weight_sum = sum(report.confidence for report in inliers)
+    if weight_sum <= 0.0:
+        return center
+    return sum(report.value * report.confidence for report in inliers) / weight_sum
+
+
 def disagreement(reports: Iterable[SpecialistReport]) -> float:
     """Mean absolute disagreement around the channel median."""
 
