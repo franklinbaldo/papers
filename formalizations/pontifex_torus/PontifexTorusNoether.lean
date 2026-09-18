@@ -19,48 +19,40 @@ def Periodic {α : Type u}
     (field : Phase → α) : Prop :=
   ∀ theta, field (translatePhase theta cycle.period) = field theta
 
-def PhaseTranslationInvariant {α : Type u}
-    (field : Phase → α) : Prop :=
-  ∀ theta delta, field (translatePhase theta delta) = field theta
-
 theorem periodic_closure {α : Type u}
     (cycle : NarrativeCycle)
     (field : Phase → α)
-    (hperiodic : Periodic cycle field) :
-    field (translatePhase 0 cycle.period) = field 0 := by
-  exact hperiodic 0
+    (hperiodic : Periodic cycle field)
+    (theta : Phase) :
+    field (translatePhase theta cycle.period) = field theta := by
+  exact hperiodic theta
+
+def TranslationInvariant {α : Type u}
+    (field : Phase → α) : Prop :=
+  ∀ theta delta, field (translatePhase theta delta) = field theta
 
 theorem translation_invariant_implies_periodic {α : Type u}
     (cycle : NarrativeCycle)
     (field : Phase → α)
-    (hinvariant : PhaseTranslationInvariant field) :
+    (hinvariant : TranslationInvariant field) :
     Periodic cycle field := by
   intro theta
   exact hinvariant theta cycle.period
 
-theorem seam_origin_is_irrelevant {α : Type u}
-    (field : Phase → α)
-    (hinvariant : PhaseTranslationInvariant field)
-    (theta delta : Phase) :
-    field (translatePhase theta delta) = field theta := by
-  exact hinvariant theta delta
+structure BilateralObservation where
+  left : Int
+  right : Int
 
-/-- Bilateral response of the moving occlusion lens. -/
-structure BilateralResponse (α : Type u) where
-  left : α
-  right : α
+def swapBilateral (obs : BilateralObservation) : BilateralObservation :=
+  { left := obs.right, right := obs.left }
 
-def swapBilateral {α : Type u}
-    (response : BilateralResponse α) : BilateralResponse α :=
-  { left := response.right, right := response.left }
-
-theorem bilateral_swap_involution {α : Type u}
-    (response : BilateralResponse α) :
-    swapBilateral (swapBilateral response) = response := by
-  cases response
+theorem bilateral_swap_involution (obs : BilateralObservation) :
+    swapBilateral (swapBilateral obs) = obs := by
+  cases obs
   rfl
 
-/-- Signed local semantic current across the two sides of the moving lens. -/
+/-- A deliberately structural current, not a claim that measured embeddings
+already instantiate a physical Noether current. -/
 structure BilateralCurrent where
   left : Int
   right : Int
@@ -80,7 +72,7 @@ theorem antisymmetric_current_has_zero_net
   unfold AntisymmetricCurrent at hanti
   unfold netCurrent
   rw [hanti]
-  exact Int.add_neg_cancel current.left
+  simp
 
 /-- A candidate semantic charge is conserved over a discrete traversal exactly
 when it has the same value at every phase. This definition is intentionally
@@ -96,9 +88,3 @@ theorem conserved_charge_is_seam_independent
   exact hconserved theta delta
 
 end PontifexTorus
-
-#print axioms PontifexTorus.periodic_closure
-#print axioms PontifexTorus.translation_invariant_implies_periodic
-#print axioms PontifexTorus.bilateral_swap_involution
-#print axioms PontifexTorus.antisymmetric_current_has_zero_net
-#print axioms PontifexTorus.conserved_charge_is_seam_independent
