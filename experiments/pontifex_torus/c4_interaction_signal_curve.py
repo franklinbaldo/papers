@@ -8,11 +8,17 @@
 """Test whether c4 cross-interaction signal is absent or merely sample-limited.
 
 This follow-up to the blockwise-regularization ablation keeps a fixed outer held-out
-family set and varies only how many outer-training families are made available.
-For each nested training budget, linear and cross penalties are selected strictly on
-an inner split.  The cross-penalty grid is fine on a logarithmic scale and contains
-an explicit `cross=off` candidate, so the held-out comparison does not infer
-"off" from an arbitrarily large finite penalty.
+family set and varies only how many paired outer-training families are made
+available.  For each nested training budget, linear and cross penalties are selected
+strictly on an inner split.  The cross-penalty grid is fine on a logarithmic scale
+and contains an explicit `cross=off` candidate, so the held-out comparison does not
+infer "off" from an arbitrarily large finite penalty.
+
+The B-side anchor atlas is built once from the full OUTER-TRAIN pool and then held
+fixed across all nested paired-training budgets for that seed.  This isolates the
+number of paired A→B transport examples from changes in the output coordinate
+system.  It does mean the smaller-budget question is specifically "how many paired
+examples are needed given a fixed B atlas?", not end-to-end data efficiency.
 
 The outer held-out families are scored exactly once for the inner-selected model at
 each training budget.  The complete penalty risk curves saved by the experiment are
@@ -206,8 +212,14 @@ def main() -> None:
         test_idx = order[:test_n]
         train_pool = order[test_n:]
 
+        # Fix the B coordinate system before varying the number of PAIRED examples.
+        # The atlas uses B embeddings from outer-train only and never sees test_idx.
+        atlas_b = b_embed[train_pool]
+        anchor_idx = farthest_anchors(atlas_b, min(args.anchors, len(atlas_b)))
+        anchor_emb = normalize(atlas_b[anchor_idx])
+
         # Nested budgets are deterministic prefixes of the SAME shuffled outer pool,
-        # while test_idx is fixed across budgets for this seed.
+        # while test_idx and anchor_emb are fixed across budgets for this seed.
         for budget in budgets:
             train_idx = train_pool[:budget]
             btr, bte = b_embed[train_idx], b_embed[test_idx]
@@ -232,8 +244,6 @@ def main() -> None:
             ctr = cross_scaler.transform(ctr_raw)
             cte = cross_scaler.transform(cte_raw)
 
-            anchor_idx = farthest_anchors(btr, min(args.anchors, len(btr)))
-            anchor_emb = normalize(btr[anchor_idx])
             ytr = normalize(btr) @ anchor_emb.T
             yte = normalize(bte) @ anchor_emb.T
 
@@ -247,7 +257,7 @@ def main() -> None:
                 seed=seed + budget,
             )
             lp_linear = float(linear_best["linear_penalty"])
-            linear_model, linear_pred = fit_candidate(
+            _, linear_pred = fit_candidate(
                 xtr,
                 ctr,
                 ytr,
@@ -285,11 +295,7 @@ def main() -> None:
             else:
                 xte_block = block_design(xte, cte, lp, cp)
                 xte_no_cross = np.concatenate(
-                    [
-                        xte / np.sqrt(lp),
-                        np.zeros_like(cte),
-                    ],
-                    axis=1,
+                    [xte / np.sqrt(lp), np.zeros_like(cte)], axis=1
                 )
                 pred_full = selected_model.predict(xte_block)
                 pred_no_cross = selected_model.predict(xte_no_cross)
@@ -300,6 +306,8 @@ def main() -> None:
                     "seed": int(seed),
                     "train_families": int(budget),
                     "test_families": int(len(test_idx)),
+                    "atlas_families": int(len(train_pool)),
+                    "atlas_anchors": int(len(anchor_emb)),
                     "linear_penalty": lp_linear,
                     "linear_test_rmse": linear_test,
                     "selected_linear_penalty": lp,
@@ -329,12 +337,15 @@ def main() -> None:
         "train_budgets": budgets,
         "fixed_test_fraction": args.test_fraction,
         "fixed_test_families_per_seed": test_n,
+        "fixed_atlas_pool_families_per_seed": max_train,
         "linear_penalty_grid": args.linear_penalties,
         "cross_penalty_grid": args.cross_penalties,
         "cross_off_candidate": True,
         "protocol": {
-            "outer_split": "fixed whole-family test set per seed; nested prefixes of the disjoint outer-training pool form the learning curve",
-            "selection": "linear and cross penalties selected only on an inner split of the current outer-training budget",
+            "outer_split": "fixed whole-family test set per seed; nested prefixes of the disjoint outer-training pool form the paired-example learning curve",
+            "atlas": "B anchor dictionary is built once from the full outer-training pool and held fixed across budgets; no outer-test B embeddings enter the atlas",
+            "estimand": "paired A→B transport sample efficiency conditional on a fixed B atlas, not end-to-end atlas construction sample efficiency",
+            "selection": "linear and cross penalties selected only on an inner split of the current paired outer-training budget",
             "risk_curve": "saved risk curves contain inner-validation RMSE only; outer test is not scanned to choose penalties",
             "held_out_use": "for each seed and budget, outer held-out families are scored once after inner selection",
             "cross_off": "explicit nested model with no cross features, not a finite-penalty approximation",
