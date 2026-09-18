@@ -81,6 +81,8 @@ def build_arrays(texts: int, positions: int, seed: int):
 
     return {
         "text_id": np.asarray([m[0] for m in meta], dtype=np.int32),
+        "original_a": originals_a.astype(np.float32),
+        "original_b": originals_b.astype(np.float32),
         "pos": np.asarray([m[1] for m in meta], dtype=np.float64),
         "size": np.asarray([m[2] for m in meta], dtype=np.int16),
         "response_a": da.astype(np.float64),
