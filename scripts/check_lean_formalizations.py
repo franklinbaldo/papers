@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
 """Compile every Lean formalization and audit the trusted boundary.
 
 The gate is intentionally dependency-free. It:
