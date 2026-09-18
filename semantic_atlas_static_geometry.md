@@ -4,6 +4,19 @@ title: "Semantic Atlas: Scale-Robust Partial Local Alignment and Observer-Specif
 description: "Empirical paper on cross-model local-neighborhood agreement across exact cosine galleries from 1k to 100k arXiv abstracts, showing above-chance scale-robust overlap that remains far below same-observer stability ceilings."
 tags: [semantic-atlas, embeddings, representation-alignment, observer-specific-geometry, mknn, exact-knn, arxiv]
 timestamp: 2026-08-29T08:10:00Z
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: draft
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    version: "0.1"
 ---
 
 # Semantic Atlas: Scale-Robust Partial Local Alignment and Observer-Specific Neighborhood Geometry
@@ -255,6 +268,16 @@ The evidential order is therefore:
 3. **only then:** test dynamic transfer, reachability, planning, or control under separately frozen protocols.
 
 This ordering prevents a common failure mode in exploratory representation research: allowing an interesting downstream mechanism to become the explanation of an upstream effect before the mechanism itself has survived a confirmatory test.
+
+## 6.1 Related work and contribution boundary
+
+Nearest-neighbor overlap as a way to compare sentence or text embedding spaces predates this paper. Lin and Smith introduced **Nearest Neighbor Overlap (N2O)** for situating sentence embedders in 2019 ([arXiv:1909.10724](https://arxiv.org/abs/1909.10724)). Huh et al. later used mutual k-nearest-neighbor overlap as a representation-alignment metric in *The Platonic Representation Hypothesis* ([arXiv:2405.07987](https://arxiv.org/abs/2405.07987)). These works mean that nearest-neighbor overlap and mKNN-style local alignment are not contributions of the present paper.
+
+The broader empirical idea that independently trained language models can share nontrivial local geometry also has direct antecedents. Lee et al. report shared global and local geometry across language-model embeddings ([arXiv:2503.21073](https://arxiv.org/abs/2503.21073)), while Naber, Frassinelli and Schulte im Walde compare semantic neighborhoods across textual and visual spaces and find observer/modality-dependent overlap ([ACL Anthology](https://aclanthology.org/2025.starsem-1.11/)). Those results constrain any interpretation of the present finding as the first observation of either shared locality or observer-dependent neighborhoods.
+
+Permutation calibration is likewise established methodology rather than a new contribution here. Gröger, Wen and Brbić show that representation-similarity metrics can have nontrivial null behavior and apply permutation-based calibration while retaining meaningful local-neighborhood agreement ([arXiv:2602.14486](https://arxiv.org/abs/2602.14486)). Koepke et al. then test mKNN under gallery densification at much larger scales and show both collapse regimes and comparatively stable language-language alignment ([arXiv:2604.18572](https://arxiv.org/abs/2604.18572)). Myntti et al. further use nearest-neighbor overlap as a structural diagnostic across modern text embedding models ([arXiv:2605.22202](https://arxiv.org/abs/2605.22202)).
+
+Accordingly, this paper does **not** claim novelty for N2O, mKNN, permutation-calibrated representation similarity, local-topology language, or the generic phenomenon that cross-model neighborhood agreement can survive increasing gallery density. The candidate contribution is narrower: a preregistered same-content text-embedding experiment that combines exact cosine galleries from 1k to 100k, a frozen permutation-calibrated mKNN scale gate, and a separately constructed same-observer stability reference, yielding the specific conjunction reported here: partial cross-observer locality survives scale while remaining far below within-observer neighborhood stability. That empirical conjunction, not its component methods, is the claim carried forward by this paper. The repository's claim-specific audit is preserved at `audits/prior-art/semantic-atlas-static-geometry-2026-09-18.md`.
 
 ## 7. Limitations
 
