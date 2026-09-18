@@ -21,6 +21,8 @@ Occlusion size and context size act as controllable lenses. Direction turns stat
 
 Completed experiments now support three early components of this program. On 120 held-out synthetic texts, explicit occlusion scale reduces cross-space response prediction error, while a local periodic interaction basis reduces RMSE from `0.04031` to `0.03508`. Label-free k-center active cartography beats random sampling at every tested budget from 5% to 40%. A context-lens experiment shows that combining local responses from both spaces predicts the expensive space's full-context response much more accurately than using the cheap full-context response alone (`0.01461` versus `0.04599` RMSE). These are still toy results, but they justify moving from generic convergence heads toward intervention-indexed cartography.
 
+The emerging architecture is broader than pairwise translation. A **Torus Assembly** can be constructed from several teacher embedding spaces on a dedicated cartography corpus, frozen, and then used as a common latent target for a cheap sparse-probe student trained on a disjoint corpus. Final downstream evaluation must use a third, untouched test corpus. Inference may operate directly on raw bytes or characters rather than learned subword tokens, and may accumulate evidence from arbitrarily long finite inputs through a fixed number of local observations followed by dense virtual traversal of the learned continuous terrain. These assembly, tokenizer-free, and long-context extensions are proposals unless explicitly tied to completed experiments below.
+
 ## 1. Why Pontifex changed
 
 The original Pontifex hypothesis was deliberately minimal: do not align embedding coordinates; instead, apply the same perturbations to multiple encoders and learn a convergence rule over within-space similarity signals. The first RED-1 run was encouraging enough to continue — median held-out AUPRC delta was about `+0.030` across three seeds — but the variance was very large.
@@ -881,6 +883,41 @@ separation and `|I_A|` is only `0.040`, and with `|I_B|` is `-0.132`.
 Future tests should map interaction as a two-dimensional function of midpoint and
 separation and compare against non-periodic pair-coordinate controls.
 
+### 12.18 First scale ladder: fixed regional capacity does not scale automatically
+
+A one-lens scale ladder increased the same synthetic grammar from 120 texts to
+500, 1,000, and 2,000 texts while keeping the current regional reconstruction
+capacity fixed at 16 B-side anchors. The experiment intentionally held the
+representation and hyperparameters constant so that corpus scale, rather than a
+capacity retune, changed.
+
+For eight real probes and saturated virtual integration:
+
+| corpus texts | Torus neighbor overlap (K=8, M=128) | direct Fourier Ridge neighbor overlap | Torus cosine | direct Ridge cosine |
+|---:|---:|---:|---:|---:|
+| 120 | **0.3539** | 0.3624 | 0.7957 | 0.8388 |
+| 500 | 0.1855 | **0.2025** | 0.7904 | 0.8444 |
+| 1,000 | 0.1558 | **0.1764** | 0.7900 | 0.8469 |
+| 2,000 | 0.1315 | **0.1539** | 0.7911 | 0.8474 |
+
+The absolute numbers are not directly comparable as retrieval accuracy because the
+candidate set also grows, but the trend is adverse for the fixed 16-anchor regional
+decoder: its relational advantage on the 120-text toy does not survive naive scale.
+The direct coordinate baseline improves in cosine while the regional representation
+becomes increasingly capacity constrained.
+
+This is useful negative evidence. It argues against treating a fixed small set of
+anchors as the final latent space. A scalable system must allow the semantic terrain
+itself to grow in representational capacity — for example through more anchors,
+hierarchical regions, learned prototypes, multiresolution charts, or the multi-teacher
+Assembly proposed below. A required follow-up is therefore a capacity frontier
+`anchors in {16,32,64,128,...}` at fixed corpus size and a corpus-size frontier at
+matched capacity.
+
+The scale run is
+`https://github.com/franklinbaldo/papers/actions/runs/35297174362`, with separate
+artifacts for 500, 1,000, and 2,000 texts.
+
 ## 13. Efficiency and continual-learning comparison protocol
 
 The sequential shared-geometry experiments now create a direct comparison point with
@@ -1009,22 +1046,506 @@ with fewer updates, less replay memory, or more positive backward transfer under
 same response-field stream.
 
 
-## 14. Immediate evaluation ladder
+## 14. Torus Assembly: a latent space assembled from multiple teachers
 
-1. implement inverse backprojection through the saved torus geometry rather than a generic field-to-vector decoder;
-2. benchmark reconstruction as a function of probe budget `1,2,4,8,16,32,all`;
-3. compare uniform, coarse-to-fine, and active probe selection at equal budgets;
-4. cross occlusion-lens size with pass count and probe budget;
-5. add explicit left-to-right/right-to-left traversal and test whether bidirectional evidence improves inversion;
-6. add richer observable channels one at a time: context horizon, anchor-relative responses, additional lens scales, and inter-text probes;
-7. compare absolute embedding reconstruction with functional reconstruction (retrieval, neighbors, downstream behavior);
-8. run the same B-observation-budget frontier for Ridge, regularized CCA, Procrustes, relative representations, and Pontifex;
-9. replicate the strongest effects on real corpora and larger encoder pairs;
-10. only after the geometry/inversion mechanism earns its keep, add spectral rendering and compare ordinary controllers with MaleCNS/connectome nulls.
+The pairwise experiments above should not be interpreted as requiring one designated
+target encoder. A stronger architecture is to construct a new latent space
+`Z_assembly` from several independently trained embedding spaces:
 
-The strongest useful result need not be a globally superior alignment algorithm. A system that reaches useful rich-space predictive quality with substantially fewer expensive observations, carries local uncertainty, or predicts unobserved scales/directions would already justify the cartographic formulation.
+\[
+E_1,E_2,\ldots,E_n
+\quad\longrightarrow\quad
+Z_{assembly}.
+\]
 
-## 15. Reproducibility
+The teachers need not share coordinates, dimensionality, tokenizer, context length,
+or training objective. They are related through shared interventions and the
+transport geometry learned from their response fields.
+
+For a cartography text `x`, every teacher receives the same intervention family:
+
+\[
+\mathcal R_i(x,p,l,r,d).
+\]
+
+The Assembly is then updated sequentially:
+
+\[
+Z_1 \leftarrow E_1,
+\]
+
+\[
+Z_{i+1}
+\leftarrow
+\operatorname{Fuse}(Z_i,E_{i+1}).
+\]
+
+The update should preserve useful geometry already acquired from previous teachers.
+A generic objective is
+
+\[
+\mathcal L_i
+=
+\mathcal L_{new\ teacher}
++
+\lambda\mathcal L_{preserve}
++
+\mu\mathcal L_{geometry}.
+\]
+
+This is not intended to produce an arithmetic average of teacher embeddings. Each
+teacher may be locally reliable in different semantic regions. Let
+`rho_i(r)` denote the learned regional transport reliability of teacher `i`.
+A conceptual local assembly rule is
+
+\[
+Z(r)
+=
+\frac{
+\sum_i \rho_i(r)\,T_i(E_i,r)
+}{
+\sum_i \rho_i(r)
+},
+\]
+
+where `T_i` transports teacher-local evidence into the common Assembly chart.
+
+This makes the Assembly a **mixture of semantic geometries conditioned on terrain**.
+One teacher may contribute more to retrieval-like neighborhoods, another to
+multilingual structure, another to code, long documents, or another semantic
+relation. The scientific question is whether the assembled terrain preserves
+complementary structure that no one teacher preserves alone.
+
+### 14.1 Sequential coupling and repeated cycles
+
+The Assembly should not depend strongly on teacher order. A first implementation may
+train sequentially
+
+\[
+E_1\to E_2\to E_3\to\cdots\to E_n,
+\]
+
+but the resulting space must be challenged by alternative permutations and repeated
+cycles:
+
+\[
+E_1\to E_2\to\cdots\to E_n\to E_1\to\cdots.
+\]
+
+If different teacher orders converge to functionally similar Assembly geometries,
+that is evidence that the method is discovering shared structure rather than merely
+remembering an arbitrary sequence of transformations.
+
+Required order controls include multiple random teacher permutations, forward versus
+reverse order, and a jointly trained multi-teacher upper bound.
+
+### 14.2 Held-out teacher test
+
+A particularly strong sanity check is to leave one teacher entirely outside Assembly
+construction:
+
+\[
+Z_{assembly}=Z(E_1,E_2,E_3)
+\]
+
+and ask, on previously unseen texts, whether `Z_assembly` predicts response geometry
+or downstream neighborhoods of an unseen teacher `E_4`.
+
+Success would not prove the existence of a universal latent space, but it would be
+stronger evidence that the Assembly captures geometry shared across representation
+systems rather than only memorizing pairwise translations.
+
+## 15. Strict corpus separation: cartography, distillation, validation, test
+
+For the central hypothesis to be meaningful, texts used to **create the latent
+space** must be disjoint from texts used to train a cheap generator and from texts
+used for final evaluation. The protocol therefore uses four partitions:
+
+\[
+D_{assembly}
+\;\perp\;
+D_{student}
+\;\perp\;
+D_{val}
+\;\perp\;
+D_{test}.
+\]
+
+### 15.1 Assembly corpus
+
+Only `D_assembly` is used to construct and repeatedly refine the multi-teacher
+terrain. The same texts are deliberately passed through all teachers because the
+shared interventions provide cross-space correspondence:
+
+\[
+x\in D_{assembly}
+\Rightarrow
+\{E_i(x),\mathcal R_i(x)\}_{i=1}^n.
+\]
+
+After cartography and teacher-order training are complete, `Z_assembly` is frozen.
+
+### 15.2 Student/distillation corpus
+
+Texts in `D_student` never participated in Assembly construction. The frozen
+Assembly and, when necessary, the expensive teachers produce target Assembly states
+
+\[
+z^*(x)\in Z_{assembly}.
+\]
+
+A cheap student then learns
+
+\[
+g_\theta(\text{sparse local observations of }x)
+\to
+\hat z(x).
+\]
+
+This separates two kinds of generalization:
+
+1. can the Assembly represent texts it never saw while being constructed?;
+2. can a cheap sparse-observation student learn to enter that frozen space?
+
+### 15.3 Validation and final benchmark
+
+`D_val` selects the probe budget, number of anchors/prototypes, harmonic bandwidth,
+active-probe policy, pair-intervention policy, stopping threshold, and other
+hyperparameters.
+
+`D_test` is untouched until the final benchmark. It must not be used to choose
+teachers, teacher order, latent capacity, probe locations, or architectural variants.
+
+The final pipeline is therefore:
+
+\[
+D_{assembly}
+\to
+Z_{assembly}\;\text{(freeze)}
+\]
+
+\[
+D_{student}
+\to
+g_\theta\;\text{(distill)}
+\]
+
+\[
+D_{val}
+\to
+\text{choose protocol}
+\]
+
+\[
+D_{test}
+\to
+\text{one-shot external task evaluation}.
+\]
+
+A benchmark result is scientifically useful only if the final test text has never
+appeared in either Assembly construction or student training.
+
+## 16. Multi-occlusion dynamics live on a torus, not on a bounded line
+
+For simultaneous occlusions, periodicity is part of the operational definition.
+With a text represented by `N` intervention positions, each occlusion advances by
+
+\[
+p_j(t+1)
+=
+(p_j(t)+v_j)\bmod N.
+\]
+
+Therefore an occlusion at the final position does not stop, reflect, or disappear.
+On the next movement it reappears at the first position:
+
+\[
+N-1\to0\to1\to2\to\cdots.
+\]
+
+For two occlusions,
+
+\[
+(p_1,p_2)\in S^1\times S^1=T^2.
+\]
+
+For `k` simultaneous occlusions, the joint intervention state lies on
+
+\[
+T^k=(S^1)^k.
+\]
+
+### 16.1 Double-occlusion orbit
+
+When two occlusions move at the same velocity with fixed circular separation
+`Delta`,
+
+\[
+p_2(t)
+=
+p_1(t)+\Delta
+\pmod N.
+\]
+
+The pair traces a closed diagonal orbit in `T^2`. A convenient coordinate system is
+the circular midpoint `m` and separation `Delta`.
+
+The previously measured pair-interaction residual
+
+\[
+I_E(p,q)
+=
+R_E(p,q)-R_E(p)-R_E(q)
+\]
+
+can therefore be promoted from a static set of sampled pairs to a periodic field
+
+\[
+I_E(\theta\mid\Delta)
+\]
+
+and, after varying separation,
+
+\[
+I_E(\theta,\Delta).
+\]
+
+The next double-occlusion experiment must explicitly move both occlusions through a
+complete orbit including the wraparound transition at the end of the text. The
+current 3,840-pair experiment establishes non-additive transferable pair information
+but did not yet test this continuous orbit.
+
+### 16.2 Higher-order interaction fields
+
+The same construction extends beyond two interventions. A sparse hierarchy is
+
+\[
+Z(x)
+=
+Z_0
++
+\sum_i\phi(p_i)
++
+\sum_{i<j}\psi(p_i,p_j)
++
+\sum_{i<j<k}\omega(p_i,p_j,p_k)
++\cdots.
+\]
+
+Exhaustive higher-order probing is combinatorially infeasible, so the practical
+hypothesis is that learned reflectance/uncertainty and active cartography can identify
+which pair or higher-order interactions are worth observing.
+
+The phrase "double slit" remains only a mnemonic. Pair non-additivity in nonlinear
+embedding responses is not evidence of quantum mechanics.
+
+## 17. Tokenizer-free Torus embeddings
+
+The Assembly architecture permits a stronger inference interface than conventional
+subword embeddings: the cheap student need not share any teacher tokenizer.
+
+"Tokenizer-free" here means **no learned lexical/subword tokenization such as BPE or
+SentencePiece at inference**. The input still has a physical representation, such as
+UTF-8 bytes or Unicode characters.
+
+Represent a finite raw byte sequence as
+
+\[
+x=(b_1,\ldots,b_N)
+\]
+
+and normalize its position to phase
+
+\[
+\theta_i=2\pi i/N.
+\]
+
+An intervention becomes a window in raw sequence coordinates:
+
+\[
+O(x,\theta,w),
+\]
+
+where `w` may be defined in bytes, characters, or a relative fraction of the
+object. The local cheap sensor
+
+\[
+s_i
+=
+f_{byte}(x[\theta_i-w:\theta_i+w])
+\]
+
+produces a probe signal without first converting the text into teacher subwords.
+
+The full inference path is then
+
+\[
+\text{raw bytes}
+\to
+K\text{ local probes}
+\to
+G_x(\theta)
+\to
+M\text{ virtual traversal points}
+\to
+z(x)\in Z_{assembly}.
+\]
+
+The teachers may remain tokenized during Assembly construction. Their expensive
+representations are distilled into the frozen geometry; the deployed student can be
+byte- or character-level.
+
+### 17.1 Arbitrarily long finite inputs
+
+This creates a direct long-context hypothesis. Let `N` be raw input length,
+`K` the number of actual local probes, and `w` local window width. If useful
+quality can be maintained while `K\ll N`, expensive semantic observation cost is
+closer to
+
+\[
+O(Kw)
+\]
+
+than to processing the entire object through a global transformer. Virtual traversal
+
+\[
+M\gg K
+\]
+
+can be arbitrarily fine computationally but, as the completed fixed-`K` experiments
+show, cannot manufacture information after the inferred field is numerically
+resolved.
+
+The strong claim to test is therefore **not** that context is literally infinite.
+It is:
+
+> a fixed-dimensional Assembly embedding may be estimated for arbitrarily long
+> finite raw inputs from a sparse number of local observations, with quality governed
+> more by semantic/cartographic complexity than by raw sequence length.
+
+The current response-field experiments do not yet establish this because they use a
+full-text embedding as the reference from which occlusion distance is measured. A
+genuinely tokenizer-free long-context implementation must replace that dependency
+with local, recursive, or accumulated reference states that never require a teacher
+to embed the full long document.
+
+### 17.2 Domain-general consequence
+
+If the student consumes raw bytes or another primitive sequence representation, text
+becomes only one possible substrate. The same Assembly interface could in principle
+receive code, DNA, serialized structured data, quantized audio, or other sequences
+without defining a domain-specific learned tokenizer. This is a future extension,
+not an empirical result.
+
+## 18. Downstream target: specific long-document retrieval tasks
+
+Reconstructing BGE coordinates is a diagnostic, not the intended endpoint. The
+external benchmark should ask whether an Assembly embedding solves a concrete task.
+
+The primary target should be a **long-document retrieval** task in which a query must
+retrieve the correct long document or passage from a candidate corpus. Candidate
+benchmarks include LongEmbed-style long-document retrieval tasks, with a synthetic
+needle-retrieval task as a controlled length stress test and a real long-document
+retrieval task as the primary downstream measure.
+
+The central comparison is not merely "does Pontifex beat the strongest full encoder?"
+but the Pareto frontier
+
+\[
+(\text{expensive observed bytes/tokens},\;
+ \text{latency},\;
+ \text{memory},\;
+ \text{retrieval quality}).
+\]
+
+Required systems include:
+
+1. the original teachers independently;
+2. an expensive teacher ensemble;
+3. a conventional direct teacher-to-teacher/student distillation baseline;
+4. chunk-and-pool long-document embeddings;
+5. a long-context embedding baseline;
+6. the frozen Torus Assembly student at `K=1,2,4,8,16,32,64`;
+7. the Assembly with active probing;
+8. the Assembly with selected pair/double-occlusion probes.
+
+For a fixed task metric such as nDCG@10 or Recall@k, report both quality and actual
+observation cost. A result can be relevant even if the sparse Assembly is less
+accurate than a full long-context teacher, provided it lies on a substantially
+better cost/quality frontier.
+
+Two scaling curves are especially important:
+
+\[
+K
+\mapsto
+\mathrm{RetrievalQuality},
+\]
+
+and
+
+\[
+N
+\mapsto
+\mathrm{RetrievalQuality}
+\quad\text{at fixed }K.
+\]
+
+The second curve directly tests the long-context hypothesis. If quality remains
+useful as raw document length grows while the number of actual probes is held fixed,
+that is evidence that the Assembly is exploiting learned terrain rather than simply
+re-encoding the entire document.
+
+## 19. Immediate evaluation ladder
+
+1. **capacity scaling:** repeat the 500/1k/2k corpus ladder with 16/32/64/128+ regional anchors or hierarchical prototypes to determine whether the current scale failure is a fixed-capacity bottleneck;
+2. **dynamic double occlusion:** move two simultaneous occlusions through complete toroidal orbits with explicit wraparound and map `I(theta,Delta)`;
+3. **pair-probe efficiency:** compare one simultaneous pair observation against two singleton observations at matched expensive-encoder cost;
+4. **Assembly v0:** choose at least three heterogeneous teacher embedding spaces and build a frozen multi-teacher Assembly only on `D_assembly`;
+5. **teacher-order control:** train several teacher permutations and quantify whether the resulting Assembly geometry/downstream behavior converges;
+6. **held-out teacher:** exclude one teacher from Assembly construction and test prediction of its response geometry on unseen texts;
+7. **student distillation:** train a sparse-probe student on a disjoint `D_student` to enter the frozen Assembly;
+8. **raw-byte student:** replace teacher-token interventions at inference with byte/character windows and remove any requirement for a full-text reference embedding;
+9. **long-input stress:** at fixed `K`, sweep raw input length over progressively longer documents and report quality versus actually observed bytes;
+10. **specific downstream retrieval:** run a long-document retrieval benchmark with untouched `D_test`, comparing teachers, ensemble, direct distillation, chunk pooling, long-context encoders, and Torus Assembly;
+11. **active sensing:** replace uniform probes with reflectance/uncertainty-guided singleton and pair interventions;
+12. **functional reconstruction first:** prioritize retrieval, neighbor preservation, and downstream behavior over coordinate-identical reconstruction;
+13. **only after these controls**, connect the continuous Assembly field to a dense sensory rendering/MaleCNS interface.
+
+The central scientific target is now:
+
+\[
+\boxed{
+\text{Can complementary knowledge from multiple latent spaces be distilled into a}
+\atop
+\text{frozen intervention-indexed geometry that new, arbitrarily long finite inputs}
+\atop
+\text{can enter using sparse tokenizer-free observations at a favorable cost/quality frontier?}
+}
+\]
+
+A negative result at any stage is useful. In particular, failure under strict corpus
+separation, teacher-order sensitivity, inability to generalize to a held-out teacher,
+or degradation with input length at fixed probe budget would directly constrain the
+theory.
+
+## 19.1 Current evidence boundary
+
+As of this revision:
+
+**Completed evidence:** pairwise response-field alignment; scale/context lenses;
+active k-center sampling; repeated-pass/backward-transfer toy results; inverse
+regional reconstruction; learned regional reflectance; fixed-real-probe versus
+virtual-resolution separation; one static simultaneous-double-occlusion interaction
+experiment; and the 500/1k/2k fixed-capacity scale ladder.
+
+**Not yet established:** scalable multi-teacher Assembly; teacher-order invariance;
+held-out-teacher generalization; a sparse student entering a frozen Assembly on
+disjoint text; tokenizer-free byte-level inference; true long-context inference
+without a full-text teacher reference; dynamic wraparound double-occlusion orbits;
+and any external long-document retrieval advantage.
+
+## 20. Reproducibility
 
 Code and live findings are under:
 
@@ -1041,6 +1562,7 @@ Code and live findings are under:
 - `experiments/pontifex_torus/virtual_resolution.py`
 - `experiments/pontifex_torus/double_slit.py`
 - `.github/workflows/pontifex-double-slit.yml`
+- `.github/workflows/pontifex-scale-ladder.yml`
 - `.github/workflows/pontifex-virtual-resolution.yml`
 - `.github/workflows/pontifex-virtual-bandwidth.yml`
 - `.github/workflows/pontifex-real-probe-frontier.yml`
