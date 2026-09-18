@@ -124,7 +124,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--texts", type=int, default=120)
     ap.add_argument("--positions", type=int, default=8)
-    ap.add_argument("--field-seed", type=int, default=17)\n    ap.add_argument("--field-store", type=Path, default=None)
+    ap.add_argument("--field-seed", type=int, default=17)
+    ap.add_argument(
+        "--field-store",
+        type=Path,
+        default=None,
+        help="Optional cached response-field NPZ produced by build_field_store.py.",
+    )
     ap.add_argument("--seeds", type=int, nargs="+", default=list(range(10)))
     ap.add_argument(
         "--passes",
@@ -140,8 +146,17 @@ def main():
     )
     args = ap.parse_args()
 
-    texts = make_texts(args.texts, args.field_seed)
-    rows = load_rows(args.field_store) if args.field_store else build_rows(texts, args.positions, args.field_seed)
+    if args.field_store:
+        rows = load_rows(args.field_store)
+        observed_ids = sorted({int(r.text_id) for r in rows})
+        if observed_ids != list(range(args.texts)):
+            raise SystemExit(
+                "cached field/text-count mismatch: "
+                f"expected ids 0..{args.texts - 1}, got {len(observed_ids)} ids"
+            )
+    else:
+        texts = make_texts(args.texts, args.field_seed)
+        rows = build_rows(texts, args.positions, args.field_seed)
 
     records = []
     for seed in args.seeds:
@@ -167,6 +182,7 @@ def main():
         "texts": args.texts,
         "positions_per_text": args.positions,
         "field_seed": args.field_seed,
+        "field_store": str(args.field_store) if args.field_store else None,
         "seeds": args.seeds,
         "pass_checkpoints": args.passes,
         "protocol_count": len(args.seeds) * len(args.passes),
@@ -174,7 +190,6 @@ def main():
         "summary_by_pass": summarize(records, args.passes),
     }
 
-    # Identify best checkpoint by mean held-out RMSE.
     best = min(
         result["summary_by_pass"].items(),
         key=lambda kv: kv[1]["mean_heldout_rmse"],
