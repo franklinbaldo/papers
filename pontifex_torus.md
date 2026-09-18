@@ -176,6 +176,113 @@ N_{sat}(r),
 
 becomes a property of the semantic geography itself.
 
+### 7.1 Narrative phase symmetry and a Noether-style conservation hypothesis
+
+The directed-occlusion construction admits a sharper interpretation when the traversal coordinate is treated as **narrative phase** rather than merely token position. Let
+
+\[
+\theta\in S^1
+\]
+
+parameterize the complete beginning-to-end traversal, with the seam identifying the end of one cycle with the beginning of the next. For a bilateral occlusion, let
+
+\[
+\Phi(\theta)=\big(\phi_L(\theta),\phi_R(\theta)\big)
+\]
+
+denote the latent responses associated with the material on the two sides of the moving lens.
+
+The candidate continuous symmetry is a change of the arbitrary phase origin,
+
+\[
+\theta\mapsto\theta+\varepsilon.
+\]
+
+The scientific hypothesis is **not** that embeddings themselves remain constant under this translation. Local responses are expected to change. The stronger and testable claim is that there may exist an action
+
+\[
+S[\Phi]
+=
+\oint
+\mathcal L\!\left(
+\Phi,
+\partial_\theta\Phi
+\right)
+\,d\theta
+\]
+
+whose value is invariant to the arbitrary choice of the traversal origin:
+
+\[
+S[\Phi(\theta+\varepsilon)]
+=
+S[\Phi(\theta)].
+\]
+
+Only under such an explicitly specified variational model would Noether's theorem apply in its classical sense. If the phase-translation symmetry holds, the corresponding Noether current is a candidate **semantic current** along the narrative trajectory. In a generic first-order formulation,
+
+\[
+J_\theta
+=
+\sum_a
+\frac{\partial\mathcal L}
+     {\partial(\partial_\theta\phi_a)}
+\partial_\theta\phi_a
+-
+\mathcal L,
+\qquad
+a\in\{L,R\},
+\]
+
+and the idealized conservation statement is
+
+\[
+\partial_\theta J_\theta=0.
+\]
+
+The bilateral structure suggests an even more concrete empirical quantity. As the occlusion moves, a small interval of the story leaves one side of the lens and enters the other. If some semantic charge is transported rather than created or destroyed by this boundary motion, then the local bilateral fluxes should be approximately antisymmetric:
+
+\[
+j_L(\theta)+j_R(\theta)\approx0.
+\]
+
+This motivates a **semantic flux conservation** test. The candidate invariant need not be the norm of an embedding; it can be any learned or predefined scalar functional
+
+\[
+Q(\phi_L,\phi_R)
+\]
+
+whose variance across phase is anomalously small relative to matched controls. The empirical problem is therefore to search for a simple \(Q\), or a restricted Lagrangian family, such that conservation generalizes across unseen texts, encoders, lens sizes, and seam rotations.
+
+The torus adds a global closure condition. Because
+
+\[
+\theta=0\equiv2\pi,
+\]
+
+a conserved local current can also be integrated around a complete narrative cycle:
+
+\[
+\mathcal C
+=
+\oint J_\theta\,d\theta.
+\]
+
+A non-trivial, reproducible circulation would be a topological summary of the whole traversal, but it must not be interpreted as a conserved Noether charge merely because the path is closed. Local phase symmetry, conservation, and global circulation are separate hypotheses and require separate controls.
+
+This formulation yields direct falsification tests:
+
+1. **seam rotation:** change the arbitrary start/end cut while preserving the cyclic ordering;
+2. **phase translation:** shift every occlusion coordinate by the same amount;
+3. **bilateral swap:** exchange the two sides together with traversal reversal;
+4. **semantic shuffle:** preserve the phase schedule but destroy correspondence between content and response;
+5. **cross-text generalization:** fit the candidate invariant on one set of narratives and evaluate conservation error on untouched narratives.
+
+The null is that any apparent conservation is explained by normalization, periodic Fourier features, smoothness, or the mechanics of the occlusion schedule. A Noether-style interpretation earns scientific weight only if an invariant survives these controls and if an explicit action with the claimed continuous symmetry predicts the observed conserved quantity.
+
+A dependency-free Lean skeleton is maintained in
+`formalizations/pontifex_torus/PontifexTorusNoether.lean`. It formalizes the exact structural claims that are already safe to prove — periodic closure, invariance to phase-origin translation when assumed, bilateral swap involution, and zero net current from antisymmetric bilateral flux. It deliberately does **not** formalize the classical analytic Noether theorem or assert that real embedding trajectories satisfy the symmetry; those remain mathematical and empirical obligations.
+
 ## 8. Active cartography
 
 An exhaustive response field is expensive. Once a partial map exists, the system should choose where to intervene next.
