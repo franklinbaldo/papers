@@ -90,7 +90,11 @@ def run_seed(rows, n_texts, seed, passes, heldout_count):
             model.partial_fit(x, y)
 
         geom = snapshot(model)
-        delta = float(np.linalg.norm(geom - prev_geom)) if prev_geom is not None else float(np.linalg.norm(geom))
+        delta = (
+            float(np.linalg.norm(geom - prev_geom))
+            if prev_geom is not None
+            else float(np.linalg.norm(geom))
+        )
         prev_geom = geom
         geometries.append(geom.tolist())
 
@@ -103,7 +107,10 @@ def run_seed(rows, n_texts, seed, passes, heldout_count):
             "current_rmse": rmse(model, current),
             "first_text_rmse": rmse(model, first_rows),
             "seen_rmse": rmse(model, select_rows(rows, seen_ids)),
-            "other_seen_rmse": rmse(model, select_rows(rows, previous_other_ids)) if previous_other_ids else None,
+            "other_seen_rmse": (
+                rmse(model, select_rows(rows, previous_other_ids))
+                if previous_other_ids else None
+            ),
             "heldout_rmse": rmse(model, heldout),
             "geometry_delta_l2": delta,
         })
@@ -111,7 +118,6 @@ def run_seed(rows, n_texts, seed, passes, heldout_count):
     before_return = stages[-1].copy()
     other_rows = select_rows(rows, sequence[1:])
 
-    # Return to T1.
     x1 = features(first_rows, "torus")
     y1 = np.asarray([r.response_b for r in first_rows], dtype=float)
     for _ in range(passes):
@@ -175,7 +181,6 @@ def summarize(runs):
             "max": float(vals.max()),
         }
 
-    # Mean trajectory across seeds, stage by stage.
     trajectory = []
     for i in range(12):
         stage_rows = [r["stages"][i] for r in runs]
@@ -195,15 +200,30 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--texts", type=int, default=120)
     ap.add_argument("--positions", type=int, default=8)
-    ap.add_argument("--field-seed", type=int, default=17)\n    ap.add_argument("--field-store", type=Path, default=None)
+    ap.add_argument("--field-seed", type=int, default=17)
+    ap.add_argument(
+        "--field-store",
+        type=Path,
+        default=None,
+        help="Optional cached response-field NPZ produced by build_field_store.py.",
+    )
     ap.add_argument("--passes", type=int, default=16)
     ap.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3, 4])
     ap.add_argument("--heldout-count", type=int, default=30)
     ap.add_argument("--output", type=Path, default=Path("pontifex-torus-return-t1.json"))
     args = ap.parse_args()
 
-    texts = make_texts(args.texts, args.field_seed)
-    rows = load_rows(args.field_store) if args.field_store else build_rows(texts, args.positions, args.field_seed)
+    if args.field_store:
+        rows = load_rows(args.field_store)
+        observed_ids = sorted({int(r.text_id) for r in rows})
+        if observed_ids != list(range(args.texts)):
+            raise SystemExit(
+                "cached field/text-count mismatch: "
+                f"expected ids 0..{args.texts - 1}, got {len(observed_ids)} ids"
+            )
+    else:
+        texts = make_texts(args.texts, args.field_seed)
+        rows = build_rows(texts, args.positions, args.field_seed)
 
     runs = [
         run_seed(rows, args.texts, seed, args.passes, args.heldout_count)
@@ -220,6 +240,7 @@ def main():
         "texts": args.texts,
         "positions_per_text": args.positions,
         "field_seed": args.field_seed,
+        "field_store": str(args.field_store) if args.field_store else None,
         "passes_per_exposure": args.passes,
         "seeds": args.seeds,
         "runs": runs,
