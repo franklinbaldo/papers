@@ -16,6 +16,14 @@ on:
         description: "Cheap null maps used for calibration"
         required: false
         default: "8"
+      refine_top:
+        description: "First-pass extremes to refine"
+        required: false
+        default: "20"
+      refine_null_maps:
+        description: "Matched-theta null maps for each refined candidate"
+        required: false
+        default: "64"
 
 jobs:
   cmb-occlusion:
@@ -34,6 +42,8 @@ jobs:
             --mode synthetic \
             --samples "${{ github.event_name == 'pull_request' && '600' || github.event.inputs.samples || '3000' }}" \
             --null-maps "${{ github.event_name == 'pull_request' && '4' || github.event.inputs.null_maps || '8' }}" \
+            --refine-top "${{ github.event_name == 'pull_request' && '12' || github.event.inputs.refine_top || '20' }}" \
+            --refine-null-maps "${{ github.event_name == 'pull_request' && '48' || github.event.inputs.refine_null_maps || '64' }}" \
             --seed 20260918 \
             --output /tmp/pontifex-cmb-occlusion-mc.json \
             --rows /tmp/pontifex-cmb-occlusion-mc.csv \
@@ -51,7 +61,7 @@ jobs:
           if [ -f /tmp/pontifex-cmb-occlusion-mc.json ]; then
             echo "## CMB occlusion parameter Monte Carlo" >> "$GITHUB_STEP_SUMMARY"
             echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
-            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-occlusion-mc.json")); print(json.dumps({k:x[k] for k in ("mode","samples","null_maps","raw_response","matched_null_excess","matched_null_z","phase_active_first_harmonic_abs_corr","parameter_space")}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-occlusion-mc.json")); print(json.dumps({k:x[k] for k in ("mode","samples","null_maps","raw_response","matched_null_excess","matched_null_z","adaptive_refinement","phase_active_first_harmonic_abs_corr","parameter_space")}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
             echo '~~~' >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f /tmp/pontifex-cmb-null-calibration.json ]; then
