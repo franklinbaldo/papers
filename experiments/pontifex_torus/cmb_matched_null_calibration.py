@@ -123,7 +123,10 @@ def audit(rows: list[dict[str, str]]) -> dict:
             "reported_upstream": "z_like = (observed - mean(nulls)) / sd(nulls)",
             "predictive_student_t": "t_pred = z_like / sqrt(1 + 1/m)",
             "degrees_of_freedom": "m - 1",
-            "reason": "the null mean and variance are estimated from the same small null ensemble, so z_like is not N(0,1)",
+            "reason": (
+                "the null mean and variance are estimated from the same small null "
+                "ensemble, so z_like is not N(0,1)"
+            ),
         },
         "z_like": {
             "summary": finite_summary(z_like),
@@ -155,10 +158,24 @@ def audit(rows: list[dict[str, str]]) -> dict:
         },
         "by_occlusion": family,
         "interpretation_contract": {
-            "evidence": "on this synthetic smoke, predictive-t calibration can be compared directly with the same rows under the naive Gaussian-z interpretation",
-            "not_evidence": "the KS statistic and rejection fractions are not formal population tests because theta rows share one sky and overlap spatially",
-            "scientific_boundary": "this audit validates or falsifies calibration mechanics only; it says nothing about a real CMB anomaly, Pontifex/Torus causality, or downstream assembly/student performance",
-            "production_rule": "do not interpret z_matched_null as a standard-normal z-score when null_maps is small; use predictive Student-t or a larger empirical null ensemble",
+            "evidence": (
+                "on this synthetic smoke, predictive-t calibration can be compared "
+                "directly with the same rows under the naive Gaussian-z interpretation"
+            ),
+            "not_evidence": (
+                "the KS statistic and rejection fractions are not formal population tests "
+                "because theta rows share one sky and overlap spatially"
+            ),
+            "scientific_boundary": (
+                "this audit validates or falsifies calibration mechanics only; it says "
+                "nothing about a real CMB anomaly, Pontifex/Torus causality, or "
+                "downstream assembly/student performance"
+            ),
+            "production_rule": (
+                "do not interpret z_matched_null as a standard-normal z-score when "
+                "null_maps is small; use predictive Student-t or a larger empirical null "
+                "ensemble"
+            ),
         },
     }
 
