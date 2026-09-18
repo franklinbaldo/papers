@@ -27,32 +27,26 @@ theorem periodic_closure {α : Type u}
     field (translatePhase theta cycle.period) = field theta := by
   exact hperiodic theta
 
-def TranslationInvariant {α : Type u}
-    (field : Phase → α) : Prop :=
-  ∀ theta delta, field (translatePhase theta delta) = field theta
+/-- A seam shift is a relabeling of phase coordinates, not a new physical
+configuration. This is the discrete structural analogue used in the paper. -/
+def seamShift (delta theta : Phase) : Phase :=
+  translatePhase theta delta
 
-theorem translation_invariant_implies_periodic {α : Type u}
-    (cycle : NarrativeCycle)
-    (field : Phase → α)
-    (hinvariant : TranslationInvariant field) :
-    Periodic cycle field := by
-  intro theta
-  exact hinvariant theta cycle.period
+/-- If an observable is translation invariant, moving the seam cannot change
+its value. -/
+def SeamInvariant {α : Type u} (observable : Phase → α) : Prop :=
+  ∀ theta delta, observable (seamShift delta theta) = observable theta
 
-structure BilateralObservation where
-  left : Int
-  right : Int
+theorem seam_shift_preserves_invariant {α : Type u}
+    (observable : Phase → α)
+    (hinvariant : SeamInvariant observable)
+    (theta delta : Phase) :
+    observable (seamShift delta theta) = observable theta := by
+  exact hinvariant theta delta
 
-def swapBilateral (obs : BilateralObservation) : BilateralObservation :=
-  { left := obs.right, right := obs.left }
-
-theorem bilateral_swap_involution (obs : BilateralObservation) :
-    swapBilateral (swapBilateral obs) = obs := by
-  cases obs
-  rfl
-
-/-- A deliberately structural current, not a claim that measured embeddings
-already instantiate a physical Noether current. -/
+/-- Structural proxy for a bilateral flow. We deliberately use integers rather
+than physical fields: the formalization proves only an antisymmetry statement,
+not that a learned semantic deformation is a physical Noether current. -/
 structure BilateralCurrent where
   left : Int
   right : Int
@@ -72,7 +66,7 @@ theorem antisymmetric_current_has_zero_net
   unfold AntisymmetricCurrent at hanti
   unfold netCurrent
   rw [hanti]
-  simp
+  exact add_neg_cancel current.left
 
 /-- A candidate semantic charge is conserved over a discrete traversal exactly
 when it has the same value at every phase. This definition is intentionally
