@@ -671,3 +671,60 @@ Adversarial questions:
    poor and active selection is the real problem?
 5. What control best distinguishes "continuous semantic terrain" from ordinary
    function interpolation plus low-rank regression?
+
+
+## Update — simultaneous double occlusion / "double slit"
+
+Successful run:
+
+https://github.com/franklinbaldo/papers/actions/runs/35297522874
+
+Artifact:
+
+https://github.com/franklinbaldo/papers/actions/runs/35297522874/artifacts/10528108626
+
+Operational definition only:
+
+`I_E(p,q) = R_E(p,q) - R_E(p) - R_E(q)`.
+
+No quantum-mechanical claim is intended.
+
+3,840 simultaneous pairs across 120 texts:
+
+- A interference mean -0.05972; mean absolute 0.06179
+- B interference mean +0.00692; mean absolute 0.01985
+- I_A vs I_B Pearson 0.229; Spearman 0.232
+- B raw-additive RMSE 0.02682
+- |I_A| vs pair separation Pearson 0.040
+- |I_B| vs pair separation Pearson -0.132
+
+Held-out B joint-response prediction:
+
+- A singles only: RMSE 0.03698, Pearson 0.614
+- A singles + toroidal pair geometry: RMSE 0.03028, Pearson 0.764
+- A singles + A simultaneous response: RMSE 0.03355, Pearson 0.697
+- A singles + A simultaneous response + toroidal pair geometry:
+  **RMSE 0.02786, Pearson 0.805**
+
+Predicting B interference directly:
+
+- A interference + pair geometry: RMSE 0.02327, Pearson 0.453
+- zero-interference null: RMSE 0.02698
+
+The joint A observation therefore appears to contain transferable pair information
+beyond singleton observations. However, because cosine-distance perturbation response
+is nonlinear, nonzero I by itself is not surprising and must not be presented as
+quantum interference.
+
+Adversarial priorities:
+
+1. Replace toroidal pair geometry with matched non-periodic coordinates, splines, and
+   random Fourier controls.
+2. Test whether A_joint gain persists after a flexible nonlinear singles-only model.
+3. Stratify by linguistic relation and token distance rather than only normalized
+   separation.
+4. Test pairs on a real corpus.
+5. Map I(midpoint,separation) and look for stable structure; do not call oscillations
+   "fringes" unless they survive null models.
+6. Test whether simultaneous paired probes improve embedding reconstruction per
+   expensive observation relative to two sequential singleton probes.
