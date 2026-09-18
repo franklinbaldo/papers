@@ -87,6 +87,13 @@ jobs:
             --heldout-count 30 \
             --output /tmp/pontifex-return-t1.json
 
+      - name: Run same-task alignment benchmark
+        run: |
+          uv run experiments/pontifex_torus/alignment_benchmark.py \
+            --field-store "$FIELD_STORE" \
+            --seeds 0 1 2 3 4 5 6 7 8 9 \
+            --output /tmp/pontifex-alignment-benchmark.json
+
       - name: Upload online results
         uses: actions/upload-artifact@v4
         with:
@@ -95,4 +102,5 @@ jobs:
             /tmp/pontifex-sequential-shared.json
             /tmp/pontifex-pass-sweep.json
             /tmp/pontifex-return-t1.json
+            /tmp/pontifex-alignment-benchmark.json
           if-no-files-found: error
