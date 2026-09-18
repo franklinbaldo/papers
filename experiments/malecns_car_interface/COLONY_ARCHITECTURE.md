@@ -3,7 +3,7 @@ type: "Companion Note"
 title: "MaleCNS Sensor Colony Architecture"
 description: "Hierarchical multi-MaleCNS architecture in which multiple specialist fly-brain instances learn individual sensor channels and one or more coordinator flies combine their reports for driving."
 tags: [malecns, driving, multi-agent, sensor-fusion, embodied-agent, experiment]
-timestamp: 2026-09-18T18:02:00-04:00
+timestamp: 2026-09-19T00:00:00Z
 ---
 
 # MaleCNS Sensor Colony Architecture
@@ -144,3 +144,11 @@ The coordinator should learn when to distrust or ignore a specialist.
 Specialists communicate through small lawful reports rather than raw simulator state. A report should expose bounded semantic quantities such as value, confidence, novelty and optional compact state references.
 
 The accompanying `colony.py` defines the first executable report contract and deterministic baselines for aggregation. Learned MaleCNS coordination comes later and must be compared against these cheap baselines.
+
+## Prior-art boundary — 2026-09-19 audit
+
+A claim-level temporal audit materially narrows what this architecture can treat as distinctive. Hierarchical mixtures of experts, modality-specific experts, learned routing, confidence-weighted sensor fusion, median-based robust fusion, missing-sensor robustness, and even multiple independent copies of one MaleCNS connectome all have public antecedents before this note's cutoff.
+
+The research question is therefore **not** whether expert hierarchies or redundant sensor fusion are new. The remaining combination-level hypothesis is whether a population of measured MaleCNS connectome instances, assigned narrow reality-bounded sensor-specialist roles and fused by higher-level MaleCNS coordinators, yields useful behavior beyond those established baselines under matched-capacity and connectome controls.
+
+See the full dated audit: [`audits/prior-art/malecns-sensor-colony-2026-09-19.md`](../../audits/prior-art/malecns-sensor-colony-2026-09-19.md).
