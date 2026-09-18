@@ -1,0 +1,75 @@
+name: Pontifex virtual resolution
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/virtual_resolution.py"
+      - "experiments/pontifex_torus/build_field_store.py"
+      - ".github/workflows/pontifex-virtual-resolution.yml"
+  workflow_dispatch:
+
+jobs:
+  virtual-resolution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      FIELD_STORE: .cache/pontifex-torus/field-120-all-token-starts-17-embeddings.npz
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Restore dense raw field
+        id: field-cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/pontifex-torus
+          key: pontifex-field-dense-v1-120-32-17-${{ hashFiles('experiments/pontifex_torus/build_field_store.py') }}
+
+      - name: Restore encoder weights on cold build
+        if: steps.field-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: pontifex-models-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-torus-${{ runner.os }}-
+            pontifex-red1-${{ runner.os }}-
+
+      - name: Build dense raw field on cache miss
+        if: steps.field-cache.outputs.cache-hit != 'true'
+        run: |
+          uv run experiments/pontifex_torus/build_field_store.py \
+            --texts 120 \
+            --positions 32 \
+            --seed 17 \
+            --output "$FIELD_STORE"
+
+      - name: Run fixed-K virtual-resolution sweep
+        run: |
+          uv run experiments/pontifex_torus/virtual_resolution.py \
+            --field-store "$FIELD_STORE" \
+            --seeds 0 1 2 3 4 5 6 7 8 9 \
+            --real-probes 2 4 8 \
+            --virtual-steps 8 16 32 64 128 256 512 \
+            --dense-train-grid 512 \
+            --harmonics 8 \
+            --anchors 16 \
+            --output /tmp/pontifex-virtual-resolution.json
+
+      - name: Publish result
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-virtual-resolution.json ]; then
+            cat /tmp/pontifex-virtual-resolution.json >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-virtual-resolution
+          path: /tmp/pontifex-virtual-resolution.json
+          if-no-files-found: error
