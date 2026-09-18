@@ -71,7 +71,7 @@ jobs:
             --dense-train-grid 512 \
             --harmonics 8 \
             --anchors 256 \
-            --alphas 0.1 1 10 \
+            --alphas 0.1 1 10 30 100 300 1000 \
             --output "$RESULT"
 
       - name: Upload diagnostic result
