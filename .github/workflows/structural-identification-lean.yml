@@ -29,11 +29,19 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
+      - name: Install uv
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --proto '=https' --tlsv1.2 -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
       - name: Install elan
         shell: bash
         run: |
           set -euo pipefail
-          curl --proto '=https' --tlsv1.2 -sSf             https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh |
             sh -s -- -y --no-modify-path
 
       - name: Install pinned Lean
@@ -49,5 +57,5 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          python3 scripts/check_lean_formalizations.py
+          export PATH="$HOME/.elan/bin:$HOME/.local/bin:$PATH"
+          uv run scripts/check_lean_formalizations.py
