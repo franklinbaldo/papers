@@ -2,7 +2,9 @@
 type: "Author"
 title: "Franklin Silveira Baldo"
 description: "Canonical author identity for Franklin Silveira Baldo."
-publication_name: "Franklin Baldo"
+publication_name: "Franklin Silveira Baldo"
+given_names: "Franklin"
+family_name: "Silveira Baldo"
 identifiers:
   - scheme: "orcid"
     value: "0000-0002-4836-7608"
@@ -13,18 +15,21 @@ identifiers:
   - scheme: "github"
     value: "franklinbaldo"
     url: "https://github.com/franklinbaldo"
+  - scheme: "academia"
+    value: "FranklinBaldo"
+    url: "https://unir.academia.edu/FranklinBaldo"
 aliases:
   - "Franklin Baldo"
 affiliations:
   - name: "Independent Researcher"
     kind: "publication"
-timestamp: 2026-09-18T14:00:00-04:00
+timestamp: 2026-09-18T14:09:00-04:00
 ---
 
 # Franklin Silveira Baldo
 
 Canonical author identity used by papers in this repository.
 
-The paper-specific byline may use `Franklin Baldo`. Paper-level authorship
+The canonical publication byline is `Franklin Silveira Baldo`. Paper-level authorship
 metadata remains authoritative for author order, submission affiliation,
 corresponding-author status, and any venue-specific spelling.
