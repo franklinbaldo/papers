@@ -193,34 +193,157 @@ This is the first direct evidence for the practical cartographic claim: useful c
 
 The next policy should be stronger than k-center: choose among **forward, reverse, new direction, new scale, or new context** according to expected information gain.
 
-## 9. From map construction to inference
+## 9. From map construction to inverse reconstruction
 
-Once the torus has been learned between a cheap space `E_c` and a richer space `E_r`, inference need not execute `E_r` immediately.
+Once the torus has been learned between a cheap space `E_c` and a richer space
+`E_r`, inference need not collapse the entire learned field into a generic decoder.
+The map itself can be traversed in the reverse observational direction.
 
-For a new object `x`, generate a small cheap-space probe trajectory
-
-\[
-Q_c(x)=\{E_c(P_1(x)),\ldots,E_c(P_k(x))\}.
-\]
-
-Use it to localize the most probable torus region:
+For a new object `x`, choose an occlusion centered at position `p` with lens size
+`l`. The local response observed in the cheap space provides a source signal
 
 \[
-p(r\mid Q_c(x)).
+L(x,p,l).
 \]
 
-If uncertainty remains high, choose another probe adaptively. Once localized, use the learned local deformation to project toward the richer side.
+Instead of asking a regressor to emit the rich embedding directly, inject that signal
+at the center of the occlusion and propagate it through the learned geometry toward
+candidate regions on the rich side of the torus. Let
 
-Two levels of recovery are possible:
+\[
+K_G(r\mid p,l)
+\]
 
-1. **Rich observables:** predict target-space distances, neighbors, response fields, relevance, or other downstream quantities without reconstructing the raw vector.
-2. **Synthetic rich embedding:** estimate `\hat E_r(x)` sufficiently well to reuse models trained on the expensive representation.
+denote the propagation kernel induced by the saved geometry `G`: the contribution
+that a source at intervention coordinate `(p,l)` makes to rich-side region `r`.
+After one probe,
 
-The central downstream test is therefore not merely vector reconstruction. It is:
+\[
+\Delta A_r(p,l)
+=
+L(x,p,l)K_G(r\mid p,l).
+\]
 
-> Does cheap-space probing plus torus localization recover enough of the rich representation to improve prediction over the cheap representation alone?
+Walking the occlusion through the text accumulates evidence:
 
-Evaluation should compare `cheap`, `cheap + atlas`, `synthetic rich`, and `real rich`, while measuring performance as a function of the number of cheap probes required.
+\[
+A_r^{(k)}
+=
+\sum_{i=1}^{k}
+L(x,p_i,l_i)K_G(r\mid p_i,l_i).
+\]
+
+The vector `A^{(k)}` is a progressively refined territorial estimate of where the
+new text belongs in the rich semantic geography. In the simplest reconstruction,
+rich-region anchors `c_r` can be combined barycentrically:
+
+\[
+\hat E_r^{(k)}
+=
+\frac{\sum_r A_r^{(k)}c_r}
+     {\sum_r A_r^{(k)}}.
+\]
+
+More generally, `A^{(k)}` can drive retrieval, downstream prediction, or an inverse
+optimization over the empirical rich-space manifold.
+
+This formulation is intentionally close to an adjoint or backprojection operator.
+Map construction measures how semantic regions project into intervention responses;
+reconstruction reverses that direction by using observed intervention responses to
+project evidence back onto semantic regions. The first implementation need not use
+literal optics, radiometry, or a physical cavity: the required object is the
+learned propagation operator induced by the geometry.
+
+### 9.1 Reconstruction quality is a probe-budget curve
+
+Exhaustively traversing every possible occlusion is unnecessary when only a coarse
+estimate is needed. Let
+
+\[
+B = |P_B|
+\]
+
+be the maximum probe budget, where `P_B` is the subset of intervention positions
+actually evaluated. Reconstruction becomes a progressive approximation:
+
+\[
+\hat E_r^{(1)},
+\hat E_r^{(2)},
+\ldots,
+\hat E_r^{(B)}.
+\]
+
+The user or downstream system can therefore request a target quality/cost point
+rather than a fixed exhaustive traversal.
+
+Three probe policies are natural controls:
+
+1. **uniform** — choose approximately equally spaced positions;
+2. **coarse-to-fine** — begin with sparse coverage, then refine regions whose
+   projected evidence remains ambiguous;
+3. **active** — choose the next position/lens that maximizes expected reduction in
+   reconstruction uncertainty.
+
+For adaptive probing,
+
+\[
+(p^*,l^*)
+=
+\arg\max_{p,l}
+\mathbb E[\Delta U(p,l)],
+\]
+
+where `U` is uncertainty over the current rich-side localization or reconstruction.
+
+The central efficiency curves are therefore:
+
+\[
+k
+\mapsto
+\cos(\hat E_r^{(k)},E_r),
+\]
+
+\[
+k
+\mapsto
+\mathrm{Retrieval}(\hat E_r^{(k)},E_r),
+\]
+
+and
+
+\[
+k
+\mapsto
+U_k.
+\]
+
+Useful thresholds such as
+
+\[
+N_{0.90}
+=
+\min\{k:\cos(\hat E_r^{(k)},E_r)\ge0.90\}
+\]
+
+or the number of probes required to recover the correct nearest neighbor become
+more informative than a single full-budget score.
+
+This provides the practical interpretation of "fast", "balanced", or "accurate"
+reconstruction: these are simply different probe budgets or stopping criteria, not
+different models.
+
+### 9.2 Two reconstruction goals
+
+The paper distinguishes two targets:
+
+1. **absolute reconstruction** — approximate the original rich embedding coordinates;
+2. **functional reconstruction** — preserve the rich space's neighbors, ranking,
+   intervention responses, or downstream behavior even if the synthetic vector is
+   not coordinate-identical to the original.
+
+A synthetic rich embedding can therefore be useful even when its cosine similarity
+to the original vector is imperfect, provided the functions that matter are
+preserved.
 
 ## 10. Spectral rendering and color as a sensory channel
 
@@ -287,6 +410,99 @@ The strongest completed toy result is the local-to-global cross-space experiment
 ### 12.6 Infrastructure feasibility
 
 A separate MS MARCO experiment opens the public 8.84-million-vector TCT-ColBERT FAISS index by mmap and extracts a deterministic 1,000-PID sample into a ~2.86 MB feature store without re-encoding. This establishes a route to large-scale tests while materializing only selected points.
+
+
+### 12.7 Repeated exposure, accumulation, and return to an earlier text
+
+A pass-count sweep over `1,2,4,8,16,32,64,128,256,500` repeated updates per
+current text found a non-monotonic optimum. Across ten paired seeds, mean held-out
+RMSE improved from `0.04534` at one pass to `0.03947` at 16 passes, a reduction
+of about 13%. Performance then gradually degraded as the pass count increased,
+although most checkpoints remained better than one pass. This shows that repeated
+exposure is useful only up to a finite consolidation regime in the current online
+learner.
+
+A separate five-seed sequence applied 16 passes to T1, then to ten different texts
+T2..T11 without resetting the shared geometry, and finally returned to T1 for another
+16 passes. T1's mean RMSE improved from `0.05688` after its first exposure to
+`0.04230` after learning T2..T11, despite T1 not being shown again. Returning to T1
+reduced it further to `0.03305`. The ten intervening texts therefore produced
+positive backward transfer in all five seeds; the final return specialized T1 further
+but caused mild average interference with T2..T11.
+
+These results motivate preserving geometry checkpoints and treating learning as a
+search over reusable states rather than one irreversible trajectory.
+
+### 12.8 Same-task semantic response-field alignment benchmark
+
+A ten-seed benchmark compares Pontifex with alignment baselines on the same task:
+predict the held-out BGE response field from the corresponding MiniLM response field.
+Because text lengths induce slightly different raw occlusion coordinates, all methods
+operate on response functions interpolated onto the same normalized position/lens
+grid.
+
+| method | mean held-out RMSE | text-neighbor overlap | learned/map state |
+|---|---:|---:|---:|
+| mean B | 0.03681 | 0.0995 | 256 B |
+| Ridge profile map | **0.02999** | **0.2665** | 8,448 B |
+| Orthogonal Procrustes | 0.04348 | 0.2463 | 8,704 B |
+| CCA-8 | median 0.03197; numerically unstable mean | 0.2346 | 12,288 B |
+| Relative representations + kNN | 0.03243 | 0.2149 | 36,352 B |
+| **Pontifex Torus** | **0.03241** | **0.2524** | **88 B** |
+
+Pontifex is not the best full-information aligner in this toy: Ridge has lower error
+and slightly better neighborhood preservation. The current Torus result is instead a
+compression result. Its response-field map is about 96x smaller than the Ridge map
+while keeping RMSE within roughly 8%, and is essentially tied in RMSE with the
+relative-representation baseline while using roughly 413x less map state.
+
+This suggests that the more relevant comparison is the **B-observation budget
+frontier**, not only the full-information endpoint.
+
+### 12.9 Synthetic rich-embedding reconstruction
+
+The next experiment asks whether a reconstructed response field can be inverted into
+a usable original BGE embedding. It separates the two error sources:
+
+\[
+A\text{-field}
+\rightarrow
+\widehat{B\text{-field}}
+\rightarrow
+\hat E_B
+\]
+
+and also evaluates the oracle route
+
+\[
+B\text{-field true}
+\rightarrow
+\hat E_B.
+\]
+
+Four field-to-vector decoders were tested across ten seeds: Ridge, PLS, kNN
+barycentric reconstruction, and anchor-similarity inversion. Important means are:
+
+| route | cosine to true B | normalized RMSE | retrieval top-1 | neighbor overlap |
+|---|---:|---:|---:|---:|
+| raw MiniLM embedding -> BGE, Ridge | **0.9548** | **0.01533** | **99.4%** | **0.6111** |
+| oracle B field -> BGE, PLS | 0.8374 | 0.02910 | 27.8% | 0.2717 |
+| direct A field -> BGE, Ridge | 0.8316 | 0.02962 | 11.4% | 0.2741 |
+| Ridge A->B field -> BGE, PLS | 0.8237 | 0.03030 | 6.7% | 0.2772 |
+| Torus A->B field -> BGE, Ridge | 0.8088 | 0.03155 | 4.4% | 0.1913 |
+| Torus A->B field -> BGE, PLS | 0.8067 | 0.03172 | 11.1% | 0.2781 |
+
+The oracle control is decisive: even the **true** scalar B response field cannot yet
+recover the original B embedding with high fidelity. Therefore decoder choice alone
+cannot close the gap. The current field preserves useful functional geography but
+discards information required for near-exact coordinate reconstruction.
+
+This negative result motivates the inverse-propagation formulation in Section 9:
+rather than flattening the field into a generic regression problem, reconstruct by
+walking intervention probes and backprojecting their evidence through the learned
+geometry. It also motivates richer observables — direction, context, anchor-relative
+responses, additional lens scales, and actively selected probes — whose contribution
+can be measured incrementally.
 
 
 
@@ -420,16 +636,16 @@ same response-field stream.
 
 ## 14. Immediate evaluation ladder
 
-1. replicate torus/lens, active selection, and context-lens effects across seeds and real corpora;
-2. add explicit left-to-right/right-to-left text traversal and quantify directional asymmetry;
-3. implement repeated forward/reverse cycles and measure information gain to saturation;
-4. extend directed occlusion to 2-D and 3-D domains and test semantic tomography;
-5. replace Fourier ridge with an explicit smooth local deformation field and compare with linear alignment, relative representations, and registration baselines;
-6. implement torus localization at inference time from a small cheap-space trajectory;
-7. test synthetic-rich observables and synthetic-rich embeddings on downstream prediction;
-8. test whether maps learned between earlier spaces reduce probes needed to characterize a new space;
-9. add spectral rendering and multimodal sensory channels;
-10. only then compare ordinary controllers with MaleCNS and connectome nulls.
+1. implement inverse backprojection through the saved torus geometry rather than a generic field-to-vector decoder;
+2. benchmark reconstruction as a function of probe budget `1,2,4,8,16,32,all`;
+3. compare uniform, coarse-to-fine, and active probe selection at equal budgets;
+4. cross occlusion-lens size with pass count and probe budget;
+5. add explicit left-to-right/right-to-left traversal and test whether bidirectional evidence improves inversion;
+6. add richer observable channels one at a time: context horizon, anchor-relative responses, additional lens scales, and inter-text probes;
+7. compare absolute embedding reconstruction with functional reconstruction (retrieval, neighbors, downstream behavior);
+8. run the same B-observation-budget frontier for Ridge, regularized CCA, Procrustes, relative representations, and Pontifex;
+9. replicate the strongest effects on real corpora and larger encoder pairs;
+10. only after the geometry/inversion mechanism earns its keep, add spectral rendering and compare ordinary controllers with MaleCNS/connectome nulls.
 
 The strongest useful result need not be a globally superior alignment algorithm. A system that reaches useful rich-space predictive quality with substantially fewer expensive observations, carries local uncertainty, or predicts unobserved scales/directions would already justify the cartographic formulation.
 
@@ -440,5 +656,9 @@ Code and live findings are under:
 - `experiments/pontifex_red1/`
 - `experiments/pontifex_torus/`
 - `.github/workflows/pontifex-torus-v0.yml`
+- `.github/workflows/pontifex-alignment-benchmark.yml`
+- `.github/workflows/pontifex-embedding-reconstruction.yml`
+- `experiments/pontifex_torus/alignment_benchmark.py`
+- `experiments/pontifex_torus/embedding_reconstruction.py`
 
 The dated experimental narrative is in `experiments/pontifex_torus/FINDINGS-2026-09-17.md`.
