@@ -345,6 +345,64 @@ A synthetic rich embedding can therefore be useful even when its cosine similari
 to the original vector is imperfect, provided the functions that matter are
 preserved.
 
+### 9.3 Canonical torus, unit light, and learned reflectance
+
+The reconstruction geometry needs a prior even before any terrain has been observed.
+We define a **canonical simple torus** `T_0` whose transport law closes a complete
+cycle by definition. A unit probe injected into `T_0` therefore has nominal return
+
+\[
+Q_{in}=1,
+\qquad
+Q_{return}^{(0)}=1.
+\]
+
+This is a geometric prior, not evidence that the cross-space terrain is already
+known. Terrain is represented as learned deformation away from that prior:
+
+\[
+G_n=T_0+\Delta G_n.
+\]
+
+A first traversal supplies the first empirical constraint on `\Delta G`; later
+traversals refine it. The important distinction is between **cycle closure** and
+**knowledge of regional transport**. A trivial identity cycle can close perfectly
+while carrying no useful information about the other semantic space.
+
+For a region `r`, the operational quantity that can be learned from previous
+traversals is its transport reliability. Let `e_n(r)` be out-of-sample transport
+error estimated from earlier observations. Define
+
+\[
+\rho_n(r)=\exp(-e_n(r))
+\]
+
+as a normalized **reflectance**, and
+
+\[
+D_n(r)=1-\rho_n(r)
+\]
+
+as **darkness**. Brightness/darkness is therefore not a metaphysical statement that
+information literally disappears. It is a learned property of how reliably the
+current terrain transports information through that region.
+
+This gives color a direct operational meaning:
+
+- bright regions: previous traversals predict reliable transport;
+- dark regions: previous traversals indicate high transport uncertainty/error;
+- changing color after new traversals visualizes terrain becoming better known.
+
+A separate cycle-residual quantity,
+
+\[
+C_n(x)=d(x,G_n^{-1}(G_n(x))),
+\]
+
+measures global non-closure. Experiments below show that `C_n` and `D_n(r)` are
+related but should not be identified: cycle closure is useful as a global maturity
+signal, whereas learned regional reflectance is the better local color variable.
+
 ## 10. Spectral rendering and color as a sensory channel
 
 For an embodied MaleCNS version, geometry need not carry every variable. Different aspects of the response field can be rendered into distinct sensory channels.
@@ -506,6 +564,84 @@ can be measured incrementally.
 
 
 
+### 12.10 Canonical-torus cycle residual
+
+A five-seed experiment tests whether A->B->A cycle non-closure can act as an
+epistemic signal. The learned geometry is fit with increasing numbers of paired
+texts (`4,8,16,32,64,84`). A shuffled A/B correspondence is used as a negative
+control.
+
+Under true correspondence, increasing terrain knowledge produces a clear aggregate
+trend:
+
+| paired training texts | mean cycle error | mean cycle darkness | B-field RMSE | embedding cosine error |
+|---:|---:|---:|---:|---:|
+| 4 | 0.0572 | 0.541 | 0.03433 | 0.255 |
+| 8 | 0.0498 | 0.471 | 0.03362 | 0.278 |
+| 16 | 0.0482 | 0.456 | 0.03358 | 0.247 |
+| 32 | 0.0459 | 0.438 | 0.03300 | 0.208 |
+| 64 | 0.0416 | 0.412 | 0.03239 | 0.199 |
+| 84 | **0.0400** | **0.400** | **0.03235** | **0.195** |
+
+At 84 training texts, shuffled correspondence produces substantially worse cycle
+error (`0.0598`) and darkness (`0.515`) than true correspondence
+(`0.0400`, `0.400`). Thus cycle closure does distinguish a learned geometry from
+a deliberately wrong correspondence at the aggregate level.
+
+However, instantaneous cycle residual is **not** a good local color map. Within a
+fixed learned state, per-text cycle error has near-zero correlation with B-field
+error, and local cycle-derived darkness can even be negatively correlated with local
+B error. Therefore the naive rule "dark = local cycle did not close" is rejected.
+
+The correct interpretation from this experiment is narrower: cycle non-closure is a
+useful measure of overall geometric maturity, but not by itself a calibrated local
+measure of terrain knowledge.
+
+### 12.11 Learned regional reflectance from previous laps
+
+A second experiment implements the stronger terrain interpretation: once a region
+has been traversed, its color should summarize the transport reliability learned
+from **previous laps**. Regional darkness is estimated from out-of-fold A->B
+transport error on already observed texts, then evaluated against held-out regional
+error.
+
+This succeeds strongly. Under true correspondence:
+
+| paired training texts | mean regional darkness | Pearson(darkness, held-out regional B error) | Spearman |
+|---:|---:|---:|---:|
+| 8 | 0.551 | 0.658 | 0.632 |
+| 16 | 0.541 | 0.679 | 0.656 |
+| 32 | 0.536 | 0.713 | 0.676 |
+| 64 | 0.520 | 0.759 | 0.727 |
+| 84 | **0.512** | **0.801** | **0.776** |
+
+The regional color becomes **more predictive** as more terrain is learned. At 84
+texts, the deliberately shuffled map remains substantially darker on average
+(`0.625`) and has worse B-field error (`0.03640`) than the true map
+(`0.512`, `0.03235`).
+
+This is the first result supporting the proposed semantic use of color: a region's
+darkness, when learned from prior transport experience, predicts where the map will
+be less reliable on held-out data.
+
+The same color does **not yet** provide a strong per-text confidence score. Weighting
+regional darkness by a new text's A-side response yields only a weak correlation
+with that text's B-field error (Pearson about `0.13` at 84 training texts), and is
+not reliably correlated with embedding reconstruction error. Thus the present result
+supports **regional epistemic color**, not yet a scalar confidence estimate for a
+whole reconstructed text.
+
+These two experiments establish an important separation:
+
+\[
+\text{cycle closure}
+\neq
+\text{regional reflectance}.
+\]
+
+Cycle closure tracks global map maturity. Learned reflectance from previous laps
+provides the better local terrain-color variable.
+
 ## 13. Efficiency and continual-learning comparison protocol
 
 The sequential shared-geometry experiments now create a direct comparison point with
@@ -660,5 +796,9 @@ Code and live findings are under:
 - `.github/workflows/pontifex-embedding-reconstruction.yml`
 - `experiments/pontifex_torus/alignment_benchmark.py`
 - `experiments/pontifex_torus/embedding_reconstruction.py`
+- `experiments/pontifex_torus/cycle_epistemics.py`
+- `experiments/pontifex_torus/terrain_reflectance.py`
+- `.github/workflows/pontifex-cycle-epistemics.yml`
+- `.github/workflows/pontifex-terrain-reflectance.yml`
 
 The dated experimental narrative is in `experiments/pontifex_torus/FINDINGS-2026-09-17.md`.
