@@ -1,6 +1,14 @@
 name: Pontifex paired clause-complexity ladder
 
 on:
+  push:
+    branches:
+      - "experiment/pontifex-red-1"
+    paths:
+      - "experiments/pontifex_torus/build_paired_clause_ladder.py"
+      - "experiments/pontifex_torus/clause_complexity_ladder.py"
+      - "experiments/pontifex_torus/PAPER-ADDENDUM-CLAUSE-COMPLEXITY-2026-09-18.md"
+      - ".github/workflows/pontifex-clause-complexity-ladder.yml"
   pull_request:
     paths:
       - "experiments/pontifex_torus/build_paired_clause_ladder.py"
