@@ -556,3 +556,42 @@ Return a review with these sections:
      - arbitrarily long finite-context extension.
 
 Be adversarial but evidence-driven. A negative conclusion is useful if well supported.
+
+
+## Update — one lens x 32 normalized positions
+
+New successful run:
+
+https://github.com/franklinbaldo/papers/actions/runs/35295286403
+
+Artifact:
+
+https://github.com/franklinbaldo/papers/actions/runs/35295286403/artifacts/10528195900
+
+The source field was rebuilt using all discrete token-start positions available in
+the short synthetic sentences, then interpolated to a common 32-position normalized
+phase grid. Only occlusion size=1 is retained. Thus this is a **one-lens,
+32-normalized-position** experiment, not 32 independent raw occlusions for every
+sentence.
+
+Ten-seed full-budget result:
+
+- inverse backprojection:
+  - cosine 0.79769
+  - normalized RMSE 0.03246
+  - retrieval top-1 4.17%
+  - neighbor overlap **0.36235**
+- direct Ridge on the same 32 scalar response coordinates:
+  - cosine 0.83043
+  - normalized RMSE 0.02972
+  - retrieval top-1 9.72%
+  - neighbor overlap **0.31308**
+
+Earlier one-lens / 8-position backprojection had neighbor overlap only ~0.1619.
+The 32-position condition therefore shows a large increase in relational geometry
+preservation, while exact vector fidelity remains much worse than Ridge.
+
+Adversarial priority: determine whether this gain is real or an interpolation /
+smoothness artifact. Require a follow-up on texts long enough to expose at least 32
+**distinct raw token occlusion centers**, plus paired significance and nonperiodic
+controls.
