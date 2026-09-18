@@ -53,6 +53,20 @@ The phone or an auxiliary radio can expose passive features of the surrounding R
 
 The default goal is not to decode private traffic. It is to test whether ambient radio structure can become a cheap contextual / localization modality, analogous to landmarks in another sensory domain.
 
+Wi-Fi can also become an explicit inter-agent communication channel. Multiple cars, each controlled by a separate MaleCNS instance, may exchange low-bandwidth messages or learned tokens with nearby peers.
+
+This creates a multi-agent research track:
+
+- cooperative signaling: warn peers about congestion, hazards or intended maneuvers;
+- negotiation: resolve merges, bottlenecks and right-of-way conflicts;
+- transferable credits/tokens: one agent may compensate another for yielding, allowing experiments in endogenous traffic conventions and local markets;
+- reputation / reciprocity: agents may learn which peers honor commitments;
+- coalition and anti-collusion tests: measure whether communication improves global flow or merely enables selfish coordination.
+
+The initial token system should be an internal simulation credit, not a real cryptocurrency. Its semantics, supply and transfer rules should be explicit and auditable. A simple first experiment is a one-lane bottleneck where two cars approach simultaneously and may bid, yield, or exchange credits for priority.
+
+The simulator must also retain non-communication baselines and adversarial controls: message dropout, deceptive peers, identity reset/Sybil-like behavior, unequal initial credit allocation and communication latency.
+
 ### Optional local language-model transducer
 
 A local LLM is a qualitatively different component: it is not a sensor but an expensive semantic transducer. It may convert approved raw or structured inputs into a low-bandwidth semantic channel for MaleCNS.
