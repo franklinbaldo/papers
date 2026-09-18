@@ -10,10 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - name: Install PyYAML
-        run: pip install pyyaml
+      - name: Install uv
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --proto '=https' --tlsv1.2 -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Validate OKF frontmatter
-        run: python3 okf/validate.py
+        run: uv run okf/validate.py
+      - name: Test Zenodo deposit preparation
+        run: uv run scripts/zenodo_prepare.py --self-test
