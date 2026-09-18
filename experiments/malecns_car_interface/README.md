@@ -31,6 +31,14 @@ MaleCNS -> thin output adapter -> steering / throttle / brake
 
 The target phone profile is not a specific flagship model. It is a generic reasonably modern Android roughly in the Galaxy S23/S24 class: camera, GNSS/GPS, accelerometer, gyroscope, magnetometer and derived orientation/motion signals where available.
 
+## Sensor-colony architecture
+
+The default architecture is no longer restricted to one MaleCNS receiving every modality. The system may instantiate many specialist MaleCNS units, including several independent flies per sensor, each trained to interpret a narrow channel. Their compact lawful reports are then fused by fixed baselines or by one or more higher-level MaleCNS coordinators.
+
+This supports specialization, redundancy, graceful degradation and recursive hierarchy without relaxing the reality boundary. See `COLONY_ARCHITECTURE.md` and `colony.py`.
+
+Required comparisons now include a monolithic MaleCNS, one specialist per channel, multiple specialists per channel, fixed aggregation and a learned MaleCNS coordinator under matched compute/parameter budgets.
+
 ## Optional cheap external sensor organs
 
 The physical analogue may add inexpensive external sensors, provided each one is explicitly declared and independently ablatable. These are treated as optional organs, not as simulator privileges.
