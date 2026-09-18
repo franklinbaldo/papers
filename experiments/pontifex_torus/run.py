@@ -169,7 +169,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--texts", type=int, default=120)
     ap.add_argument("--positions", type=int, default=8)
-    ap.add_argument("--seed", type=int, default=7)\n    ap.add_argument("--field-store", type=Path, default=None)
+    ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument("--field-store", type=Path, default=None)
     ap.add_argument("--output", type=Path, default=Path("pontifex-torus.json"))
     args = ap.parse_args()
 
