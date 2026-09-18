@@ -77,7 +77,10 @@ theorem antisymmetric_current_has_zero_net
     (current : BilateralCurrent)
     (hanti : AntisymmetricCurrent current) :
     netCurrent current = 0 := by
-  simp [netCurrent, AntisymmetricCurrent, hanti]
+  unfold AntisymmetricCurrent at hanti
+  unfold netCurrent
+  rw [hanti]
+  exact Int.add_neg_cancel current.left
 
 /-- A candidate semantic charge is conserved over a discrete traversal exactly
 when it has the same value at every phase. This definition is intentionally
