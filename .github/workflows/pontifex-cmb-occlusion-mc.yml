@@ -44,7 +44,7 @@ jobs:
           if [ -f /tmp/pontifex-cmb-occlusion-mc.json ]; then
             echo "## CMB occlusion parameter Monte Carlo" >> "$GITHUB_STEP_SUMMARY"
             echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
-            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-occlusion-mc.json")); print(json.dumps({k:x[k] for k in ("mode","samples","null_maps","observed_response","null_calibration","parameter_space")}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-occlusion-mc.json")); print(json.dumps({k:x[k] for k in ("mode","samples","null_maps","raw_response","matched_null_excess","matched_null_z","phase_active_first_harmonic_abs_corr","parameter_space")}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
             echo '~~~' >> "$GITHUB_STEP_SUMMARY"
           fi
 
