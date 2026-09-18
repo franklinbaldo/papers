@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "experiments/pontifex_torus/alignment_benchmark.py"
+      - "experiments/pontifex_torus/gauge_invariance.py"
       - "experiments/pontifex_torus/build_field_store.py"
       - "experiments/pontifex_torus/run.py"
       - ".github/workflows/pontifex-alignment-benchmark.yml"
@@ -55,11 +56,24 @@ jobs:
             --seeds 0 1 2 3 4 5 6 7 8 9 \
             --output /tmp/pontifex-alignment-benchmark.json
 
+      - name: Run coordinate-gauge invariance control
+        run: |
+          uv run experiments/pontifex_torus/gauge_invariance.py \
+            --field-store "$FIELD_STORE" \
+            --seeds 0 1 2 3 4 5 6 7 8 9 \
+            --phase-turns 0 0.125 0.25 0.5 0.75 \
+            --output /tmp/pontifex-gauge-invariance.json
+
       - name: Publish benchmark
         if: always()
         run: |
           if [ -f /tmp/pontifex-alignment-benchmark.json ]; then
+            echo '## Alignment benchmark' >> "$GITHUB_STEP_SUMMARY"
             cat /tmp/pontifex-alignment-benchmark.json >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f /tmp/pontifex-gauge-invariance.json ]; then
+            echo '## Coordinate-gauge invariance' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/pontifex-gauge-invariance.json >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload benchmark
@@ -67,5 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pontifex-alignment-benchmark
-          path: /tmp/pontifex-alignment-benchmark.json
+          path: |
+            /tmp/pontifex-alignment-benchmark.json
+            /tmp/pontifex-gauge-invariance.json
           if-no-files-found: error
