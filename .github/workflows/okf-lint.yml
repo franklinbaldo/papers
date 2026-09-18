@@ -17,3 +17,5 @@ jobs:
         run: pip install pyyaml markdown
       - name: Validate OKF frontmatter
         run: python3 okf/validate.py
+      - name: Test Zenodo deposit preparation
+        run: python3 scripts/zenodo_prepare.py --self-test
