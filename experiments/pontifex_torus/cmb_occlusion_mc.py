@@ -488,6 +488,12 @@ def main() -> None:
         "--rows", type=Path, default=Path("pontifex-cmb-occlusion-mc.csv")
     )
     ap.add_argument(
+        "--null-scores",
+        type=Path,
+        default=Path("pontifex-cmb-null-scores.jsonl"),
+        help="Persist one JSON object per theta with the observed score and every matched-null score.",
+    )
+    ap.add_argument(
         "--plots", type=Path, default=Path("pontifex-cmb-occlusion-plots")
     )
     args = ap.parse_args()
@@ -512,6 +518,7 @@ def main() -> None:
     ]
 
     rows: list[dict] = []
+    null_score_rows: list[dict] = []
     thetas = [sample_theta(rng, i, rmin, rmax) for i in range(args.samples)]
     for theta in thetas:
         observed_rng = np.random.default_rng(args.seed + 97_409 * (theta.sample + 1))
@@ -531,6 +538,16 @@ def main() -> None:
                 "z_matched_null": z,
                 "null_n": len(null_vals),
                 "dataset": "observed" if args.mode == "healpix" else "synthetic",
+            }
+        )
+        null_score_rows.append(
+            {
+                **asdict(theta),
+                "observed_score": float(metrics["score"]),
+                "null_scores": [float(v) for v in null_vals],
+                "null_n": len(null_vals),
+                "mode": args.mode,
+                "seed": args.seed,
             }
         )
 
@@ -707,6 +724,10 @@ def main() -> None:
         json.dumps(result, indent=2, allow_nan=True) + "\n", encoding="utf-8"
     )
     save_csv(rows, args.rows)
+    args.null_scores.parent.mkdir(parents=True, exist_ok=True)
+    with args.null_scores.open("w", encoding="utf-8") as f:
+        for row in null_score_rows:
+            f.write(json.dumps(row, allow_nan=True) + "\n")
     print(json.dumps(result, indent=2, allow_nan=True))
 
 
