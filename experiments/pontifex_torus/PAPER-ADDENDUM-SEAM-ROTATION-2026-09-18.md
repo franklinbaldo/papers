@@ -1,12 +1,12 @@
 ---
 type: "Interpretability Paper"
-title: "Pontifex Torus Addendum: Seam-Rotation Equivariance of Occlusion Response Fields"
-description: "A discriminant test separating toroidal probe coordinates from the stronger claim that raw text semantics are invariant to moving a circular seam."
-tags: [pontifex, torus, occlusion, equivariance, seam, latent-space]
+title: "Pontifex Torus Addendum: Seam Rotation and Coordinate-Gauge Invariance"
+description: "Discriminant tests separating toroidal probe coordinates from the stronger claim that raw text semantics are invariant to moving a circular seam."
+tags: [pontifex, torus, occlusion, equivariance, seam, gauge, latent-space]
 timestamp: 2026-09-18T01:24:00-04:00
 ---
 
-# Pontifex Torus Addendum: Seam-Rotation Equivariance of Occlusion Response Fields
+# Pontifex Torus Addendum: Seam Rotation and Coordinate-Gauge Invariance
 
 **Franklin Baldo**  
 Independent Researcher
@@ -19,11 +19,14 @@ The dynamic double-occlusion experiment established the operational rule
 p(t+1)=(p(t)+1)\bmod N,
 \]
 
-but did not establish that the *semantic response field itself* is independent of where a circular seam is placed. This addendum tests a stronger claim directly.
+but did not establish that the *semantic response field itself* is independent of where a circular seam is placed. This addendum separates two claims that can otherwise be conflated:
+
+1. whether raw cyclic sequence rotation preserves intervention-response structure; and
+2. whether the learned Torus chart is invariant to an arbitrary change of coordinate origin while the raw text and response field remain fixed.
 
 The distinction is important. A torus may be useful as a periodic **coordinate substrate for probes** even when natural-language sequence semantics are not intrinsically circular. Moving the seam in raw text physically changes word order, whereas changing the phase origin of a coordinate chart need not.
 
-## Experiment
+## Experiment 1: raw seam rotation
 
 The test uses the same 120-text synthetic cartography corpus as the current Pontifex Torus experiments. No downstream benchmark test set, Assembly test partition, or future student/test split is consumed.
 
@@ -40,7 +43,7 @@ I_E(i,j)=R_E(i,j)-R_E(i)-R_E(j).
 
 After rotating the raw sequence by `s`, the response field is re-aligned to the same physical tokens using the inverse circular coordinate shift. A seam-equivariant field should correlate more strongly after this alignment than under the intentionally unaligned control.
 
-## Results
+## Results 1
 
 Across 240 rotation instances per encoder (two rotations for each of 120 texts):
 
@@ -61,7 +64,7 @@ Across 240 rotation instances per encoder (two rotations for each of 120 texts):
 Run: `https://github.com/franklinbaldo/papers/actions/runs/35309939303`  
 Artifact: `pontifex-seam-rotation` (Actions artifact id `10532768489`).
 
-## Interpretation
+## Interpretation 1
 
 The result is mixed in a scientifically useful way.
 
@@ -77,29 +80,58 @@ The supported claim is consequently narrow:
 
 This is compatible with the current Pontifex formulation in which the torus is a computational substrate rather than a claim about the intrinsic topology of language.
 
-## Stronger next discriminant: coordinate-gauge invariance
+## Experiment 2: coordinate-gauge invariance
 
-Raw cyclic rotation changes linguistic order, so it conflates two operations:
+Raw cyclic rotation changes linguistic order, so it conflates moving the Torus coordinate origin with changing the sequence presented to the encoder. The cleaner gauge test keeps **all response values, raw text, train/test split, and physical intervention states fixed** and changes only the phase origin used to label positions.
 
-1. moving the torus coordinate origin;
-2. changing the text sequence presented to the encoder.
-
-The cleaner next experiment must hold the raw text and all physical occlusion states fixed, change only the phase origin used by the learned Torus chart, and test whether predictions transform equivariantly. For an arbitrary chart shift `alpha`, the same physical state should satisfy
+For phase shifts
 
 \[
-\hat I_B(p,q;\alpha)
-\approx
-\hat I_B(p,q;0)
+\alpha\in\{0,1/8,1/4,1/2,3/4\},
 \]
 
-after inverse coordinate alignment.
+the same fixed response field is fitted with three matched representations over ten held-out-text seeds:
 
-This should be evaluated on held-out whole texts and compared directly with a non-periodic raw-coordinate basis. A periodic Fourier/Torus representation earns its role only if it is less sensitive to this arbitrary chart origin than the matched non-periodic control.
+1. **position agnostic** — invariant by construction, but cannot exploit position;
+2. **Torus Fourier** — complete sine/cosine pairs with the existing local interaction terms;
+3. **raw seam polynomial** — a deliberately non-periodic modulo-position basis with an arbitrary discontinuity at the chosen seam.
+
+For every nonzero `alpha`, the model is retrained after relabeling both train and held-out coordinates by the same phase shift. Gauge invariance requires its physical predictions to remain unchanged.
+
+## Results 2
+
+The Torus Fourier representation is invariant to the coordinate-origin choice to floating-point precision:
+
+| representation | mean prediction drift RMSE | mean normalized drift | max drift RMSE | held-out RMSE |
+|---|---:|---:|---:|---:|
+| position agnostic | 0 | 0 | 0 | 0.03862 |
+| **Torus Fourier** | **1.18e-16** | **1.09e-15** | **2.35e-16** | **0.03241** |
+| raw seam polynomial | 0.00798 | 0.07354 | 0.01365 | 0.03329 |
+
+The raw-coordinate control exposes a strong arbitrary-seam effect. Its mean prediction drift is `0.000353` at an eighth-turn, `0.00913` at a quarter-turn, `0.00927` at a half-turn, and `0.01316` at three-quarters of a turn. The Torus prediction is unchanged at every tested phase apart from numerical roundoff; held-out RMSE (`0.03241`) and neighbor overlap (`0.25243`) are identical across phase origins.
+
+Run: `https://github.com/franklinbaldo/papers/actions/runs/35314063702`  
+Artifact: `pontifex-alignment-benchmark` (Actions artifact id `10534343265`).  
+Implementation: `experiments/pontifex_torus/gauge_invariance.py`.
+
+## Interpretation 2
+
+This result closes the narrower coordinate question raised by the seam-rotation experiment. The current complete Fourier Torus basis plus isotropically regularized Ridge is **coordinate-gauge invariant** under a global phase-origin change. This is also the behavior expected mathematically: a global phase shift rotates each complete sine/cosine pair inside its span, while the Ridge penalty is isotropic in that feature subspace.
+
+The position-agnostic control is exactly invariant too, which is why invariance alone is not evidence of useful semantic geometry. Its held-out RMSE is materially worse (`0.03862` versus `0.03241`). The useful result is the conjunction: the Torus basis exploits position while avoiding sensitivity to the arbitrary choice of phase zero.
+
+The non-periodic raw-coordinate control is slightly worse in task RMSE (`0.03329`) and, more importantly for this discriminant, changes its physical predictions substantially when the arbitrary seam is moved. Thus the periodic representation removes a real coordinate artifact that the matched non-periodic representation retains.
+
+This **does not** establish that language itself has circular topology. It validates a property of the chosen computational chart. It also does not establish multi-teacher Assembly, tokenizer-free inference, long-context scaling, or downstream retrieval value. Those remain separate empirical questions.
+
+The combination of Experiments 1 and 2 sharpens the ontology:
+
+> **Raw-text seam rotation is only partially equivariant and can materially change semantics; coordinate-gauge rotation of the Torus chart is exactly invariant. The torus is therefore presently supported as a seam-free computational coordinate system for intervention geography, not as a claim that text itself is a circle.**
 
 ## Evidence boundary
 
-**Established in this addendum:** cyclic raw-sequence rotation experiment; strong singleton response-field alignment in both encoders; strong BGE pair-interaction alignment; weak/non-robust MiniLM pair-interaction alignment.
+**Established in this addendum:** cyclic raw-sequence rotation experiment; strong singleton response-field alignment in both encoders; strong BGE pair-interaction alignment; weak/non-robust MiniLM pair-interaction alignment; coordinate-gauge invariance of the current complete Fourier Torus basis under global phase-origin changes; arbitrary-seam sensitivity of the matched raw polynomial coordinate control.
 
-**Not established:** intrinsic circular topology of language; metric invariance of response amplitudes; coordinate-gauge invariance of the learned Torus map; multi-teacher Assembly; tokenizer-free inference; long-context advantage; downstream retrieval advantage.
+**Not established:** intrinsic circular topology of language; metric invariance of response amplitudes under raw sequence rotation; scalable multi-teacher Assembly; held-out-teacher generalization; tokenizer-free inference; long-context advantage; downstream retrieval advantage.
 
-Implementation: `experiments/pontifex_torus/seam_rotation.py`.
+Implementations: `experiments/pontifex_torus/seam_rotation.py` and `experiments/pontifex_torus/gauge_invariance.py`.
