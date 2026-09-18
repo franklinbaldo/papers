@@ -11,6 +11,10 @@ every pull request.
 * [SPEC.md](SPEC.md) - vendored copy of OKF v0.1, the version this repository targets.
 * [publication.md](publication.md) - repository-local `publication` frontmatter state machine and external-publication provenance records.
 
+# Canonical concepts
+
+* [Schmidhuber Meter](schmidhuber-meter.md) - claim-level Citation Debt Index based only on public temporal priority, substantive overlap, historical discoverability, observed credit, and separately measured impact.
+
 # Types
 
 * [Dogmatic Paper](types/dogmatic-paper.md) - CPC 2015 doctrinal thesis papers (the 1A-1G series plus the umbrella paper).
@@ -28,9 +32,11 @@ every pull request.
 * [Session Log Entry](types/session-log-entry.md) - dated changelog entry for one debate-apparatus session.
 * [Protocol](types/protocol.md) - canonical rules document for a repeatable process.
 * [Audit Report](types/audit-report.md) - dated external review with findings and execution status.
+* [Citation Debt Assessment](types/citation-debt-assessment.md) - claim-by-claim auditable record used to compute the Schmidhuber Meter without inferring private intent or causal derivation.
 * [Session Log](types/session-log.md) - superseded precursor to Session Log Entry.
 * [Index](types/catalog-index.md) - human-facing catalog and reading guide (this repository's `README.md`).
-* [Reference](types/reference.md) - vendored external material, mirrored into this repository so its OKF adoption does not depend on that material staying reachable (`okf/SPEC.md`).\n* [Author](types/author.md) - canonical reusable identity record for paper authors and future coauthors.
+* [Reference](types/reference.md) - vendored external material, mirrored into this repository so its OKF adoption does not depend on that material staying reachable (`okf/SPEC.md`).
+* [Author](types/author.md) - canonical reusable identity record for paper authors and future coauthors.
 * [OKF Type Spec](types/okf-type-spec.md) - a document that specifies how one type should be used (this list's own entries).
 
 # Tooling
