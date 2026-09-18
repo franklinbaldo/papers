@@ -642,6 +642,64 @@ These two experiments establish an important separation:
 Cycle closure tracks global map maturity. Learned reflectance from previous laps
 provides the better local terrain-color variable.
 
+### 12.12 Inverse light backprojection to a synthetic B embedding
+
+The next experiment implements the proposed reconstruction path literally as a
+regional inverse-propagation operator rather than a generic vector decoder:
+
+\[
+\text{occlusion center}
+\rightarrow
+\text{cheap-space light}
+\rightarrow
+K_G
+\rightarrow
+\text{B-side regional accumulation}
+\rightarrow
+\hat E_B.
+\]
+
+Sixteen representative B-embedding anchors define target semantic regions. The
+learned cross-space object is a probe-to-region kernel `K_G`: selected occlusion
+centers emit standardized cheap-space response light, the kernel transports those
+deviations into B-region affinity space, regional evidence is accumulated, and the
+synthetic B vector is produced only at the end by a barycentric combination of the
+B anchors. No coefficient maps source probes directly to B embedding coordinates.
+
+The experiment evaluates uniform walks with `1,2,4,8` occlusion centers. Two source
+modes are tested: the smallest lens only, and all four available lens sizes at each
+visited center. Ten paired seeds use the same 70/30 held-out split protocol.
+
+| method | centers | scalar probes | cosine to B | normalized RMSE | retrieval top-1 | neighbor overlap |
+|---|---:|---:|---:|---:|---:|---:|
+| canonical regional prior | 0 | 0 | 0.7931 | 0.03283 | 2.78% | 0.0889 |
+| backprojection, smallest lens | 8 | 8 | 0.7941 | 0.03274 | 2.78% | 0.1619 |
+| backprojection, all lenses | 1 | 4 | 0.7935 | 0.03279 | 3.06% | 0.1892 |
+| backprojection, all lenses | 4 | 16 | 0.7946 | 0.03271 | 3.33% | 0.2131 |
+| backprojection, all lenses | 8 | 32 | **0.7974** | **0.03248** | **4.44%** | **0.3013** |
+| direct A-profile -> B-embedding Ridge | 8 | 32 | **0.8316** | **0.02962** | **11.39%** | 0.2741 |
+
+The result is mixed and therefore informative. The first inverse-backprojection
+implementation does **not** beat unconstrained direct Ridge in absolute reconstruction:
+its cosine similarity and exact held-out retrieval remain substantially worse.
+However, the full-budget regional reconstruction preserves held-out B-space
+neighborhood structure better than direct Ridge (`0.3013` versus `0.2741` mean
+neighbor overlap). This difference has not yet been subjected to a paired
+significance test and should not be treated as a confirmed win.
+
+The probe-budget curve is weak in coordinate fidelity but clearer in relational
+structure. Multiple lenses matter: the eight-center smallest-lens condition reaches
+only `0.1619` neighbor overlap, while eight centers with all lenses reach
+`0.3013`. Thus the current evidence is more compatible with the interpretation
+that inverse propagation reconstructs **semantic geography** before it reconstructs
+the original absolute vector coordinates.
+
+Important limitations remain. The transport kernel is still a regularized linear
+operator learned from paired data, the target regions are empirical B anchors, the
+barycentric decoder restricts outputs to their span, and only eight normalized text
+positions are available in the current cached field. The result therefore tests the
+backprojection *architecture*, not a fully physical optical model.
+
 ## 13. Efficiency and continual-learning comparison protocol
 
 The sequential shared-geometry experiments now create a direct comparison point with
@@ -798,6 +856,8 @@ Code and live findings are under:
 - `experiments/pontifex_torus/embedding_reconstruction.py`
 - `experiments/pontifex_torus/cycle_epistemics.py`
 - `experiments/pontifex_torus/terrain_reflectance.py`
+- `experiments/pontifex_torus/inverse_backprojection.py`
+- `.github/workflows/pontifex-inverse-backprojection.yml`
 - `.github/workflows/pontifex-cycle-epistemics.yml`
 - `.github/workflows/pontifex-terrain-reflectance.yml`
 
