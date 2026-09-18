@@ -1,4 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#   "PyYAML>=6.0.3,<7",
+# ]
+# ///
+
 """OKF v0.1 conformance checker for this repository.
 
 Checks (see okf/SPEC.md §9 for the spec's own conformance clause):

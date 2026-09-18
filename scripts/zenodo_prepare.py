@@ -1,4 +1,12 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#   "Markdown>=3.10.3,<4",
+#   "PyYAML>=6.0.3,<7",
+# ]
+# ///
+
 """Prepare one OKF paper for a Zenodo deposition.
 
 This script never talks to Zenodo and never reads secrets. It only validates
