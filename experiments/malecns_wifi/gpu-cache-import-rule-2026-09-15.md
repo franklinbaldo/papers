@@ -1,3 +1,11 @@
+---
+type: "Protocol"
+title: "Frozen rule: when a GPU state cache may be imported into the clean confirmatory"
+description: "Pre-result import protocol freezing the admissibility gates and procedure for importing GPU-computed MaleCNS states into the clean confirmatory run."
+tags: [malecns, protocol, gpu-cache, confirmatory]
+timestamp: 2026-09-15T00:32:00Z
+---
+
 # Frozen rule: when a GPU state cache may be imported into the clean confirmatory
 
 Registered 2026-09-15T00:32Z, while Kaggle run `34912592209` (kernel v5) was still
