@@ -729,6 +729,104 @@ the 32-point field is an interpolation of all available discrete token-start
 responses in these short synthetic texts. A decisive follow-up requires genuinely
 longer texts with at least 32 distinct raw occlusion centers and no interpolation.
 
+### 12.14 Fixed real probes versus arbitrary virtual torus resolution
+
+A stricter experiment separates **real observations** from **virtual traversal
+resolution**. One lens (`size=1`) is used throughout. For held-out texts, only
+`K` real A-side occlusion responses are revealed at actual token-start positions.
+Those observations define a circular piecewise-linear source function. A continuous
+Fourier transport kernel `K_G(theta,r)` is learned only from training texts.
+Inference then integrates the same inferred source function through the learned
+terrain using `M` virtual quadrature points.
+
+Increasing `M` therefore reveals **no additional held-out encoder observations**.
+
+With eight real probes fixed:
+
+| virtual steps M | cosine to B | neighbor overlap |
+|---:|---:|---:|
+| 8 | 0.79531 | 0.29475 |
+| 16 | 0.79568 | **0.35292** |
+| 32 | 0.79569 | 0.35295 |
+| 64 | 0.79569 | 0.35349 |
+| 128 | 0.79569 | **0.35388** |
+| 256 | 0.79569 | 0.35388 |
+| 512 | 0.79569 | 0.35388 |
+
+Thus virtual traversal density improves relational reconstruction substantially from
+`M=8` to approximately `M=16`, while exact-vector cosine changes only slightly.
+Beyond that point the integral converges and additional virtual steps do not create
+new information.
+
+The same qualitative pattern appears with fewer real probes. For `K=4`, neighbor
+overlap rises from `0.1851` at `M=8` to `0.2582` at `M=16`, then remains
+approximately flat. For `K=2`, it rises from `0.1374` to `0.1700`, then
+plateaus/slightly declines.
+
+This supports a more precise claim:
+
+> The Torus permits arbitrarily fine **virtual traversal**, but reconstruction quality
+> improves only until the learned continuous terrain is numerically resolved. Virtual
+> steps refine integration; they do not manufacture new semantic observations.
+
+### 12.15 Terrain bandwidth and the virtual-resolution plateau
+
+A follow-up varies the Fourier bandwidth of the continuous terrain while keeping the
+same held-out real probes. Harmonic counts `4,8,16,32` produce very similar
+saturation behavior.
+
+For `K=8` real probes, the best mean neighbor-overlap values are:
+
+| harmonics | M=8 | M=16 | M=32 | M>=128 |
+|---:|---:|---:|---:|---:|
+| 4 | 0.3404 | 0.3467 | 0.3434 | 0.3447 |
+| 8 | 0.2948 | 0.3529 | 0.3530 | 0.3539 |
+| 16 | 0.2910 | 0.3567 | 0.3542 | 0.3555 |
+| 32 | 0.2907 | **0.3630** | 0.3543 | 0.3556 |
+
+Higher terrain bandwidth does not move the useful virtual-resolution frontier much
+beyond `M≈16` in this toy. The strongest relational result is the 32-harmonic,
+16-step condition (`0.3630` mean neighbor overlap). This argues against the naive
+idea that simply increasing virtual resolution without bound should continually
+increase reconstruction quality.
+
+### 12.16 Real-probe frontier at saturated virtual resolution
+
+Holding virtual resolution at a numerically saturated regime shows the complementary
+effect: **real probes add information**.
+
+At `M=128`, one-lens regional backprojection gives:
+
+| real probes K | cosine to B | neighbor overlap |
+|---:|---:|---:|
+| 1 | 0.79305 | 0.1091 |
+| 2 | 0.79309 | 0.1640 |
+| 3 | 0.79395 | 0.2609 |
+| 4 | 0.79392 | 0.2519 |
+| 5 | 0.79397 | 0.2578 |
+| 6 | 0.79466 | 0.2733 |
+| 7 | 0.79455 | 0.2904 |
+| 8 | **0.79569** | **0.3539** |
+
+The curve is not perfectly monotonic because the current policy chooses approximately
+uniform raw positions and different `K` values select different locations. The
+overall trend is nevertheless clear: additional real observations change the
+reconstruction frontier much more than adding virtual steps after quadrature
+convergence.
+
+The practical decomposition is therefore:
+
+\[
+\boxed{K = \text{observation / information budget}}
+\]
+
+\[
+\boxed{M = \text{virtual integration resolution}}
+\]
+
+with `M` arbitrarily refinable in principle, but `K` controlling how much new
+information enters the reconstruction.
+
 ## 13. Efficiency and continual-learning comparison protocol
 
 The sequential shared-geometry experiments now create a direct comparison point with
@@ -886,6 +984,10 @@ Code and live findings are under:
 - `experiments/pontifex_torus/cycle_epistemics.py`
 - `experiments/pontifex_torus/terrain_reflectance.py`
 - `experiments/pontifex_torus/inverse_backprojection.py`
+- `experiments/pontifex_torus/virtual_resolution.py`
+- `.github/workflows/pontifex-virtual-resolution.yml`
+- `.github/workflows/pontifex-virtual-bandwidth.yml`
+- `.github/workflows/pontifex-real-probe-frontier.yml`
 - `.github/workflows/pontifex-inverse-backprojection.yml`
 - `.github/workflows/pontifex-cycle-epistemics.yml`
 - `.github/workflows/pontifex-terrain-reflectance.yml`
