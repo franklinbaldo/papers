@@ -700,6 +700,35 @@ barycentric decoder restricts outputs to their span, and only eight normalized t
 positions are available in the current cached field. The result therefore tests the
 backprojection *architecture*, not a fully physical optical model.
 
+### 12.13 One lens at 32 normalized positions
+
+A targeted resolution ablation holds the occlusion lens fixed at `size=1` and
+increases the positional representation from 8 to 32 normalized positions. The
+dense source field first evaluates every discrete token-start position available in
+each synthetic sentence, then interpolates that observed response function onto a
+common 32-point phase grid. Therefore these are 32 normalized reconstruction
+positions, not 32 independent encoder calls for short sentences.
+
+At full budget:
+
+| method | lens count | normalized positions | cosine to B | top-1 | neighbor overlap |
+|---|---:|---:|---:|---:|---:|
+| backprojection, previous 8-position field | 1 | 8 | 0.7941 | 2.78% | 0.1619 |
+| backprojection, dense 32-position grid | 1 | 32 | **0.7977** | **4.17%** | **0.3623** |
+| direct Ridge on same 32 scalar responses | 1 | 32 | **0.8304** | **9.72%** | 0.3131 |
+
+The absolute-vector metrics improve only modestly, but relational reconstruction
+changes substantially: neighbor overlap more than doubles relative to the earlier
+one-lens/8-position condition and exceeds the direct Ridge control at the same
+32-scalar representation (`0.3623` versus `0.3131`). This reinforces, but does
+not yet prove, the hypothesis that positional traversal density is especially useful
+for reconstructing semantic neighborhood geometry rather than exact coordinates.
+
+The comparison is not a clean statement that "32 real probes beat 8 real probes":
+the 32-point field is an interpolation of all available discrete token-start
+responses in these short synthetic texts. A decisive follow-up requires genuinely
+longer texts with at least 32 distinct raw occlusion centers and no interpolation.
+
 ## 13. Efficiency and continual-learning comparison protocol
 
 The sequential shared-geometry experiments now create a direct comparison point with
