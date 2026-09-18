@@ -1,34 +1,53 @@
-name: Structural identification Lean proofs
+name: Lean formalizations
 
 on:
   pull_request:
     paths:
-      - 'structural_identification_from_restricted_truths.md'
-      - 'formalizations/structural_identification/**'
-      - '.github/workflows/structural-identification-lean.yml'
+      - "formalizations/**"
+      - "scripts/check_lean_formalizations.py"
+      - "lean-toolchain"
+      - ".github/workflows/structural-identification-lean.yml"
+      - "pontifex_torus.md"
+      - "structural_identification_from_restricted_truths.md"
   push:
     branches:
-      - 'paper/structural-identification-lean'
+      - main
+      - "experiment/pontifex-red-1"
+      - "paper/structural-identification-lean"
     paths:
-      - 'structural_identification_from_restricted_truths.md'
-      - 'formalizations/structural_identification/**'
-      - '.github/workflows/structural-identification-lean.yml'
+      - "formalizations/**"
+      - "scripts/check_lean_formalizations.py"
+      - "lean-toolchain"
+      - ".github/workflows/structural-identification-lean.yml"
+
+permissions:
+  contents: read
 
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Install elan
+        shell: bash
         run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          set -euo pipefail
+          curl --proto '=https' --tlsv1.2 -sSf             https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh |
+            sh -s -- -y --no-modify-path
 
-      - name: Install Lean 4.22.0
+      - name: Install pinned Lean
+        shell: bash
         run: |
-          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.22.0
+          set -euo pipefail
+          TOOLCHAIN="$(tr -d '\r\n' < lean-toolchain)"
+          "$HOME/.elan/bin/elan" toolchain install "$TOOLCHAIN"
+          "$HOME/.elan/bin/elan" default "$TOOLCHAIN"
+          "$HOME/.elan/bin/lean" --version
 
-      - name: Check structural-identification proofs
+      - name: Compile and audit all Lean formalizations
+        shell: bash
         run: |
-          "$HOME/.elan/bin/elan" run leanprover/lean4:v4.22.0 \
-            lean formalizations/structural_identification/StructuralIdentification.lean
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          python3 scripts/check_lean_formalizations.py
