@@ -595,3 +595,79 @@ Adversarial priority: determine whether this gain is real or an interpolation /
 smoothness artifact. Require a follow-up on texts long enough to expose at least 32
 **distinct raw token occlusion centers**, plus paired significance and nonperiodic
 controls.
+
+
+## Update — fixed real probes versus virtual Torus resolution
+
+New successful runs:
+
+- fixed-K virtual resolution:
+  https://github.com/franklinbaldo/papers/actions/runs/35295761935
+- terrain bandwidth sweep:
+  https://github.com/franklinbaldo/papers/actions/runs/35295852947
+- real-probe frontier:
+  https://github.com/franklinbaldo/papers/actions/runs/35295926064
+
+Core protocol:
+
+- one lens only (`size=1`);
+- only `K` actual held-out A-side occlusion responses are revealed;
+- those `K` observations define a circular interpolated source function;
+- a continuous Fourier transport kernel is learned from training texts;
+- `M` virtual positions are used only to numerically integrate the inferred source
+  through that terrain;
+- increasing `M` therefore does **not** reveal any new held-out encoder observation.
+
+Key result for `K=8`:
+
+- M=8: neighbor overlap 0.29475
+- M=16: 0.35292
+- M=32: 0.35295
+- M=128: 0.35388
+- M=512: 0.35388
+
+So virtual traversal helps strongly from 8 to ~16 steps, then saturates.
+
+Terrain-bandwidth sweep (4, 8, 16, 32 Fourier harmonics) does not shift the plateau
+much. Best observed relational score is H=32, M=16, K=8:
+
+- neighbor overlap 0.362996
+- cosine ~0.79567
+
+The real-probe frontier at M=128 is:
+
+- K=1: neighbor 0.1091
+- K=2: 0.1640
+- K=3: 0.2609
+- K=4: 0.2519
+- K=5: 0.2578
+- K=6: 0.2733
+- K=7: 0.2904
+- K=8: 0.3539
+
+Interpretation to attack:
+
+The data support the narrow distinction
+
+`K = observational information budget`
+
+versus
+
+`M = virtual integration resolution`.
+
+They do **not** support a claim that arbitrarily increasing M creates arbitrarily
+better estimates. M may be arbitrarily large computationally, but useful accuracy
+saturates once the inferred continuous terrain is resolved.
+
+Adversarial questions:
+
+1. Is the gain M=8 -> M=16 merely numerical quadrature convergence rather than a
+   distinctive scientific advantage of the torus?
+2. Would an ordinary continuous spline / Gaussian-process / Fourier functional
+   regressor show the same behavior without toroidal language?
+3. Does circular interpolation across the start/end boundary introduce an unjustified
+   prior that happens to help this synthetic grammar?
+4. Is the non-monotonic K=3/4/5 behavior evidence that uniform probe placement is
+   poor and active selection is the real problem?
+5. What control best distinguishes "continuous semantic terrain" from ordinary
+   function interpolation plus low-rank regression?
