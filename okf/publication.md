@@ -3,7 +3,7 @@ type: "Protocol"
 title: "Publication State"
 description: "Repository-local OKF extension for tracking manuscript publication readiness and external publication records without conflating Git history with venue publication."
 tags: [okf, publication, arxiv, provenance]
-timestamp: 2026-09-18T13:10:00-04:00
+timestamp: 2026-09-18T14:00:00-04:00
 ---
 
 # Publication State
