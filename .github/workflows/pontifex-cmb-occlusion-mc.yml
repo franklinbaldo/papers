@@ -47,6 +47,7 @@ jobs:
             --seed 20260918 \
             --output /tmp/pontifex-cmb-occlusion-mc.json \
             --rows /tmp/pontifex-cmb-occlusion-mc.csv \
+            --null-scores /tmp/pontifex-cmb-null-scores.jsonl \
             --plots /tmp/pontifex-cmb-occlusion-plots
 
       - name: Audit small-ensemble matched-null calibration
@@ -79,6 +80,7 @@ jobs:
           path: |
             /tmp/pontifex-cmb-occlusion-mc.json
             /tmp/pontifex-cmb-occlusion-mc.csv
+            /tmp/pontifex-cmb-null-scores.jsonl
             /tmp/pontifex-cmb-null-calibration.json
             /tmp/pontifex-cmb-occlusion-plots/
           if-no-files-found: warn
