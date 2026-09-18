@@ -1,5 +1,5 @@
 ---
-type: "Experiment Finding"
+type: "Findings Record"
 title: "MaleCNS sensor-colony synthetic fault ablation"
 description: "Deterministic pre-training ablation of aggregation rules for redundant sensor-specialist colonies under independent biased faults."
 tags: [malecns, driving, sensor-fusion, multi-agent, robustness, ablation]
