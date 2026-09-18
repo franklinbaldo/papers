@@ -1,8 +1,7 @@
 name: Record Pontifex dynamic orbit results
 
 on:
-  push:
-    branches: [experiment/pontifex-red-1]
+  pull_request:
     paths:
       - .github/workflows/pontifex-record-dynamic-orbit.yml
 
