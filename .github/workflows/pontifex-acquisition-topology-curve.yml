@@ -63,9 +63,9 @@ jobs:
             --virtual-steps 128 \
             --dense-train-grid 512 \
             --harmonics 8 \
-            --anchors 128 \
+            --anchors 256 \
             --edge-budget 36 \
-            --random-reps 10 \
+            --random-reps 12 \
             --alphas 0.1 1 10 \
             --output /tmp/pontifex-acquisition-topology-curve.json
 
