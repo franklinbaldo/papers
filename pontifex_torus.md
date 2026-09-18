@@ -883,7 +883,60 @@ separation and `|I_A|` is only `0.040`, and with `|I_B|` is `-0.132`.
 Future tests should map interaction as a two-dimensional function of midpoint and
 separation and compare against non-periodic pair-coordinate controls.
 
-### 12.18 First scale ladder: fixed regional capacity does not scale automatically
+### 12.17.1 Dynamic toroidal wraparound orbit
+
+    The static pair experiment was extended into the explicitly periodic motion required
+    by the Torus hypothesis. For each text and each available circular separation
+    `Delta`, two size-1 occlusions advance together by one raw intervention position:
+
+    \[
+    i(t+1)=(i(t)+1)\bmod N,
+    \qquad
+    j(t+1)=(j(t)+1)\bmod N.
+    \]
+
+    Thus the leading occlusion does not stop at the last position: on its next movement
+    it wraps immediately to position zero while the other occlusion continues modulo
+    `N`. Across 120 texts this generated 6,278 oriented orbit states.
+
+    A seam-continuity diagnostic compares the absolute step-to-step change in the
+    non-additive interaction residual at wrap transitions with ordinary non-wrap
+    transitions. The result is mixed:
+
+    | space | mean abs step at wrap | mean abs step away from wrap | pooled wrap/non-wrap ratio |
+    |---|---:|---:|---:|
+    | A / MiniLM | 0.04478 | 0.02789 | 1.606 |
+    | B / BGE | 0.02066 | 0.02471 | 0.836 |
+
+    In A, wrap transitions are substantially larger on average than ordinary steps; in B
+    they are slightly smaller. Looking only at the transition where the **leading**
+    occlusion wraps gives mean absolute changes of `0.02950` in A and `0.01731` in B.
+    The current evidence therefore does **not** support the strong claim that the learned
+    response itself is seam-free merely because the intervention coordinate is periodic.
+
+    A second held-out whole-text test predicts `I_B` using the same A-side scalar
+    interaction information while changing only the coordinate representation:
+
+    | features for predicting B interaction | overall RMSE | RMSE after leading occlusion wrapped | Pearson |
+    |---|---:|---:|---:|
+    | A-side scalar interaction only | 0.02436 | 0.02421 | 0.292 |
+    | + non-periodic raw/polynomial pair coordinates | **0.02311** | **0.02142** | **0.420** |
+    | + periodic toroidal pair coordinates | 0.02370 | 0.02262 | 0.365 |
+
+    The periodic representation loses `0.00059` RMSE overall to the matched raw-coordinate
+    control and `0.00120` on states after the leading occlusion has wrapped. This is useful
+    negative evidence: **correct toroidal motion is a structural rule of the intervention
+    process, but the current circular feature basis has not yet earned a predictive
+    advantage for pair interactions.**
+
+    A cleaner next test is seam-rotation equivariance: move phase zero to several arbitrary
+    positions while keeping the same physical pair states, and require predictions not to
+    depend on that arbitrary coordinate choice.
+
+    Completed run:
+    `https://github.com/franklinbaldo/papers/actions/runs/35306211464`.
+
+    ### 12.18 First scale ladder: fixed regional capacity does not scale automatically
 
 A one-lens scale ladder increased the same synthetic grammar from 120 texts to
 500, 1,000, and 2,000 texts while keeping the current regional reconstruction
@@ -1310,10 +1363,13 @@ and, after varying separation,
 I_E(\theta,\Delta).
 \]
 
-The next double-occlusion experiment must explicitly move both occlusions through a
-complete orbit including the wraparound transition at the end of the text. The
-current 3,840-pair experiment establishes non-additive transferable pair information
-but did not yet test this continuous orbit.
+A completed follow-up now moves both occlusions through complete orbits including the
+wraparound transition at the end of the text. The intervention dynamics therefore
+satisfy the toroidal rule operationally. However, the first held-out control does not
+show a predictive advantage for the current periodic feature basis over matched raw
+coordinates, and MiniLM interaction residuals remain more discontinuous at the natural
+wrap seam. Section 12.17.1 reports this negative result. Periodicity is part of the
+intervention contract; seamless semantic geometry remains an empirical question.
 
 ### 16.2 Higher-order interaction fields
 
@@ -1499,7 +1555,7 @@ re-encoding the entire document.
 ## 19. Immediate evaluation ladder
 
 1. **capacity scaling:** repeat the 500/1k/2k corpus ladder with 16/32/64/128+ regional anchors or hierarchical prototypes to determine whether the current scale failure is a fixed-capacity bottleneck;
-2. **dynamic double occlusion:** move two simultaneous occlusions through complete toroidal orbits with explicit wraparound and map `I(theta,Delta)`;
+2. **seam-rotation control:** repeat complete double-occlusion orbits under multiple arbitrary phase-zero rotations and test whether pair-interaction prediction is equivariant to seam placement before attributing value to toroidal coordinates;
 3. **pair-probe efficiency:** compare one simultaneous pair observation against two singleton observations at matched expensive-encoder cost;
 4. **Assembly v0:** choose at least three heterogeneous teacher embedding spaces and build a frozen multi-teacher Assembly only on `D_assembly`;
 5. **teacher-order control:** train several teacher permutations and quantify whether the resulting Assembly geometry/downstream behavior converges;
@@ -1536,14 +1592,16 @@ As of this revision:
 **Completed evidence:** pairwise response-field alignment; scale/context lenses;
 active k-center sampling; repeated-pass/backward-transfer toy results; inverse
 regional reconstruction; learned regional reflectance; fixed-real-probe versus
-virtual-resolution separation; one static simultaneous-double-occlusion interaction
-experiment; and the 500/1k/2k fixed-capacity scale ladder.
+virtual-resolution separation; static simultaneous-double-occlusion interaction;
+complete dynamic double-occlusion orbits with explicit modulo wraparound (including
+an adverse periodic-vs-raw coordinate control); and the 500/1k/2k fixed-capacity
+scale ladder.
 
 **Not yet established:** scalable multi-teacher Assembly; teacher-order invariance;
 held-out-teacher generalization; a sparse student entering a frozen Assembly on
 disjoint text; tokenizer-free byte-level inference; true long-context inference
-without a full-text teacher reference; dynamic wraparound double-occlusion orbits;
-and any external long-document retrieval advantage.
+without a full-text teacher reference; seam-rotation equivariance of the dynamic
+multi-occlusion field; and any external long-document retrieval advantage.
 
 ## 20. Reproducibility
 
