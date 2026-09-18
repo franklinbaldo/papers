@@ -30,7 +30,13 @@ from sklearn.metrics import mean_squared_error
 from sklearn.neighbors import NearestNeighbors
 
 
-def load_profiles(path: Path):
+def load_profiles(path: Path, grid_points: int = 8):
+    """Interpolate each text's response field onto a common position grid.
+
+    Raw texts can expose slightly different valid occlusion positions because token
+    counts differ. For same-task alignment, compare the functions on the same
+    normalized intervention coordinates rather than requiring identical raw starts.
+    """
     d = np.load(path, allow_pickle=False)
     tid = d["text_id"].astype(int)
     pos = d["pos"].astype(float)
@@ -39,21 +45,33 @@ def load_profiles(path: Path):
     b = d["response_b"].astype(float)
 
     ids = np.unique(tid)
-    keys = sorted(set((float(p), int(s)) for p, s in zip(pos, size)))
-    key_index = {k: i for i, k in enumerate(keys)}
+    sizes = sorted(int(x) for x in np.unique(size))
+    grid = np.linspace(0.0, 1.0, grid_points)
+    keys = [(float(p), int(s)) for s in sizes for p in grid]
 
-    xa = np.full((len(ids), len(keys)), np.nan, dtype=float)
-    yb = np.full_like(xa, np.nan)
-    for t, p, s, av, bv in zip(tid, pos, size, a, b):
-        i = int(np.where(ids == t)[0][0])
-        j = key_index[(float(p), int(s))]
-        xa[i, j] = av
-        yb[i, j] = bv
+    xa = np.empty((len(ids), len(keys)), dtype=float)
+    yb = np.empty_like(xa)
 
-    if np.isnan(xa).any() or np.isnan(yb).any():
-        raise RuntimeError(
-            "Response profiles are not rectangular; use a field with identical intervention coordinates per text."
-        )
+    for i, text_id in enumerate(ids):
+        offset = 0
+        for s in sizes:
+            mask = (tid == text_id) & (size == s)
+            ps = pos[mask]
+            av = a[mask]
+            bv = b[mask]
+            order = np.argsort(ps)
+            ps, av, bv = ps[order], av[order], bv[order]
+
+            if len(ps) == 0:
+                raise RuntimeError(f"missing size {s} for text {text_id}")
+
+            # np.interp uses endpoint values outside the observed range. This keeps
+            # all methods on an identical functional grid without inventing fitted
+            # cross-space parameters.
+            xa[i, offset:offset + grid_points] = np.interp(grid, ps, av)
+            yb[i, offset:offset + grid_points] = np.interp(grid, ps, bv)
+            offset += grid_points
+
     return ids, keys, xa, yb
 
 
