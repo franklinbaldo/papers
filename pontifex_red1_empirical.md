@@ -61,23 +61,37 @@ On the common BM25 candidate pool, A-only ANCE scored `0.346215` MRR@10 and B-or
 
 This is a genuine negative result against plug-and-play or universal transport claims, not evidence that transport is impossible. Both encoders are MS-MARCO-family models, the evaluation is a 256-query pilot over a frozen candidate pool, and it is not an official full-dev leaderboard result. Detailed record: `experiments/pontifex_benchmarks/FINDINGS-MSMARCO-PILOT-2026-09-19.md`.
 
+### 2.6 Feasibility-frozen residual-norm + A-KNN null
+
+The hard-locality protocol first attempted donor rank `<=16` and failed before opening any `D_test` relevance grades (`35460716096`) because at least one residual-norm stratum admitted no perfect derangement. The frozen feasibility ladder `[16,20,24,32,48,63]` therefore selected the smallest combinatorially feasible cap from `D_student` geometry only. Runs at 16, 20 and 24 were infeasible; rank 32 was the first feasible cap. Only after the graph and both 63-permutation null banks were frozen and hashed were the official `D_test` qrels read.
+
+Run `35461028519` then observed TRUE `0.649954`, norm+KNN coupled mean `0.640060`, and independent mean `0.616211` nDCG@10. TRUE-minus-coupled was `+0.009894`, but exact residual identity again failed the predeclared two-part criterion: finite-bank `p=0.09375` and paired-query 95% CI `[-0.002436,+0.022668]`. Shared-warp coherence remained positive: coupled-minus-independent was `+0.023849`, with paired-query 95% CI `[+0.011687,+0.036146]`.
+
+This is therefore a fourth completed failure of the exact-identity claim under the frozen decision rule, alongside another positive replication of two-sided shared-warp coherence. However, the same run reported mean donor A-cosine distance `0.80004` (p95 `0.93161`) despite the rank-32 cap, so donor rank alone still does not establish tight geometric locality.
+
+### 2.7 D_student-only locality calibration of the KNN null
+
+To quantify that concern without reopening or reusing `D_test` grades, run `35463689486` calibrated the frozen rank-32 bank entirely on `D_student` geometry. Within the same residual-norm strata, the expected random-donor mean A-cosine distance is `0.87712`; the theoretical minimum-cost perfect derangement reaches `0.53900`, while the unconstrained per-anchor nearest-neighbour floor is `0.51386`. The actual frozen KNN bank averages `0.80004` (median `0.81079`, p95 `0.93161`).
+
+Define a descriptive locality-capture scale with 0 equal to random-within-stratum mean locality and 1 equal to the minimum-cost feasible derangement. The frozen KNN bank scores only `0.22797`. Thus the rank-32 bank is measurably more local than random, but captures only about 23% of the available random-to-optimal locality improvement. This is a **methodological negative result** about the strength of the nuisance control, not a held-out retrieval result and not evidence for semantic specificity.
+
 ## 3. Current evidence / hypothesis boundary
 
-Supported: under the frozen SciFact K=512 setup, shared query/document warp coherence is robust to global, residual-magnitude-matched, and coarse balanced-group nulls; and the tested Pontifex map substantially outperforms CCA, PLS and RFF+ridge coordinate mappings at the same K=512 correspondence budget.
+Supported: under the frozen SciFact K=512 setup, shared query/document warp coherence is robust to global, residual-magnitude-matched, coarse balanced-group, and feasibility-frozen KNN nulls; and the tested Pontifex map substantially outperforms CCA, PLS and RFF+ridge coordinate mappings at the same K=512 correspondence budget.
 
-Not supported: the stronger claim that exact residual-to-anchor identity is necessary. It has now failed the same predeclared two-part criterion under three completed null families. Also not supported: robustness to **tight** source-space locality, because the completed balanced-group run's own donor-distance diagnostics show that its groups were not genuinely local.
+Not supported: the stronger claim that exact residual-to-anchor identity is necessary. It has now failed the same predeclared two-part criterion under **four** completed null families. Also not supported: robustness to genuinely tight source-space locality. The completed KNN test used the tightest *rank cap* that admitted perfect derangements, but the D_student-only calibration shows that its actual donor distances remain much closer to random-within-stratum than to the minimum-cost feasible derangement.
 
 The MS MARCO pilot adds a separate negative boundary: current Pontifex transport does not generalize as a plug-and-play retrieval upgrade across the tested ANCE→TCT representation pair. That failure coexists with the positive SciFact shared-warp result; neither should be generalized beyond its frozen design.
 
 Still hypotheses or outside these diagnostics: causal semantic locality, an intrinsic or physical torus, universal transport superiority, native-B superiority, low-budget superiority, broad cross-dataset generalization, and Assembly-to-student generalization.
 
-## 4. Prospective stronger discrimination: residual norm + hard A-KNN donor constraint
+## 4. Prospective stronger discrimination: distance-optimal local null
 
-The first hard-locality run (`35460716096`) required every residual donor to lie among the 16 nearest non-self anchors inside the same residual-norm stratum. It failed **before any D_test qrel grade was read** because at least one directed 16-NN bipartite stratum admitted no perfect derangement. This is a combinatorial protocol-feasibility result, not evidence for or against retrieval performance.
+The locality calibration identifies a sharper next discriminant. Within each residual-norm stratum, the minimum-cost perfect derangement reaches mean A-cosine distance `0.53900`, compared with `0.80004` for the current KNN bank and `0.87712` for random donors. A future frozen test should therefore destroy exact residual identity while directly minimizing source-space donor distance, rather than using neighbour rank as a proxy.
 
-The revised protocol freezes the donor-rank ladder `[16,20,24,32,48,63]` and, using `D_student` geometry only, selects the smallest rank cap for which every residual-norm stratum admits a perfect derangement. Only then are the exact candidate graph and the 63 coupled + 63 independent permutation banks frozen and hashed. `D_test` relevance grades remain sealed until after that point. The rank choice therefore solves a nuisance-design feasibility constraint without tuning on test performance.
+This follow-up must be treated as adaptive/prospective. Its assignment object must be constructed from `D_student` only, with `D_val` restricted to coordinate-space selection as before, and frozen before any `D_test` relevance-grade read. Because a single deterministic optimum does not provide a valid 63-member permutation reference distribution by itself, a future inferential protocol must predeclare either a near-optimal assignment bank with an explicit locality tolerance or a paired-query-only decision rule before opening `D_test`. No result from that future test is claimed here.
 
-The semantic-specificity decision rule remains unchanged: paired-query 95% interval strictly above zero **and** finite-bank `p<=0.05`. A positive result would strengthen only the narrow claim that exact residual identity adds utility beyond residual magnitude and the tightest feasible frozen A-space donor-rank constraint. A negative result would further weaken exact-identity claims. Either outcome leaves broader torus, causality, and physical-topology hypotheses unproven.
+A positive result would strengthen only the narrow claim that exact residual identity adds utility beyond residual magnitude and a genuinely distance-local source-space nuisance control. A negative result would further weaken exact-identity claims. Either outcome leaves broader torus, causality, and physical-topology hypotheses unproven.
 
 ## Reproducibility
 
@@ -88,5 +102,7 @@ The semantic-specificity decision rule remains unchanged: paired-query 95% inter
 - completed classical baselines: `https://github.com/franklinbaldo/papers/actions/runs/35455793508`
 - completed MS MARCO pilot: `https://github.com/franklinbaldo/papers/actions/runs/35457043627`
 - infeasible hard rank-16 locality attempt: `https://github.com/franklinbaldo/papers/actions/runs/35460716096`
-- revised KNN feasibility-ladder run: `https://github.com/franklinbaldo/papers/actions/runs/35461028519`
-- revised hard-locality protocol: `experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-KNN-MATCHED-COUPLING-K512-2026-09-19.md`
+- completed KNN feasibility-ladder test: `https://github.com/franklinbaldo/papers/actions/runs/35461028519`
+- completed D_student-only locality calibration: `https://github.com/franklinbaldo/papers/actions/runs/35463689486`
+- locality calibration script: `experiments/pontifex_benchmarks/scifact_knn_null_locality_calibration_k512.py`
+- hard-locality protocol: `experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-KNN-MATCHED-COUPLING-K512-2026-09-19.md`
