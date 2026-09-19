@@ -84,6 +84,22 @@ A learned coordinator should therefore receive at least compact timing signals a
 
 All are available on a real phone/vehicle computer and can be emitted as scalar channels without simulator privilege.
 
+## Prior-art boundary
+
+A claim-level audit performed immediately after RUN4 materially narrows what this experiment can support as novelty. See [`audits/prior-art/malecns-freshness-fusion-2026-09-19.md`](../../audits/prior-art/malecns-freshness-fusion-2026-09-19.md).
+
+The following ingredients have clear public antecedents before RUN4's conservative public cutoff (`2026-09-19T00:57:33Z`):
+
+- explicit age/freshness variables for rejecting stale information in distributed estimation (Age-of-Information literature);
+- timestamp-offset features for robust autonomous-driving sensor fusion under staleness (Zoox, 2025);
+- age-aware decay plus learned attention/gating based on temporal freshness (AoI-FusionNet, 2026);
+- Age-of-Sensing as an active learned trust gate in asynchronous sensor fusion (TA-Fusion, 2026);
+- quality/confidence × freshness × reliability fusion, including continuous **exponential** freshness decay from sensor latency, in the public Ananta Meridian implementation (April 2026).
+
+In particular, RUN4's `confidence * 2 ** (-age / half_life)` rule is not a new class of sensor-fusion algorithm: it is an exponential age-decay weighting rule, mathematically equivalent up to parameterization to `exp(-age / tau)` freshness factors already used publicly in multisensor fusion.
+
+Accordingly, RUN4 should be read as an **executed MaleCNS-specific benchmark and failure-mode diagnostic**. Its project-specific content is the reality-bounded `SpecialistReport` timing contract, the exact deterministic stale-specialist ablation and numerical result, and the planned matched comparison against a learned MaleCNS coordinator. No pre-cutoff source was located in the recorded searches that combines that entire MaleCNS-specific conjunction; this is a bounded search result, not a claim of universal priority.
+
 ## Limits
 
 This experiment uses a deliberately simple linear-in-time latent scalar. It does not model realistic vehicle dynamics, correlated bus delays, camera batching, sensor clock drift, or trained MaleCNS specialists. The observed MAE improvements are therefore architecture diagnostics, not autonomous-driving performance claims.
