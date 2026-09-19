@@ -1,0 +1,67 @@
+name: Pontifex CMB metric-aware beam ladder
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_metric_beam_ladder.py"
+      - "experiments/pontifex_torus/cmb_nonlocal_observable_ablation.py"
+      - ".github/workflows/pontifex-cmb-metric-beam-ladder.yml"
+  workflow_dispatch:
+    inputs:
+      skies:
+        description: "Independent synthetic skies"
+        required: false
+        default: "6"
+      null_maps:
+        description: "Matched null maps per theta"
+        required: false
+        default: "32"
+
+jobs:
+  metric-beam-ladder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run metric-aware beam-width ladder
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SKIES=6
+            NULLS=32
+          else
+            SKIES="${{ github.event.inputs.skies || '6' }}"
+            NULLS="${{ github.event.inputs.null_maps || '32' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_metric_beam_ladder.py \
+            --skies "$SKIES" \
+            --theta-per-cell 3 \
+            --null-maps "$NULLS" \
+            --beam-width-ratios 0 0.125 0.25 0.5 1.0 \
+            --ny 64 --nx 128 \
+            --scores /tmp/pontifex-cmb-metric-beam-scores.jsonl \
+            --output /tmp/pontifex-cmb-metric-beam-ladder.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-metric-beam-ladder.json ]; then
+            echo "## CMB metric-aware beam-width ladder" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-metric-beam-ladder.json")); print(json.dumps({"ladder":x["ladder"],"cross_width":x["cross_width"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-metric-beam-ladder
+          path: |
+            /tmp/pontifex-cmb-metric-beam-ladder.json
+            /tmp/pontifex-cmb-metric-beam-scores.jsonl
+          if-no-files-found: warn
