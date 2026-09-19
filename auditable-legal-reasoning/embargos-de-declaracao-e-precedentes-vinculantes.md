@@ -5,7 +5,7 @@ description: "Síntese dogmática sobre embargos de declaração e precedentes v
 tags: [paper1-dogmatico, embargos-de-declaracao, precedentes, cpc, fundamentacao]
 timestamp: 2026-07-09T12:12:59+00:00
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Silveira Baldo"
     affiliations:
       - "Independent Researcher"

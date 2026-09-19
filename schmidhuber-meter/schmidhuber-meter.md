@@ -5,7 +5,7 @@ description: "A practical, auditable framework for measuring public temporal pri
 tags: [schmidhuber-meter, citation-debt, bibliometrics, prior-art, scientific-credit]
 timestamp: 2026-09-19T00:00:00Z
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Silveira Baldo"
     affiliations:
       - "Independent Researcher"

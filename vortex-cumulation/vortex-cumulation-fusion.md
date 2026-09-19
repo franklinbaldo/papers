@@ -5,7 +5,7 @@ description: "Tests whether the anisotropic finite-time Navier–Stokes vortex c
 tags: [navier-stokes, fusion, mhd, magnetized-target-fusion, maglif, vortex-cumulation, plasma-physics]
 timestamp: 2026-09-08T20:16:00-04:00
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Silveira Baldo"
     affiliations:
       - "Independent Researcher"

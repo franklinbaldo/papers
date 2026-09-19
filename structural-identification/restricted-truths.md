@@ -5,7 +5,7 @@ description: "A mathematical theory note formalizing identification of a structu
 tags: [structural-identification, model-theory, teaching-dimension, version-spaces, lean4, formal-verification]
 timestamp: 2026-08-24T03:40:00Z
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Baldo"
     affiliations:
       - "Independent Researcher"

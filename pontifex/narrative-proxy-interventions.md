@@ -5,7 +5,7 @@ description: "A falsifiable protocol for aligning a language-embedding trajector
 tags: [pontifex, torus, malecns, drosophila, embeddings, causal-interventions, narrative-time, representation-alignment, connectome]
 timestamp: 2026-09-19T09:41:00-04:00
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Silveira Baldo"
     affiliations:
       - "Independent Researcher"

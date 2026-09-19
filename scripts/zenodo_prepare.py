@@ -268,7 +268,7 @@ title: Test Paper
 description: Test fallback
 tags: [test]
 authors:
-  - ref: /authors/test.md
+  - ref: /about/authors/test.md
 publication:
   status: ready
   targets: [zenodo]

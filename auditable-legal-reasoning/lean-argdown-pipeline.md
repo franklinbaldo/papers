@@ -5,7 +5,7 @@ description: "Pipeline Argdown + Lean 4 para auditoria de raciocínio jurídico,
 tags: [pipeline, legal-ai, lean4, argdown, formal-verification, brazilian-civil-procedure]
 timestamp: 2026-07-09T12:12:59+00:00
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Silveira Baldo"
     affiliations:
       - "Independent Researcher"

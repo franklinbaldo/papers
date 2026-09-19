@@ -5,7 +5,7 @@ description: "Empirical baseline testing whether a frozen recurrent reservoir co
 tags: [malecns, drosophila, connectome, reservoir-computing, sequence-tagging, legal-nlp, kaggle]
 timestamp: 2026-09-13T13:07:00-04:00
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Baldo"
     affiliations:
       - "Independent Researcher"

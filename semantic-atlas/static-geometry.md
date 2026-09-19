@@ -5,7 +5,7 @@ description: "Empirical paper on cross-model local-neighborhood agreement across
 tags: [semantic-atlas, embeddings, representation-alignment, observer-specific-geometry, mknn, exact-knn, arxiv]
 timestamp: 2026-08-29T08:10:00Z
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Baldo"
     affiliations:
       - "Independent Researcher"

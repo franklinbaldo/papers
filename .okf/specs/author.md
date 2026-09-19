@@ -47,7 +47,7 @@ frontmatter. Each entry references an Author concept:
 
 ```yaml
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Baldo"
     affiliations:
       - "Independent Researcher"

@@ -5,7 +5,7 @@ description: "Clarification of the maximum-entropy null, spontaneous organized f
 tags: [informational-time, negentropy, maximum-entropy, agent-recognition, fluctuation]
 timestamp: 2026-07-31T03:22:00Z
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Silveira Baldo"
     affiliations:
       - "Independent Researcher"

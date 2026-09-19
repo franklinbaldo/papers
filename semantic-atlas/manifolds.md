@@ -5,7 +5,7 @@ description: "Follow-up position paper proposing an SRF-anchored two-scale Seman
 tags: [semantic-atlas, manifolds, spectral-geometry, graph-laplacian, block-sparse-featurizers, embeddings, steering, interpretability, navigation]
 timestamp: 2026-08-15T01:25:00Z
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Silveira Baldo"
     affiliations:
       - "Independent Researcher"

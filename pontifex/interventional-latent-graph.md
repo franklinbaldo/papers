@@ -5,7 +5,7 @@ description: "A Pontifex extension in which latent spaces are vertices, atomic s
 tags: [pontifex, interventional-graph, latent-space, information-theory, causal-representation, lean4]
 timestamp: 2026-09-19T03:10:00Z
 authors:
-  - ref: /authors/franklin-silveira-baldo.md
+  - ref: /about/authors/franklin-silveira-baldo.md
     byline: "Franklin Silveira Baldo"
     affiliations:
       - "Independent Researcher"
