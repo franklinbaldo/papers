@@ -1,3 +1,7 @@
+---
+type: "Protocol"
+---
+
 # Peer reliability replication stack
 
 This branch is stacked on `experiment/malecns-peer-reliability-grid` and implements the preregistered two-new-seed replication of the selected `peer_lambda=0.50` candidate.
