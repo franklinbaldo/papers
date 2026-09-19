@@ -1,0 +1,133 @@
+name: MaleCNS Wi-Fi reservoir gate
+
+on:
+  pull_request:
+    paths:
+      - "experiments/malecns_wifi/**"
+      - ".github/workflows/malecns-wifi.yml"
+  push:
+    branches:
+      - experiment/malecns-wifi
+    paths:
+      - "experiments/malecns_wifi/**"
+      - ".github/workflows/malecns-wifi.yml"
+  workflow_dispatch:
+    inputs:
+      mirror_base_url:
+        description: "Optional base URL containing the three MaleCNS v1.0 Feather files (e.g. an Internet Archive mirror)."
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: malecns-wifi-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: experiments/malecns_wifi/pyproject.toml
+      - name: Install experiment
+        working-directory: experiments/malecns_wifi
+        run: uv sync --extra dev
+      - name: Run synthetic compiler/runtime tests
+        working-directory: experiments/malecns_wifi
+        run: uv run pytest -q
+
+  compile-real:
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      CACHE_DIR: ${{ github.workspace }}/.cache/malecns-wifi
+      OUT_DIR: experiments/malecns_wifi/artifacts/runtime-v1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: experiments/malecns_wifi/pyproject.toml
+      - uses: actions/cache@v4
+        with:
+          path: .cache/malecns-wifi
+          key: malecns-v1-raw-${{ runner.os }}
+      - name: Install experiment
+        working-directory: experiments/malecns_wifi
+        run: uv sync
+      - name: Compile public MaleCNS v1.0
+        working-directory: experiments/malecns_wifi
+        shell: bash
+        run: |
+          args=(--output artifacts/runtime-v1 --cache "$CACHE_DIR")
+          mirror="${{ github.event.inputs.mirror_base_url || '' }}"
+          if [[ -n "$mirror" ]]; then
+            args+=(--mirror-base-url "$mirror")
+          fi
+          uv run python scripts/compile_connectome.py "${args[@]}"
+      - name: Validate compile sanity target
+        working-directory: experiments/malecns_wifi
+        run: |
+          uv run python - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('artifacts/runtime-v1/manifest.json').read_text())
+          n=m['runtime']['neurons']; e=m['runtime']['edges']
+          print({'neurons': n, 'edges': e})
+          if not (164_000 <= n <= 166_500):
+              raise SystemExit(f'unexpected retained neuron count: {n}')
+          if not (8_000_000 <= e <= 13_000_000):
+              raise SystemExit(f'unexpected signed edge count: {e}')
+          PY
+      - name: Run deterministic recurrent smoke
+        working-directory: experiments/malecns_wifi
+        run: uv run python scripts/smoke_reservoir.py --graph artifacts/runtime-v1/graph.npz --output artifacts/runtime-v1/smoke.json --seed 0
+      - name: Characterise operator against both nulls
+        working-directory: experiments/malecns_wifi
+        run: |
+          uv run python scripts/characterize.py \
+            --graph artifacts/runtime-v1/graph.npz \
+            --output artifacts/runtime-v1/characterization.json \
+            --gains 0.8 1.0 1.2 \
+            --input-seeds 0 \
+            --washout 200 --train-steps 1200 --test-steps 600 \
+            --max-lag 100 --readout-size 256
+      - name: Validate that the characterisation is interpretable
+        working-directory: experiments/malecns_wifi
+        run: |
+          uv run python - <<'PY'
+          import json, math
+          from pathlib import Path
+          report = json.loads(Path('artifacts/runtime-v1/characterization.json').read_text())
+          # The gate is on interpretability, not on the values: a saturated or
+          # non-finite cell means the measurement says nothing about topology.
+          for result in report['results']:
+              for entry in result['sweep']:
+                  label = f"{result['operator']} gain={entry['gain']}"
+                  if not math.isfinite(entry['memory_capacity']):
+                      raise SystemExit(f'{label}: non-finite memory capacity')
+                  if entry['saturated_fraction'] > 0.5:
+                      raise SystemExit(f'{label}: states saturated, measurement uninterpretable')
+          PY
+      - name: Hash runtime outputs
+        working-directory: experiments/malecns_wifi
+        run: sha256sum artifacts/runtime-v1/graph.npz artifacts/runtime-v1/manifest.json artifacts/runtime-v1/smoke.json artifacts/runtime-v1/characterization.json | tee artifacts/runtime-v1/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: malecns-v1-runtime
+          path: |
+            experiments/malecns_wifi/artifacts/runtime-v1/graph.npz
+            experiments/malecns_wifi/artifacts/runtime-v1/manifest.json
+            experiments/malecns_wifi/artifacts/runtime-v1/smoke.json
+            experiments/malecns_wifi/artifacts/runtime-v1/characterization.json
+            experiments/malecns_wifi/artifacts/runtime-v1/SHA256SUMS
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 90
