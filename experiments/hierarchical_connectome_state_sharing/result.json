@@ -1,0 +1,56 @@
+{
+  "kind": "synthetic exploratory sanity check (not MaleCNS)",
+  "seed": 42,
+  "dynamics": {
+    "n": 2048,
+    "agents": 512,
+    "latent_clusters": 16,
+    "avg_degree": 10,
+    "steps": 30,
+    "leak": 0.35,
+    "row_l1_gain": 0.9
+  },
+  "approximation": "fixed known latent cluster centroids; individual residuals omitted",
+  "accuracy": {
+    "0.005": {
+      "rel_rmse_step1": 0.012406650930643082,
+      "cos_step1": 0.9999229907989502,
+      "rel_rmse_step30": 0.0027603961061686277,
+      "cos_step30": 0.9999961853027344
+    },
+    "0.02": {
+      "rel_rmse_step1": 0.04956468939781189,
+      "cos_step1": 0.9987703561782837,
+      "rel_rmse_step30": 0.01103286538273096,
+      "cos_step30": 0.9999390244483948
+    },
+    "0.05": {
+      "rel_rmse_step1": 0.12309599667787552,
+      "cos_step1": 0.9923914670944214,
+      "rel_rmse_step30": 0.02756001055240631,
+      "cos_step30": 0.9996198415756226
+    },
+    "0.1": {
+      "rel_rmse_step1": 0.2408015877008438,
+      "cos_step1": 0.9705615043640137,
+      "rel_rmse_step30": 0.055198632180690765,
+      "cos_step30": 0.99847412109375
+    }
+  },
+  "kernel_benchmark": {
+    "n": 8192,
+    "agents": 1024,
+    "representatives": 32,
+    "avg_degree": 10,
+    "full_spmm_seconds_median": 0.03212098900030469,
+    "representative_spmm_seconds_median": 0.001639170000089507,
+    "pure_spmm_speedup": 19.59588633183301
+  },
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41"
+  },
+  "claim_boundary": "This validates only the algebra/code path in a favorable synthetic clustered regime. It is not evidence that MaleCNS ensemble states cluster this way and is not an end-to-end speedup benchmark; clustering, centroid maintenance, reconstruction, and outputs are excluded from the timing."
+}

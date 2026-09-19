@@ -2,7 +2,7 @@
 type: "Index"
 title: "papers"
 description: "Catalogo e guia de leitura dos papers deste repositorio e do aparato de debate que os acompanha."
-timestamp: 2026-09-08T20:48:00-04:00
+timestamp: 2026-09-16T12:00:00-04:00
 okf_version: "0.1"
 ---
 
@@ -69,6 +69,11 @@ Position papers and working drafts.
 ## Eixo empírico
 
 - `empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
+
+## Eixo conectomas / simulação neural
+
+- `malecns_connectome_reservoir_tagging.md` — experimento vivo com reservatório recorrente congelado derivado do MaleCNS para tagging byte-level, com controles shuffled e byte-only
+- `hierarchical_connectome_state_sharing.md` — agenda falsificável para simular grandes enxames que compartilham o mesmo conectoma usando batching exato, clustering regional inspirado em Barnes-Hut, representantes + resíduos low-rank, hyper-reduction e timesteps adaptativos
 
 ## Eixo física matemática / fusão
 
