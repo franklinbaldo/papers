@@ -1,3 +1,7 @@
+---
+type: "Findings Record"
+---
+
 # Peer-reliability grid — exploratory result (2026-09-15)
 
 Source run: `franklinbaldo/malecns-peer-reliability-grid`, GitHub Actions `34960309065`, papers ref `43aea5a67b25cf7ac3bf6599924e6b715d2bb321`.
