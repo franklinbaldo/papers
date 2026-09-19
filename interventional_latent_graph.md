@@ -4,6 +4,20 @@ title: "Interventional Latent Graphs: Binary Distinctions as Minimal Operational
 description: "A Pontifex extension in which latent spaces are vertices, atomic shared interventions are edges, and binary contrasts provide the minimal non-trivial operational intervention without being claimed as a minimum physical quantum."
 tags: [pontifex, interventional-graph, latent-space, information-theory, causal-representation, lean4]
 timestamp: 2026-09-19T03:10:00Z
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
 # Interventional Latent Graphs: Binary Distinctions as Minimal Operational Edges Between Representation Spaces
@@ -89,7 +103,27 @@ BISCUIT, for example, shows that binary interaction variables can support identi
 
 The ILG differs in its primary object. It does not initially seek the causal variables *within* one latent system. It constructs a graph *whose vertices are the latent systems themselves*, with shared interventions as the primitive edges. The responses observed at the endpoints can later support structural-identification claims.
 
-A systematic novelty review remains necessary before making a strong priority claim for this exact formulation.
+### 2.5 Cross-model intervention correspondence is established prior art
+
+The generic idea that interventions must be related across models or abstraction levels is not new. Rubenstein et al. formalize exact transformations between structural causal models and make intervention specification part of cross-level consistency. Beckers and Halpern likewise treat allowed interventions and their mappings as part of causal abstraction, while Otsuka and Saigo study equivalence between causal models through translations that preserve intervention calculus. Geiger et al. broaden this lineage for mechanistic interpretability by formalizing causal abstraction with a richer intervention algebra.
+
+This literature imposes a direct constraint on the ILG ontology: an intervention token cannot be admitted merely because two endpoint-specific manipulations share a name. The scientific contract must say what factor or mechanism is manipulated, how each endpoint implements that manipulation, and why those implementations count as the same operational contrast independently of the response agreement later measured by Pontifex. If that identity can only be established after learning the same alignment the graph is intended to test, the slogan that “the graph exists before the map” becomes circular and must be narrowed.
+
+### 2.6 Heterogeneous domains, identifiability, and closure controls
+
+Transportability theory already shows that corresponding interventions across heterogeneous domains need not induce identical effects. This supports the ILG separation between edge admission and response agreement, but it also reinforces the burden of specifying intervention identity independently of the effect being compared.
+
+Binary contrast is similarly only a minimal *question*, not a generic identification guarantee. Modern interventional causal-representation results show that identifiability depends on intervention type, transformation class, causal assumptions, and the number of interventional environments. The present paper therefore makes no claim that one binary contrast suffices to reconstruct a latent system.
+
+Finally, learned transport and closure are potentially non-discriminating when the alignment family is too expressive. Sutter et al. show that sufficiently flexible nonlinear alignments can make arbitrary model/algorithm pairs appear causally aligned, including a randomly initialized language-model control in their setting. Any future ILG evidence from learned transports or cycle closure must therefore constrain or complexity-penalize the transport family, evaluate held-out interventions, and compare against capacity-matched shuffled or random endpoint/null-cycle controls. Closure that also occurs in those nulls is not evidence for a Torus or manifold.
+
+### 2.7 Contribution boundary after the claim-specific audit
+
+A dated claim-specific audit in this repository finds pre-cutoff antecedents for the component ideas of cross-model intervention correspondence, intervention mappings, multiple interventional contexts/entities, atomic interventions, binary contrast as the smallest non-trivial finite alphabet, heterogeneous response to corresponding interventions, and generic multigraph/path/cycle/closure machinery. None of those components is claimed here as an isolated novelty.
+
+The narrower conjunction for which that audit did **not** locate a material pre-cutoff antecedent is the following: whole representation systems are vertices; each admitted shared intervention token is definitionally one multigraph edge; primitive edge existence is deliberately independent of response agreement; response comparison is layered above the edge; paths are intervention histories; learned transports and closure are downstream measurements; and manifold/Torus structure is an explicitly falsifiable downstream hypothesis rather than part of the graph definition.
+
+That finding is a bounded negative-search result, not a claim of priority or exhaustive novelty. The empirical programme remains capable of falsifying the central premise if shared-intervention identity cannot be operationalized independently of the alignment being measured.
 
 ## 3. Definition of the Interventional Latent Graph
 
@@ -532,16 +566,23 @@ If the answer is yes, the graph exists before the map.
 - Shannon, C. E. (1948). *A Mathematical Theory of Communication*. Bell System Technical Journal, 27, 379-423 and 623-656.
 - Landauer, R. (1961). *Irreversibility and Heat Generation in the Computing Process*. IBM Journal of Research and Development, 5(3), 183-191. https://doi.org/10.1147/rd.53.0183
 - Pearl, J. (2009). *Causality: Models, Reasoning, and Inference*, 2nd ed. Cambridge University Press.
+- Rubenstein, P. K., Weichwald, S., Bongers, S., Mooij, J. M., Janzing, D., Grosse-Wentrup, M., & Schölkopf, B. (2017). *Causal Consistency of Structural Equation Models*. UAI 2017. https://arxiv.org/abs/1707.00819
+- Beckers, S., & Halpern, J. Y. (2019). *Abstracting Causal Models*. Proceedings of the AAAI Conference on Artificial Intelligence, 33(01), 2678-2685. https://doi.org/10.1609/aaai.v33i01.33012678
+- Bareinboim, E., & Pearl, J. (2013). *Meta-Transportability of Causal Effects: A Formal Approach*. Proceedings of AISTATS 2013, PMLR 31, 135-143. https://proceedings.mlr.press/v31/bareinboim13a.html
+- Otsuka, J., & Saigo, H. (2022). *On the Equivalence of Causal Models: A Category-Theoretic Approach*. CLeaR 2022, PMLR 177. https://arxiv.org/abs/2201.06981
+- Geiger, A., et al. (2023). *Causal Abstraction: A Theoretical Foundation for Mechanistic Interpretability*. https://arxiv.org/abs/2301.04709
 - Schölkopf, B., Locatello, F., Bauer, S., Ke, N. R., Kalchbrenner, N., Goyal, A., & Bengio, Y. (2021). *Towards Causal Representation Learning*. Proceedings of the IEEE, 109(5), 612-634. https://arxiv.org/abs/2102.11107
 - Kocaoglu, M., Jaber, A., Shanmugam, K., & Bareinboim, E. (2019). *Characterization and Learning of Causal Graphs with Latent Variables from Soft Interventions*. NeurIPS 32.
 - Lippe, P., Magliacane, S., Löwe, S., Asano, Y. M., Cohen, T., & Gavves, E. (2023). *BISCUIT: Causal Representation Learning from Binary Interactions*. UAI 2023.
+- Varıcı, B., Acartürk, E., Shanmugam, K., Tajer, A., & Tchetgen Tchetgen, E. J. (2025). *Score-based Causal Representation Learning: Linear and General Transformations*. Journal of Machine Learning Research, 26(112), 1-90. https://arxiv.org/abs/2402.00849
+- Sutter, D., Minder, J., Hofmann, T., & Pimentel, T. (2025). *The Non-Linear Representation Dilemma: Is Causal Abstraction Enough for Mechanistic Interpretability?* https://arxiv.org/abs/2507.08802
 
 ## Companion formalization
 
 The machine-checked core is in:
 
-\`formalizations/interventional_latent_graph/InterventionalLatentGraph.lean\`
+`formalizations/interventional_latent_graph/InterventionalLatentGraph.lean`
 
 with scope and trusted-boundary notes in:
 
-\`formalizations/interventional_latent_graph/README.md\`
+`formalizations/interventional_latent_graph/README.md`
