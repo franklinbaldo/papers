@@ -1,3 +1,7 @@
+---
+type: "Protocol"
+---
+
 # Preregistered exploratory test — state-conditioned peer coupling
 
 Date: 2026-09-15
