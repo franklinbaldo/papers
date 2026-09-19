@@ -1736,3 +1736,13 @@ Code and live findings are under:
 - `.github/workflows/pontifex-terrain-reflectance.yml`
 
 The dated experimental narrative is in `experiments/pontifex_torus/FINDINGS-2026-09-17.md`.
+
+
+## Research programme position
+
+- **Initiative:** Pontifex / Torus
+- **Scope:** Periodic multiscale intervention cartography, transport, active acquisition, reconstruction, Assembly, tomography, and Torus-specific structural hypotheses.
+- **Not claimed here:** Pontifex does not require Torus; Semantic Atlas static geometry, Semantic Observers, Perquire inversion, and the Interventional Latent Graph remain independent or upstream initiatives. Evidence for useful periodic coordinates is not evidence that semantic spaces are intrinsically topological tori.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This living paper remains authoritative for Torus-specific hypotheses, experiments, positive results, adverse results, and limitations.
