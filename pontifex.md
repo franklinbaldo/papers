@@ -477,3 +477,12 @@ programme regardless of how that verification resolves.
 - `o3-originality-assessment.md` — preliminary, AI-assisted prior-art
   scan for the same idea. Not an independent assessment; see the
   editorial note at the top of that file.
+
+## Research programme position
+
+- **Initiative:** Pontifex
+- **Scope:** Shared/proxy interventions and within-system response signatures across otherwise unaligned observers.
+- **Not claimed here:** The Torus topology/model class, Semantic Atlas static geometry, Perquire inversion, and MaleCNS-specific mechanisms are separate initiatives.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
