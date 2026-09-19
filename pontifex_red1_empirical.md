@@ -75,23 +75,33 @@ To quantify that concern without reopening or reusing `D_test` grades, run `3546
 
 Define a descriptive locality-capture scale with 0 equal to random-within-stratum mean locality and 1 equal to the minimum-cost feasible derangement. The frozen KNN bank scores only `0.22797`. Thus the rank-32 bank is measurably more local than random, but captures only about 23% of the available random-to-optimal locality improvement. This is a **methodological negative result** about the strength of the nuisance control, not a held-out retrieval result and not evidence for semantic specificity.
 
+### 2.8 Residual-norm + minimum-cost A-space derangement
+
+The locality calibration motivated a stronger adaptive test that does not use donor rank as a proxy for locality. Before the new held-out read, `PROTOCOL-SCIFACT-NORM-MINCOST-DERANGEMENT-K512-2026-09-19.md` froze a single deterministic perfect derangement that, within each residual-L2 stratum, minimizes total normalized A-space cosine donor distance. The assignment was built from `D_student` only, its hash was frozen, `D_val` remained restricted to coordinate-space `tau`/`lambda` selection, and official `D_test` qrels were loaded only after the map, strata, assignment, manifests and mapped coordinates were fixed.
+
+Because a single deterministic optimum is not a permutation reference distribution, the protocol explicitly forbade retrofitting a finite-bank p-value. Its predeclared decision rule used only a 5,000-resample paired-query bootstrap: support for exact-identity utility required the 95% percentile interval for TRUE-minus-MINCOST to lie strictly above zero.
+
+Run `35463942235` reproduced the D_student locality calibration exactly: nearest-nonself mean A-cosine distance `0.51386`, minimum-cost perfect derangement `0.53900`, and random-within-stratum expectation `0.87712`. It then observed TRUE `0.649954` versus MINCOST_COUPLED `0.640415` nDCG@10, a mean difference of `+0.009538`. The paired-query 95% interval was `[-0.004726,+0.024025]`, with bootstrap probability of positive mean `0.9048`. The predeclared criterion therefore **failed to support exact residual identity even against the strongest deterministic source-local nuisance control tested here**.
+
+This is a negative result for exact-identity necessity, not a negative result for all Pontifex structure. The minimum-cost run did not include a separate independently warped document comparator, so it does not itself test shared-warp coherence. That positive claim continues to rest on the four earlier bank-based null families and must not be inferred from this run.
+
 ## 3. Current evidence / hypothesis boundary
 
-Supported: under the frozen SciFact K=512 setup, shared query/document warp coherence is robust to global, residual-magnitude-matched, coarse balanced-group, and feasibility-frozen KNN nulls; and the tested Pontifex map substantially outperforms CCA, PLS and RFF+ridge coordinate mappings at the same K=512 correspondence budget.
+Supported: under the frozen SciFact K=512 setup, shared query/document warp coherence is robust to global, residual-magnitude-matched, coarse balanced-group, and feasibility-frozen KNN null banks; and the tested Pontifex map substantially outperforms CCA, PLS and RFF+ridge coordinate mappings at the same K=512 correspondence budget.
 
-Not supported: the stronger claim that exact residual-to-anchor identity is necessary. It has now failed the same predeclared two-part criterion under **four** completed null families. Also not supported: robustness to genuinely tight source-space locality. The completed KNN test used the tightest *rank cap* that admitted perfect derangements, but the D_student-only calibration shows that its actual donor distances remain much closer to random-within-stratum than to the minimum-cost feasible derangement.
+Not supported: the stronger claim that exact residual-to-anchor identity is necessary. It failed the predeclared two-part rule in the four bank-based null families, and it also failed the separately preregistered paired-bootstrap rule under the fifth, minimum-cost distance-local derangement. The latest result is especially discriminating because the nuisance assignment reduces mean A-space donor distance from the random-within-stratum expectation `0.87712` to `0.53900`, close to the per-anchor nearest-neighbour floor `0.51386`, while still destroying every anchor's exact residual identity.
 
 The MS MARCO pilot adds a separate negative boundary: current Pontifex transport does not generalize as a plug-and-play retrieval upgrade across the tested ANCE→TCT representation pair. That failure coexists with the positive SciFact shared-warp result; neither should be generalized beyond its frozen design.
 
 Still hypotheses or outside these diagnostics: causal semantic locality, an intrinsic or physical torus, universal transport superiority, native-B superiority, low-budget superiority, broad cross-dataset generalization, and Assembly-to-student generalization.
 
-## 4. Prospective stronger discrimination: distance-optimal local null
+## 4. Next discriminant: independent replication rather than another adaptive SciFact null
 
-The locality calibration identifies a sharper next discriminant. Within each residual-norm stratum, the minimum-cost perfect derangement reaches mean A-cosine distance `0.53900`, compared with `0.80004` for the current KNN bank and `0.87712` for random donors. A future frozen test should therefore destroy exact residual identity while directly minimizing source-space donor distance, rather than using neighbour rank as a proxy.
+The SciFact exact-identity question has now been stressed by increasingly controlled nuisance families through a distance-optimal perfect derangement, and none supported the strong identity claim under its frozen decision rule. Further adaptive sharpening on the same held-out set risks producing diminishing scientific value even if leakage remains technically controlled.
 
-This follow-up must be treated as adaptive/prospective. Its assignment object must be constructed from `D_student` only, with `D_val` restricted to coordinate-space selection as before, and frozen before any `D_test` relevance-grade read. Because a single deterministic optimum does not provide a valid 63-member permutation reference distribution by itself, a future inferential protocol must predeclare either a near-optimal assignment bank with an explicit locality tolerance or a paired-query-only decision rule before opening `D_test`. No result from that future test is claimed here.
+The higher-value next step is an **independent replication** of the supported shared-warp-coherence claim on a separately frozen dataset or representation pair, with the full coupled-versus-independent contrast preregistered before its held-out labels are opened. A replication should preserve the same information roles (`D_assembly`, `D_student`, `D_val`, `D_test`), include a genuinely distance-local nuisance family whose locality is calibrated before test access, and report negative outcomes symmetrically. This is a proposed next experiment, not current evidence.
 
-A positive result would strengthen only the narrow claim that exact residual identity adds utility beyond residual magnitude and a genuinely distance-local source-space nuisance control. A negative result would further weaken exact-identity claims. Either outcome leaves broader torus, causality, and physical-topology hypotheses unproven.
+The minimum-cost SciFact result also suggests a narrower hypothesis revision: useful two-sided deformation may be a **regional/geometric property** that does not require exact anchor-residual identity. That interpretation is plausible given the repeated shared-warp positives and exact-identity negatives, but it remains a hypothesis until tested by an independent design that distinguishes regional coherence from anchor identity.
 
 ## Reproducibility
 
@@ -104,5 +114,7 @@ A positive result would strengthen only the narrow claim that exact residual ide
 - infeasible hard rank-16 locality attempt: `https://github.com/franklinbaldo/papers/actions/runs/35460716096`
 - completed KNN feasibility-ladder test: `https://github.com/franklinbaldo/papers/actions/runs/35461028519`
 - completed D_student-only locality calibration: `https://github.com/franklinbaldo/papers/actions/runs/35463689486`
+- completed minimum-cost local derangement: `https://github.com/franklinbaldo/papers/actions/runs/35463942235`
 - locality calibration script: `experiments/pontifex_benchmarks/scifact_knn_null_locality_calibration_k512.py`
-- hard-locality protocol: `experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-KNN-MATCHED-COUPLING-K512-2026-09-19.md`
+- minimum-cost protocol: `experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-MINCOST-DERANGEMENT-K512-2026-09-19.md`
+- minimum-cost experiment: `experiments/pontifex_benchmarks/scifact_norm_mincost_derangement_k512.py`
