@@ -107,7 +107,16 @@ Group specialists by modality (vision, vehicle dynamics, ranging, navigation, so
 
 ### C5 — dynamic recruitment
 
-Allow a coordinator to allocate attention or compute to specialists based on uncertainty, novelty or expected value.
+Allow a coordinator to allocate attention or compute to specialists under a **fixed total compute budget**, using only lawful runtime signals.
+
+The first deterministic baseline uses two distinct cues:
+
+- within-modality disagreement: more independently trained flies may help when a fresh modality is epistemically unsettled;
+- freshness / report age: do not recruit more cognition onto a commonly stale physical stream, because extra flies cannot recreate a missing sensor sample.
+
+Dynamic recruitment must always be compared with static matched-compute allocations. RUN6 is deliberately a mixed result: the lawful allocator moves compute away from a stalled camera as intended, but a tuned fixed IMU-heavy split remains slightly better through most of the synthetic sweep. Dynamic only wins at the most severe stall rates. That negative result makes the next target stricter: a learned recruiter must estimate the **marginal value of another specialist**, not merely route toward disagreement.
+
+See [`FINDINGS_2026-09-18_RUN6_DYNAMIC_RECRUITMENT.md`](./FINDINGS_2026-09-18_RUN6_DYNAMIC_RECRUITMENT.md).
 
 ## Required ablations
 
