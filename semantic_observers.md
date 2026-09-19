@@ -868,3 +868,13 @@ Yacobi, A., Ben-Ari, N., Talmon, R., & Shaham, U. (2025). **Learning Shared Repr
 Zhang, L., Yang, Q., & Agrawal, A. (2025). **Assessing and Learning Alignment of Unimodal Vision and Language Models.** CVPR 2025, pp. 14604–14614. https://openaccess.thecvf.com/content/CVPR2025/html/Zhang_Assessing_and_Learning_Alignment_of_Unimodal_Vision_and_Language_Models_CVPR_2025_paper.html
 
 Zhu, T., Han, T., Guibas, L., Pătrăucean, V., & Ovsjanikov, M. (2026). **Dynamic Reflections: Probing Video Representations with Text Alignment.** ICLR 2026. arXiv:2511.02767. https://arxiv.org/abs/2511.02767
+
+
+## Research programme position
+
+- **Initiative:** Semantic Observers
+- **Scope:** Observer-dependent semantic observability: resolution, parallax, informativeness, blind spots, and multi-observer reconstruction.
+- **Not claimed here:** It does not establish a unique observer-independent semantic universe, nor does it assume Pontifex interventions or Torus geometry.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
