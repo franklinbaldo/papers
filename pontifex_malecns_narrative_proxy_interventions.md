@@ -947,3 +947,13 @@ Sakoe, H., & Chiba, S. (1978). Dynamic programming algorithm optimization for sp
 Wurgaft, D., et al. (2026). Manifold Steering Reveals the Shared Geometry of Neural Network Representation and Behavior. arXiv:2605.05115.
 
 Zhang, Y., Li, M., Long, D., Zhang, X., Lin, H., Yang, B., Xie, P., Yang, A., Liu, D., Lin, J., Huang, F., & Zhou, J. (2025). Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models. arXiv:2506.05176.
+
+
+## Research programme position
+
+- **Initiative:** Narrative Proxy Interventions
+- **Scope:** Substrate-native realizations of shared intervention concepts, especially for sequential heterogeneous systems such as language and MaleCNS.
+- **Not claimed here:** The Torus is an optional aligner/model class; the paper's core proxy-intervention framework does not require it.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
