@@ -586,3 +586,13 @@ The machine-checked core is in:
 with scope and trusted-boundary notes in:
 
 `formalizations/interventional_latent_graph/README.md`
+
+
+## Research programme position
+
+- **Initiative:** Interventional Latent Graph
+- **Scope:** The minimal graph induced by shared interventions: spaces as vertices and intervention instances as edges.
+- **Not claimed here:** No particular geometry, response agreement, semantic equivalence, or Torus topology follows from edge existence.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
