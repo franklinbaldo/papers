@@ -68,13 +68,15 @@ Relative to the Run-9 one-step learner, terminal-value training reduced MAE by a
 
 However, it still missed the best simple baseline by approximately 0.22%, 0.22% and 0.43% respectively.
 
+These are deterministic single-seed comparisons. They establish the executed result for seed `20260919`, but the ~0.65–1.18% terminal-over-one-step improvement should not be generalized as a robust effect until replicated across independent seeds or accompanied by paired uncertainty estimates.
+
 ## Result
 
 The delayed objective is **better than the myopic objective, but not yet good enough**.
 
 This rejects a simple explanation that Run 9 failed only because its reward horizon was too short. Moving supervision to terminal loss consistently recovers much of the one-step learner's deficit, but the learned sequential policy collapses toward roughly four camera specialists and eight IMU specialists across all three regimes. In other words, with this linear state/action model and randomized continuation target, terminal training mostly rediscovers the strong fixed IMU-heavy prior rather than learning useful per-episode adaptation.
 
-The result also clarifies the oracle gap. There remains a large gap to the evaluation-only final-allocation oracle, but that oracle sees realized outputs of specialists not yet recruited. A lawful coordinator cannot possess that information for free. The remaining problem is therefore not simply better regression; it is partly a **value-of-information problem**.
+There remains a large gap to the evaluation-only final-allocation oracle, but that oracle sees realized outputs of specialists not yet recruited. The gap is therefore best interpreted as a **value-of-clairvoyance / perfect-information upper bound**, not as a direct estimate of actionable value of information. A lawful coordinator must pay to reveal a report before deciding whether to use it. The oracle gap motivates a probe/value-of-information experiment, but does not by itself show that paid probing can recover the gap.
 
 ## Design implication
 
@@ -88,6 +90,22 @@ The next clean experiment should separate two operations:
 A probe can be informative even if its value should not be trusted directly. This permits a coordinator to learn from disagreement, freshness, confidence calibration and cross-modal consistency without forcing every paid-for specialist into the actuator path.
 
 A second useful comparison is terminal training under a stronger but still lawful continuation policy, because the randomized continuation used here adds variance to the target. That must be compared against probe-then-trust rather than silently replacing this negative result.
+
+## Prior-art and falsification boundary
+
+A claim-level adversarial audit is recorded in [`audits/prior-art/malecns-terminal-value-recruitment-2026-09-19.md`](../../audits/prior-art/malecns-terminal-value-recruitment-2026-09-19.md).
+
+The audit materially narrows what this run should be taken to establish:
+
+- rollout and approximate dynamic-programming literature long predates the pattern of evaluating a current action through a downstream/base continuation policy; consequently, the randomized continuation is a load-bearing part of the RUN10 target rather than an implementation detail;
+- active feature-acquisition and sensor-scheduling literature long predates the generic idea of paying to reveal information under a prediction/control budget;
+- acquisition/resource scheduling followed by separate measurement validation also predates the generic `probe / activate` versus `trust / use` distinction;
+- sparse terminal rewards have known credit-assignment difficulties, while reward shaping and stronger nongreedy acquisition methods are established alternatives;
+- under adaptive-submodular/diminishing-return conditions, a strong greedy policy can already be competitive, so a more complex long-horizon coordinator should not be assumed to help without a stronger greedy control.
+
+RUN10's defensible contribution is therefore the **executed MaleCNS-specific negative/control result**: within this lawful state, policy class, randomized continuation, matched 12-specialist budget, and seed, extending the reward horizon recovers part of RUN9's deficit but still does not beat the best simple baseline.
+
+The next test should include at least: independent-seed uncertainty, a stronger lawful continuation policy, a stronger expected-marginal/greedy acquisition baseline, and a paid probe-then-trust comparison. The free clairvoyant oracle should remain an upper bound, not a deployable baseline.
 
 ## Reality-bound status
 
