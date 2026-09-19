@@ -1,120 +1,121 @@
 ---
 type: "Interpretability Paper"
-title: "Pontifex RED-1: Empirical Mechanism Boundary on SciFact"
-description: "Living empirical companion to Pontifex, separating completed SciFact transport evidence from mechanism hypotheses and prospective stronger null tests."
-tags: [pontifex, red-1, scifact, transport, matched-null, empirical]
-timestamp: 2026-09-19T13:20:00-04:00
+title: "Pontifex RED-1: Empirical Mechanism Boundary"
+description: "Living empirical companion to Pontifex, separating completed transport/mechanism evidence from hypotheses across SciFact, MS MARCO, and the preregistered NFCorpus replication."
+tags: [pontifex, red-1, scifact, nfcorpus, transport, matched-null, replication, empirical]
+timestamp: 2026-09-19T16:25:00-04:00
 ---
 
-# Pontifex RED-1: Empirical Mechanism Boundary on SciFact
+# Pontifex RED-1: Empirical Mechanism Boundary
 
 **Franklin Baldo**  
 Independent Researcher
 
-> **Living empirical companion paper.** This document records completed RED-1 evidence and explicitly separates it from follow-up hypotheses. A result enters the evidence column only after its frozen run completes. Follow-ups motivated by earlier results are labeled adaptive/prospective rather than independent confirmations.
+> **Living empirical companion paper.** This document records completed RED-1 evidence and explicitly separates it from follow-up hypotheses. A result enters the evidence column only after its frozen run completes. Adaptive follow-ups are labeled as such; independent replications require a protocol committed before the new held-out grades are opened.
 
 ## 1. Information boundary
 
-The current SciFact mechanism programme uses four non-interchangeable roles. `D_assembly` contains canonical text/split membership and frozen encoder identities, without relevance grades. `D_student` is a deterministic 80% of exact-test-overlap-filtered train queries and supplies unlabeled paired representation coordinates. `D_val` is the remaining 20% and is used only for coordinate-space hyperparameter selection. `D_test` contains official SciFact test relevance grades and is opened only after the tested map and every null object are frozen.
+The mechanism programme uses four non-interchangeable roles. `D_assembly` contains canonical text/split membership and frozen encoder identities, without relevance grades used for fitting or selection. `D_student` supplies unlabeled paired representation coordinates. `D_val` is used only for coordinate-space hyperparameter selection. `D_test` contains official held-out relevance grades and is opened only after the tested map and null objects are frozen.
 
-For K=512 mechanism diagnostics, no B/MPNet coordinates for test queries or corpus documents are encoded, and zero task labels/qrels are used for fitting or selection. These experiments test a transport mechanism; they do **not** demonstrate `D_assembly -> D_student` generalization.
+For the SciFact K=512 diagnostics and the NFCorpus replication, no B/MPNet coordinates for test queries or corpus documents are encoded, and zero task labels/qrels are used for fitting or selection. These experiments test transport mechanisms; they do **not** demonstrate `D_assembly -> D_student` generalization.
 
 ## 2. Completed evidence
 
-### 2.1 Global-permutation K=512
+### 2.1 SciFact global-permutation K=512
 
 Run `35451426518` gave TRUE `0.649954`, coupled global-null mean `0.641013`, and independent global-null mean `0.620021` nDCG@10. Exact residual identity did not meet the predeclared rule: TRUE-minus-coupled was `+0.008940`, finite-bank `p=0.078125`, paired-query 95% CI `[-0.003652,+0.021549]`. Shared-warp coherence did: coupled-minus-independent was `+0.020992`, 95% CI `[+0.009079,+0.033756]`.
 
-Evidence: a common two-sided deformation preserves more held-out retrieval structure than independently scrambled query/document deformations under this frozen benchmark. Not evidence: necessity of exact residual identity.
+Evidence: a common two-sided deformation preserves more held-out SciFact retrieval structure than independently scrambled query/document deformations under this frozen benchmark. Not evidence: necessity of exact residual identity.
 
-### 2.2 Residual-norm-matched K=512
+### 2.2 SciFact residual-norm-matched K=512
 
-The stronger completed run `35455793661` constrained every null permutation to remain within eight equal-count residual-L2 strata. It observed:
+Run `35455793661` constrained every null permutation to eight equal-count residual-L2 strata. TRUE was `0.649954`, norm-matched coupled mean `0.640712`, and independent mean `0.619617`. TRUE-minus-coupled was `+0.009241`; the finite-bank upper-tail test was positive (`p=0.015625`) but the paired-query 95% CI remained `[-0.003507,+0.021617]`, so the **predeclared two-part semantic-specificity criterion failed**.
 
-| condition | nDCG@10 |
-| --- | ---: |
-| TRUE | 0.649954 |
-| norm-matched coupled mean | 0.640712 |
-| norm-matched independent mean | 0.619617 |
+Shared-warp coherence remained positive: coupled-minus-independent `+0.021095`, 95% CI `[+0.008416,+0.034615]`.
 
-TRUE-minus-coupled was `+0.009241`. The finite-bank upper-tail test was positive (`p=0.015625`), but the paired-query bootstrap 95% interval remained `[-0.003507,+0.021617]`, so the **predeclared two-part semantic-specificity criterion still fails**. The two statistical views are therefore reported together rather than selecting the favorable one after the fact.
+### 2.3 SciFact residual-norm + balanced-group A-space null
 
-Shared-warp coherence replicated under the stronger nuisance match: coupled-minus-independent was `+0.021095`, with paired-query 95% CI `[+0.008416,+0.034615]`. This remains the cleanest positive mechanism result currently supported.
+Run `35457676312` gave TRUE `0.649954`, coupled mean `0.640717`, and independent mean `0.620341`. TRUE-minus-coupled was `+0.009236`, finite-bank `p=0.03125`, but paired-query 95% CI `[-0.003390,+0.022029]`; exact identity therefore failed again. Shared-warp coherence was `+0.020376`, 95% CI `[+0.009422,+0.032373]`.
 
-### 2.3 Residual-norm + balanced-group A-space null
+The same run falsified a methodological assumption: its deterministic groups were not tightly local in normalized A-space. Query donor cosine distance averaged `0.78787` with p95 `0.99686`; document distance averaged `0.78952` with the same p95. It is therefore evidence for a **coarse balanced-group nuisance control**, not for a genuinely local null.
 
-Run `35457676312` completed the next adaptive follow-up. TRUE remained `0.649954`; the balanced-group coupled mean was `0.640717` and the independent mean `0.620341`. TRUE-minus-coupled was `+0.009236`, with finite-bank `p=0.03125` but paired-query 95% CI `[-0.003390,+0.022029]`. The predeclared exact-identity criterion therefore **failed again**. Shared-warp coherence remained positive at `+0.020376`, with paired-query 95% CI `[+0.009422,+0.032373]`.
+### 2.4 SciFact classical coordinate-mapping baselines
 
-The run also falsified a methodological assumption in its own design: the deterministic balanced groups were not tightly local in normalized A-space. Query-side donor cosine distance averaged `0.78787` with p95 `0.99686`; document-side distance averaged `0.78952` with the same p95. Accordingly, this run is evidence for robustness to a **coarse balanced-group nuisance control**, not evidence that the result survives a genuinely local-A null. The locality diagnostic is treated as a negative result that motivates, but does not itself validate, the next experiment.
+Run `35455793508` compared frozen, label-free CCA, PLS and RFF+ridge mappings. A-only MiniLM scored `0.645082`, B-oracle MPNet `0.655697`, and at K=512 RFF+ridge `0.496555`, PLS `0.307058`, CCA `0.000000`, versus Pontifex TRUE `0.649954`. Pontifex exceeded the best of those tested classical mappings by `+0.153399` nDCG@10, sat `+0.004872` above A-only, and remained `-0.005743` below B oracle.
 
-### 2.4 Classical coordinate-mapping baselines
-
-Run `35455793508` completed a label-free, frozen-manifest comparison against CCA, PLS and RFF+ridge. A-only MiniLM scored `0.645082` and the B/MPNet oracle `0.655697` nDCG@10. At K=512, the best of the three classical maps was RFF+ridge at `0.496555`; PLS scored `0.307058` and CCA `0.000000`. The Pontifex TRUE K=512 map (`0.649954`) therefore exceeded the best tested classical mapping by `+0.153399` nDCG@10, sat `+0.004872` above A-only, and remained `-0.005743` below the B oracle.
-
-Across K={16,32,64,128,256,512}, none of those three classical families reached the precomputed A-to-B midpoint (`0.650389`) or the 90%-to-B target (`0.654635`). This is useful comparative evidence **only for these frozen methods, budgets and SciFact setup**. It does not establish universal transport superiority.
+This is comparative evidence only for the frozen methods, budgets and SciFact setup. It is not universal transport superiority.
 
 ### 2.5 MS MARCO pilot: negative transfer result
 
-Run `35457043627` completed the separately frozen 256-query ANCE→TCT-ColBERT-v2 HN+ MS MARCO pilot with leakage audit `PASS`: dev qrels were excluded from candidate generation, fitting and hyperparameter selection, candidate documents were excluded from document-side transport fitting, and qrels were loaded only after rankings were frozen.
+Run `35457043627` completed a separately frozen 256-query ANCE -> TCT-ColBERT-v2 HN+ MS MARCO pilot with leakage audit `PASS`. On the common BM25 candidate pool, A-only scored `0.346215` MRR@10, B-oracle `0.373555`, Pontifex K=512 only `0.222483`, Procrustes `0.222836`, and shuffled-correspondence Pontifex `0.013194`.
 
-On the common BM25 candidate pool, A-only ANCE scored `0.346215` MRR@10 and B-oracle TCT scored `0.373555`. At K=512, Pontifex scored only `0.222483`, essentially tied with Procrustes (`0.222836`) and far below A-only, while shuffled-correspondence Pontifex scored `0.013194`. Thus the paired correspondence carries real structure relative to shuffle, but the present transport formulation does **not** preserve enough retrieval geometry to recover even the native A-space baseline on this pilot.
+The paired correspondence carries structure relative to shuffle, but the current transport formulation does **not** preserve enough retrieval geometry to recover the native A-space baseline. This is a real negative result against plug-and-play or universal transport claims, not evidence that transport is impossible.
 
-This is a genuine negative result against plug-and-play or universal transport claims, not evidence that transport is impossible. Both encoders are MS-MARCO-family models, the evaluation is a 256-query pilot over a frozen candidate pool, and it is not an official full-dev leaderboard result. Detailed record: `experiments/pontifex_benchmarks/FINDINGS-MSMARCO-PILOT-2026-09-19.md`.
+### 2.6 SciFact feasibility-frozen residual-norm + A-KNN null
 
-### 2.6 Feasibility-frozen residual-norm + A-KNN null
+The first hard-locality attempt (`35460716096`) froze donor rank `<=16` and failed before opening `D_test` grades because at least one residual-norm stratum admitted no perfect derangement. A preregistered feasibility ladder `[16,20,24,32,48,63]` then selected rank 32 from `D_student` geometry only.
 
-The hard-locality protocol first attempted donor rank `<=16` and failed before opening any `D_test` relevance grades (`35460716096`) because at least one residual-norm stratum admitted no perfect derangement. The frozen feasibility ladder `[16,20,24,32,48,63]` therefore selected the smallest combinatorially feasible cap from `D_student` geometry only. Runs at 16, 20 and 24 were infeasible; rank 32 was the first feasible cap. Only after the graph and both 63-permutation null banks were frozen and hashed were the official `D_test` qrels read.
+Run `35461028519` observed TRUE `0.649954`, norm+KNN coupled mean `0.640060`, and independent mean `0.616211`. TRUE-minus-coupled was `+0.009894`, with finite-bank `p=0.09375` and paired-query 95% CI `[-0.002436,+0.022668]`: exact identity failed again. Shared-warp coherence was positive at `+0.023849`, 95% CI `[+0.011687,+0.036146]`.
 
-Run `35461028519` then observed TRUE `0.649954`, norm+KNN coupled mean `0.640060`, and independent mean `0.616211` nDCG@10. TRUE-minus-coupled was `+0.009894`, but exact residual identity again failed the predeclared two-part criterion: finite-bank `p=0.09375` and paired-query 95% CI `[-0.002436,+0.022668]`. Shared-warp coherence remained positive: coupled-minus-independent was `+0.023849`, with paired-query 95% CI `[+0.011687,+0.036146]`.
+### 2.7 SciFact D_student-only locality calibration
 
-This is therefore a fourth completed failure of the exact-identity claim under the frozen decision rule, alongside another positive replication of two-sided shared-warp coherence. However, the same run reported mean donor A-cosine distance `0.80004` (p95 `0.93161`) despite the rank-32 cap, so donor rank alone still does not establish tight geometric locality.
+Run `35463689486`, using `D_student` geometry only, found random-within-stratum expected donor distance `0.87712`, KNN-bank mean `0.80004`, minimum-cost perfect-derangement distance `0.53900`, and individual nearest-nonself floor `0.51386`. On a scale where 0 is random and 1 is the minimum-cost feasible derangement, the KNN bank captured only `0.22797` of available locality improvement.
 
-### 2.7 D_student-only locality calibration of the KNN null
+This is a **methodological negative result** about the strength of that nuisance control, not held-out retrieval evidence.
 
-To quantify that concern without reopening or reusing `D_test` grades, run `35463689486` calibrated the frozen rank-32 bank entirely on `D_student` geometry. Within the same residual-norm strata, the expected random-donor mean A-cosine distance is `0.87712`; the theoretical minimum-cost perfect derangement reaches `0.53900`, while the unconstrained per-anchor nearest-neighbour floor is `0.51386`. The actual frozen KNN bank averages `0.80004` (median `0.81079`, p95 `0.93161`).
+### 2.8 SciFact residual-norm + minimum-cost A-space derangement
 
-Define a descriptive locality-capture scale with 0 equal to random-within-stratum mean locality and 1 equal to the minimum-cost feasible derangement. The frozen KNN bank scores only `0.22797`. Thus the rank-32 bank is measurably more local than random, but captures only about 23% of the available random-to-optimal locality improvement. This is a **methodological negative result** about the strength of the nuisance control, not a held-out retrieval result and not evidence for semantic specificity.
+A separately frozen adaptive protocol then replaced donor-rank locality with the deterministic minimum-cost perfect derangement. It was constructed from `D_student` only; `D_val` stayed restricted to `tau`/`lambda`; `D_test` grades were loaded only after map, strata, assignment, manifests and mapped A-side ingredients were fixed. Because one deterministic optimum is not a permutation reference distribution, the protocol explicitly forbade a finite-bank p-value and preregistered a paired-query bootstrap decision rule.
 
-### 2.8 Residual-norm + minimum-cost A-space derangement
+Run `35463942235` observed TRUE `0.649954` versus MINCOST_COUPLED `0.640415`, delta `+0.009538`, with 95% CI `[-0.004726,+0.024025]`. The criterion therefore **failed to support exact residual identity even against the strongest deterministic source-local nuisance tested on SciFact**. This run had no independent-warp comparator and therefore adds no shared-warp evidence by itself.
 
-The locality calibration motivated a stronger adaptive test that does not use donor rank as a proxy for locality. Before the new held-out read, `PROTOCOL-SCIFACT-NORM-MINCOST-DERANGEMENT-K512-2026-09-19.md` froze a single deterministic perfect derangement that, within each residual-L2 stratum, minimizes total normalized A-space cosine donor distance. The assignment was built from `D_student` only, its hash was frozen, `D_val` remained restricted to coordinate-space `tau`/`lambda` selection, and official `D_test` qrels were loaded only after the map, strata, assignment, manifests and mapped coordinates were fixed.
+### 2.9 NFCorpus independent-dataset replication: shared warp does not replicate
 
-Because a single deterministic optimum is not a permutation reference distribution, the protocol explicitly forbade retrofitting a finite-bank p-value. Its predeclared decision rule used only a 5,000-resample paired-query bootstrap: support for exact-identity utility required the 95% percentile interval for TRUE-minus-MINCOST to lie strictly above zero.
+After the SciFact sequence, the higher-value test was moved off the reused SciFact held-out set. Commit `aa33ff96f18e363247977604e3491d281f00104d` froze an NFCorpus replication protocol and executable before the first NFCorpus `D_test` relevance-grade read. It retains the same pinned MiniLM -> MPNet encoder pair but changes the BEIR dataset, so this is an independent **dataset** replication, not an independent representation-pair replication.
 
-Run `35463942235` reproduced the D_student locality calibration exactly: nearest-nonself mean A-cosine distance `0.51386`, minimum-cost perfect derangement `0.53900`, and random-within-stratum expectation `0.87712`. It then observed TRUE `0.649954` versus MINCOST_COUPLED `0.640415` nDCG@10, a mean difference of `+0.009538`. The paired-query 95% interval was `[-0.004726,+0.024025]`, with bootstrap probability of positive mean `0.9048`. The predeclared criterion therefore **failed to support exact residual identity even against the strongest deterministic source-local nuisance control tested here**.
+The K=256 design preserved the four-way split contract. `D_student` created eight residual-norm strata and two separately seeded, disjoint 31-member local derangement banks; `D_val` selected only `tau=0.1` and `lambda=1.5`; official `D_test` grades were opened last. B coordinates for test queries and corpus documents were never encoded and the task-label budget for fit/selection remained zero.
 
-This is a negative result for exact-identity necessity, not a negative result for all Pontifex structure. The minimum-cost run did not include a separate independently warped document comparator, so it does not itself test shared-warp coherence. That positive claim continues to rest on the four earlier bank-based null families and must not be inferred from this run.
+The nuisance banks were considerably more local than required. Minimum-cost A-cosine donor distance was `0.652204` and random-within-stratum expectation `0.855995`. Query-bank mean distance was `0.652270`, document-bank mean `0.652275`, corresponding to mean locality capture `0.999673` and `0.999649`. Thus this test destroys exact identity while keeping replacement residuals extremely close to the strongest feasible regional match.
+
+Run `35466980084` produced TRUE `0.318457`, LOCAL_COUPLED mean `0.314782`, and LOCAL_INDEPENDENT mean `0.314777` nDCG@10. The preregistered primary difference was only `+0.0000053`. Across 323 held-out queries, the 5,000-resample paired bootstrap gave 95% CI `[-0.000329,+0.000356]` and probability of positive mean `0.5056`. The preregistered criterion therefore **fails cleanly: the SciFact shared-warp advantage did not replicate on NFCorpus under this highly local nuisance family**.
+
+The secondary TRUE-minus-LOCAL_COUPLED contrast was `+0.003674`, with 95% CI `[-0.001637,+0.009323]`; it also does not support exact residual identity under an interval-above-zero rule, but it was not the replication target.
+
+This negative replication does not invalidate the four completed SciFact positives; it changes their scope. Shared-warp coherence is now evidence specific to the tested SciFact/null regimes, not a demonstrated cross-dataset property. Detailed record: `experiments/pontifex_benchmarks/FINDINGS-NFCORPUS-LOCAL-SHARED-WARP-REPLICATION-K256-2026-09-19.md`.
 
 ## 3. Current evidence / hypothesis boundary
 
-Supported: under the frozen SciFact K=512 setup, shared query/document warp coherence is robust to global, residual-magnitude-matched, coarse balanced-group, and feasibility-frozen KNN null banks; and the tested Pontifex map substantially outperforms CCA, PLS and RFF+ridge coordinate mappings at the same K=512 correspondence budget.
+**Supported within SciFact:** at K=512, shared query/document warp coherence survives four global-to-moderately-local null-bank families; the tested Pontifex map also substantially outperforms CCA, PLS and RFF+ridge at the same frozen K=512 correspondence budget.
 
-Not supported: the stronger claim that exact residual-to-anchor identity is necessary. It failed the predeclared two-part rule in the four bank-based null families, and it also failed the separately preregistered paired-bootstrap rule under the fifth, minimum-cost distance-local derangement. The latest result is especially discriminating because the nuisance assignment reduces mean A-space donor distance from the random-within-stratum expectation `0.87712` to `0.53900`, close to the per-anchor nearest-neighbour floor `0.51386`, while still destroying every anchor's exact residual identity.
+**Not supported:** exact residual-to-anchor identity is necessary. It failed the predeclared decision rules across four SciFact null banks, the SciFact minimum-cost deterministic local derangement, and the secondary NFCorpus local contrast.
 
-The MS MARCO pilot adds a separate negative boundary: current Pontifex transport does not generalize as a plug-and-play retrieval upgrade across the tested ANCE→TCT representation pair. That failure coexists with the positive SciFact shared-warp result; neither should be generalized beyond its frozen design.
+**Not replicated cross-dataset:** the SciFact shared-warp advantage failed the preregistered NFCorpus replication when residual replacements were constrained to near-minimum-cost local A-space derangements. Therefore the current evidence no longer supports describing shared-warp coherence as robust across datasets.
 
-Still hypotheses or outside these diagnostics: causal semantic locality, an intrinsic or physical torus, universal transport superiority, native-B superiority, low-budget superiority, broad cross-dataset generalization, and Assembly-to-student generalization.
+**Additional negative boundary:** the MS MARCO pilot shows current Pontifex transport is not a plug-and-play retrieval upgrade across the tested ANCE -> TCT pair.
 
-## 4. Next discriminant: independent replication rather than another adaptive SciFact null
+Still hypotheses or outside these diagnostics: causal semantic locality, an intrinsic or physical torus, universal transport superiority, native-B superiority, low-budget superiority, broad cross-representation generalization, and `D_assembly -> D_student` generalization.
 
-The SciFact exact-identity question has now been stressed by increasingly controlled nuisance families through a distance-optimal perfect derangement, and none supported the strong identity claim under its frozen decision rule. Further adaptive sharpening on the same held-out set risks producing diminishing scientific value even if leakage remains technically controlled.
+## 4. Next discriminant: coupling x locality, frozen prospectively
 
-The higher-value next step is an **independent replication** of the supported shared-warp-coherence claim on a separately frozen dataset or representation pair, with the full coupled-versus-independent contrast preregistered before its held-out labels are opened. A replication should preserve the same information roles (`D_assembly`, `D_student`, `D_val`, `D_test`), include a genuinely distance-local nuisance family whose locality is calibrated before test access, and report negative outcomes symmetrically. This is a proposed next experiment, not current evidence.
+The NFCorpus result creates a sharper mechanistic question than simply trying another dataset. The SciFact positive coupled-versus-independent gaps were obtained with nulls whose replacement residuals were global, magnitude-matched, coarse-group, or only moderately local; the NFCorpus replication used banks with approximately `0.9997` locality capture and observed effectively zero coupled-versus-independent gap.
 
-The minimum-cost SciFact result also suggests a narrower hypothesis revision: useful two-sided deformation may be a **regional/geometric property** that does not require exact anchor-residual identity. That interpretation is plausible given the repeated shared-warp positives and exact-identity negatives, but it remains a hypothesis until tested by an independent design that distinguishes regional coherence from anchor identity.
+A plausible generated hypothesis is therefore that the shared-warp contrast is **scale-dependent**: coupling matters when the null displacement is large enough to change the regional field, but becomes irrelevant when both coupled and independent substitutions remain nearly inside the same local field. The current data do not establish that explanation because dataset and locality regime changed together.
+
+The next discriminant should preregister a locality ladder on a fresh held-out dataset/representation setting and test a `coupling × locality` interaction, with the nuisance distances and bank construction frozen from `D_student` before any `D_test` grades are opened. A monotone collapse of the coupled-minus-independent gap as locality tightens would support a regional-field interpretation; absence of such an interaction would weaken it. This is a hypothesis and proposed experiment, not current evidence.
 
 ## Reproducibility
 
 - PR: `https://github.com/franklinbaldo/papers/pull/485`
-- completed global K=512: `https://github.com/franklinbaldo/papers/actions/runs/35451426518`
-- completed norm-matched K=512: `https://github.com/franklinbaldo/papers/actions/runs/35455793661`
-- completed balanced-group norm+local K=512: `https://github.com/franklinbaldo/papers/actions/runs/35457676312`
-- completed classical baselines: `https://github.com/franklinbaldo/papers/actions/runs/35455793508`
-- completed MS MARCO pilot: `https://github.com/franklinbaldo/papers/actions/runs/35457043627`
-- infeasible hard rank-16 locality attempt: `https://github.com/franklinbaldo/papers/actions/runs/35460716096`
-- completed KNN feasibility-ladder test: `https://github.com/franklinbaldo/papers/actions/runs/35461028519`
-- completed D_student-only locality calibration: `https://github.com/franklinbaldo/papers/actions/runs/35463689486`
-- completed minimum-cost local derangement: `https://github.com/franklinbaldo/papers/actions/runs/35463942235`
-- locality calibration script: `experiments/pontifex_benchmarks/scifact_knn_null_locality_calibration_k512.py`
-- minimum-cost protocol: `experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-MINCOST-DERANGEMENT-K512-2026-09-19.md`
-- minimum-cost experiment: `experiments/pontifex_benchmarks/scifact_norm_mincost_derangement_k512.py`
+- SciFact global K=512: `https://github.com/franklinbaldo/papers/actions/runs/35451426518`
+- SciFact norm-matched K=512: `https://github.com/franklinbaldo/papers/actions/runs/35455793661`
+- SciFact balanced-group K=512: `https://github.com/franklinbaldo/papers/actions/runs/35457676312`
+- SciFact classical baselines: `https://github.com/franklinbaldo/papers/actions/runs/35455793508`
+- MS MARCO pilot: `https://github.com/franklinbaldo/papers/actions/runs/35457043627`
+- SciFact KNN feasibility test: `https://github.com/franklinbaldo/papers/actions/runs/35461028519`
+- SciFact locality calibration: `https://github.com/franklinbaldo/papers/actions/runs/35463689486`
+- SciFact minimum-cost local derangement: `https://github.com/franklinbaldo/papers/actions/runs/35463942235`
+- NFCorpus preregistration commit: `https://github.com/franklinbaldo/papers/commit/aa33ff96f18e363247977604e3491d281f00104d`
+- NFCorpus preregistered replication: `https://github.com/franklinbaldo/papers/actions/runs/35466980084`
+- NFCorpus protocol: `experiments/pontifex_benchmarks/PROTOCOL-NFCORPUS-LOCAL-SHARED-WARP-REPLICATION-K256-2026-09-19.md`
+- NFCorpus findings: `experiments/pontifex_benchmarks/FINDINGS-NFCORPUS-LOCAL-SHARED-WARP-REPLICATION-K256-2026-09-19.md`
+- NFCorpus executable: `experiments/pontifex_benchmarks/nfcorpus_local_shared_warp_replication_k256.py`
