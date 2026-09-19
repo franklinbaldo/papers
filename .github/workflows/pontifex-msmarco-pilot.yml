@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "experiment/pontifex-red-1"
+      - "experiment/pontifex-msmarco-pilot-run"
     paths:
       - "experiments/pontifex_benchmarks/msmarco_candidate_manifest.py"
       - "experiments/pontifex_benchmarks/msmarco_transport_pilot.py"
