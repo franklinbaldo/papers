@@ -412,3 +412,13 @@ If v2 shows that best checkpoints occur well after epoch three, the original bas
 5. Morra, J.; Flynn, M.; Amann, A.; Daley, D. "Multifunctionality in a Connectome-Based Reservoir Computer." arXiv:2306.01885 (2023). https://arxiv.org/abs/2306.01885
 6. Huang, H.; Wang, H.; Safarzadeh, H. "Incorporating echo state network and sand cat swarm optimization algorithm based on quantum for named entity recognition." *Scientific Reports* (2025). https://www.nature.com/articles/s41598-025-02275-6
 7. Codex; Wormuth, A. "Flies Are All You Need." Preprint, 2026-09-11. https://artificialscientific.com/papers/flies-are-all-you-need ; code: https://github.com/nftechie/flm
+
+
+## Research programme position
+
+- **Initiative:** MaleCNS
+- **Scope:** Frozen connectome dynamics as a computational substrate between trainable interfaces.
+- **Not claimed here:** MaleCNS can be used as observer, operator, or controller; success here does not automatically validate Torus or Pontifex.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
