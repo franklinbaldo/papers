@@ -3,14 +3,14 @@ name: Semantic spectral confidence — relative-depth confirmation
 on:
   pull_request:
     paths:
-      - "experiments/semantic_atlas/spectral_bottleneck/relative_depth_confirmation.py"
-      - "experiments/semantic_atlas/spectral_bottleneck/test_relative_depth_confirmation.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/relative_depth_confirmation.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/test_relative_depth_confirmation.py"
       - ".github/workflows/semantic-spectral-relative-depth-confirm.yml"
   push:
     branches: [main]
     paths:
-      - "experiments/semantic_atlas/spectral_bottleneck/relative_depth_confirmation.py"
-      - "experiments/semantic_atlas/spectral_bottleneck/test_relative_depth_confirmation.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/relative_depth_confirmation.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/test_relative_depth_confirmation.py"
       - ".github/workflows/semantic-spectral-relative-depth-confirm.yml"
   workflow_dispatch:
 
@@ -40,16 +40,16 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-          cache-dependency-path: experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+          cache-dependency-path: semantic-atlas/experiments/spectral_bottleneck/requirements-real.txt
 
       - name: Install CPU PyTorch
         run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install experiment dependencies
-        run: python -m pip install -r experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+        run: python -m pip install -r semantic-atlas/experiments/spectral_bottleneck/requirements-real.txt
 
       - name: Validate frozen relative-depth protocol
-        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        working-directory: semantic-atlas/experiments/spectral_bottleneck
         run: >-
           python -m unittest -v
           test_real_model_experiment.py
@@ -57,7 +57,7 @@ jobs:
           test_relative_depth_confirmation.py
 
       - name: Run fresh relative-depth confirmation
-        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        working-directory: semantic-atlas/experiments/spectral_bottleneck
         run: >-
           python relative_depth_confirmation.py
           --model ${{ matrix.model }}
@@ -69,8 +69,8 @@ jobs:
       - name: Publish confirmation summary
         if: always()
         run: |
-          if [ -f experiments/semantic_atlas/spectral_bottleneck/results-relative-depth-${{ matrix.id }}/summary.md ]; then
-            cat experiments/semantic_atlas/spectral_bottleneck/results-relative-depth-${{ matrix.id }}/summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f semantic-atlas/experiments/spectral_bottleneck/results-relative-depth-${{ matrix.id }}/summary.md ]; then
+            cat semantic-atlas/experiments/spectral_bottleneck/results-relative-depth-${{ matrix.id }}/summary.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload confirmation artifact
@@ -78,5 +78,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: semantic-spectral-relative-depth-${{ matrix.id }}
-          path: experiments/semantic_atlas/spectral_bottleneck/results-relative-depth-${{ matrix.id }}/
+          path: semantic-atlas/experiments/spectral_bottleneck/results-relative-depth-${{ matrix.id }}/
           if-no-files-found: error

@@ -3,15 +3,15 @@ name: Structural identification Lean proofs
 on:
   pull_request:
     paths:
-      - 'structural_identification_from_restricted_truths.md'
-      - 'formalizations/structural_identification/**'
+      - 'structural-identification/restricted-truths.md'
+      - 'structural-identification/formalizations/**'
       - '.github/workflows/structural-identification-lean.yml'
   push:
     branches:
       - 'paper/structural-identification-lean'
     paths:
-      - 'structural_identification_from_restricted_truths.md'
-      - 'formalizations/structural_identification/**'
+      - 'structural-identification/restricted-truths.md'
+      - 'structural-identification/formalizations/**'
       - '.github/workflows/structural-identification-lean.yml'
 
 jobs:
@@ -31,4 +31,4 @@ jobs:
       - name: Check structural-identification proofs
         run: |
           "$HOME/.elan/bin/elan" run leanprover/lean4:v4.22.0 \
-            lean formalizations/structural_identification/StructuralIdentification.lean
+            lean structural-identification/formalizations/StructuralIdentification.lean

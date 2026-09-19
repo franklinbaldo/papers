@@ -3,13 +3,13 @@ name: Semantic Atlas toy tests
 on:
   pull_request:
     paths:
-      - 'experiments/semantic_atlas/**'
+      - 'semantic-atlas/experiments/**'
       - '.github/workflows/semantic-atlas-tests.yml'
   push:
     branches:
       - 'semantic-atlas/**'
     paths:
-      - 'experiments/semantic_atlas/**'
+      - 'semantic-atlas/experiments/**'
       - '.github/workflows/semantic-atlas-tests.yml'
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: experiments/semantic_atlas
+        working-directory: semantic-atlas/experiments
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
