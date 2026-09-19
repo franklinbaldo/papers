@@ -4,11 +4,25 @@ title: "Negentropy, Fluctuation, and the Recognition of Another Agent"
 description: "Clarification of the maximum-entropy null, spontaneous organized fluctuations, and relational agent recognition in the informational-time framework."
 tags: [informational-time, negentropy, maximum-entropy, agent-recognition, fluctuation]
 timestamp: 2026-07-31T03:22:00Z
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
 # Negentropy, Fluctuation, and the Recognition of Another Agent
 
-**Franklin Baldo**  
+**Franklin Silveira Baldo**  
 Independent Researcher  
 franklinbaldo@gmail.com
 
@@ -19,6 +33,14 @@ franklinbaldo@gmail.com
 > evolutionary, collective, distributed, or otherwise unconventional sources of
 > organized behavior. It specifies what an observer must distinguish before it
 > can rationally attribute persistent local order to another causal source.
+
+## Prior-art boundary and contribution
+
+The component ideas used here have substantial antecedents and are not claimed as independent inventions. Predictive and compressive usefulness as a reason to adopt an intentional or higher-level description is central to Dennett's intentional-stance and real-patterns programme [1]. Bayesian inverse planning formalizes inference over latent goals and beliefs from observed action [2]. Human agency attribution has been linked empirically to perceived departures from randomness [3], while predictive-coding accounts already frame agency detection as Bayesian inference over hidden causes [4]. Sequential evidence accumulation and first-threshold stopping are classical [5], and prequential/MDL traditions already connect sequential predictive performance to model selection and description length [6,7]. Goal-recognition work also predates this note both in measuring how much observation is required before a hidden goal can be distinguished [8] and in using active interventions to accelerate recognition [9]. Contemporary agent-evaluation work independently studies behavioural and representational evidence for goal-directedness [10].
+
+The candidate contribution of this companion note is therefore narrower. It is the operational conjunction of four explicitly competing families — maximum-entropy background, self-generated/channel-induced structure, structured non-agent law, and agent-level model — with the agent family charged for model, registry, search, and fitted-parameter cost, and with any retrospective advantage required to survive prospectively on held-out prediction or intervention. The criterion may optionally be located along the observer-relative informational-cost axis developed in `informational_time.md`. A dedicated repository prior-art audit did not locate this exact full conjunction before the note's public cutoff, but that bounded negative search is not a claim of priority or exhaustive novelty.
+
+No empirical benchmark has yet validated the four-family criterion. The hypotheses below remain prospective, and any eventual positive result must be tested for sensitivity to the admissible model families and to capacity matching between `M_law` and `M_agent`.
 
 ## 1. The maximum-entropy null is relative to the observer
 
@@ -188,6 +210,8 @@ flowchart TD
 
 The revised figure makes the complexity charge and matched prospective comparison load-bearing: evidence for an external organized source is weaker than evidence for agency, and an agent account does not win merely by being a more flexible model class.
 
+That fairness requirement is substantive rather than cosmetic. The selected result may change when either comparator family is enriched. A benchmark should therefore use predeclared capacity controls — for example nested `M_law`/`M_agent` families, matched effective parameter or description budgets, and sensitivity analyses across reasonable model classes. If an apparent agent advantage disappears when the structured-law family receives comparable expressive capacity, the criterion has not established agency; it has only exposed an asymmetric benchmark.
+
 Intervention is especially informative. If changing $A$'s actions produces
 structured responses that cannot be derived from $A$ alone, the evidence for an
 external continuing source increases.
@@ -297,6 +321,8 @@ fluctuation, self-generation, and structured external-law explanations available
 to the observer. All models should be compared at the same primitive observation
 interface even when they use different internal tokenizations.
 
+The benchmark should also include established comparators rather than only bespoke implementations: prefix-to-recognition measures in the spirit of worst-case distinctiveness [8], inverse-planning models [2], sequential-threshold baselines [5], and prequential/MDL model-selection baselines [6,7]. These controls are needed to show whether the four-family construction adds anything beyond known recognition and model-selection machinery.
+
 ## 8. Clarified hypotheses
 
 ### H1: Local order alone does not establish another agent
@@ -369,3 +395,27 @@ Agency is the relational interpretation earned at the final step, not a synonym
 for order, predictability, or compressibility. The framework leaves open which
 physical, biological, computational, collective, or evolutionary processes will
 earn it and at which causal scale.
+
+The principal limitation of the current note is therefore empirical and benchmark-relative. The exact four-family conjunction has not yet been validated against the established recognition/model-selection baselines above, and conclusions can depend on the model classes, coding language, capacity controls, intervention policy, observer, and causal scale. The contribution claimed here is the testable comparison contract, not evidence that the contract has already identified agency correctly in any natural or artificial system.
+
+## References
+
+[1] Daniel C. Dennett. “Real Patterns.” *The Journal of Philosophy*, 88(1), 1991. DOI: [10.2307/2027085](https://doi.org/10.2307/2027085).
+
+[2] Chris L. Baker, Rebecca Saxe, and Joshua B. Tenenbaum. “Action understanding as inverse planning.” *Cognition*, 113(3), 2009. DOI: [10.1016/j.cognition.2009.07.005](https://doi.org/10.1016/j.cognition.2009.07.005).
+
+[3] Yuan Meng, Thomas L. Griffiths, and Fei Xu. “Inferring Intentional Agents From Violation of Randomness.” 2017. [Princeton publication record](https://collaborate.princeton.edu/en/publications/inferring-intentional-agents-from-violation-of-randomness/).
+
+[4] Marc Andersen. “Predictive coding in agency detection.” *Religion, Brain & Behavior*, first published online 2017. DOI: [10.1080/2153599X.2017.1387170](https://doi.org/10.1080/2153599X.2017.1387170).
+
+[5] Abraham Wald. “Sequential Tests of Statistical Hypotheses.” *Annals of Mathematical Statistics*, 16(2), 1945. DOI: [10.1214/aoms/1177731118](https://doi.org/10.1214/aoms/1177731118).
+
+[6] A. P. Dawid. “Present Position and Potential Developments: Some Personal Views: Statistical Theory — The Prequential Approach.” 1984. DOI: [10.2307/2981683](https://doi.org/10.2307/2981683).
+
+[7] Jörg Bornschein, Yazhe Li, and Marcus Hutter. “Sequential Learning Of Neural Networks for Prequential MDL.” 2022. [arXiv:2210.07931](https://arxiv.org/abs/2210.07931).
+
+[8] Sarah Keren, Avigdor Gal, and Erez Karpas. “Goal Recognition Design.” *Proceedings of ICAPS 2014*. DOI: [10.1609/icaps.v24i1.13617](https://doi.org/10.1609/icaps.v24i1.13617).
+
+[9] Maayan Shvo and Sheila A. McIlraith. “Active Goal Recognition.” *Proceedings of AAAI 2020*. DOI: [10.1609/aaai.v34i06.6551](https://doi.org/10.1609/aaai.v34i06.6551).
+
+[10] Raghu Arghal et al. “A Behavioural and Representational Evaluation of Goal-Directedness in Language Model Agents.” 2026. [arXiv:2602.08964](https://arxiv.org/abs/2602.08964).
