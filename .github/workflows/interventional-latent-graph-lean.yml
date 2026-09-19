@@ -1,0 +1,34 @@
+name: Interventional latent graph Lean proofs
+
+on:
+  pull_request:
+    paths:
+      - 'interventional_latent_graph.md'
+      - 'formalizations/interventional_latent_graph/**'
+      - '.github/workflows/interventional-latent-graph-lean.yml'
+  push:
+    branches:
+      - 'paper/interventional-latent-graph'
+    paths:
+      - 'interventional_latent_graph.md'
+      - 'formalizations/interventional_latent_graph/**'
+      - '.github/workflows/interventional-latent-graph-lean.yml'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+
+      - name: Install Lean 4.22.0
+        run: |
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.22.0
+
+      - name: Check interventional latent graph proofs
+        run: |
+          "$HOME/.elan/bin/elan" run leanprover/lean4:v4.22.0 \
+            lean formalizations/interventional_latent_graph/InterventionalLatentGraph.lean
