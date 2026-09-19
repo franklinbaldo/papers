@@ -4,7 +4,9 @@ on:
   pull_request:
     paths:
       - "experiments/pontifex_benchmarks/scifact_transport.py"
+      - "experiments/pontifex_benchmarks/scifact_residual_side_ablation.py"
       - "experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-TRANSPORT-2026-09-19.md"
+      - "experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-RESIDUAL-SIDE-ABLATION-2026-09-19.md"
       - ".github/workflows/pontifex-scifact-transport.yml"
   workflow_dispatch:
 
@@ -25,8 +27,9 @@ jobs:
           path: |
             .cache/pontifex-scifact
             ~/.cache/huggingface
-          key: pontifex-scifact-transport-v1-${{ runner.os }}
+          key: pontifex-scifact-transport-v2-${{ runner.os }}
           restore-keys: |
+            pontifex-scifact-transport-v2-
             pontifex-scifact-transport-v1-
 
       - name: Run untouched-test SciFact transport benchmark
@@ -37,10 +40,20 @@ jobs:
             --cache-dir .cache/pontifex-scifact \
             --output /tmp/pontifex-scifact-transport.json
 
-      - name: Upload benchmark record
+      - name: Run frozen residual-side ablation
+        run: |
+          uv run experiments/pontifex_benchmarks/scifact_residual_side_ablation.py \
+            --budgets 16 32 64 128 256 512 \
+            --seed 20260919 \
+            --cache-dir .cache/pontifex-scifact \
+            --output /tmp/pontifex-scifact-side-ablation.json
+
+      - name: Upload benchmark records
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pontifex-scifact-transport
-          path: /tmp/pontifex-scifact-transport.json
+          path: |
+            /tmp/pontifex-scifact-transport.json
+            /tmp/pontifex-scifact-side-ablation.json
           if-no-files-found: error

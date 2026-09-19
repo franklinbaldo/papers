@@ -1,5 +1,5 @@
 ---
-type: "Experiment Protocol"
+type: "Protocol"
 title: "Pontifex BEIR/SciFact transport: low-budget A→B retrieval"
 description: "Prospective external retrieval benchmark of low-budget latent transport from MiniLM to MPNet on untouched BEIR/SciFact test retrieval, with explicit train-only correspondence fitting and leakage audit."
 timestamp: 2026-09-19T09:57:00-04:00
