@@ -12,8 +12,9 @@
 
 The transport budget is exactly K unlabeled A<->B train-split sentence
 correspondences. No SICK relatedness label is used for transport fitting or
-hyperparameter selection. The Torus residual hyperparameters and Ridge alpha
-are selected only from those same K correspondence pairs.
+hyperparameter selection. Torus hyperparameters are selected by strict
+cross-fitting within those K correspondence pairs; validation and test are
+never used for transport selection.
 """
 
 from __future__ import annotations
@@ -38,6 +39,7 @@ MODEL_B = "sentence-transformers/all-mpnet-base-v2"
 TAUS = (0.02, 0.05, 0.10, 0.20, 0.40, 0.80)
 LAMBDAS = (0.25, 0.50, 1.00, 1.50)
 RIDGE_ALPHAS = (1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0)
+SELECTION_FOLDS = 4
 
 
 def normalized_text(x: str) -> str:
@@ -200,12 +202,12 @@ def predict_residual(
     return softmax_rows(sims / tau) @ residual_anchor
 
 
-def choose_residual_hparams(
+def choose_residual_hparams_pseudo_loo(
     a_anchor: np.ndarray,
     coarse_anchor: np.ndarray,
     target_b: np.ndarray,
 ) -> tuple[float, float, float]:
-    """Choose tau/lambda by leave-one-out reconstruction using only the K anchors."""
+    """Legacy diagnostic: excludes self only from residual weights, not coarse fit."""
     residual = target_b - coarse_anchor
     sims = l2norm(a_anchor) @ l2norm(a_anchor).T
     best: tuple[float, float, float] | None = None
@@ -217,6 +219,56 @@ def choose_residual_hparams(
         for lam in LAMBDAS:
             pred_b = coarse_anchor + lam * pred_residual
             loss = float(np.mean(1.0 - row_cosine(pred_b, target_b)))
+            candidate = (tau, lam, loss)
+            if best is None or loss < best[2]:
+                best = candidate
+    assert best is not None
+    return best
+
+
+def choose_residual_hparams_crossfit(
+    a_anchor: np.ndarray,
+    b_anchor: np.ndarray,
+    folds: int = SELECTION_FOLDS,
+) -> tuple[float, float, float]:
+    """Choose tau/lambda by strict outer cross-fit using only the K anchors.
+
+    Every held-out anchor is excluded from both the Procrustes coarse map and
+    the residual basis used to predict it. Fold identity is deterministic from
+    the already-seeded anchor order, so no validation/test information enters
+    selection.
+    """
+    n = len(a_anchor)
+    if n < folds:
+        raise ValueError(f"need at least {folds} anchors for {folds}-fold selection")
+
+    losses = {(tau, lam): [] for tau in TAUS for lam in LAMBDAS}
+    fold_id = np.arange(n, dtype=np.int64) % folds
+
+    for fold in range(folds):
+        held = fold_id == fold
+        train = ~held
+        a_train, b_train = a_anchor[train], b_anchor[train]
+        a_held, b_held = a_anchor[held], b_anchor[held]
+
+        w_fold = fit_procrustes(a_train, b_train)
+        coarse_train = apply_coarse(a_train, a_train, b_train, w_fold)
+        residual_train = b_train - coarse_train
+        coarse_held = apply_coarse(a_held, a_train, b_train, w_fold)
+        sims = l2norm(a_held) @ l2norm(a_train).T
+
+        for tau in TAUS:
+            pred_residual = softmax_rows(sims / tau) @ residual_train
+            for lam in LAMBDAS:
+                pred_b = coarse_held + lam * pred_residual
+                losses[(tau, lam)].extend(
+                    (1.0 - row_cosine(pred_b, b_held)).astype(float).tolist()
+                )
+
+    best: tuple[float, float, float] | None = None
+    for tau in TAUS:
+        for lam in LAMBDAS:
+            loss = float(np.mean(losses[(tau, lam)]))
             candidate = (tau, lam, loss)
             if best is None or loss < best[2]:
                 best = candidate
@@ -288,15 +340,13 @@ def main() -> None:
     rng = np.random.default_rng(args.seed)
     order = rng.permutation(len(anchor_candidates))
     anchor_candidates = [anchor_candidates[i] for i in order]
-    budgets = sorted({k for k in args.budgets if 1 < k <= len(anchor_candidates)})
+    budgets = sorted({k for k in args.budgets if k >= SELECTION_FOLDS and k <= len(anchor_candidates)})
     if not budgets:
         raise RuntimeError("no valid budgets")
 
     val_unique = unique_in_order(val1 + val2)
     test_unique = unique_in_order(test1 + test2)
-    all_texts = unique_in_order(
-        anchor_candidates[: max(budgets)] + val_unique + test_unique
-    )
+    all_texts = unique_in_order(anchor_candidates[: max(budgets)] + val_unique + test_unique)
     emb = encode_all(all_texts, args.cache)
     idx = emb.lookup()
 
@@ -321,7 +371,10 @@ def main() -> None:
         t_fit = time.perf_counter()
         w = fit_procrustes(a_anchor, b_anchor)
         coarse_anchor = apply_coarse(a_anchor, a_anchor, b_anchor, w)
-        tau, lam, loo_loss = choose_residual_hparams(a_anchor, coarse_anchor, b_anchor)
+        legacy_tau, legacy_lam, legacy_loss = choose_residual_hparams_pseudo_loo(
+            a_anchor, coarse_anchor, b_anchor
+        )
+        tau, lam, crossfit_loss = choose_residual_hparams_crossfit(a_anchor, b_anchor)
         fit_seconds = time.perf_counter() - t_fit
 
         t0 = time.perf_counter()
@@ -360,10 +413,7 @@ def main() -> None:
         np.random.default_rng(args.seed + 20_000 + k).shuffle(b_perm)
         b_shuf = b_anchor[b_perm]
         w_shuf = fit_procrustes(a_anchor, b_shuf)
-        coarse_shuf_anchor = apply_coarse(a_anchor, a_anchor, b_shuf, w_shuf)
-        tau_shuf, lam_shuf, _ = choose_residual_hparams(
-            a_anchor, coarse_shuf_anchor, b_shuf
-        )
+        tau_shuf, lam_shuf, _ = choose_residual_hparams_crossfit(a_anchor, b_shuf)
         fs_test1 = torus_predict(test_a1, a_anchor, b_shuf, w_shuf, tau_shuf, lam_shuf)
         fs_test2 = torus_predict(test_a2, a_anchor, b_shuf, w_shuf, tau_shuf, lam_shuf)
         fs_testu = torus_predict(test_au, a_anchor, b_shuf, w_shuf, tau_shuf, lam_shuf)
@@ -411,15 +461,26 @@ def main() -> None:
                 "selected_without_task_labels": {
                     "torus_tau": tau,
                     "torus_lambda": lam,
-                    "torus_anchor_loo_cosine_loss": loo_loss,
+                    "torus_anchor_crossfit_cosine_loss": crossfit_loss,
+                    "selection_folds": SELECTION_FOLDS,
                     "ridge_alpha": float(ridge.alpha_),
+                },
+                "selection_audit": {
+                    "legacy_pseudo_loo_not_used_for_model_selection": {
+                        "tau": legacy_tau,
+                        "lambda": legacy_lam,
+                        "optimistic_anchor_cosine_loss": legacy_loss,
+                    },
+                    "strict_crossfit_used_for_model_selection": {
+                        "tau": tau,
+                        "lambda": lam,
+                        "anchor_cosine_loss": crossfit_loss,
+                    },
                 },
                 "validation_diagnostic": methods_val,
                 "test": methods_test,
                 "fraction_of_B_utility_recovered_official_pearson": {
-                    name: fraction_recovered(
-                        float(payload["task"]["pearson"]), a_p, b_p
-                    )
+                    name: fraction_recovered(float(payload["task"]["pearson"]), a_p, b_p)
                     for name, payload in methods_test.items()
                 },
                 "incremental_torus_over_same_procrustes": {
@@ -485,7 +546,7 @@ def main() -> None:
         },
         "leakage_audit": {
             "status": "PASS",
-            "adapter_fit_and_hparam_selection": "same K unlabeled train A<->B pairs only",
+            "adapter_fit_and_hparam_selection": "same K unlabeled train A<->B pairs only; Torus selector uses strict 4-fold outer cross-fit",
             "task_labels_used_for_transport_fit_or_selection": 0,
             "raw_unique_train_sentence_candidates": len(raw_candidates),
             "eligible_train_candidates_after_exact_eval_overlap_filter": len(anchor_candidates),
@@ -503,12 +564,21 @@ def main() -> None:
             ),
             "seed": args.seed,
         },
+        "split_contract": {
+            "D_assembly": "not used in this benchmark; frozen external encoders",
+            "D_student": "eligible SICK train anchor pool only",
+            "D_val": "diagnostic only",
+            "D_test": "final scoring only",
+        },
         "fixed_protocol": {
             "budgets": budgets,
             "torus_tau_grid": TAUS,
             "torus_lambda_grid": LAMBDAS,
             "ridge_alpha_grid": RIDGE_ALPHAS,
-            "torus_selection": "anchor-only leave-one-out B-coordinate cosine loss",
+            "torus_selection": "deterministic 4-fold outer cross-fitted B-coordinate cosine loss; held-out fold excluded from both Procrustes fit and residual basis",
+            "selection_folds": SELECTION_FOLDS,
+            "fold_assignment": "anchor index modulo 4 after deterministic seeded anchor permutation",
+            "legacy_pseudo_loo": "diagnostic only; prohibited from model selection",
             "ridge_selection": "RidgeCV generalized leave-one-out on same K A<->B anchors",
             "anchor_order": "deterministic RNG permutation after exact eval-overlap removal",
         },
