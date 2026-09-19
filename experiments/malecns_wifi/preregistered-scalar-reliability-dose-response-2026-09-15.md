@@ -1,3 +1,7 @@
+---
+type: "Protocol"
+---
+
 # Preregistered experiment — scalar reliability dose response
 
 Date: 2026-09-15
