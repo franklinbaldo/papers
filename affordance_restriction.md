@@ -1,59 +1,92 @@
 ---
 type: "Alignment Paper"
 title: "Alignment by Affordance Restriction: A Pattern for Auditable Bounded Agents"
-description: "Alignment by affordance restriction: padrao para agentes auditaveis em dominios delimitados (PINK como exemplo trabalhado)."
-tags: [affordance-restriction]
+description: "A position paper on a bounded-agent architecture that composes a human-readable content-addressed action canon, approval/execution integrity, and doctrine/procedure governance asymmetry."
+tags: [affordance-restriction, bounded-agents, agent-governance, auditability]
 timestamp: 2026-06-13T06:05:18-04:00
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
 # Alignment by Affordance Restriction: A Pattern for Auditable Bounded Agents
 
-**Franklin Silveira Baldo**
-*Procuradoria-Geral do Estado de Rondônia / Universidade Federal de Rondônia*
+**Franklin Silveira Baldo**  
+*Procuradoria-Geral do Estado de Rondônia / Universidade Federal de Rondônia*  
 *franklin@pge.ro.gov.br*
 
 *Target venue: SafeAI @ AAAI 2027 (workshop, ~8 pages + references).*
-*Draft status: TDD-for-research. Citations marked `[CITATION NEEDED]` indicate references the author intends to verify and engage in subsequent revision. Real citations to verified works are given inline as `[Author Year]`.*
+
+> **Position/methodology paper — frozen v0.1.** This version reports a design pattern and a worked historical design/implementation snapshot, not a completed deployment evaluation. A claim-specific prior-art audit is maintained at [`audits/prior-art/affordance-restriction-2026-09-17.md`](audits/prior-art/affordance-restriction-2026-09-17.md). The audit found direct antecedents for deterministic action shielding, least-privilege agent authorization, parameterized action schemas, draft-first/human-reviewed execution, approval-to-execution integrity, and cryptographic capability/provenance binding. Accordingly, this paper does **not** claim those components individually. Its candidate contribution is the narrower composition described below. The PINK provenance used for the worked example is pinned in Section 4.6; this version makes no claim that the historical playbook architecture is the current production interface of PINK.
 
 ---
 
 ## Abstract
 
-We describe *alignment by affordance restriction*: an alignment pattern in which an agent's action space is constrained by a curated, content-addressed catalog of allowed scenarios rather than by reward modeling, output filtering, or behavioral training. The pattern has four structural properties — affordance enumeration, doctrine/procedure separation, structured ex-ante commitment, and content-addressed canon — and we argue that an instance of the pattern exhibits all four. We identify three semantic conditions that determine the pattern's applicability to a target domain: whether there exists a discrete unit of action, whether there is a record where reflection persists, and whether the operator wishes to be auditable. We instantiate the pattern in PINK, a legal-administrative agent system under development at the Brazilian state attorney's office for the State of Rondônia, with design complete and phased implementation underway. We characterize four failure modes that survive the pattern's application, present a validation roadmap with metrics targeted for the pilot deployment, and situate the pattern against training-based alignment, scalable oversight, mechanistic interpretability, and legal expert systems.
+We describe *alignment by affordance restriction*: an architecture for bounded agents in which the executable action space is a curated, human-readable, content-addressed catalog of parameterized scenarios. Prior work already establishes model-external action shielding, least-privilege authorization for LLM agents, parameterized action schemas, human-gated write workflows, approval/execution integrity, and digest-bound capability/provenance mechanisms. Our candidate contribution is therefore not any of those components in isolation. It is their specific composition: a scenario canon that simultaneously acts as the agent's complete action vocabulary and durable approval/execution substrate, while separating doctrine/value commitments from procedure/instrumental specializations with intentionally asymmetric governance cost.
+
+The pattern has four structural properties — affordance enumeration, doctrine/procedure separation, structured ex-ante commitment, and content-addressed canon. We identify three semantic conditions that determine whether the pattern is applicable to a target domain: whether there exists a discrete unit of action, whether there is a record where reflection can persist, and whether durable audit is desirable for the operator. We use a historical PINK playbook design as a worked example, characterize four failure modes, and propose a validation programme against stronger controls derived from the prior-art audit. No pilot-performance or safety-superiority result is reported.
 
 ## 1. Introduction
 
-Public discourse on AI alignment is dominated by techniques that act on the model itself: reward modeling and reinforcement learning from human feedback [Ouyang et al. 2022], constitutional methods that train models against principle-stated critiques [Bai et al. 2022], output filtering pipelines, and interpretability research aimed at recovering intent from internal state. These techniques operate by changing what the model is or by filtering what it produces. We describe a complementary pattern that operates earlier: it changes what the model is *allowed to do*, where "allowed" is enforced by syntax rather than by training.
+Many alignment techniques act on the model or its outputs: reinforcement learning from human feedback changes a policy using preference-derived reward [Christiano et al. 2017; Ouyang et al. 2022], constitutional approaches train against principle-stated critiques [Bai et al. 2022], and output filters intervene after generation. A different family acts at the execution boundary. Safe-RL shielding, deterministic LLM-agent privilege controls, scoped delegation frameworks, and governed tool gateways already demonstrate that a learned policy can be constrained by machinery outside the model [Alshiekh et al. 2018; South et al. 2025; Shi et al. 2025; Zhu et al. 2026].
 
-We call this pattern *alignment by affordance restriction*. An agent's action space is the projection of a curated, content-addressed catalog of allowed scenarios written in a human-readable specification language. The agent does not generate actions; it instantiates entries from the catalog by binding parameter slots to values from the case at hand. The catalog grows monotonically; additions are git commits subject to human review. Edits to existing entries are structurally impossible — content change yields a new identity, and prior bindings either resolve to the original entry or fail cleanly. The pattern is old in spirit (expert systems [Ashley 1990], doctrinal codification, behavior-driven development [North 2006]) but newly tractable: a contemporary LLM is competent at selecting from and binding to a catalog without needing to extend it on the fly, which is the operational shift that makes the pattern useful where it was previously only conceptually attractive.
+This paper studies one narrower composition of that execution-boundary idea. We call it *alignment by affordance restriction*. An agent's executable action space is the projection of a curated, content-addressed catalog of parameterized scenarios written for both domain experts and software. The agent selects and binds entries; the system boundary rejects actions that cannot be represented by an authorized catalog entry. Consequential actions are materialized as structured artifacts before execution, and the same approved artifact constrains what can later execute. The catalog distinguishes doctrine/value-level entries from procedural specializations and deliberately makes doctrine expansion more expensive to approve.
 
-This paper makes three contributions:
+None of the ingredients is treated as an isolated invention. STRIPS and descendants long predate the paper in parameterized action schemas [Fikes and Nilsson 1971]. Runtime shielding predates it in external enforcement of allowable actions [Alshiekh et al. 2018]. Authenticated Delegation, Progent, OpenPort, and SkillScope predate it in scoped or graph-structured agent authorization [South et al. 2025; Shi et al. 2025; Zhu et al. 2026; Wu et al. 2026]. The WYSIWYS security lineage predates it in the integrity goal that the operation a human approves should be the operation authorized [Landrock and Pedersen 1998]. in-toto/SLSA and capability-manifest work predate it in digest-bound provenance and capability identity [Torres-Arias et al. 2019; SLSA 2023; Zhou 2026].
 
-1. We name and characterize the affordance-restriction pattern as a class of alignment techniques distinct from training-based and filtering-based approaches, identifying four structural properties that make instances of the pattern recognizable.
+The claim left after that literature is deliberately compositional. Under the search protocol documented in the repository audit, no pre-cutoff source was located that materially anticipated the full conjunction of: (i) a finite human-readable scenario canon as the complete action vocabulary; (ii) doctrine/procedure stratification with asymmetric governance cost; (iii) structured ex-ante commitment pinned to immutable content identity; (iv) the approved proposal serving as executor input and durable audit record; and (v) behavior changes receiving new content identity rather than silently inheriting old authority. That is a bounded negative search result, not an exhaustive firstness claim.
 
-2. We identify three semantic conditions on the target domain that determine whether the pattern is applicable: the existence of a discrete unit of action, the existence of a record where reflection persists, and the operator's interest in auditability. We apply these conditions to seven candidate domains.
+This paper therefore makes three narrower contributions:
 
-3. We present PINK, a legal-administrative agent system under development with design complete and phased implementation underway, as a worked example with documented architecture, four named failure modes, and an explicit validation roadmap.
+1. It specifies the four-property conjunction as a reusable bounded-agent architecture and makes explicit how the properties depend on one another.
+2. It proposes three semantic applicability questions — discrete action, persistent record, and desirability of audit — as a domain-selection test for this composition.
+3. It develops a PINK playbook design snapshot as a worked example and derives failure modes and discriminating evaluation controls that compare the full composition with simpler authorization and approval architectures.
 
-The paper proceeds as follows. Section 2 situates the pattern in the alignment, scalable-oversight, and legal-informatics literatures. Section 3 articulates the four structural properties. Section 4 walks through PINK's instantiation of each. Section 5 develops the three semantic questions and applies them across domains. Sections 6 and 7 enumerate what the pattern is not and the failure modes that survive its application. Section 8 lays out deployment status and validation plans. Section 9 closes.
+The paper proceeds as follows. Section 2 maps the closest antecedents. Section 3 specifies the four-property pattern. Section 4 records the PINK worked design and its provenance boundary. Section 5 gives the applicability test. Sections 6 and 7 state non-claims and failure modes. Section 8 freezes a prospective validation roadmap. Section 9 closes.
 
-## 2. Background and Related Work
+## 2. Background and Prior-Art Boundary
 
-**Alignment via model modification.** Two dominant techniques act on the model. Reinforcement learning from human feedback fits a reward model from preference comparisons and trains the policy to maximize predicted reward [Christiano et al. 2017; Ouyang et al. 2022]. Constitutional AI replaces direct human feedback with model-generated critiques against a written constitution [Bai et al. 2022]. Both modify the model's distribution over outputs without constraining the space of possible outputs in any verifiable structural sense. Affordance restriction is complementary rather than competing: it changes the syntactic space the model selects within, independently of how the model was trained. RLHF-trained and constitutionally-trained models can sit inside an affordance restriction without contradiction; the techniques compose.
+**Alignment via model modification.** Reinforcement learning from human feedback fits a reward model from preference comparisons and trains a policy to maximize predicted reward [Christiano et al. 2017; Ouyang et al. 2022]. Constitutional AI replaces direct human preference labels with model-generated critiques against a written constitution [Bai et al. 2022]. Affordance restriction operates at a different layer and can compose with either: the model may still be preference-trained while the external system separately limits which actions can have effects.
 
-**Scalable oversight.** The bandwidth question — how does a human supervise a system fast enough to keep up — is shared between affordance restriction and the scalable-oversight literature [Christiano, Shlegeris, and Amodei 2018; Bowman et al. 2022; Irving, Christiano, and Amodei 2018]. The strategies diverge sharply. Scalable oversight amplifies the human supervisor (via debate, recursive amplification, weak-to-strong generalization) to keep pace with a more capable learner. Affordance restriction constrains the learner's action space such that human oversight remains feasible at fixed human bandwidth. The two can compose; in domains where the affordance set is bounded and the proposal volume is matched to approval throughput, oversight amplification is not required.
+**Parameterized action vocabularies.** STRIPS represents domains through operators with parameters, applicability conditions, and effects [Fikes and Nilsson 1971]. The general idea that an agent or planner acts through a finite vocabulary of parameterized schemas is therefore established. The contribution claimed here is not schema enumeration itself, but the way schema identity is tied to governance, approval, and durable authorization.
 
-**Corrigibility and human-in-the-loop control.** Hadfield-Menell et al. [2017] formalize corrigibility as a game-theoretic property under which an agent voluntarily defers to human control. The structured commitment property in our pattern (Section 3) is a concrete shape of this: every action is the projection of a human-approved instance of a human-curated scenario, with the approval recorded as a state transition on a structured artifact. Russell [2019] argues for value uncertainty as the foundation of safe agency; our pattern is silent on value learning but provides a substrate within which value commitments — encoded as the doctrinal layer of the catalog — are explicit, finite, and version-controlled.
+**Execution-layer shielding and least privilege.** Safe Reinforcement Learning via Shielding established model-external enforcement of allowable behavior using a synthesized shield [Alshiekh et al. 2018]. Authenticated Delegation formalizes human-scoped, auditable authority for AI agents [South et al. 2025]. Progent provides deterministic, programmable privilege control for LLM-agent tool calls without changing agent internals [Shi et al. 2025]. SkillScope models fine-grained agent-skill actions and constrains over-privileged behavior using graph structure [Wu et al. 2026]. These are direct antecedents to the generic claim that safety can be improved by constraining what reaches the world rather than relying only on model obedience.
 
-**Plans as accountability.** Suchman's distinction between *plans-as-cognition* and *plans-as-accountability* [Suchman 1987] is central to interpreting our pattern. The proposal artifact in our instantiation (Section 4) is not a record of the agent's decision process; it is the structured commitment by which the decision will be judged. Mechanistic interpretability seeks to recover intent from internal state; our pattern instead requires the agent to externalize its intent as a parseable artifact before any action is taken. The two strategies answer different questions about a system; neither replaces the other.
+**Human-gated writes and approval/execution integrity.** OpenPort supplies authorization-dependent tool access, draft-first governed writes, human review, preflight binding, and structured audit events [Zhu et al. 2026]. Much older WYSIWYS work establishes the security requirement that the operation represented to a signer should be the operation actually authorized [Landrock and Pedersen 1998]. The present paper therefore does not claim that review-before-write or approval/execution identity is new. Its narrower architectural move is to make the reviewed object an instantiation of the same immutable scenario canon that defines the allowed action vocabulary.
 
-**Content-addressed software artifacts.** The structural use of content-addressing in our canon borrows from supply-chain security work. Merkle trees [Merkle 1987] supply the cryptographic foundation; in-toto attestations [Torres-Arias et al. 2019] and the SLSA framework [CITATION NEEDED: SLSA v1.0 specification, slsa.dev, 2023] establish per-artifact provenance for software build pipelines. We extend the technique from build artifacts to behavioral specifications: the agent's allowed action vocabulary becomes itself a content-addressed directed acyclic graph, with the same audit properties applied to a different artifact class.
+**Content-addressed identity and provenance.** Merkle trees provide the cryptographic basis for content-derived identity [Merkle 1987]. in-toto and SLSA use digests and immutable attestations for software-supply-chain provenance [Torres-Arias et al. 2019; SLSA 2023]. Governing Dynamic Capabilities binds AI-agent authorization to a skills-manifest hash so that capability changes invalidate prior authority [Zhou 2026]. These works occupy the generic mechanism of digest-bound provenance/capability identity. The question here is what changes when that mechanism is applied to human-readable behavioral scenarios that are also the approval and execution referents.
 
-**Behavior-driven development.** Gherkin, the specification language used in our instantiation, originates in BDD [North 2006; Wynne and Hellesøy 2012]. BDD designed Gherkin for human-readable test specifications of human-built systems; we appropriate it for human-curated action specifications of LLM-driven agents. The grammar fits because it was originally designed for a similar audience: domain experts who must agree, in prose, with engineers, on what a system should do. The semantics shifts — the same syntax that specifies test scenarios in BDD specifies allowed actions in our pattern — but the grammar's human-readability properties carry over.
+**Scalable oversight.** The bandwidth question — how a human supervises a system fast enough to keep up — is shared with scalable-oversight work [Christiano, Shlegeris, and Amodei 2018; Bowman et al. 2022; Irving, Christiano, and Amodei 2018]. Affordance restriction does not solve scalable oversight generally. In bounded domains it attempts to lower review entropy by forcing consequential actions into a finite, structured vocabulary. Whether this actually reduces reviewer burden without introducing unacceptable catalog-maintenance costs is an empirical question for Section 8.
 
-**Legal expert systems.** The deep prehistory of our worked example is the legal-expert-systems literature: HYPO [Rissland and Ashley 1987] and CATO [CITATION NEEDED: Aleven and Ashley, CATO system, 1990s] modeled legal argument via case-based reasoning; rule-based systems for tax law [McCarty 1977] integrated structured legal rules with case retrieval; later hybrid systems combined both [Branting 2000]. These systems aimed to *replace* legal reasoning with formal machinery; the present work aims instead to *bound* it. The agent reasons under a catalog curated by lawyers; the lawyers retain authority; the catalog records what reasoning is legitimate, not what conclusions are correct on a given case.
+**Corrigibility and human-in-the-loop control.** Hadfield-Menell et al. [2017] formalize corrigibility as a game-theoretic property under which an agent defers to human control. Russell [2019] argues for value uncertainty as a foundation for safe agency. The present pattern is silent on value learning; it instead makes a narrower engineering choice in which value-like/doctrinal commitments and instrumental procedures are separated in the external action canon and governed with different review costs.
 
-**The alignment-as-values literature.** Gabriel [2020] argues that AI alignment is best understood as a problem of value identification rather than capability constraint. Our pattern is consistent with this framing: the doctrinal layer of the catalog (Section 3) explicitly encodes value commitments distinct from the procedural layer, and extending doctrine requires a heavier review gesture than extending procedure. We do not propose a method for *discovering* values; we propose a structural separation between values and instrumental policies in agent action spaces, leaving value-discovery to the human curators of the catalog.
+**Plans as accountability.** Suchman's distinction between *plans-as-cognition* and *plans-as-accountability* [Suchman 1987] is useful here. The proposal artifact is not claimed to reveal the model's internal decision process. It is the structured commitment by which the action is reviewed and later judged. Mechanistic interpretability and ex-ante commitment therefore answer different questions.
+
+**Behavior-driven development.** Gherkin originates in behavior-driven development [North 2006; Wynne and Hellesøy 2012]. We reuse its human-readable scenario grammar as one possible syntax for an action canon. The syntax is not the contribution; another parseable domain language could instantiate the same architecture.
+
+**Legal expert systems.** Legal AI has a long lineage in case-based and rule-based reasoning, including HYPO-related work, TAXMAN, and later hybrid approaches [Rissland and Ashley 1987; Ashley 1990; McCarty 1977; Branting 2000]. The present architecture does not claim to replace legal reasoning with a formal expert system. The worked example instead uses a curated external canon to delimit which procedural effects an LLM-driven agent may cause.
+
+**The alignment-as-values literature.** Gabriel [2020] argues that alignment involves value identification rather than only capability constraint. This paper does not solve value identification. Doctrine/procedure stratification assumes that humans can identify a set of higher-cost commitments whose modification deserves stronger governance.
+
+### 2.1 Revised novelty statement
+
+The claim-specific audit supports the following bounded formulation:
+
+> Prior work already provides deterministic action shielding, least-privilege agent authorization, parameterized action schemas, human-gated write workflows, approval-to-execution integrity, and cryptographic capability/provenance binding. The candidate contribution of affordance restriction is the **specific composition** in which a human-readable, content-addressed scenario canon is both the complete action vocabulary and the durable approval/execution substrate, with a governance-significant doctrine/procedure stratification. No material antecedent to that full conjunction was located under the documented pre-cutoff search protocol.
+
+This statement is a search result, not a patent-style novelty opinion and not evidence that every component was independently invented here.
 
 ## 3. The Pattern: Alignment by Affordance Restriction
 
@@ -63,121 +96,118 @@ We characterize alignment by affordance restriction via four structural properti
 
 The agent's allowed actions are the entries in a finite catalog. The catalog is human-curated; additions require human approval; the agent does not act outside it. Each entry is a parameterized scenario: a pattern of preconditions, an action sequence, and metadata identifying its role in the catalog graph. Operating on a case means selecting an entry whose preconditions describe the case and instantiating it by binding parameters to concrete values.
 
-Affordance enumeration distinguishes the pattern from prompt-based restriction ("you must only do X, Y, Z") and from output filtering ("if the output looks like W, refuse"). Prompt-based restriction is not enforceable; the model can be jailbroken, can misunderstand instructions, or can simply not follow them under sufficient context pressure. Output filtering reacts after the fact and cannot prevent novel attack surfaces; its blacklist grows monotonically by design. Affordance enumeration is enforced at the system boundary, not at the model boundary: actions not parseable as catalog instantiations cannot reach the world, regardless of what the model produces internally.
+This property should not be confused with the claim that finite action schemas are new. The established antecedents above already provide bounded action vocabularies and execution-layer restrictions. Here, enumeration matters because the same vocabulary is also the unit of versioned authority, review, and provenance.
 
 ### 3.2 Property 2: Doctrine/Procedure Separation
 
-The catalog stratifies. A doctrinal layer (which we call *Tier 1* in our instantiation) declares what counts as a legitimate outcome in a class of situations; the action clauses in this layer are *assertions* about state, not instructions. Procedural layers (*Tier 2+*) declare concrete action sequences that, if executed, produce the doctrinal outcomes. The procedural layers concretize the doctrinal layer through structural references — in our content-addressed instantiation, by carrying a tag that points at the doctrinal scenario's content hash.
+The catalog stratifies. A doctrinal layer (called *Tier 1* in the worked design) declares what counts as a legitimate outcome in a class of situations; its action clauses are assertions about state rather than executable instructions. Procedural layers (*Tier 2+*) declare concrete action sequences that realize those outcomes. Procedural entries structurally reference the doctrinal entries they concretize.
 
-Procedural addition is cheap: a new specialization passes a linter, receives review, and lands. Doctrinal addition is structurally expensive: the proposal carries an explicit doctrinal-alert flag, sits in a separate review queue, requires a confirmation gesture that names the proposal individually, and never enters batch operations. The asymmetry encodes a value commitment: extending procedure is recognized as common and acceptable; extending doctrine is rare and reflective. This maps the philosophical distinction between instrumental policies and value commitments [Russell 2019] onto a concrete review workflow with different gating costs.
+Procedural addition is designed to be comparatively cheap. Doctrinal addition is intentionally more expensive: it enters a separate review path and cannot be batch-approved in the worked design. The asymmetry encodes a governance choice: changes to value-like commitments receive more friction than changes to implementation procedure. This distinction has obvious ancestry in law, public administration, and policy hierarchies; the paper claims only its role inside this particular bounded-agent composition.
 
 ### 3.3 Property 3: Structured Ex-ante Commitment
 
-Before acting, the agent emits a proposal — a structured artifact carrying (a) the catalog entry it instantiates, identified by content hash; (b) the bindings of placeholders to case values; (c) a record of the path traversed through the catalog graph to reach the selected entry; (d) a narrative justification; and (e) the instantiated scenario in executable form. The same artifact is the input to human approval, the input to the executor on approval, and the durable audit record after execution. There is no translation step between approval-time content and execution-time content; the executor parses the same string the reviewer read.
+Before acting, the agent emits a proposal — a structured artifact carrying (a) the catalog entry it instantiates, identified by content identity; (b) bindings of placeholders to case values; (c) the path traversed through the catalog graph; (d) a narrative justification; and (e) the instantiated scenario in executable form. The intended invariant is that the same approved artifact is the executor input and durable audit record.
 
-The interpretability claim is structural rather than computational. The agent's intent is not recovered from internal state via probing or attribution; it is *required to be externalized* as a parseable commitment before any action takes effect. A reviewer reads the proposal and sees: which catalog entry, with which bindings, justified by which descent through the catalog, with which expected effects. The opacity of the underlying model is bracketed; what the model committed to is on disk.
-
-This is interpretability via *what the model said it would do*, not via *what we can recover about how the model decided*. The two notions are not substitutes (Section 6), but the former is operationally tractable in ways the latter currently is not.
+The interpretability claim is structural rather than computational. The artifact does not prove why an internal model selected the action. It records what action the system committed to, under which declared bindings and justification, before effects occur. WYSIWYS and OpenPort establish related approval-integrity goals; the distinctive role here is that the proposal is pinned to the same content-addressed behavioral vocabulary that defines authorization.
 
 ### 3.4 Property 4: Content-addressed Canon
 
-Catalog entries are identified by hash of normalized content. Filenames embed the hash prefix as a structural element, not as a separate identifier. Edges in the catalog graph — the structural references between entries — point at hashes, not at filesystem paths. Edits to an entry are not possible in place: changing content yields a new hash, which yields a new file. Past references to the original entry remain valid (the file with the original hash either exists or doesn't); new references must point at the new hash explicitly.
+Catalog entries are identified by normalized content identity. Edges in the catalog graph point at immutable identities rather than mutable semantic names. Changing behavior therefore creates a new identity and requires explicit reauthorization rather than silently inheriting authority from an earlier version.
 
-Two properties follow. First, the catalog is a Merkle directed acyclic graph; acyclicity is guaranteed by construction when tier-difference rules force edges from higher tiers to strictly lower tiers, and the linter rule for acyclicity reduces to a single comparison per edge. Second, audit reconstruction is deterministic: a proposal pinned to a hash either resolves to a specific normalized content or fails to resolve, with no third option. Silent edits — a class of failure that complicates audit in append-only-with-versioning systems — are eliminated structurally rather than detected procedurally.
+Content addressing and digest-bound authority are established mechanisms [Torres-Arias et al. 2019; SLSA 2023; Zhou 2026]. Their role in this pattern is to bind Properties 1 and 3 together: an approval refers to the exact behavioral object from the finite action vocabulary.
 
-The four properties are not independent. Property 4 enables Property 3 to make a stronger claim (commitment is to a specific content, not to a mutable reference); Property 2 requires Property 1 (stratification presupposes enumeration); Property 3 requires Property 4 (durable commitment requires durable referents). The pattern's coherence comes from the conjunction.
+The four properties are coupled. Property 4 strengthens Property 3 because commitment is to immutable content rather than a mutable reference. Property 2 presupposes an enumerated vocabulary. Property 3 makes that vocabulary the human review surface. The candidate contribution is this conjunction, not the isolated mechanisms.
 
-## 4. PINK as Worked Example
+## 4. PINK as a Worked Design Snapshot
 
-PINK is an agent system under active development at the Procuradoria-Geral do Estado de Rondônia (PGE-RO), the state attorney's office for the State of Rondônia, Brazil. The system of record, Kanoê, holds case data for the attorney office's docket; PINK operates read-only against Kanoê via a Metabase data layer and writes back only via a separately-gated subsystem invoked under explicit human approval. The first deployment target is the docket of approximately 8,000 active cases in pension litigation (RPPS — *Regime Próprio de Previdência Social*), a domain characterized by recurring procedural patterns, statutory complexity, and high audit sensitivity arising from the constitutional and quasi-judicial nature of state pension adjudication.
+PINK is an agent-first interface to the Kanoê/Caipora legal case system used in the State of Rondônia. The historical design explored in this paper introduced a five-stage case workflow and a Gherkin playbook canon. The worked example is useful because it supplied the concrete artifact semantics from which the four-property pattern was abstracted.
+
+The archival boundary matters. PINK's current repository documentation at head `cb20378754cf7182f94761ae8931dac7bf94b678` describes the product as a typed FastMCP capability surface over Kanoê/Caipora and does not present the playbook framework as the current product documentation. Consequently, this paper freezes the playbook material as a **historical design/implementation snapshot**, not as a claim about PINK's present production architecture or deployment status.
 
 ### 4.1 Pipeline
 
-PINK structures agent operation as a five-stage pipeline: *Discover* (read case data densely into agent context), *Fetch* (download referenced documents to local storage), *Propose* (descend the catalog, bind parameters, write the proposal artifact), *Review* (human triages and approves, rejects, or edits), *Apply* (execute approved scenario against Kanoê via the gated write subsystem).
+The playbook design used a five-stage pipeline: *Discover* (read case data into agent context), *Fetch* (materialize referenced documents), *Propose* (descend the canon, bind parameters, write a proposal artifact), *Review* (human approve/reject/edit), and *Apply* (execute an approved scenario through the gated write subsystem).
 
 ```mermaid
 graph LR
   D[Discover<br/><i>read</i>] --> F[Fetch<br/><i>read</i>]
-  F --> P[Propose<br/><i>local fs write</i>]
+  F --> P[Propose<br/><i>local artifact</i>]
   P --> R[Review<br/><i>human gate</i>]
-  R --> A[Apply<br/><i>Kanoê write + comment</i>]
+  R --> A[Apply<br/><i>gated write</i>]
 ```
 
-**Figure 1.** *The five-stage pipeline. Stages 1–3 are read-only against the system of record; stage 4 is human gating; stage 5 is the only stage that mutates case state, and only by dispatching to an explicit, narrow write API.*
+**Figure 1.** *Historical five-stage playbook design. The figure is an architectural proposal/snapshot, not evidence of current production deployment.*
 
 ### 4.2 Catalog Structure
 
-Catalog entries are Gherkin `.feature` files in Brazilian-Portuguese keyword variant (`Funcionalidade`, `Cenário`, `Dado`, `Quando`, `Então`, `E`), organized under directory paths `playbooks/tier1/`, `tier2/`, etc. Each entry's filename embeds the 8-hex-character prefix of a UUIDv5 computed over the entry's normalized content (line-ending normalization, keyword case-folding, sorted tags, sorted parameter block, trailing whitespace stripped, final newline). Tags within each file declare its tier and, for Tier 2+, the content hashes of the entries it concretizes — for example, `@concretiza:a1b2c3d4`. Aciclicity is enforced by a single linter rule: every concretization edge points to an entry whose tier number is strictly lower than the source's.
+The design represented catalog entries as Brazilian-Portuguese Gherkin `.feature` files organized by tier. Content-addressing work defined normalized content identity and filenames carrying an abbreviated UUIDv5-derived identity. `@concretiza:` edges linked higher-tier procedural specializations to lower-tier outcomes. A strict lower-tier rule made the concretization graph acyclic by construction in that design.
 
-Figure 2 illustrates a small canon: one Tier 1 outcome (registering a procedural deadline), two Tier 2 concretizations of it (electronic citation in defense procedure; mere-acknowledgment for non-deadline communications), and one Tier 3 leaf specializing one of the Tier 2 cases for the situation where no work-box has been assigned to the case file. Leaves — nodes with no children — are the only entries the agent may bind directly. Non-leaves are *abstract*: adding a deeper specialization that concretizes them automatically retires them from direct binding for that branch.
-
-**Figure 2.** *Tier hierarchy in the canon. Tier 1 declares outcome; Tier 2 concretizes Tier 1 via `@concretiza:` edges pointing at content hashes; Tier 3 adds situational specialization. The graph is a DAG by construction (edges flow only from higher tiers to strictly lower tiers).*
+Leaves were the directly bindable objects. Adding a deeper specialization could retire a parent from direct binding for that branch, forcing later proposals to descend to the more specific node.
 
 ### 4.3 Traversal, Not Matching
 
-The agent loads the upper canon (Tier 1 and Tier 2) into its working context — a small, slow-changing, human-curated subset. For a case stimulus (typically an *expediente* — a procedural communication from the court), the agent identifies a candidate Tier 2 entry whose preconditions match the case, then queries `pink playbooks children` against the candidate's hash. An empty result indicates a leaf (no deeper specialization exists for this branch); a non-empty result requires the agent to read each child and recurse, selecting the child whose preconditions match the case at the current level of specificity. The descent terminates at a leaf; the leaf is bound. If at any descent step no child of the current node fits the case, the agent proposes a new specialization under the current node, with the appropriate concretization edge.
-
-PINK itself performs no matching, ranking, or fuzzy comparison. It exposes the canon as a graph and serves structural queries (`children`, `is-leaf`, `ancestors`). All inference — which Tier 2 fits the case, which child fits at each level of descent — happens in the LLM. The system is, by design, ignorant of its own content: it answers structural questions deterministically and lets the agent perform the semantic work.
-
-The descent path itself is recorded in the proposal's `traversal` field, with the hash of each visited entry. A reviewer asking *why did the agent descend this far, and through which alternatives* can reconstruct the chain step by step from the artifact, without inspecting the agent's internal state.
+The design deliberately moved semantic selection out of the infrastructure. The infrastructure exposed structural navigation (`tree`, `show`, `children`, `is-leaf`, `ancestors`); the LLM performed the semantic judgment about which child fit the case. The traversal path was intended to be recorded in the proposal artifact so a later reviewer could reconstruct the declared descent through the canon without claiming access to the model's internal reasoning.
 
 ### 4.4 The Proposal Artifact
 
-A proposal is a markdown file under `.pink/<case>/proposals/<expediente_id>.md` with YAML frontmatter (catalog reference, traversal, bindings, status, agent self-reported confidence), a narrative reasoning section, and an embedded Gherkin block representing the instantiated scenario. The same artifact is parsed by `pink propose apply` after human approval; the embedded Gherkin's `Então` clauses dispatch to the corresponding write primitives in the gated Kanoê subsystem.
-
-The frontmatter is the machine contract; the embedded Gherkin is the executable; the narrative is the human-readable justification. All three carry the same substantive content in different registers. Lint enforces that the last entry of `traversal` matches the catalog reference, that bindings are complete and well-typed, and that the structure of the embedded Gherkin matches the bound entry's structure modulo placeholder substitution.
+A proposal was specified as a markdown artifact with YAML frontmatter (catalog reference, traversal, bindings, status, and agent-reported confidence), a narrative justification, and an embedded Gherkin scenario. The proposal design required edits after approval to reset review state, and the embedded scenario — not a newly regenerated action — was the intended unit executed after approval.
 
 ### 4.5 Two Artifacts, Two Readers, Same Reflection
 
-When apply executes against the case, the proposal's substantive reasoning is also posted as a comment on the corresponding case record in Kanoê. The technical audit trail — the proposal markdown, content-addressed, git-trackable — and the legal audit trail — the comment in the case record, durable in the case file and readable by any lawyer accessing the case in the future — carry the same substantive content. The technical reviewer reconstructs what the system did; the legal reviewer reads what was reasoned, in the place a lawyer would already be looking. Neither audit requires access to the other.
+The design also required substantive reasoning to be written back into the case record when the procedural outcome depended on interpretation. The local proposal served the technical audit trail; the case-system comment served the legal audit trail. Closure-recognizing outcomes were introduced specifically to avoid a structural bias toward visible procedural action when the appropriate result was acknowledgment or no further act.
 
-This property is not incidental. The seed canon for the pilot deployment includes explicit closure-recognizing Tier 1 outcomes: scenarios whose doctrinal claim is that acknowledgment without procedural action is a legitimate result, *provided* the substantive reason for non-action is recorded as a comment on the case record. The pattern requires that the agent's reflection on cases that warrant no procedural action be captured as a durable artifact in the system of record, not merely as an entry in a local-filesystem audit trail. Otherwise the agent is structurally biased toward proposing action whenever action is bindable, and the audit trail of acknowledgment is invisible to the legal reviewer who actually opens the case.
+### 4.6 Provenance and implementation boundary
 
-### 4.6 Implementation Status
+The worked example is pinned to repository history rather than presented as a current-product assertion. Material milestones include:
 
-Design is complete and merged. Phase 0 (audit of pre-existing CLI test specifications for consistency with the design) is complete; 17 existing feature files have been amended or marked deprecated, and 11 new test feature files have been enumerated for the implementation phases. Phases 1 and 2 (read-side affordances and catalog plumbing) are in flight: the content-addressing infrastructure (UUIDv5 namespace, content normalization function, filename parser, UUID-to-path resolver, `pink playbooks normalize` for opt-in rewriting, `pink playbooks lint` for read-only verification) is being built as a prerequisite to all canon-aware commands. Phase 3 (seed canon) is scheduled for Q3 2026 with curation by the legal team at PGE-RO. Phases 4 and 5 (proposal pipeline and apply) follow, targeting first production binding-and-apply against a pilot docket by end of Q3 2026.
+- `f0c8cd95fe3f7800d467c91161cfe6db4da635b3` (2026-05-14): five-stage journey and tiered playbook framework design;
+- `82a3d20736c53a355ca03107dd6e66e8bcbf7e48` (2026-05-14): content-addressed playbook identity and stricter tier-edge semantics;
+- `50569aef349615af9fd41d149f2aca2b062f99ff` (2026-05-14): review-integrity and apply-contract refinements;
+- `eeecb4c78a526d1defaa0d42742a036430d8f151` (2026-05-14): implemented content-addressing primitives and `pink playbooks normalize/resolve`;
+- `96946547bb0a513385cccb94c82433f436ec9e9e` (2026-05-15): implemented read-only `pink playbooks list/tree/show` discovery layer;
+- current PINK head inspected for this archival freeze: `cb20378754cf7182f94761ae8931dac7bf94b678` (2026-09-17).
+
+The current repository is private and is not vendored into this Zenodo candidate. Therefore these SHAs provide author-side provenance, not independent public reproducibility of the implementation. This paper makes no claim that the later phases of the historical plan were completed, deployed, or empirically validated. The four-property architecture should be evaluated as a position/methodology proposal until a public, frozen implementation/evaluation artifact exists.
 
 ## 5. Three Semantic Questions of Applicability
 
-The four structural properties (Section 3) require three antecedent conditions to hold of the target domain. We state them as questions to be answered before considering the pattern.
+The four structural properties require three antecedent conditions to hold of the target domain. We state them as design questions rather than empirical laws.
 
-**Q1: Is there a discrete unit of action?** The pattern requires that what the agent does be decomposable into named steps whose execution against the world can be specified by parameterized clauses. Free creative writing fails this test: a condolence letter is not three executable steps in any meaningful sense, and forcing it into that shape destroys what makes the letter what it is. Domains with strong action discreteness include ticket-based workflows, case management, transactional systems, and control loops. Domains with weak discreteness include open conversation, exploratory analysis, and creative composition.
+**Q1: Is there a discrete unit of action?** The pattern requires that consequential effects be decomposable into named operations whose execution can be represented by parameterized clauses. Ticket workflows, case management, transactional systems, and many control loops are plausible candidates; open conversation and creative composition are weaker fits.
 
-**Q2: Is there a record where reflection belongs?** The pattern requires a persistent context where the agent's reasoning can be inscribed for future readers — readers who consult the record because that is where one looks for the history of the case, ticket, account, or system. Without such a record, the technical audit trail (Property 3) is isolated from the working context of the domain's practitioners, and the two-artifact property (Section 4.5) degrades to a single technical archive that practitioners do not consult. Case records, ticket systems, electronic health records, lab notebooks, and operator logs are positive examples. Real-time conversation, private deliberation, and most creative work are negative examples.
+**Q2: Is there a record where reflection belongs?** The pattern benefits from a persistent context where the agent's declared reasoning can be inscribed for later readers. Case records, ticket systems, electronic health records, lab notebooks, and operator logs are examples of such surfaces. Where no durable record belongs, the audit artifact may become detached from the practitioners' actual workflow.
 
-**Q3: Does the operator want to be auditable?** The pattern produces durable, structured records of agent activity. In domains where the operator's professional or legal posture *requires* that activity not be durably structured — confidential investigative journalism, internal litigation strategy under professional privilege, dissent under repressive regimes — the pattern is a trap rather than a tool. The artifacts that make the pattern interpretable in benign contexts become instruments of surveillance, discovery, or persecution in adversarial ones. We treat this as a structural condition, not a preference: where audit cannot exist without harming the operator, the pattern is inappropriate regardless of design refinement.
+**Q3: Does the operator want to be auditable?** The pattern intentionally produces durable structured records. In settings where durable traceability itself creates unacceptable risk — for example, some confidential-source or repressive-environment contexts — that property can be harmful rather than protective.
 
-### 5.1 Applicability Across Domains
+### 5.1 Candidate Domains
 
-Table 1 applies the three questions to seven candidate domains.
+Table 1 illustrates how the questions can be used. It is a design analysis, not evidence that the full four-property architecture is already deployed in the listed domains.
 
-| Domain | Q1: Discrete action? | Q2: Record? | Q3: Wants audit? | Pattern fits? |
+| Domain | Q1: Discrete action? | Q2: Persistent record? | Q3: Audit desirable? | Candidate fit |
 |---|---|---|---|---|
-| Legal-administrative agency (PINK) | Yes (procedural acts on case) | Yes (case record) | Yes (constitutional requirement) | **Yes** |
-| High-frequency trading | Yes (trade orders) | Yes (regulatory logs) | Yes (regulatory mandate) | Yes (with sampling-based approval) |
-| Industrial process control | Yes (setpoints, alarms) | Yes (operator log) | Yes (safety regulation) | Yes (pattern already implicit) |
-| Clinical decision support | Yes (orders, prescriptions) | Yes (EHR) | Yes (clinical liability) | Yes |
-| Software ops / SRE | Yes (commands, runbooks) | Yes (ticket system) | Yes (incident review) | Yes |
-| Regulatory compliance attestation | Yes (filings, attestations) | Yes (case management) | Yes (statutory) | Yes |
-| Investigative journalism (confidential sources) | Qualified (research operations) | Sometimes (story notes) | **No** | **No** |
+| Legal-administrative agency | Strong | Strong | Strong | High |
+| High-frequency trading | Strong | Strong | Strong, but latency changes review placement | Conditional |
+| Industrial process control | Strong | Strong | Strong | Plausible analogy |
+| Clinical decision support | Strong for orders/prescriptions | Strong | Strong | Conditional |
+| Software ops / SRE | Strong | Strong | Strong | High |
+| Regulatory compliance attestation | Strong | Strong | Strong | High |
+| Investigative journalism with confidential sources | Mixed | Mixed | Often weak/negative | Poor |
 
-**Table 1.** *Applicability of the affordance-restriction pattern across candidate domains. Cells answer the three semantic questions; the final column gives an overall verdict.*
+**Table 1.** *Analytical candidate assessment under the three semantic questions; not a survey of existing deployments.*
 
-The first six rows have all three answers as yes; the pattern applies cleanly, with the placement of human approval varying with the throughput requirements of the domain. In high-frequency trading, ex-ante per-trade approval is infeasible at the latencies involved; the human approval property is realized instead through a combination of automated boundary checks, post-hoc sampling, and complete structured records that enable forensic reconstruction of every decision. The pattern's interpretability claim remains intact even where ex-ante approval is replaced by structured post-hoc review — the artifacts are still parseable commitments, just inspected after the fact rather than before. Industrial process control is the pattern with different vocabulary already in place: the playbook is the controller, the proposal is the setpoint or alarm acknowledgment, the case record is the operator log; supervisor approval is implicit in boundary conditions and explicit only at alarm escalation [CITATION NEEDED: representative reference on operator-log auditability in process industries]. Legal-administrative agency, where PINK operates, sits at the low-throughput end of the spectrum: ex-ante human approval per proposal is feasible, the case record is the natural location of reflection, and the audit interest is constitutional.
+The review mechanism need not be identical in every domain. Very low-latency systems cannot support per-action human approval, so any attempted adaptation would require a different realization of governance and should not be called equivalent without testing. Industrial process control shares surface features such as structured commands, alarms, and operator records, but this paper does **not** claim that existing process-control systems instantiate the four-property conjunction.
 
-The seventh row fails the third question structurally. Affordance restriction here would produce audit artifacts whose subpoena value would compromise sources; the pattern is inappropriate. We note this not as a peripheral case but as the boundary that defines the pattern's scope: when an operator must remain unauditable to be effective, no design refinement rescues the technique. The pattern carries an embedded assumption — that audit is desirable for the operator — that does not survive transplantation to adversarial-information settings.
-
-A pattern's applicability is not the same as its desirability. Even where all three answers are yes, the pattern competes with alternatives: less-structured agents with more capable post-hoc review, fully manual workflows for low-volume cases, or hybrid approaches that use affordance restriction for the procedural majority and human-only handling for the doctrinally novel minority. We claim only that the three questions are *necessary*: where any answer is no, the pattern does not apply, and design refinement cannot fix this.
+A pattern's applicability is not the same as its desirability. Even where the three questions are favorable, affordance restriction competes with alternatives: simpler runtime policies, ordinary access control, draft/review gateways, manual workflows, or hybrid architectures. That competition motivates the controls in Section 8.
 
 ## 6. What This Is Not
 
-We anticipate three over-readings of the pattern that its framing may invite.
+**Affordance restriction is not a replacement for RLHF, CAI, or output filtering.** It operates at a different system layer and can compose with them. Nor is execution-layer restriction itself new: shielding, Progent, OpenPort and related authorization work already occupy that component. The paper's claim is only about the full composition.
 
-**Affordance restriction is not a replacement for RLHF, CAI, or output filtering.** It operates at a different system layer. A model whose distribution over outputs is shaped by reward modeling can sit inside an affordance restriction without contradiction; the two techniques are composable and address different failure modes. RLHF reduces the likelihood that the model produces harmful or unhelpful outputs; affordance restriction guarantees that whatever the model produces, only parseable instantiations of catalog entries can reach the world. A safety-relevant deployment might use both: RLHF to align the model's preferences, affordance restriction to constrain its possible actions, and human approval to gate execution. The pattern's claim is that for domains satisfying the three questions, additional constraint at the affordance layer offers structural properties (auditability, monotonic doctrine growth, durable commitment) that training-based techniques do not provide on their own, however well-trained the model.
+**Affordance restriction is not mechanistic interpretability.** It does not recover beliefs, circuits, representations, or causal internal state. It records an externally checkable commitment. A proposal can be perfectly auditable while the internal decision process remains opaque.
 
-**Affordance restriction is not mechanistic interpretability.** It does not recover the model's internal state, attribute outputs to circuits, or expose representations. It answers a different question: not *what does the model believe* but *what did the model commit to, on this case, under what justification, with what expected effect*. The two are not substitutes. Mechanistic interpretability asks about the system in the abstract or about its general dispositions; affordance restriction asks about the system on a particular act. For deployment review, post-hoc audit, and regulatory compliance, the latter question is often the operationally relevant one — what did the system do on case X, and why, and was it appropriate — and the former is currently intractable for systems at the scale of contemporary LLMs.
+**Affordance restriction is not alignment for open-ended agents.** Enumeration trades generality for governance. Where a finite or curatable action vocabulary is not meaningful, the architecture loses its defining property.
 
-**Affordance restriction is not alignment for open-ended agents.** The three semantic questions delimit where the pattern applies. An open-ended creative assistant, a general-purpose chat interface, or an exploratory research agent operating without ticket structure each fail at least one of the questions. The pattern offers nothing for these settings beyond the trivial observation that explicit action vocabularies are clearer than implicit ones. We do not propose that alignment in general can be solved by enumeration; we propose that in *bounded domains where enumeration is possible*, the pattern offers structural properties that are otherwise difficult to obtain.
+**Affordance restriction is not empirically validated by this paper.** The PINK material establishes a design and partial implementation lineage, not a measured safety benefit. Claims about reduced unauthorized effects, reviewer burden, audit quality, or maintenance cost remain hypotheses for controlled evaluation.
 
 ## 7. Limitations and Failure Modes
 
@@ -185,64 +215,58 @@ We document four failure modes the pattern does not eliminate.
 
 ### 7.1 Wrong-but-Valid Leaf Selection
 
-The pattern constrains *what* the agent can do; it does not guarantee *that the agent picks the right action* within the constrained space. A misaligned matcher can consistently bind the wrong-but-valid leaf for a case — for example, treating an informative communication as deadline-bearing because no closure-recognizing leaf was present in the upper canon, or selecting a procedural concretization whose preconditions are technically satisfied but whose substantive fit to the case is poor. Mitigation depends on canon design: every Tier 1 must have closure-recognizing concretizations (the closure pattern is not optional — see Section 4.5), and the seed canon must cover the space of legitimate outcomes without leaving inadvertent gaps that channel the agent toward the wrong tier.
-
-The structural pattern itself *enables the failure to be detected* — the proposal records exactly what was bound, against which leaf, with what bindings and traversal — but does not prevent it. Post-hoc detection requires sampling and human review of bound leaves against ground-truth case outcomes. We treat this as the primary validation target for the pilot deployment (Section 8).
+The pattern constrains *what* the agent can do; it does not guarantee that the agent selects the appropriate allowed action. An agent can choose a wrong-but-valid leaf whose preconditions appear compatible with the case. The structured artifact makes such errors inspectable but does not prevent them.
 
 ### 7.2 Unverified Tier Realization
 
-The pattern's structural rules require that every concrete (Tier 2+) entry concretize a doctrinal (Tier 1) entry by hash reference; the linter verifies the reference exists and points to a strictly lower tier. The linter does *not* verify that the concrete `Então` clauses *semantically realize* the doctrinal outcomes. A concretization can carry the correct tag while encoding actions that drift from the parent's intent. This is the soft seam of the pattern: realization checking is the domain expert's job at review time, and lint cannot replace it.
-
-Formal-methods extensions — proving realization via step-level annotations, or via partial-order reasoning over outcome predicates — are a research direction we identify but do not address in v1. The current state of the pattern accepts this as an unverified property and relies on human review at canon-entry time, periodic audit of the canon against the cases it has been applied to, and the structural separation of doctrine/procedure as the mechanism by which doctrine drift becomes visible.
+A structural edge can state that a procedural entry concretizes a doctrinal outcome without proving semantic realization. Lint can check identity, tier constraints, and required structural elements; semantic implication remains a human/domain-review problem unless a stronger formal semantics is added.
 
 ### 7.3 Cascading State Drift Between Executed Steps
 
-Apply is best-effort, not transactional. When a proposal has *N* action clauses and the first *k* succeed while step *k+1* fails, the world has changed in ways the original proposal-time precondition validation did not account for. The retry mechanism handles re-attempting failed steps but does not handle the case where executing the first *k* actions invalidated preconditions of step *k+2*. We mitigate by per-step revalidation declarations — preconditions marked as volatile are re-checked at apply time against fresh data — but we do not eliminate the failure mode. Transactional semantics over a non-transactional write subsystem cannot be retrofitted at the proposal layer; either the underlying write subsystem provides transactional guarantees (which is rare in legacy case-management systems and not the case for Kanoê), or the pattern accepts best-effort with documented partial-apply semantics.
+Multi-step execution over a non-transactional external system can partially succeed and thereby invalidate later assumptions. Per-step revalidation can reduce this risk but cannot generally retrofit transactional semantics onto a legacy write surface.
 
 ### 7.4 Self-Reported Confidence Without Calibration
 
-Proposals carry an agent-reported confidence field. In v1 this field is uncalibrated: no feedback loop ties past apply outcomes to per-playbook confidence statistics. Readers of the proposal who interpret the field as a probability are misled. We currently mitigate by documentation; structural calibration via tracking apply outcomes per playbook is identified as future work but is not part of the pattern in its current statement. Until calibration exists, the field is best read as an indicator of the agent's working uncertainty, not as a probability.
+An agent-reported confidence field is not a calibrated probability merely because it is structured. Any archival or deployment artifact should distinguish self-report from empirically calibrated reliability.
 
-We expect deployment to surface additional failure modes that the present statement of the pattern does not anticipate; the validation roadmap (Section 8) includes structured surfaces for capturing them and revising the pattern accordingly.
+### 7.5 Prior-art and composition limitation
 
-## 8. Deployment Plan and Validation Roadmap
+The strongest novelty statement here is a negative-search result for a conjunction. Future work may locate a closer pre-cutoff antecedent, in which case the contribution boundary should narrow again. The value of the architecture does not depend on exhaustive firstness; it can be evaluated as a composition even if every component and eventually the conjunction prove to have antecedents.
 
-PINK is in active development. We summarize current status and the validation milestones over the next six months.
+## 8. Validation Roadmap
 
-**Phase status.** Phase 0 (audit of pre-existing CLI test specifications against the design) is complete: 17 existing feature files have been amended or marked deprecated, and 11 new test feature files have been enumerated. Phases 1–2 (read-side affordances and catalog plumbing) are partially implemented; the content-addressing infrastructure is the present focus. Phase 3 (seed canon) is scheduled to begin once Phases 1–2 stabilize; the seed canon will be curated by the legal team at PGE-RO, with the closure-recognizing Tier 1s as required content. Phases 4 and 5 (proposal pipeline and apply) follow, with first production binding-and-apply against a pilot docket of approximately 200 cases targeted for end of Q3 2026.
+No pilot result is frozen into v0.1. Evaluation should isolate the value, if any, of the composition rather than compare only against unconstrained agents.
 
-**Validation metrics.** We commit to instrumenting and reporting the following during the pilot:
+The prior-art audit motivates at least the following controls:
 
-- *Proposal volume and disposition.* Number of proposals emitted; distribution across approve, reject, edit-then-approve, and let-expire. Establishes baseline throughput and intervention rate.
-- *Edit-before-approve rate.* Fraction of approved proposals that the human modifies during review. High rates indicate either matcher errors (the agent is selecting wrong-but-valid leaves; Section 7.1) or scenario design issues (the canon's leaves are insufficiently specific).
-- *Canon extension frequency.* New leaf additions per unit time; new Tier 1 elevations per unit time. Rapid Tier 1 elevation indicates either an underdeveloped seed canon or active domain reconceptualization. Slow Tier 2+ growth indicates the catalog has reached coverage stability.
-- *Stale rate after canon evolution.* Fraction of approved-but-unapplied proposals that become stale (their bound leaf gains a child between approval and apply, retiring it from direct binding) before apply. High rates indicate timing mismatches between agent activity and curator activity.
-- *Apply success and partial-apply rate.* Fraction of approved proposals that reach `applied`; fraction that reach `partial`; distribution of step-level failures across volatile-precondition stale, write-API error, and unhandled exception. Measures the cost of best-effort apply (Section 7.3).
-- *Audit reconstruction by third-party reviewer.* A blinded reviewer — neither the operating lawyer nor the system author — reconstructs the agent's action and justification on a random sample of cases from artifacts alone, without consulting the agent or the operating lawyer. Reconstruction accuracy is our central interpretability metric: a value below threshold indicates the pattern's structural commitment is not, in practice, sufficient for downstream audit, and the pattern's interpretability claim fails empirically.
+1. **Policy-only runtime gate:** deterministic allow/deny control with the same model and tools, but no scenario canon.
+2. **Draft/review gateway:** structured draft + approval + execution binding, but no content-addressed scenario vocabulary.
+3. **Manifest-hash capability binding:** digest-bound capability identity, but no doctrine/procedure canon.
+4. **Scenario canon without content addressing:** tests whether immutable behavioral identity contributes beyond ordinary version control.
+5. **Scenario canon without doctrine/procedure asymmetry:** tests whether the semantic governance split changes review quality or maintenance burden.
+6. **Full affordance restriction:** all four properties.
 
-We do not pre-commit to thresholds for these metrics, because no prior reference exists against which to calibrate them for this specific class of system. A follow-up paper will report the pilot's quantitative results and propose tentative norms; the present paper's contribution is the pattern, the applicability criterion, and the design that supports such measurement.
+Outcome metrics should track the actual safety/governance claims rather than generic task accuracy alone: unauthorized side-effect rate, approval/execution drift, reviewer time, wrong-but-valid action rate, silent inheritance after behavioral change, audit-reconstruction accuracy, partial-apply rate, and catalog-maintenance cost.
 
-**Replication.** PINK's implementation is open-source [CITATION NEEDED: PINK repository URL]; the legal canon is curated content owned by PGE-RO and is not redistributed, but the canon's structure, lint rules, and content-addressing infrastructure are general and reusable. We document the canon structure in detail in the project's `PLAYBOOKS.md` to enable replication of the pattern in other domains.
+Any later deployment study should freeze decision rules and thresholds prospectively. This v0.1 does not precommit numerical thresholds because it contains no calibration data from the target deployment.
+
+**Replication boundary.** The PINK development repository inspected for this version is private, and the legal canon is not part of this paper bundle. The paper therefore does not claim public reproduction of the worked PINK implementation. What is reproducible from the manuscript is the architecture and the proposed control structure; a future empirical paper should archive the executable evaluation substrate or an equivalent public fixture set before making implementation-performance claims.
 
 ## 9. Discussion
 
-Three implications close the paper.
+Affordance restriction occupies one corner of the agent-governance design space. Its central hypothesis is compositional: a human-readable scenario canon may become more useful as a safety and audit boundary when the same immutable objects serve simultaneously as executable vocabulary, review surface, authorization referent, and provenance anchor, with higher-cost governance for doctrine-like changes.
 
-First, the pattern situates one corner of the alignment design space. Affordance restriction is not a general solution to alignment; it is a class of techniques that buys structural properties — auditability, controllability, durable commitment, monotonic canon growth — at the cost of generality. The three semantic questions are the price tag, and they delimit the pattern's scope honestly. We do not claim what the pattern cannot deliver: alignment for open-ended agents, generality across creative or conversational domains, or interpretability of model internals.
+The prior-art correction strengthens rather than weakens the experimental question. We do not need to compare the full pattern only against an unconstrained model. Existing shielding, least-privilege, approval-binding, and capability-hash systems supply meaningful ablations. If a simpler runtime gate performs equally well on unauthorized-effect rate, reviewer effort, audit reconstruction, and maintenance cost, the extra canon machinery is not justified by the evidence. If doctrine/procedure asymmetry or immutable scenario identity provides measurable benefits under matched controls, those benefits can be attributed more narrowly.
 
-Second, the pattern offers a workable notion of interpretability for bounded systems. Rather than recovering intent from weights via probing or attribution, the system requires the agent to commit intent to a parseable artifact ex ante. The technique scales with the domain expert's capacity to read structured artifacts, not with the analyst's capacity to interpret model internals. For many production deployments — legal, regulatory, clinical, operational — this is the more tractable form of the interpretability question, and the form that downstream audit actually needs.
+The paper also keeps a limited notion of interpretability. The proposal artifact is an accountability surface: it records what the system was permitted and committed to do. It does not reveal internal cognition. That narrower property may still matter in regulated bounded workflows, but its practical value must be measured rather than assumed.
 
-Third, the pattern raises questions adjacent to but outside its scope. We list four:
-- *Formal-methods extensions for tier realization verification.* Can the lint verify, not merely assert, that a Tier 2+ entry's `Então` clauses realize the Tier 1 outcomes they claim to concretize?
-- *Confidence calibration from apply outcomes.* Can the self-reported confidence field be replaced or augmented by an empirical confidence statistic learned from past apply outcomes per playbook?
-- *Multi-agent canon extension.* When multiple agents propose new concretizations against a shared canon simultaneously, how should proposal conflicts be mediated, and what hash-stability properties survive the resulting merge?
-- *Quantitative interpretability metrics for structural commitment.* Beyond third-party reconstruction accuracy, what other empirical handles measure the interpretability that the pattern claims to provide?
+The remaining research questions are therefore empirical and formal: whether procedural entries can be checked against doctrinal outcomes more strongly than by human review; whether confidence can be calibrated from outcomes; how concurrent canon extension should preserve authority identity; and which audit metrics best distinguish a useful structural commitment from mere paperwork.
 
-We identify these as research directions without addressing them in this paper.
-
-The pattern is older than alignment as a research field. Its newer claim is that the substrate has caught up: LLMs are competent at selecting from and binding to a curated vocabulary, which makes the pattern operationally feasible in domains where it was previously only conceptually attractive. In those domains, alignment by affordance restriction offers what training-based techniques and post-hoc filtering cannot: structural guarantees about the action space, durable commitment to specific actions on specific cases, and interpretability via what was committed rather than via what can be recovered. The cost is generality; the question is whether the bounded domains in which the pattern applies are economically and societally significant enough to be worth the design effort. We believe they are, and PINK is one such case.
+The contribution claimed by v0.1 is thus a bounded architectural synthesis and a testable evaluation programme. It does not claim general alignment, novel execution-layer authorization, or demonstrated deployment superiority.
 
 ## References
+
+Alshiekh, M.; Bloem, R.; Ehlers, R.; Könighofer, B.; Niekum, S.; and Topcu, U. 2018. Safe Reinforcement Learning via Shielding. *Proceedings of the AAAI Conference on Artificial Intelligence* 32(1). https://doi.org/10.1609/aaai.v32i1.11797.
 
 Ashley, K. D. 1990. *Modeling Legal Argument: Reasoning with Cases and Hypotheticals.* Cambridge, MA: MIT Press.
 
@@ -256,34 +280,42 @@ Christiano, P.; Leike, J.; Brown, T.; Martic, M.; Legg, S.; and Amodei, D. 2017.
 
 Christiano, P.; Shlegeris, B.; and Amodei, D. 2018. Supervising Strong Learners by Amplifying Weak Experts. arXiv:1810.08575.
 
+Fikes, R. E.; and Nilsson, N. J. 1971. STRIPS: A New Approach to the Application of Theorem Proving to Problem Solving. *Artificial Intelligence* 2(3–4): 189–208. https://doi.org/10.1016/0004-3702(71)90010-5.
+
 Gabriel, I. 2020. Artificial Intelligence, Values, and Alignment. *Minds and Machines* 30(3): 411–437.
 
-Hadfield-Menell, D.; Dragan, A.; Abbeel, P.; and Russell, S. 2017. The Off-Switch Game. In *Proceedings of the 26th International Joint Conference on Artificial Intelligence (IJCAI '17),* 220–227.
+Hadfield-Menell, D.; Dragan, A.; Abbeel, P.; and Russell, S. 2017. The Off-Switch Game. In *Proceedings of the 26th International Joint Conference on Artificial Intelligence (IJCAI '17)*, 220–227.
 
 Irving, G.; Christiano, P.; and Amodei, D. 2018. AI Safety via Debate. arXiv:1805.00899.
 
+Landrock, P.; and Pedersen, T. 1998. WYSIWYS? — What You See Is What You Sign? *Information Security Technical Report* 3(2).
+
 McCarty, L. T. 1977. Reflections on TAXMAN: An Experiment in Artificial Intelligence and Legal Reasoning. *Harvard Law Review* 90(5): 837–893.
 
-Merkle, R. C. 1987. A Digital Signature Based on a Conventional Encryption Function. In *Advances in Cryptology — CRYPTO '87,* LNCS 293, 369–378. Berlin: Springer.
+Merkle, R. C. 1987. A Digital Signature Based on a Conventional Encryption Function. In *Advances in Cryptology — CRYPTO '87*, LNCS 293, 369–378. Berlin: Springer.
 
-North, D. 2006. Introducing BDD. *Better Software Magazine,* March 2006.
+North, D. 2006. Introducing BDD. *Better Software Magazine*, March 2006.
 
 Ouyang, L.; Wu, J.; Jiang, X.; Almeida, D.; Wainwright, C. L.; Mishkin, P.; Zhang, C.; et al. 2022. Training Language Models to Follow Instructions with Human Feedback. In *Advances in Neural Information Processing Systems 35 (NeurIPS 2022).*
 
-Rissland, E. L.; and Ashley, K. D. 1987. A Case-Based System for Trade Secrets Law. In *Proceedings of the 1st International Conference on Artificial Intelligence and Law (ICAIL '87),* 60–66.
+Rissland, E. L.; and Ashley, K. D. 1987. A Case-Based System for Trade Secrets Law. In *Proceedings of the 1st International Conference on Artificial Intelligence and Law (ICAIL '87)*, 60–66.
 
 Russell, S. 2019. *Human Compatible: Artificial Intelligence and the Problem of Control.* New York: Viking.
 
+Shi, T.; et al. 2025. Progent: Programmable Privilege Control for LLM Agents. arXiv:2504.11703.
+
+SLSA. 2023. Supply-chain Levels for Software Artifacts, Specification v1.0. https://slsa.dev/spec/v1.0/.
+
+South, T.; et al. 2025. Authenticated Delegation and Authorized AI Agents. arXiv:2501.09674.
+
 Suchman, L. A. 1987. *Plans and Situated Actions: The Problem of Human-Machine Communication.* Cambridge: Cambridge University Press.
 
-Torres-Arias, S.; Afzali, H.; Kuppusamy, T. K.; Curtmola, R.; and Cappos, J. 2019. in-toto: Providing Farm-to-Table Guarantees for Bits and Bytes. In *Proceedings of the 28th USENIX Security Symposium,* 1393–1410.
+Torres-Arias, S.; Afzali, H.; Kuppusamy, T. K.; Curtmola, R.; and Cappos, J. 2019. in-toto: Providing Farm-to-Table Guarantees for Bits and Bytes. In *Proceedings of the 28th USENIX Security Symposium*, 1393–1410.
+
+Wu, J.; et al. 2026. SkillScope: Toward Fine-Grained Least-Privilege Enforcement for Agent Skills. arXiv:2605.05868.
 
 Wynne, M.; and Hellesøy, A. 2012. *The Cucumber Book: Behaviour-Driven Development for Testers and Developers.* Raleigh, NC: Pragmatic Bookshelf.
 
-[CITATION NEEDED: SLSA framework v1.0 specification, slsa.dev]
+Zhou, Z. 2026. Governing Dynamic Capabilities: Cryptographic Binding and Reproducibility Verification for AI Agent Tool Use. arXiv:2603.14332.
 
-[CITATION NEEDED: Aleven and Ashley, CATO system, mid-1990s ICAIL or AI-and-Law journal references]
-
-[CITATION NEEDED: representative reference on operator-log auditability and structured logs in process industries — possibly IEEE Trans. Industrial Informatics or similar]
-
-[CITATION NEEDED: PINK repository URL — to be added on submission]
+Zhu, G.; et al. 2026. OpenPort Protocol: A Security Governance Specification for AI Agent Tool Access. arXiv:2602.20196.
