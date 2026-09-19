@@ -123,13 +123,13 @@ These are complementary, not competing definitions of the same method.
 A long-term unification target is therefore:
 
 [
-	ext{static observations}
+\ext{static observations}
 +
-	ext{interventional responses}
+\ext{interventional responses}
 +
-	ext{inverse queries}
-ightarrow
-	ext{better system identification}.
+\ext{inverse queries}
+\ightarrow
+\ext{better system identification}.
 ]
 
 ## 5. Pontifex — core programme independent of Torus
@@ -195,7 +195,7 @@ Evidence for a periodic coordinate system or useful Fourier features is not evid
 Minimal rule:
 
 [
-oxed{	ext{one shared intervention}=	ext{one edge}}
+\oxed{\ext{one shared intervention}=\ext{one edge}}
 ]
 
 Vertices are representational systems/spaces; edges are shared experimental contrasts. Edge existence does not assert similarity, response agreement, common ontology, or causal equivalence.
@@ -210,18 +210,18 @@ The ILG deliberately sits **before geometry**. Cycles, communities, coverings, m
 For heterogeneous substrates, the same physical intervention may be impossible. The shared object becomes an intervention concept (c) with substrate-native realizations:
 
 [
-cightarrow R_A(c),
+c\ightarrow R_A(c),
 qquad
-cightarrow R_B(c).
+c\ightarrow R_B(c).
 ]
 
 For sequential systems, the atomic experimental object is better written as:
 
 [
-i=(c,	au,h),
+i=(c,\au,h),
 ]
 
-where (	au) is narrative position and (h) is relevant history.
+where (\au) is narrative position and (h) is relevant history.
 
 This front is broader than MaleCNS and broader than Torus.
 
@@ -233,7 +233,7 @@ This front is broader than MaleCNS and broader than Torus.
 Observer model:
 
 [
-O_m:mathcal Uightarrow mathcal Z_m
+O_m:mathcal U\ightarrow mathcal Z_m
 ]
 
 with (mathcal U) treated initially as a latent **relational** structure rather than a globally Euclidean universe.
@@ -283,7 +283,7 @@ Major fronts already represented in the repository:
 A central comparative question is:
 
 [
-	ext{Does intervention-response structure add predictive information beyond static Atlas geometry?}
+\ext{Does intervention-response structure add predictive information beyond static Atlas geometry?}
 ]
 
 That comparison should be preferred over assuming that every cross-model effect is uniquely interventional.
@@ -387,8 +387,8 @@ Its relevance to Pontifex is strongest as a radical heterogeneous substrate that
 STT asks whether semantic representations can become the **computational unit** of sequence modeling:
 
 [
-	ext{text}ightarrow	ext{semantic chunks}ightarrow
-	ext{embedding}ightarrow	ext{RVQ codes}ightarrow	ext{sequence model}.
+\ext{text}\ightarrow\ext{semantic chunks}\ightarrow
+\ext{embedding}\ightarrow\ext{RVQ codes}\ightarrow\ext{sequence model}.
 ]
 
 It is adjacent because:
@@ -436,7 +436,7 @@ This is relevant to Pontifex cycles, MaleCNS closed loops, and multi-system resp
 These ask how information survives transformation chains:
 
 [
-zightarrow M_0ightarrow M_1ightarrowcdotsightarrow M_Nightarrowhat z.
+z\ightarrow M_0\ightarrow M_1\ightarrowcdots\ightarrow M_N\ightarrowhat z.
 ]
 
 This is approximately dual to Pontifex:
