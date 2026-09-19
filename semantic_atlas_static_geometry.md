@@ -42,6 +42,18 @@ The result supports a narrow but useful conclusion: independently trained embedd
 
 ---
 
+## Evidence boundary: relational agreement is not a universal metric
+
+This paper's positive evidence concerns **calibrated relational agreement between declared observers**. The preregistered mKNN results show that local neighborhood agreement survives large-gallery scaling while remaining materially below same-observer stability. They do not establish that the two observers instantiate one globally identical metric space.
+
+The canonical interpretation is therefore:
+
+- **supported:** nontrivial, scale-stable cross-observer local relational structure;
+- **also supported:** substantial observer-specific residual structure;
+- **not established:** a unique observer-independent global semantic metric or manifold.
+
+Any later global alignment or reference-frame model must earn additional predictive value beyond these local relations and must be evaluated under a frozen gauge. This interpretation is shared with [Semantic Observers](semantic_observers.md) and the [Semantic Systems Research Map](research/semantic-systems-map.md).
+
 ## 1. Question
 
 Suppose two embedding models can be compared on the same collection of texts. Even if their coordinates can be aligned, two different questions remain:
