@@ -69,15 +69,21 @@ The B head is frozen once and reused unchanged for every A→B transport. Theref
 All transport methods see the exact same K A↔B pairs and the same `D_transport_val` coordinate targets for unsupervised hyperparameter selection:
 
 - Orthogonal Procrustes;
+- identified-subspace / rank-constrained Procrustes;
 - Ridge linear map;
 - CCA;
 - PLS;
 - RFF + Ridge;
 - capacity-matched one-hidden-layer MLP regression;
-- Pontifex = Procrustes coarse map + local residual interpolation;
+- Pontifex = full-Procrustes coarse map + local residual interpolation;
+- rank-Pontifex = identified-subspace Procrustes coarse map + the same local residual interpolation;
 - shuffled-correspondence Pontifex with a deterministic derangement and the same validation procedure.
 
 No task label is used to fit or select any transport.
+
+## Prospective rank-control amendment
+
+Before any AG News score was computed, the matrix was expanded to preserve a lesson already exposed by the negative MS MARCO experiment: for `K < d`, full Orthogonal Procrustes has an unconstrained orthogonal complement. Single-item classification removes the *query/document gauge mismatch*, but not arbitrary completion of directions that the K pairs do not identify. Therefore `RankProcrustes` and `RankPontifex` are predeclared controls that map only the singular subspace identified by the centered K-pair cross-covariance. The original full Procrustes and original Pontifex remain mandatory and their success criteria are unchanged. This amendment is prospective and cannot be used to discard an unfavorable full-map result.
 
 Mean/convex fusion of true A and B test embeddings is not budget-matched because it requires B at inference; it is therefore excluded from the primary frontier rather than given extra information. `B-oracle` already supplies the allowed ceiling reference.
 
@@ -91,6 +97,7 @@ All choices freeze on train-derived validation data:
 - RFF gamma/width/Ridge alpha on the same coordinate loss;
 - MLP width/alpha on the same coordinate loss;
 - Pontifex tau/lambda on the same coordinate loss;
+- rank-Pontifex tau/lambda on the same coordinate loss;
 - shuffled Pontifex receives the identical grid and selection rule.
 
 Test accuracy/F1 are computed only after the complete prediction bank is frozen.
