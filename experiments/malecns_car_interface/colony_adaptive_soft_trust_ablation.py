@@ -55,12 +55,7 @@ def _episode(
     truth, camera, imu = _sample(rng, age_profile=age_profile)
     states = {
         name: [list(camera[:2]), list(imu[:2])]
-        for name in (
-            "cauchy_fixed",
-            "cauchy_age",
-            "huber_fixed",
-            "huber_age",
-        )
+        for name in ("cauchy_fixed", "huber_fixed", "huber_age")
     }
 
     shared_camera_bias = None
@@ -95,26 +90,6 @@ def _episode(
                 imu_candidate,
                 camera_reports,
                 residual_scale=RUN13_CAUCHY_SCALE,
-            )
-        )
-
-        camera_reports, imu_reports = states["cauchy_age"]
-        camera_reports.append(
-            soften_probe_huber(
-                camera_reports,
-                camera_candidate,
-                imu_reports,
-                base_scale=RUN13_CAUCHY_SCALE,
-                age_power=1.0,
-            )
-        )
-        imu_reports.append(
-            soften_probe_huber(
-                imu_reports,
-                imu_candidate,
-                camera_reports,
-                base_scale=RUN13_CAUCHY_SCALE,
-                age_power=1.0,
             )
         )
 
