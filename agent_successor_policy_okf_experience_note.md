@@ -1,5 +1,5 @@
 ---
-type: companion-note
+type: "Companion Note"
 title: "Event-Sourced Agent Experience: OKF Cycle Reports as the Training Source for Agent Successor Policy"
 description: "Companion note replacing a mutable reward ledger with immutable start/end cycle concepts and a parser-derived RL corpus."
 status: draft
