@@ -1,0 +1,58 @@
+name: Pontifex SciFact norm mincost derangement K512
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - experiment/pontifex-red-1
+    paths:
+      - experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-MINCOST-DERANGEMENT-K512-2026-09-19.md
+      - experiments/pontifex_benchmarks/scifact_norm_mincost_derangement_k512.py
+      - experiments/pontifex_benchmarks/scifact_knn_null_locality_calibration_k512.py
+      - .github/workflows/pontifex-scifact-norm-mincost-derangement-k512.yml
+
+jobs:
+  mincost-derangement-k512:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Restore SciFact representation cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/pontifex-scifact
+            ~/.cache/huggingface
+          key: pontifex-scifact-mincost-derangement-k512-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-scifact-knn-locality-calibration-k512-v1-
+            pontifex-scifact-norm-knn-feasible-k512-v1-
+            pontifex-scifact-norm-matched-k512-v1-
+            pontifex-scifact-coupling-k512-v1-
+      - name: Run frozen distance-optimal local derangement test
+        run: |
+          uv run experiments/pontifex_benchmarks/scifact_norm_mincost_derangement_k512.py \
+            --seed 20260919 \
+            --k 512 \
+            --n-norm-strata 8 \
+            --cache-dir .cache/pontifex-scifact \
+            --output /tmp/pontifex-scifact-norm-mincost-derangement-k512.json
+      - name: Publish result summary
+        if: always()
+        run: |
+          echo '## Pontifex SciFact norm + minimum-cost local derangement K=512' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f /tmp/pontifex-scifact-norm-mincost-derangement-k512.json ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/pontifex-scifact-norm-mincost-derangement-k512.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload mechanism record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-scifact-norm-mincost-derangement-k512
+          path: /tmp/pontifex-scifact-norm-mincost-derangement-k512.json
+          if-no-files-found: error
