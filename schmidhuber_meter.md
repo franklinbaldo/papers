@@ -4,6 +4,20 @@ title: "The Schmidhuber Meter: A Claim-Level Citation Debt Index"
 description: "A practical, auditable framework for measuring public temporal priority, substantive overlap, discoverability, missing bibliographic credit, and the consequence of that deficit at the level of scientific claims."
 tags: [schmidhuber-meter, citation-debt, bibliometrics, prior-art, scientific-credit]
 timestamp: 2026-09-19T00:00:00Z
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
 # The Schmidhuber Meter: A Claim-Level Citation Debt Index
@@ -11,7 +25,7 @@ timestamp: 2026-09-19T00:00:00Z
 **Franklin Silveira Baldo**  
 Independent Researcher
 
-> **Methodology paper.** This paper proposes a claim-level bibliometric index for citation credit deficit. It does not infer plagiarism, copying, intent, negligence, or causal derivation from temporal priority and overlap alone. The operational definition is intentionally restricted to public, auditable evidence. A claim-specific prior-art audit is maintained at [`audits/prior-art/schmidhuber-meter-2026-09-19.md`](audits/prior-art/schmidhuber-meter-2026-09-19.md).
+> **Methodology paper — frozen v0.1.** This paper proposes a claim-level bibliometric index for citation credit deficit. Version 0.1 is a deliberately **uncalibrated composite indicator**, not a probability, causal estimator, misconduct detector, or validated measurement scale. It does not infer plagiarism, copying, intent, negligence, independent reinvention, or causal derivation from temporal priority and overlap alone. The operational definition is restricted to public, auditable evidence. The claim-specific prior-art audit is maintained at [`audits/prior-art/schmidhuber-meter-2026-09-19.md`](audits/prior-art/schmidhuber-meter-2026-09-19.md), and the later adversarial validity audit at [`audits/prior-art/schmidhuber-meter-falsification-2026-09-19.md`](audits/prior-art/schmidhuber-meter-falsification-2026-09-19.md).
 
 ## Abstract
 
@@ -27,7 +41,7 @@ $$
 SM_{base}(A,B)=10\,P\,O\,D\,(1-C),
 $$
 
-where \(P\) is priority confidence, \(O\) substantive overlap, \(D\) historical discoverability, and \(C\) received credit, each normalized to \([0,1]\). The model is deliberately deterministic and inspectable. A future calibrated model may replace this product after sufficient expert-labelled data exist, while preserving the raw components and formula version used by earlier audits.
+where \(P\) is priority confidence, \(O\) substantive overlap, \(D\) historical discoverability, and \(C\) received credit, each normalized to \([0,1]\). The product is kept because it is deterministic and recomputable, not because it has been empirically validated as an optimal scale. Consequential comparisons must therefore preserve the raw component vector, make missingness explicit, and report sensitivity to plausible weighting, normalization, and aggregation choices. A future calibrated model may replace this product without destroying the evidence recorded by v0.1 audits.
 
 ## 1. Motivation
 
@@ -41,7 +55,7 @@ It also differs from several neighboring phenomena. A **sleeping beauty** asks w
 
 ## 2. Prior art and the narrowed novelty claim
 
-A reproducible audit conducted on 2026-09-19 materially narrowed the contribution claimed here [12]. The following ideas predate this work and must not be represented as inventions of the Schmidhuber Meter.
+A reproducible audit conducted on 2026-09-19 materially narrowed the contribution claimed here [12]. A subsequent falsification-oriented audit tested the validity assumptions of the proposed score rather than its priority [14]. The following ideas predate this work and must not be represented as inventions of the Schmidhuber Meter.
 
 ### 2.1 Expected-versus-observed citation gaps are established
 
@@ -59,13 +73,13 @@ CitationR is therefore not merely a convenient future calibration dataset. It al
 
 Strauss et al. define an **attribution gap** for search-enabled LLMs as the difference between relevant web sources consumed and sources actually cited [6]. Their setting differs from scientific priority, but the structure is important: relevant input sources can be observed, credited sources can be observed, and the gap can be quantified.
 
-Indeed, observed source visitation is stronger evidence of exposure than the discoverability proxies available in ordinary scholarly-history reconstruction. The present framework therefore does not claim the generic concept of a measurable attribution deficit.
+Observed source visitation is stronger evidence of exposure than the discoverability proxies available in ordinary scholarly-history reconstruction. The present framework therefore does not claim the generic concept of a measurable attribution deficit.
 
 ### 2.4 Independent simultaneous discovery is an empirical phenomenon, not a residual excuse
 
 Bikard systematizes identification of **simultaneous discoveries** from openly available scientific sources and produces a large collection of “idea twins” [7]. That literature is central to the epistemic posture of the present index: material overlap and temporal proximity do not establish derivation.
 
-A citation-debt score can be high while causal dependency remains unknown.
+A citation-debt score can be high while causal dependency remains unknown. Conversely, a low score cannot prove independent reinvention.
 
 ### 2.5 Priority has measurable downstream rewards
 
@@ -85,19 +99,25 @@ CITECHOICE, released four days before the public cutoff of the Schmidhuber Meter
 
 Wakeling et al.’s survey of 2,648 corresponding authors reports that respondents identify non-citation as a problem, with a particularly serious case being priority or discovery claims that omit work capable of countering those claims [11]. Earlier ethics literature likewise discusses omission of relevant work as a source of unfair loss of priority [13].
 
-### 2.9 Surviving contribution after the audit
+### 2.9 Composite-indicator methodology constrains the score
+
+The Schmidhuber Meter is not exempt from the ordinary weaknesses of composite indicators. Methodological work on composite indices emphasizes that weighting, normalization, aggregation, and missing-data choices can materially change rankings and interpretation [15–17]. Version 0.1 therefore treats the product formula as one transparent aggregation rule, not as a discovered measurement law.
+
+The practical consequence is mandatory for consequential use: keep the raw components, expose missingness, and test whether reasonable alternative modeling choices materially change the ordering or conclusion. If they do, that instability is part of the finding rather than something to average away.
+
+### 2.10 Surviving contribution after the audits
 
 No pre-cutoff source located in the documented searches was found to instantiate the complete conjunction used here:
 
 1. claim-specific public temporal provenance;
 2. decomposed substantive technical overlap;
 3. reconstructible historical discoverability;
-4. observed claim-level credit;
+4. observed claim-level credit with citation-function inspection;
 5. explicit separation of dependency evidence;
 6. explicit separation of later impact from the base historical-deficit score;
-7. a versioned, recomputable claim-pair audit record.
+7. a versioned, recomputable claim-pair audit record with missingness and uncertainty exposed.
 
-The bounded search also did not locate the exact v0.1 product \(10POD(1-C)\). These are **search results, not proofs of uniqueness or firstness**. The paper therefore claims a proposed operational synthesis, not discovery of the underlying citation phenomena.
+The bounded search also did not locate the exact v0.1 product \(10POD(1-C)\). These are **search results, not proofs of uniqueness or firstness**. The paper therefore claims a proposed operational synthesis, not discovery of the underlying citation phenomena or proof that the v0.1 scalar is already a valid universal scale.
 
 ## 3. Why the unit of analysis is the claim
 
@@ -153,13 +173,15 @@ $$
 - **Prediction/result overlap \(O_p\):** the same distinctive prediction or empirical consequence.
 - **Rare-conjunction overlap \(O_r\):** the same uncommon combination of otherwise known components.
 
-For formula version 0.1:
+For formula version 0.1, every overlap dimension is explicitly marked as `scored`, `not_applicable`, or `unknown`. The aggregate is:
 
 $$
 O=\operatorname{mean}(O_c,O_m,O_e,O_p,O_r),
 $$
 
-using only components that can actually be assessed. Missing components are not silently imputed.
+but only over dimensions that are genuinely applicable **and scored**. A `not_applicable` dimension may be excluded from the denominator only with substantive justification. An applicable but `unknown` dimension may **not** be silently dropped, because doing so can make a poorly observed pair look more similar than a well-observed pair. When applicable dimensions remain unknown, the preferred options are to leave scalar \(O\) and \(SM_{base}\) unset or to report an explicit interval such as \(O_{min}\)–\(O_{max}\) under a declared missing-data rule.
+
+The equal-weight mean is provisional. The five components are not assumed to be statistically independent or equally predictive of citation expectation. Audits therefore preserve the component vector and coverage state even when an aggregate is reported.
 
 The rare-conjunction term prevents generic overlap from dominating. “Reinforcement learning plus memory” is weak evidence. A highly specific conjunction of unusual architectural choices can be much more informative.
 
@@ -184,7 +206,7 @@ Useful evidence includes:
 - venue/repository visibility;
 - terminology correspondence available at that historical time.
 
-This does not estimate what the authors of \(B\) actually knew or read. Private reading history is excluded from the base score.
+This does not estimate what the authors of \(B\) actually knew or read. Private reading history is excluded from the base score. Discoverability is evidence about the historical information environment, not evidence of exposure.
 
 ## 8. Credit received
 
@@ -198,11 +220,13 @@ represent publicly visible claim-level acknowledgment of \(A\) by \(B\).
 
 A direct and substantively appropriate citation can approach 1. Partial or indirect acknowledgment may receive an intermediate value. No located acknowledgment is 0.
 
-Citation context matters. Citing \(A\) for an unrelated fact is not automatically full credit for the overlapping claim. Conversely, a legitimate citation to a canonical predecessor or an earlier version may provide substantial credit even without exact title matching.
+Citation context is part of the audit, not optional commentary. The assessment should record the citation's function where possible—for example `background`, `support`, `method_or_reuse`, `comparison`, `critique`, or `explicit_priority_acknowledgment`. Citing \(A\) for an unrelated fact is not automatically full credit for the overlapping claim. Conversely, a legitimate citation to a canonical predecessor or an earlier version may provide substantial credit even without exact title matching.
+
+The scalar \(C\) is itself provisional. Citation-motivation research shows that citation presence and purpose are heterogeneous [18]. If annotators cannot reliably reduce relevant citation contexts to one scalar, the framework should retain a richer vector rather than force agreement into a decimal.
 
 ## 9. The base Schmidhuber Meter
 
-For a temporally eligible pair, version 0.1 defines:
+For a temporally eligible pair with sufficiently observed components, version 0.1 defines:
 
 $$
 B=P\,O\,D\,(1-C),
@@ -214,9 +238,9 @@ $$
 \boxed{SM_{base}=10\,P\,O\,D\,(1-C)}.
 $$
 
-The multiplicative form is intentionally severe. Weak temporal evidence, weak overlap, low discoverability, or substantial received credit suppresses the score.
+The multiplicative form suppresses the score when temporal evidence, overlap, discoverability, or the missing-credit term is weak. It is chosen for transparency and recomputability.
 
-This functional form is **provisional**. It is chosen for transparency and recomputability, not because it has already been statistically validated as optimal.
+It is **not** empirically established as the optimal functional form. Version 0.1 is an uncalibrated composite indicator. Any consequential pairwise comparison or ranking must therefore preserve the raw component vector and report a sensitivity analysis under plausible alternative weights, normalizations, missing-data treatments, and aggregation rules. If reasonable alternatives produce rank reversals or qualitatively different conclusions, the aggregate is unstable for that use case and the vector/dashboard should take precedence over the scalar.
 
 ## 10. Why impact is separate
 
@@ -247,20 +271,24 @@ Dependency evidence is represented separately as a categorical state, for exampl
 
 The default is `unknown`.
 
-Temporal priority plus high overlap does not establish derivation. Temporal priority plus no citation does not establish derivation. Even a score near 10 does not establish plagiarism.
+Temporal priority plus high overlap does not establish derivation. Temporal priority plus no citation does not establish derivation. Even a score near 10 does not establish plagiarism. Likewise, a low or intermediate score cannot establish independent reinvention.
 
 Positive causal claims require independent evidence such as explicit public discussion, documented reuse, acknowledged access, copied distinctive errors, or another verifiable connection. The simultaneous-discovery literature [7] is a direct reason to keep this field outside the score.
 
-## 12. Interpretation bands
+## 12. Interpretation without causal labels
 
-For communication, version 0.1 proposes descriptive—not misconduct—bands:
+Version 0.1 has no empirically validated mapping from score ranges to expert judgments of citation obligation, dependency, or independent discovery. The preferred report is therefore the raw component vector, continuous \(SM_{base}\) when defined, missingness coverage, uncertainty interval where needed, and sensitivity analysis.
 
-- **0–2 — ordinary convergence:** weak citation expectation or low overlap.
-- **2–4 — plausible reinvention:** an antecedent exists, but specificity or discoverability is limited.
-- **4–6 — citation eyebrow raised:** clear public antecedence and meaningful overlap.
-- **6–8 — Schmidhuber territory:** distinctive, discoverable antecedent with little or no located credit.
-- **8–9.5 — full Schmidhuber:** unusually strong observable citation deficit.
-- **9.5–10 — exceptional public-evidence case:** extreme observable conditions; still not proof of misconduct.
+If bins are useful for visualization, v0.1 uses neutral labels only:
+
+- **0–2 — v0.1 bin A**;
+- **2–4 — v0.1 bin B**;
+- **4–6 — v0.1 bin C**;
+- **6–8 — v0.1 bin D**;
+- **8–9.5 — v0.1 bin E**;
+- **9.5–10 — v0.1 bin F**.
+
+Earlier mnemonic labels such as `ordinary convergence`, `plausible reinvention`, `Schmidhuber territory`, and `full Schmidhuber` are retired for scored interpretation. They suggested causal or normative states that the base score was explicitly designed not to identify. Semantic labels should not be restored until blinded calibration shows that stable thresholds correspond to reproducible expert judgments.
 
 ## 13. Practical audit protocol
 
@@ -272,18 +300,23 @@ A useful index must be independently reproducible. A minimal assessment for \(A\
 4. earliest public version of \(B\);
 5. temporal classification;
 6. each overlap component with textual or technical evidence;
-7. discoverability proxies reconstructed at the historical cutoff;
-8. direct and indirect credit in \(B\);
-9. important search queries and databases consulted;
-10. negative searches that materially constrain the conclusion;
-11. raw component values and formula version;
-12. impact data and observation date, if used;
-13. dependency evidence, normally unknown;
-14. uncertainty and revision history.
+7. for every overlap component, whether it is `scored`, `not_applicable`, or `unknown`;
+8. overlap coverage and the missing-data rule;
+9. discoverability proxies reconstructed at the historical cutoff;
+10. direct and indirect credit in \(B\);
+11. citation function/context where a citation exists;
+12. important search queries and databases consulted;
+13. negative searches that materially constrain the conclusion;
+14. raw component values and formula version;
+15. scalar score or interval, where justified;
+16. component uncertainty and sensitivity analysis;
+17. impact data and observation date, if used;
+18. dependency evidence, normally `unknown`;
+19. uncertainty and revision history.
 
-The accompanying OKF concept and `Citation Debt Assessment` type implement this structure for machine- and human-readable audits.
+The accompanying OKF concept and `Citation Debt Assessment` type implement this structure for machine- and human-readable audits. A scored assessment should not hide annotator disagreement behind a single decimal value.
 
-## 14. Calibration strategy
+## 14. Calibration and falsification strategy
 
 A probabilistic quantity such as
 
@@ -298,10 +331,21 @@ Version 0.1 therefore uses a deterministic index whose inputs can be inspected d
 Promising calibration sources include:
 
 - reviewer-identified missing citations such as CitationR [4];
-- controlled expert annotation of claim pairs;
+- controlled blinded expert annotation of claim pairs;
 - known corrections or post-publication citation disputes;
-- negative controls involving generic overlap, reversed chronology, canonical/common-knowledge claims, and low discoverability;
+- negative controls involving generic overlap, reversed chronology, canonical/common-knowledge claims, low discoverability, and obliteration-by-incorporation cases;
 - simultaneous-discovery datasets [7], which are valuable controls against converting overlap into derivation.
+
+At minimum, calibration should test:
+
+- inter-annotator reliability for \(P\), every overlap component, \(D\), and \(C\);
+- ranking agreement between \(SM_{base}\) and blinded judgments of whether a citation is expected;
+- robustness to plausible weights, normalizations, missing-data treatments, and additive/geometric/multiplicative alternatives;
+- out-of-domain stability across fields with different citation norms;
+- whether citation function needs to remain multidimensional rather than be collapsed into \(C\);
+- whether any proposed interpretation thresholds are calibrated before semantic labels are attached.
+
+If plausible model choices produce frequent rank reversals, the aggregate should be downgraded to a dashboard/vector. If expert judgments do not show useful out-of-sample agreement with the score, formula v0.1 should be replaced rather than defended by construction.
 
 The raw components should remain stable enough that future formulas can be applied retrospectively without destroying the original evidence record.
 
@@ -335,26 +379,31 @@ Attribution-gap work [6] and CITECHOICE [10] show that source credit can be quan
 
 Idea-twin and scooping research [7,8] shows both that independent convergence is common enough to study systematically and that priority order changes later rewards. Those findings motivate the explicit separation between temporal priority, causal dependency, and downstream impact.
 
+### 15.8 Composite indicators
+
+Composite-index methodology [15–17] is not prior art for citation debt as such, but it supplies a direct validity constraint on how a multi-component score should be used. Weighting and aggregation are modeling choices, so robustness is an empirical question rather than an aesthetic property of the formula.
+
 ## 16. Paper-level summaries
 
 The natural unit is a claim pair, not an author. For a paper with many audited claims, reporting distributions is preferable to naive summation:
 
-- maximum \(SM_{base}\);
-- median score among eligible later works;
+- maximum \(SM_{base}\), with coverage and uncertainty;
+- median score among sufficiently observed eligible later works;
 - number of high-confidence priority cases;
 - number of `later_non_citing` pairs;
-- number of pairs above a preregistered threshold;
+- number of pairs above any **preregistered, explicitly uncalibrated** visualization threshold;
+- sensitivity of these summaries to alternative plausible aggregation rules;
 - impact-weighted consequence statistics reported separately.
 
-Author-level rankings require particular caution because an evidence audit can otherwise turn into a reputational leaderboard detached from the uncertainty of individual claim pairs.
+Author-level rankings require particular caution because an evidence audit can otherwise turn into a reputational leaderboard detached from the uncertainty of individual claim pairs. Version 0.1 should not be used as an author misconduct ranking.
 
 ## 17. Limitations
 
 The framework has significant limitations.
 
-First, scholarly citation norms vary by field. Second, historical search behavior is difficult to reconstruct. Third, oral communication and private circulation leave incomplete public records. Fourth, independent rediscovery is common. Fifth, technical-overlap assessment can be disputed. Sixth, citation counts and venue prestige are imperfect measures of consequence. Seventh, the v0.1 product and its equal-weight overlap mean are not yet empirically calibrated. Eighth, a memorable eponym can encourage people to read the score as accusation rather than audit.
+First, scholarly citation norms vary by field. Second, historical search behavior is difficult to reconstruct. Third, oral communication and private circulation leave incomplete public records. Fourth, independent rediscovery is common. Fifth, technical-overlap assessment can be disputed. Sixth, citation purpose is heterogeneous and may not reduce reliably to a scalar credit variable. Seventh, the v0.1 product and its equal-weight overlap mean are not empirically calibrated. Eighth, weighting, normalization, aggregation, and missing-data choices can change composite-indicator rankings. Ninth, missing evidence can bias overlap upward if `unknown` is confused with `not_applicable`; v0.1 therefore requires an explicit missingness contract. Tenth, a memorable eponym can encourage people to read the score as accusation rather than audit.
 
-For these reasons the method is conservative about causality, requires provenance for every important judgment, and treats negative searches as bounded evidence rather than proof of nonexistence.
+For these reasons the method is conservative about causality, requires provenance for every important judgment, preserves raw components, treats negative searches as bounded evidence rather than proof of nonexistence, and requires uncertainty/sensitivity reporting for consequential use.
 
 ## 18. Why “Schmidhuber”?
 
@@ -368,7 +417,7 @@ The method aims to replace:
 
 with:
 
-> “Here is the claim, its earliest public version, the compared work, the technical overlap, the historical discoverability evidence, the observed credit, the uncertainty, and the exact score calculation.”
+> “Here is the claim, its earliest public version, the compared work, the technical overlap, what was unknown, the historical discoverability evidence, the observed credit and citation function, the uncertainty, the sensitivity analysis, and the exact score calculation.”
 
 ## 19. Conclusion
 
@@ -378,15 +427,16 @@ Its design principles are:
 
 1. reconstruct priority from the first public appearance of the specific claim;
 2. distinguish technical overlap from superficial semantic similarity;
-3. reconstruct historical discoverability rather than assume it;
-4. inspect received credit in context;
-5. keep impact as a later consequence rather than a retroactive obligation multiplier;
-6. keep causal dependency separate from bibliometric overlap;
-7. preserve raw evidence so every aggregate score can be recomputed or challenged.
+3. distinguish `unknown` from `not_applicable` evidence;
+4. reconstruct historical discoverability rather than assume it;
+5. inspect received credit and citation function in context;
+6. keep impact as a later consequence rather than a retroactive obligation multiplier;
+7. keep causal dependency separate from bibliometric overlap;
+8. preserve raw evidence, uncertainty, and sensitivity so every aggregate score can be recomputed or challenged.
 
-The 2026-09-19 prior-art audit narrows the proposal further: missing citations, expected citation gaps, attribution gaps, priority rewards, simultaneous discovery, citation amnesia, and citation-credit allocation all have antecedents. The proposed contribution is the **integration of those concerns into a public, claim-pair, versioned audit protocol and score**, not invention of the component phenomena.
+The 2026-09-19 prior-art audit narrows the proposal: missing citations, expected citation gaps, attribution gaps, priority rewards, simultaneous discovery, citation amnesia, and citation-credit allocation all have antecedents. The later falsification audit narrows the measurement claim further: the v0.1 product is one uncalibrated composite aggregation; missingness must be explicit; citation function matters; and causal score-band labels are not justified. The proposed contribution is therefore the **integration of these concerns into a public, claim-pair, versioned audit protocol and testable score**, not invention of the component phenomena or a claim that the current scalar is already universally validated.
 
-A useful scientometric instrument should make priority disputes narrower, more reproducible, and easier to revise when better evidence appears.
+A useful scientometric instrument should make priority disputes narrower, more reproducible, and easier to revise when better evidence appears. If calibration shows the scalar does not do that, the correct outcome is to replace the scalar while preserving the audit record.
 
 ---
 
@@ -418,6 +468,16 @@ A useful scientometric instrument should make priority disputes narrower, more r
 
 [13] Marco Cosentino, Franca Marino & Georges J. M. Maestroni. “Disregarded Conflicting Results with Prior Research: A Case Report in a Leading Biomedical Journal.” *Journal of Academic Ethics* 12(3), 245–249 (2014). DOI: `10.1007/s10805-014-9213-3`.
 
+[14] Franklin Silveira Baldo. “Schmidhuber Meter falsification audit — 2026-09-19.” [`audits/prior-art/schmidhuber-meter-falsification-2026-09-19.md`](audits/prior-art/schmidhuber-meter-falsification-2026-09-19.md).
+
+[15] OECD / European Union / EC-JRC. *Handbook on Constructing Composite Indicators: Methodology and User Guide* (2008). DOI: `10.1787/9789264043466-en`.
+
+[16] Melissa J. Dobbie & David Dail. “Robustness and sensitivity of weighting and aggregation in constructing composite indices.” *Ecological Indicators* 29 (2013). DOI: `10.1016/j.ecolind.2012.12.025`.
+
+[17] William E. Becker, Michaela Saisana, Paolo Paruolo & Ine Vandecasteele. “Weights and importance in composite indicators: Closing the gap.” *Ecological Indicators* 80 (2017). DOI: `10.1016/j.ecolind.2017.03.056`.
+
+[18] Lutz Bornmann & Hans-Dieter Daniel. “What do citation counts measure? A review of studies on citing behavior.” *Journal of Documentation* 64(1), 45–80 (2008). DOI: `10.1108/00220410810844150`.
+
 ## Repository specification
 
 The machine-readable operational definition for this paper is maintained in:
@@ -425,4 +485,4 @@ The machine-readable operational definition for this paper is maintained in:
 - [Schmidhuber Meter OKF concept](okf/schmidhuber-meter.md)
 - [Citation Debt Assessment OKF type](okf/types/citation-debt-assessment.md)
 
-The OKF definition is the source of truth for automated audits; this paper provides the scientific rationale and methodology.
+The OKF definition is the source of truth for automated audits; this paper provides the scientific rationale and methodology. Formula version 0.1 is frozen for reproducibility, while interpretation and future calibration remain explicitly revisable.
