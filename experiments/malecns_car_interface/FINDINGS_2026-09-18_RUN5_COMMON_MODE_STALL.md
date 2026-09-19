@@ -107,6 +107,16 @@ The architecture should therefore avoid allocating all additional compute to mor
 
 For the coordinator, `modality`, modality-summary age, confidence, novelty, and cross-modality disagreement are legitimate low-bandwidth signals. A learned MaleCNS coordinator should eventually beat the fixed hierarchical freshness baseline.
 
+## Prior-art boundary
+
+The generic reliability conclusions above are **not** new. Common-cause/common-mode failure defeating identical redundancy is established reliability engineering; sensor diversity and independent sensing principles are established mitigations. In autonomous-driving literature, modality-specific processing, quality/reliability-aware routing, and graceful degradation under missing/corrupted modalities also predate RUN5.
+
+The claim-level audit at [`audits/prior-art/malecns-common-mode-stall-2026-09-19.md`](../../audits/prior-art/malecns-common-mode-stall-2026-09-19.md) documents the temporal boundary and sources. In particular, NIST (1993) already describes a common sensor defeating redundant processors; NASA/IEEE work on common-cause failures formalizes the redundancy limit and role of diversity; and a 2026 autonomous-vehicle systematic review states that redundancy should be judged by independence of evidence rather than sensor count.
+
+What RUN5 contributes is narrower: an **executed MaleCNS-specific architecture diagnostic** that instantiates that established principle inside the repository's specialist-colony contract, quantifies same-camera redundancy versus cross-modal rescue in a deterministic synthetic regime, preserves reality-bounded modality/age metadata, and defines a concrete benchmark for a future learned MaleCNS coordinator. The numerical RUN5 results remain results of this experiment; they do not establish invention of common-mode-resilient or modality-diverse sensor fusion.
+
+No exact pre-cutoff source was located that combines measured-connectome MaleCNS reservoirs, several specialists per physical modality, the repository's robust modality-summary contract, the exact camera-stall/IMU-rescue ablation, and the planned matched-compute learned MaleCNS coordinator. That is a bounded negative search result, not an assertion of exhaustive novelty.
+
 ## Next experiment
 
 Replace the synthetic paired modalities with a cacheable real-data slice where overlapping signals exist, preferably vehicle yaw/speed derived independently from IMU and CAN/GNSS. Then train several actual MaleCNS specialists per modality and inject correlated sensor stalls after acquisition. The key comparison should preserve matched total compute:
