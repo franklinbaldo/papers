@@ -1,0 +1,66 @@
+name: Pontifex SciFact norm+KNN feasibility ladder K512
+
+on:
+  push:
+    branches:
+      - "experiment/pontifex-red-1"
+    paths:
+      - "experiments/pontifex_benchmarks/scifact_norm_knn_feasibility_ladder_k512.py"
+      - "experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-KNN-MATCHED-COUPLING-K512-2026-09-19.md"
+      - ".github/workflows/pontifex-scifact-norm-knn-feasibility-k512.yml"
+  workflow_dispatch:
+
+jobs:
+  norm-knn-feasibility-k512:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Restore SciFact representation cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/pontifex-scifact
+            ~/.cache/huggingface
+          key: pontifex-scifact-norm-knn-feasible-k512-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-scifact-norm-local-k512-v1-
+            pontifex-scifact-norm-matched-k512-v1-
+            pontifex-scifact-coupling-k512-v1-
+            pontifex-scifact-coupling-v1-
+            pontifex-scifact-side-v1-
+            pontifex-scifact-transport-v2-
+            pontifex-scifact-transport-v1-
+
+      - name: Run frozen D_student-only KNN feasibility ladder
+        run: |
+          uv run experiments/pontifex_benchmarks/scifact_norm_knn_feasibility_ladder_k512.py \
+            --seed 20260919 \
+            --k 512 \
+            --n-null 63 \
+            --n-norm-strata 8 \
+            --cache-dir .cache/pontifex-scifact \
+            --output /tmp/pontifex-scifact-norm-knn-feasibility-ladder-k512.json
+
+      - name: Publish result summary
+        if: always()
+        run: |
+          echo '## Pontifex SciFact residual-norm + feasible A-KNN coupling K=512' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f /tmp/pontifex-scifact-norm-knn-feasibility-ladder-k512.json ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/pontifex-scifact-norm-knn-feasibility-ladder-k512.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload mechanism record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-scifact-norm-knn-feasibility-ladder-k512
+          path: /tmp/pontifex-scifact-norm-knn-feasibility-ladder-k512.json
+          if-no-files-found: error
