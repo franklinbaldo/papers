@@ -12,7 +12,7 @@ tags: [pontifex, scifact, retrieval, transport, permutation, null, mechanism, ho
 
 **Prospective mechanism follow-up.** This protocol is frozen after observing the completed residual-side ablation but before the first run of this coupling-specificity experiment. It is therefore not an independent confirmation of the original Pontifex claim.
 
-The motivating observation is narrow: at the predeclared `K=256`, the full residual did not reliably outperform Procrustes, but the algebraic two-sided interaction was positive; at `K=512` the same pattern was larger. That observation motivates the discriminant below and is not itself reused as a selection target.
+The motivating observation is narrow: at the predeclared `K=256`, the full residual did not reliably outperform Procrustes, but the algebraic two-sided interaction was positive. The larger interaction at `K=512` is noted in the preceding findings but is **not** used to choose the present test point.
 
 ## Scientific question
 
@@ -29,15 +29,13 @@ A shared nonlinear transformation can create non-additive retrieval effects even
 
 No MPNet/B coordinate may be encoded for test queries or corpus documents. No test qrel may select K, a permutation, `tau`, `lambda`, model class or endpoint.
 
-## Primary and diagnostic K
+## Frozen test point
 
-`K=256` remains the **primary point** because it was selected prospectively in the preceding residual-side protocol from the earlier SICK-R benchmark, not from SciFact test outcomes.
-
-`K=512` is retained as a **predeclared diagnostic** because it was already part of the parent scaling ladder. Results at `K=512` must not be promoted to a second confirmatory discovery.
+Only `K=256` is tested here. It remains the primary mechanism point because it was selected prospectively in the preceding residual-side protocol from the earlier SICK-R benchmark, not from SciFact test outcomes. Restricting this follow-up to that already-frozen point also avoids turning the stronger post-hoc `K=512` interaction into a new selection rule.
 
 ## Three frozen conditions
 
-For each K, fit the ordinary Procrustes coarse map on the correct `D_student` pairs and compute the true anchor residuals
+Fit the ordinary Procrustes coarse map on the correct `D_student` pairs and compute the true anchor residuals
 
 `r_i = b_i - Procrustes(a_i)`.
 
@@ -55,13 +53,13 @@ Thus `TRUE` and `COUPLED-NULL` differ in semantic residual-to-anchor assignment 
 
 The primary retrieval endpoint is mean nDCG@10 over the 300 canonical SciFact test queries.
 
-For `K=256` report:
+Report:
 
 - `TRUE - median(COUPLED-NULL_j)` and an exact finite-bank upper-tail randomization p-value `(1 + #{null >= TRUE}) / 32`;
 - `median(COUPLED-NULL_j) - median(INDEPENDENT-NULL_j)`;
 - paired-query bootstrap intervals for `TRUE - mean(COUPLED-NULL)` and `mean(COUPLED-NULL) - mean(INDEPENDENT-NULL)` using 5000 deterministic resamples.
 
-The 31-null bank gives minimum p-value `1/32 = 0.03125`; no stronger resolution may be claimed. `K=512` receives the same descriptive outputs but is diagnostic.
+The 31-null bank gives minimum p-value `1/32 = 0.03125`; no stronger resolution may be claimed. No alternate K is substituted if this point is null or adverse.
 
 ## Interpretation boundary
 
