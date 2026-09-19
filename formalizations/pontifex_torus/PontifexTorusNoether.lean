@@ -66,7 +66,7 @@ theorem antisymmetric_current_has_zero_net
   unfold AntisymmetricCurrent at hanti
   unfold netCurrent
   rw [hanti]
-  simp
+  exact Int.add_right_neg current.left
 
 /-- A candidate semantic charge is conserved over a discrete traversal exactly
 when it has the same value at every phase. This definition is intentionally
