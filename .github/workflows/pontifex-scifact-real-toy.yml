@@ -1,6 +1,12 @@
 name: Pontifex SciFact real toy
 
 on:
+  push:
+    branches:
+      - "experiment/pontifex-red-1"
+    paths:
+      - "experiments/pontifex_red1/scifact_real_toy.py"
+      - ".github/workflows/pontifex-scifact-real-toy.yml"
   workflow_dispatch:
     inputs:
       queries:
@@ -26,6 +32,7 @@ jobs:
           uv run experiments/pontifex_red1/scifact_real_toy.py \
             --queries "$N_QUERIES" \
             --seed 7 \
+            --train-budgets 4 8 16 24 32 48 \
             --output /tmp/pontifex-scifact-real-toy.json
 
       - name: Publish summary
