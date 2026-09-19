@@ -1,4 +1,5 @@
 ---
+type: "Companion Note"
 okf_version: "0.2"
 title: "Agent Successor Policy — Epistemic Provenance of Rewards and Agent Claims"
 description: "Companion note separating observed, simulated, inferred, and pending ASP training signals and defining null models for claims about learned agency."
