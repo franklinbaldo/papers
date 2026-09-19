@@ -869,3 +869,13 @@ That formulation is not a replacement for model theory or teaching complexity. I
 [6] Ziyuan Gao, Christoph Ries, Hans U. Simon, and Sandra Zilles. “Preference-Based Teaching.” *Journal of Machine Learning Research* 18, 1–32, 2017.
 
 [7] Faizanuddin Ansari, Debanjan Dutta, and Swagatam Das. “Identifiability and Order-Dimension Limits of In-Context Learning on Partial Orders.” arXiv:2608.14004, v1 posted 14 August 2026. https://arxiv.org/abs/2608.14004.
+
+
+## Research programme position
+
+- **Initiative:** Structural Identification
+- **Scope:** What structure is identifiable from restricted observations relative to a hypothesis class, equivalence relation, and cost.
+- **Not claimed here:** It supplies formal foundations for several initiatives but does not itself establish any particular semantic geometry.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.

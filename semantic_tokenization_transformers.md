@@ -35,7 +35,7 @@ franklinbaldo@gmail.com
 
 ## Abstract
 
-Current language models rely on subword tokenization (e.g., Byte-Pair Encoding) which operates at a granularity that is fundamentally misaligned with semantic units of meaning. This limits effective context length, requires excessive computational steps to model long-range dependencies, and produces representations that lack semantic coherence. We propose **Semantic Tokenization Transformers (STT)**, an approach that shifts the atomic unit of pre-training from subwords to semantic chunks. The method has three components: (1) an offline tokenization pipeline that embeds text chunks using a pre-trained teacher model and quantizes them into a discrete codebook via Residual Vector Quantization (RVQ), (2) a Transformer architecture trained autoregressively on sequences of semantic codes with optional dual-stream processing, and (3) a semantically grounded decoding mechanism that reconstructs readable text through medoid-based path selection with disciplined LLM normalization, preserving core concepts while producing fluent paraphrases. We argue that, *if* the proposed pipeline behaves as designed, STT should yield substantial compression of sequence length over BPE, enable modeling of significantly longer contexts, and produce decodings with high semantic fidelity and low hallucination. We formulate these as falsifiable predictions and describe an experimental protocol to test them. The approach is also intended to provide semantic indexing for retrieval and memory systems while remaining compatible with existing Transformer architectures.
+Current language models rely on subword tokenization (e.g., Byte-Pair Encoding), while a chosen representation model can supply coarser **teacher-relative semantic groupings** that may be more useful for some long-context computations. These groupings are measurements made by an observer, not assumed observer-independent atoms of meaning. This limits effective context length, requires excessive computational steps to model long-range dependencies, and produces representations that lack semantic coherence. We propose **Semantic Tokenization Transformers (STT)**, an approach that shifts the computational unit of pre-training from subwords to **teacher-relative semantic chunks/codes**. "Semantic" here means structured by a declared frozen representation observer; it does not assert that the teacher's partition is the unique or observer-independent semantic ontology. The method has three components: (1) an offline tokenization pipeline that embeds text chunks using a pre-trained teacher model and quantizes them into a discrete codebook via Residual Vector Quantization (RVQ), (2) a Transformer architecture trained autoregressively on sequences of semantic codes with optional dual-stream processing, and (3) a semantically grounded decoding mechanism that reconstructs readable text through medoid-based path selection with disciplined LLM normalization, preserving core concepts while producing fluent paraphrases. We argue that, *if* the proposed pipeline behaves as designed, STT should yield substantial compression of sequence length over BPE, enable modeling of significantly longer contexts, and produce decodings with high semantic fidelity and low hallucination. We formulate these as falsifiable predictions and describe an experimental protocol to test them. The approach is also intended to provide semantic indexing for retrieval and memory systems while remaining compatible with existing Transformer architectures.
 
 **Keywords:** semantic tokenization, vector quantization, transformer architecture, faithful decoding, long-range modeling
 
@@ -43,7 +43,7 @@ Current language models rely on subword tokenization (e.g., Byte-Pair Encoding) 
 
 ## 1. Introduction
 
-The dominant paradigm in language model pre-training relies on subword tokenization schemes such as Byte-Pair Encoding (BPE) [Sennrich et al., 2016] or SentencePiece [Kudo & Richardson, 2018]. While these methods balance vocabulary size with coverage, they operate at a granularity that is fundamentally disconnected from semantic units—the natural atoms of meaning in human language. A typical sentence might be split into 15-25 BPE tokens, and a paragraph into 150-300 tokens, rapidly consuming the limited context windows of modern Transformers [Vaswani et al., 2017].
+The dominant paradigm in language model pre-training relies on subword tokenization schemes such as Byte-Pair Encoding (BPE) [Sennrich et al., 2016] or SentencePiece [Kudo & Richardson, 2018]. While these methods balance vocabulary size with coverage, their boundaries are not designed to coincide with higher-level relational groupings produced by a semantic representation model. STT does not assume that any such grouping is a natural or observer-independent atom of meaning. A typical sentence might be split into 15-25 BPE tokens, and a paragraph into 150-300 tokens, rapidly consuming the limited context windows of modern Transformers [Vaswani et al., 2017].
 
 This mismatch between tokenization granularity and semantic structure has several consequences:
 
@@ -98,6 +98,23 @@ methodological, not empirical. Specifically:
 3. **Matched baseline ladder:** the proposal is evaluated not only against BPE models but against continuous sentence/concept modeling, Quant-LCM/RVQ-style semantic modeling, semantic-token reduction, conventional learned decoding, and successive reconstruction ablations.
 
 4. **Falsifiable position-paper protocol:** all sequence-length, fidelity, cost, and downstream-performance statements remain prospective design targets with explicit failure criteria; no empirical advantage is claimed in this version.
+
+### 1.5 Observer-relative semantics contract
+
+Every STT codebook is indexed by the observer that constructs it. If a frozen teacher `O_T` embeds chunks and an RVQ quantizer `Q` discretizes that geometry, then a code
+
+\[
+z=Q(O_T(x))
+\]
+
+is a **teacher-relative semantic code**. Reconstruction fidelity, compression ratio, or downstream performance do not by themselves show that another observer partitions the same inputs in the same way.
+
+The programme therefore separates two claims:
+
+- **computational usefulness:** teacher-relative codes can compress/model/reconstruct sequences effectively;
+- **cross-observer semantic validity:** the code neighborhoods, boundaries, or relational distinctions are recoverable by an observer that did not construct the codebook.
+
+The second claim requires a frozen held-out-observer evaluation and may fail even if the first succeeds. Metrics for that evaluation should reuse Semantic Observers / Semantic Atlas relational measures rather than define a bespoke notion of universality. See the [Semantic Systems Research Map](research/semantic-systems-map.md).
 
 The remainder of this paper is organized as follows: Section 2 reviews related work, Section 3 details the proposed method, Section 4 describes implementation considerations, Section 5 presents the evaluation protocol and falsifiable predictions, Section 6 discusses limitations, and Section 7 concludes with future directions.
 
@@ -1256,3 +1273,13 @@ experimentally, not a measured result.
 ---
 
 *End of paper*
+
+
+## Research programme position
+
+- **Initiative:** Semantic Tokenization Transformers
+- **Scope:** Semantic chunks/codes as computational units for sequence modeling and corpus-grounded reconstruction.
+- **Not claimed here:** STT is an application of semantic representations, not evidence for Pontifex, Semantic Atlas, or Torus.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.

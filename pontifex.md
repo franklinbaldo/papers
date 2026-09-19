@@ -160,13 +160,11 @@ under inspection need not itself be byte-level.
 Procrustes alignment, contrastive multimodal pretraining (CLIP,
 ALIGN), and domain-adaptation methods all attempt to bring two or
 more embedding spaces into a common frame so that distances become
-comparable. Pontifex deliberately does *not* align spaces. Instead, it
-treats each encoder as a self-contained oracle that emits scalar
-similarity scores, and asks a small head to learn agreement patterns
-over those scalars. This sidesteps the cost and brittleness of
-alignment and accommodates spaces that are structurally
-non-isomorphic (e.g., a text encoder, a code encoder, and a vision
-encoder).
+comparable. Pontifex's **core comparison primitive** deliberately does *not* require alignment between spaces. It treats each encoder as a self-contained observer that emits within-space response measurements to externally shared interventions. Those measurements are comparable because the intervention is shared, not because the coordinates are.
+
+Later research branches may optionally fit an explicit transport (for example Procrustes, affine, or low-capacity residual maps) **after** intervention-derived correspondence has been established. Such a transport is a downstream model of cross-space structure, not part of the primitive that makes Pontifex measurements comparable. Failure or success of a transport model therefore does not retroactively validate or falsify the coordinate-free intervention primitive.
+
+This stage distinction lets Pontifex accommodate spaces that are structurally non-isomorphic (for example a text encoder, a code encoder, and a vision encoder) while still permitting explicit transport to be tested when reconstruction itself is the scientific endpoint.
 
 ### 2.4 Position relative to closest prior art
 
@@ -240,12 +238,20 @@ perturbations and produces, for each byte position, a saliency score
 and an "agreement profile" — a measure of how concordant the encoders
 were about the importance of that span. `C` is trained on a small
 labelled dataset of human-annotated salient spans, or via
-self-supervised proxies (see Section 5). Because `C` operates on
-scalar similarity scores rather than on embeddings, it is cheap to
-train and to run, and it does not need to learn any cross-space
-mapping.
+self-supervised proxies (see Section 5). Because `C` operates on scalar similarity scores rather than on embeddings, the original convergence architecture is cheap to train and does not need a cross-space coordinate map. This statement applies to the **core convergence formulation** only; later Pontifex transport experiments intentionally add explicit mappings as optional downstream estimators and must be evaluated as separate claims.
 
-### 3.5 Computational profile (design target)
+### 3.5 Core primitive versus optional transport
+
+Pontifex now distinguishes two experimental layers:
+
+1. **Identification layer (core):** shared or proxy interventions plus within-observer response measurements. This layer is coordinate-free across observers and is the minimum Pontifex claim.
+2. **Transport layer (optional):** an explicit map is fitted after correspondence has been defined, when the endpoint requires reconstructing or predicting another observer's representation.
+
+Transport models include linear isometries, affine maps, local/regional decoders, and low-capacity residuals. They compete against static-alignment baselines and may fail without invalidating the identification layer. Conversely, good reconstruction by a generic aligner is not evidence that intervention information was necessary; a discriminating control must show incremental information from Pontifex responses.
+
+This separation is the canonical resolution of the apparent tension between the original no-alignment formulation and current transport branches. See the [Semantic Systems Research Map](research/semantic-systems-map.md).
+
+### 3.6 Computational profile (design target)
 
 The design target is end-to-end latency of roughly 0.5 seconds per
 sample on a single consumer GPU for inputs of up to a few kilobytes,
@@ -477,3 +483,18 @@ programme regardless of how that verification resolves.
 - `o3-originality-assessment.md` — preliminary, AI-assisted prior-art
   scan for the same idea. Not an independent assessment; see the
   editorial note at the top of that file.
+
+## Shared cross-program evaluation contracts
+
+For any claim that multiple observers add information beyond one observer, Pontifex now reuses the [Synergy Geometry protocol](experiments/synergy_geometry/protocol.md) rather than defining a project-specific notion of "synergy". The minimum ladder is best-single → static weighted combination → interaction-capable combination → shuffled-coupling null.
+
+For programme-level comparison against static geometry and inverse semantic querying, Pontifex participates in the prospective [Unified Semantic Identification Benchmark](experiments/unified_semantic_identification/protocol.md). A Pontifex-specific gain is therefore an incremental held-out effect over the nested non-Pontifex arm, not merely a good absolute score.
+
+## Research programme position
+
+- **Initiative:** Pontifex
+- **Scope:** Shared/proxy interventions and within-system response signatures across otherwise unaligned observers.
+- **Not claimed here:** The Torus topology/model class, Semantic Atlas static geometry, Perquire inversion, and MaleCNS-specific mechanisms are separate initiatives.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.

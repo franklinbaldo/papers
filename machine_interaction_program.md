@@ -196,3 +196,12 @@ For the conceptual arc:
 7. `machine_discovery.md` — when any terminal product could alter accepted public knowledge.
 
 For implementation, begin with `rl_relay_transducers.md` and treat the other papers as definitions of the controls, diagnostics, and claims that the implementation must not conflate.
+
+## Research programme position
+
+- **Initiative:** Machine Interaction Program
+- **Scope:** Editorial map for machine teaching, informational time, relay systems, interstitial agency, and machine discovery.
+- **Not claimed here:** This is an adjacent interaction/agency programme, not a subproject of Pontifex or Semantic Atlas.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.

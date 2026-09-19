@@ -486,3 +486,13 @@ Zhang, Y., Li, M., Long, D., Zhang, X., Lin, H., Yang, B., Xie, P., Yang, A., Li
 Zhou, F., & De la Torre, F. (2009). Canonical Time Warping for Alignment of Human Behavior. *Advances in Neural Information Processing Systems*.
 
 Zhou, F., & De la Torre, F. (2012). Generalized Time Warping for Multi-Modal Alignment of Human Motion. *Proceedings of CVPR 2012*. https://doi.org/10.1109/CVPR.2012.6247812
+
+
+## Research programme position
+
+- **Initiative:** Narrative Proxy Interventions
+- **Scope:** Substrate-native realizations of shared intervention concepts, especially for sequential heterogeneous systems such as language and MaleCNS.
+- **Not claimed here:** The Torus is an optional aligner/model class; the paper's core proxy-intervention framework does not require it.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.

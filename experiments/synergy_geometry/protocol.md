@@ -51,6 +51,61 @@ Success would **not** show that:
 
 At most, success would support a narrow empirical claim: some relation-dependent computations may be carried by an identifiable interaction geometry that survives held-out composition, causal intervention, and independently calibrated cross-model comparison.
 
+## Shared multi-observer evaluation contract
+
+This protocol also defines the programme-wide vocabulary for claims that combining observers adds information beyond simpler baselines. Consumer projects may instantiate different observables, but they should preserve the same comparison logic.
+
+For observer channels (X_1,ldots,X_k) and target (Y), report separately:
+
+1. **best single observer** — strongest (X_i) under the same split;
+2. **static convex/reliability-weighted combination** — no interaction terms;
+3. **interaction-capable combination** — may use cross terms or a learned fusion model;
+4. **channel ablation/corruption** — tests robustness and dependence on each observer;
+5. **shuffled-coupling null** — preserves marginal channel distributions while destroying cross-observer correspondence;
+6. **held-out observer or held-out relation** where the project claims general shared structure.
+
+The minimum programme-wide effect decomposition is:
+
+[
+Delta_{mathrm{fusion}} =
+operatorname{score}(	ext{interaction model})
+-
+operatorname{score}(	ext{best single}),
+]
+
+[
+Delta_{mathrm{interaction}} =
+operatorname{score}(	ext{interaction model})
+-
+operatorname{score}(	ext{best static weighted combination}),
+]
+
+plus a correspondence-specificity contrast against the shuffled-coupling null.
+
+These quantities answer different questions and must not be collapsed into one "synergy" number.
+
+### Required claim vocabulary
+
+- **redundancy:** observers carry overlapping predictive/relational information;
+- **unique information:** one observer contributes information not recoverable from the others under the declared model class;
+- **complementarity:** combination improves the endpoint without yet establishing irreducible statistical synergy;
+- **interaction gain:** an interaction-capable combination beats a matched static combination;
+- **correspondence-specific interaction:** interaction gain also beats a null that destroys the true observer pairing;
+- **PID/statistical synergy:** reserved for an explicitly estimated information-decomposition quantity under its own assumptions.
+
+Consumer papers should use the weakest term supported by their controls.
+
+### Consumer bindings
+
+The following initiatives should reuse this contract rather than create project-specific "multi-observer gain" semantics:
+
+- Pontifex RED/convergence experiments;
+- Semantic Observers multi-observer reconstruction;
+- Semantic Atlas multi-model fusion;
+- Torus Assembly teacher fusion and regional reliability.
+
+Each consumer remains responsible for its own target, data split, and scientific interpretation. Shared metrics are methodology, not evidence transferred across projects.
+
 ## Formal objects
 
 Let \(A\) and \(B\) be finite sets of experimentally controlled factors, not assumed to be vector spaces. For model \(M\), layer \(l\), and fixed scaffold/context \(c\), record the activation

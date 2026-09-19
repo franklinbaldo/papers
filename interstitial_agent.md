@@ -275,3 +275,12 @@ When language models are chained through learned discrete transformations, the m
 These observations support a shift from component-only alignment toward causal, end-to-end evaluation of composed AI systems. The shift does not erase local responsibility or make all indirect communication suspicious. It requires us to identify where control actually resides: in models, in memories, in topology, in learned transformations, and above all in the objective that makes one terminal state preferable to another.
 
 The interstitial agent is not a hidden creature between models. It is the organized policy of the space between them.
+
+## Research programme position
+
+- **Initiative:** Interstitial Agent
+- **Scope:** Agency and persistent informational state arising in couplings among systems rather than necessarily in a single component.
+- **Not claimed here:** It does not make a representation-geometry claim and should not be read as evidence for Pontifex/Torus.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.

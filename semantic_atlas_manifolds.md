@@ -46,6 +46,19 @@ This produces a testable alternative to a global-PCA picture of semantic space. 
 
 ---
 
+## Evidence boundary: manifold is a local model class, not the semantic ontology
+
+The manifold extension is evaluated as a **local/mesoscale model class** for observer-relative representation structure. Evidence that a chart, tangent model, diffusion operator, or geodesic improves prediction/control over matched point-space baselines supports that local model in the declared observer and gauge.
+
+It does **not** imply that:
+
+- all observers share the same manifold;
+- local charts glue into one observer-independent global manifold;
+- successful cross-model chart alignment proves metric identity;
+- a visually coherent rendered atlas is the underlying semantic world.
+
+Cross-observer claims require separately fitted calibration mappings and held-out relational tests. The default common evidence layer remains local relational invariants, consistent with [Semantic Observers](semantic_observers.md), [Semantic Atlas static geometry](semantic_atlas_static_geometry.md), and the [Semantic Systems Research Map](research/semantic-systems-map.md).
+
 ## 1. Scope: a follow-up, not a revision
 
 The original [Semantic Atlas](semantic_atlas.md) proposes a multiscale map of language-model dynamics expressed in a calibrated Semantic Reference Frame (SRF), with semantic quasars fixing an external reference geometry, an atlas estimating local transition and reachability structure, and a Semantic Servo providing closed-loop control.
@@ -626,3 +639,12 @@ The most interesting possibility is that the model's enormous activation space c
 This paper proposes an extension and a sequence of falsifiable experiments. It does **not** claim novelty for the broad semantic-manifold hypothesis, concept manifolds, sparse multidimensional concept blocks, generic global/local semantic-manifold decompositions, dynamical-system descriptions on semantic manifolds, manifold/geodesic steering, local tangent charts, learned chart atlases, Procrustes alignment, or graph-Laplacian/diffusion/Fiedler/conductance machinery. It also does **not** claim that BSFs are the correct featurizer for language, that language concepts are typically two- to four-dimensional, that independently trained models share the same local manifold coordinates, that semantic "gravity" is a physical force, that spectral graph bottlenecks are causal barriers, or that a three-dimensional visualization faithfully represents the full high-dimensional geometry without distortion.
 
 The bounded candidate contribution is the **SRF/quasar-anchored integration and experimental contract** described in §1.1. In particular, a spectral gap of a graph Laplacian or Laplace--Beltrami operator is used here only as a representation-geometric observable; it is not a quantum-field-theoretic mass gap and does not support claims about Yang--Mills theory or physical compactification. No experiment reported here establishes the manifold extension; the proposal is ready to archive as a preprint because its claims are explicitly scoped, its strongest alternatives and controls are stated, and its rejection conditions are part of the design.
+
+## Research programme position
+
+- **Initiative:** Semantic Atlas / manifolds
+- **Scope:** Local charts, manifold-aware geometry, bottlenecks, tangent structure, and support-respecting navigation.
+- **Not claimed here:** It does not by itself establish an intervention-derived map or a Torus topology.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.

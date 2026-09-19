@@ -42,6 +42,18 @@ The result supports a narrow but useful conclusion: independently trained embedd
 
 ---
 
+## Evidence boundary: relational agreement is not a universal metric
+
+This paper's positive evidence concerns **calibrated relational agreement between declared observers**. The preregistered mKNN results show that local neighborhood agreement survives large-gallery scaling while remaining materially below same-observer stability. They do not establish that the two observers instantiate one globally identical metric space.
+
+The canonical interpretation is therefore:
+
+- **supported:** nontrivial, scale-stable cross-observer local relational structure;
+- **also supported:** substantial observer-specific residual structure;
+- **not established:** a unique observer-independent global semantic metric or manifold.
+
+Any later global alignment or reference-frame model must earn additional predictive value beyond these local relations and must be evaluated under a frozen gauge. This interpretation is shared with [Semantic Observers](semantic_observers.md) and the [Semantic Systems Research Map](research/semantic-systems-map.md).
+
 ## 1. Question
 
 Suppose two embedding models can be compared on the same collection of texts. Even if their coordinates can be aligned, two different questions remain:
@@ -335,3 +347,13 @@ The terminal findings record is `experiments/semantic_atlas/SCALE_MKNN_RESULTS.m
 The frozen protocol, corpus manifest, exact-draw code, aggregate results, embeddings manifests, and terminal figure are preserved under `experiments/semantic_atlas/` and in the durable prerelease `semantic-atlas-scale-v1-data`. The primary corpus hash is `3333172fb665cd6de92117f6a825de7bb250c4b18a248d74acbec810405f89c8`.
 
 No threshold, corpus rule, model revision, gallery schedule, or terminal classification rule was changed after observing the N=100k outcome.
+
+
+## Research programme position
+
+- **Initiative:** Semantic Atlas / static geometry
+- **Scope:** Static cross-model geometry and the extent to which relational structure survives coordinate mismatch.
+- **Not claimed here:** Dynamic/interventional response claims belong to Pontifex; periodic topology belongs to Torus.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.

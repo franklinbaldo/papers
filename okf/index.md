@@ -38,6 +38,7 @@ every pull request.
 * [Reference](types/reference.md) - vendored external material, mirrored into this repository so its OKF adoption does not depend on that material staying reachable (`okf/SPEC.md`).
 * [Author](types/author.md) - canonical reusable identity record for paper authors and future coauthors.
 * [OKF Type Spec](types/okf-type-spec.md) - a document that specifies how one type should be used (this list's own entries).
+* [Research Map](types/research-map.md) - canonical programme map for relationships, evidence state, dependencies, and source-of-truth boundaries across papers and adjacent initiatives.
 
 # Tooling
 

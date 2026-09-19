@@ -287,3 +287,13 @@ Wynne, M.; and Hellesøy, A. 2012. *The Cucumber Book: Behaviour-Driven Developm
 [CITATION NEEDED: representative reference on operator-log auditability and structured logs in process industries — possibly IEEE Trans. Industrial Informatics or similar]
 
 [CITATION NEEDED: PINK repository URL — to be added on submission]
+
+
+## Research programme position
+
+- **Initiative:** Affordance Restriction
+- **Scope:** Constraining an agent's executable action space for auditability and bounded-domain safety.
+- **Not claimed here:** This is adjacent action-space research; it is not mechanistic interpretability or semantic-geometry evidence.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.

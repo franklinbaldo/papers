@@ -10,6 +10,10 @@ okf_version: "0.1"
 
 Position papers and working drafts.
 
+## Mapa canônico do ecossistema de pesquisa
+
+- `research/semantic-systems-map.md` — **Semantic Systems Research Map**: fonte de verdade para a relação entre Pontifex, Torus, Semantic Atlas, Semantic Observers, Perquire, ILG, MaleCNS, Synergy Geometry, Structural Identification, Dynamic Quasar Reference Frames, STT e iniciativas adjacentes. Status transversal e relações entre papers devem ser atualizados primeiro nesse mapa, evitando duplicação e drift editorial.
+
 ## Raciocínio Jurídico Auditável (CPC 2015) — série dogmática
 
 - `paper1_dogmatico_ED_precedentes.md` — Embargos de Declaração e saídas legítimas diante de precedente vinculante (umbrella)

@@ -585,3 +585,12 @@ If successful, the benchmark will establish a controlled substrate for studying 
 ## Pre-registration
 
 A permanent external pre-registration link has not yet been created. `[LINK]` will be replaced only after the protocol is deposited; the repository history records this version of the design before data collection.
+
+## Research programme position
+
+- **Initiative:** Forbidden Relay
+- **Scope:** Pre-registered transmission benchmark for recoverable benign messages across constrained LLM chains.
+- **Not claimed here:** This tests emergent communication and information preservation, not representation alignment or semantic cartography.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
