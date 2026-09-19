@@ -65,8 +65,11 @@ def age_normalized_huber_weight(
     ``base_scale`` is the residual radius for a fresh report. The effective radius
     contracts with timestamp-derived freshness, so stale reports must agree more
     closely with the currently available cross-modal estimate before receiving the
-    same influence. This encodes a physical fact rather than a hidden failure flag:
-    old measurements are less informative about a changing world.
+    same influence. Positive ``age_power`` is an experimental conservative
+    heuristic, not a general physical law: Run 17 shows that it can suppress useful
+    independent correction when the reference modality carries persistent bias.
+    The mechanism remains reality-bounded because it uses only observed report
+    values, confidence, modality and timestamp-derived age.
     """
 
     if base_scale <= 0.0:
