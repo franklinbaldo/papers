@@ -3,6 +3,7 @@ import unittest
 from colony import (
     SpecialistReport,
     confidence_weighted_value,
+    consensus_weighted_value,
     disagreement,
     median_value,
 )
@@ -28,6 +29,22 @@ class ColonyTests(unittest.TestCase):
             SpecialistReport("bad", "danger", 1.0, 0.0),
         ]
         self.assertAlmostEqual(confidence_weighted_value(reports), 0.25)
+
+    def test_consensus_weighting_rejects_overconfident_outlier(self):
+        reports = [
+            SpecialistReport("a", "yaw", 0.10, 0.7),
+            SpecialistReport("b", "yaw", 0.12, 0.8),
+            SpecialistReport("c", "yaw", 0.11, 0.9),
+            SpecialistReport("bad", "yaw", 1.20, 1.0),
+        ]
+        value = consensus_weighted_value(reports, min_radius=0.05)
+        self.assertGreater(value, 0.10)
+        self.assertLess(value, 0.12)
+
+    def test_consensus_weighting_rejects_negative_radius(self):
+        reports = [SpecialistReport("a", "speed", 1.0, 1.0)]
+        with self.assertRaises(ValueError):
+            consensus_weighted_value(reports, min_radius=-0.1)
 
     def test_disagreement_detects_conflict(self):
         calm = [
