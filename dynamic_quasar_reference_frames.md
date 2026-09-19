@@ -850,3 +850,13 @@ OpenAI (2026). **NavierStokesAndEuler: Lean certificates accompanying Navier--St
 Baldo, F. (2026). **Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models.** `semantic_atlas.md`, this repository.
 
 Baldo, F. (2026). **From Semantic Points to Concept Manifolds: A Manifold-Aware Extension of the Semantic Atlas.** `semantic_atlas_manifolds.md`, this repository.
+
+
+## Research programme position
+
+- **Initiative:** Dynamic Quasar Reference Frames
+- **Scope:** Dynamic reference frames, canonical vector fields, trajectory, reachability, flow, and control under moving gauges.
+- **Not claimed here:** It is adjacent to Semantic Atlas and Torus gauge questions but does not depend on Pontifex.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
