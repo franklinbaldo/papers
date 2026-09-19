@@ -554,3 +554,105 @@ When programme structure changes, update this file first. Update a paper only wh
 The most useful shared experiment is not another domain-specific demonstration. It is a **Unified Semantic Identification Benchmark** with common data splits and held-out endpoints, allowing static, interventional, inverse-query, and combined methods to compete under one evaluation contract.
 
 That benchmark would tell us whether these initiatives are genuinely complementary or merely rediscovering the same signal through different interfaces.
+
+
+## 26. Cross-line consistency register
+
+This register tracks places where two research lines can be individually reasonable but jointly inconsistent, ambiguous, or vulnerable to claim leakage. A row stays open until the linked issue's acceptance criterion is met.
+
+| priority | inconsistency | affected initiatives | risk | issue |
+|---|---|---|---|---|
+| **P0** | Pontifex core says it avoids explicit alignment, while current transport branches use Procrustes / explicit maps | Pontifex, Torus transport, benchmarks | foundational-method ambiguity: readers may think the programme reversed its primitive rather than added an optional downstream stage | [#670](https://github.com/franklinbaldo/papers/issues/670) |
+| **P0** | STT can read as if a single teacher's embedding defines observer-independent semantic units | STT, Semantic Observers, Semantic Atlas | ontology leakage: teacher-relative codes can be mistaken for universal semantic atoms | [#671](https://github.com/franklinbaldo/papers/issues/671) |
+| **P0** | Semantic Atlas global/shared-geometry language can outrun the local/observer-relative evidence boundary | Semantic Atlas, Semantic Observers, Structural Identification | overclaiming global geometry from local relational agreement | [#672](https://github.com/franklinbaldo/papers/issues/672) |
+| **P1** | MaleCNS appears as observer, operator, controller, and optional Torus component; evidence can leak across roles | MaleCNS, Pontifex, Torus | role conflation and invalid cross-paper inference | [#676](https://github.com/franklinbaldo/papers/issues/676) |
+| **P1** | Gauge / equivalence / identifiability terminology is independently redefined in several lines | Structural Identification, Semantic Atlas, Pontifex, ILG, Torus | duplicated formal work and incompatible theorem statements | [#675](https://github.com/franklinbaldo/papers/issues/675) |
+
+### Consistency interpretation rules
+
+1. An inconsistency is not automatically a contradiction in the underlying science. It may be a **scope or ontology mismatch** that needs explicit wording.
+2. Historical papers/results are preserved. Corrections should narrow interpretation or add stage distinctions rather than rewrite the empirical record.
+3. A cross-line issue is closed only when every affected canonical paper either:
+   - adopts the common definition/boundary; or
+   - explicitly states why its usage is intentionally different.
+4. Evidence does not propagate across initiative boundaries unless an experiment was designed to discriminate that bridge claim.
+
+## 27. Synergy register
+
+This register tracks reusable work that should flow from one initiative into another rather than being reimplemented.
+
+| priority | source capability | potential consumer | reuse / new discriminant | issue |
+|---|---|---|---|---|
+| **P0** | Synergy Geometry vocabulary and controls for redundancy / unique information / interaction | RED-1, Semantic Observers, Semantic Atlas multi-model fusion, Torus Assembly | make multi-observer gain use one baseline ladder and one interaction vocabulary | [#673](https://github.com/franklinbaldo/papers/issues/673) |
+| **P0** | Static Atlas + Pontifex interventions + Perquire inverse queries | all semantic-identification lines | Unified Semantic Identification Benchmark under common splits and held-out observer | [#674](https://github.com/franklinbaldo/papers/issues/674) |
+| **P1** | Structural Identification equivalence/gauge formalism | Atlas gauge compression, Torus seam/gauge, Pontifex equivalence, ILG paths | shared glossary + reusable Lean definitions instead of parallel formalizations | [#675](https://github.com/franklinbaldo/papers/issues/675) |
+| **P1** | Semantic Observers resolution/parallax metrics | STT, Perquire, Pontifex, MaleCNS | use a frozen held-out observer to test whether "semantic" structure generalizes beyond the constructing observer | [#671](https://github.com/franklinbaldo/papers/issues/671) |
+| **P1** | Pontifex response fields | Semantic Atlas | compare static geometry against differential/interventional geometry on the same stimuli | [#674](https://github.com/franklinbaldo/papers/issues/674) |
+| **P1** | Perquire target-relevant feedback experiment | Pontifex active probing / Atlas active anchor selection | share active-experimental-design methods while keeping scientific endpoints separate | [#674](https://github.com/franklinbaldo/papers/issues/674) |
+| **P2** | MaleCNS proxy-intervention protocol | cross-modal Pontifex / alternative-substrate tests | stress-test whether correspondence survives radically heterogeneous native realizations | [#676](https://github.com/franklinbaldo/papers/issues/676) |
+| **P2** | Dynamic Quasar / dynamic gauge machinery | Semantic Atlas + Torus | compare moving-reference explanations against periodic-coordinate explanations before introducing new geometry | [#675](https://github.com/franklinbaldo/papers/issues/675) |
+
+### Reuse rule
+
+Before adding a new metric, aligner, active sampler, notion of equivalence, or multi-observer baseline to a paper, check this register. If an equivalent component already exists elsewhere in the programme, prefer:
+
+1. reuse unchanged;
+2. adapt behind a clearly named interface;
+3. only create a new version when the existing one fails a documented requirement.
+
+The consumer paper should cite the source initiative and state whether the reused component is evidence, methodology, or infrastructure.
+
+## 28. Issue escalation policy
+
+The map itself is the first place to record a cross-line concern. Escalate to a repository issue when at least one of the following is true:
+
+- a canonical paper's claim boundary must change;
+- an experiment must be rerun or a new discriminant is required;
+- two papers use materially incompatible definitions;
+- evidence is being cited across initiatives without a valid bridge experiment;
+- a shared component would eliminate duplicated experimental or formal work;
+- the inconsistency could change the interpretation of a published/preprint-ready claim.
+
+Minor wording drift stays in this map until the next normal paper edit.
+
+Each escalated issue should state:
+
+- affected papers/initiatives;
+- exact inconsistency or unrealized synergy;
+- why it matters scientifically;
+- required change or discriminating experiment;
+- acceptance criterion.
+
+## 29. Priority queue
+
+### P0 — correct before expanding the programme
+
+1. **Pontifex core vs explicit transport** — [#670](https://github.com/franklinbaldo/papers/issues/670). Clarify that coordinate-free intervention comparison is the core primitive and explicit transport is an optional later stage.
+2. **Observer-relative semantics in STT** — [#671](https://github.com/franklinbaldo/papers/issues/671). Prevent one teacher embedding from silently becoming the semantic ontology.
+3. **Semantic Atlas global-geometry boundary** — [#672](https://github.com/franklinbaldo/papers/issues/672). Make local relational evidence the default and label stronger universal geometry as hypothesis.
+4. **Shared multi-observer evaluator** — [#673](https://github.com/franklinbaldo/papers/issues/673). Consolidate RED-1 / Assembly / observer-fusion metrics into Synergy Geometry.
+5. **Unified Semantic Identification Benchmark** — [#674](https://github.com/franklinbaldo/papers/issues/674). This is the main anti-duplication experiment: determine whether Atlas, Pontifex and Perquire contain complementary information under one frozen evaluation contract.
+
+### P1 — unify language and prevent future divergence
+
+6. **Shared identifiability / gauge vocabulary and formal primitives** — [#675](https://github.com/franklinbaldo/papers/issues/675).
+7. **MaleCNS role separation** — [#676](https://github.com/franklinbaldo/papers/issues/676): observer vs operator vs controller vs Torus component.
+
+### P2 — exploit validated bridges after P0/P1
+
+8. Reuse active-design machinery across Perquire, Pontifex and Atlas.
+9. Use held-out-observer metrics from Semantic Observers as a cross-project validity layer.
+10. Compare Dynamic Quasar moving-reference explanations directly against Torus periodic-coordinate explanations where both can fit the same phenomenon.
+
+## 30. Cross-paper change-control loop
+
+For every substantial new result:
+
+1. update the originating findings record / paper;
+2. ask whether it changes any row in the consistency or synergy register;
+3. update this map;
+4. if a P0/P1 boundary or reusable component changed, update the linked issue;
+5. only edit sibling papers if their **own claim boundary or evidence** changed;
+6. never propagate a conclusion to a sibling solely because the projects are adjacent.
+
+This loop is intended to make the map an active scientific control surface rather than a static taxonomy.
