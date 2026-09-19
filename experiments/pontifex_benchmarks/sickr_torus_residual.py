@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
-#   "datasets>=3.0",
+#   "datasets>=3.0,<4.0",
 #   "numpy>=2.0",
 #   "scikit-learn>=1.7",
 #   "scipy>=1.14",
@@ -327,7 +327,7 @@ def main() -> None:
     ap.add_argument("--output", type=Path, default=Path("pontifex-sickr-torus-residual.json"))
     args = ap.parse_args()
 
-    ds = load_dataset(DATASET)
+    ds = load_dataset(DATASET, trust_remote_code=True)
     train1, train2, _ = split_rows(ds["train"])
     val1, val2, val_gold = split_rows(ds["validation"])
     test1, test2, test_gold = split_rows(ds["test"])
