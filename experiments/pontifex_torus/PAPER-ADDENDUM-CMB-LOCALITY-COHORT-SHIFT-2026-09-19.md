@@ -98,6 +98,28 @@ The remote ensemble remains unconvincing relative to fixed:
 
 The primary result is therefore not merely another failed replication. It identifies the **geometry-defined theta cohort as a major sensitivity axis** of the roughness-to-width result.
 
+## Exploratory crossed decomposition
+
+After the predeclared result was fixed, the saved held-out rows were used for a crossed diagnostic. This analysis is **post-hoc/exploratory** and is not part of the confirmatory family above.
+
+Keeping the `SINGLE`-trained remote rule frozen but restricting only evaluation to the `MULTI` rows changes its gain from mean **+0.0031383** to **-0.0008950**. The paired evaluation-cohort shift has:
+
+- mean **-0.0040333**;
+- median **-0.0040180**;
+- 22 negative skies and 2 positive;
+- unadjusted exploratory sign-test **p = 3.5882e-5**.
+
+Then, on that same `MULTI` held-out cohort, replacing the `SINGLE`-trained rule with the `MULTI`-trained rule contributes an additional:
+
+- mean **-0.0017911**;
+- median **-0.0016487**;
+- 17 negative, 6 positive, 1 tie;
+- unadjusted exploratory sign-test **p = 0.03469**.
+
+The two pieces add to the predeclared total mean shift of **-0.0058244**. On the mean scale, roughly **69%** of that total is associated with changing the held-out theta mixture while keeping the `SINGLE` rule frozen, and roughly **31%** with changing the fitted rule on the already restricted cohort. These percentages are a descriptive decomposition, not causal effect estimates.
+
+This sharpens the next question: the dominant observed sensitivity is already present when only the evaluation cohort is restricted. It therefore cannot be attributed solely to refitting the controller.
+
 ## Spectrum-stratified diagnostic
 
 The aggregate gate effect is not equally large at every spectrum:
@@ -115,19 +137,22 @@ These strata are descriptive diagnostics, not additional confirmatory tests. The
 1. With raw theta candidates and skies held fixed, the stricter multi-remote geometry gate changes the learned protocol's held-out behavior strongly and consistently.
 2. The broad `SINGLE` cohort supports a positive remote-controller gain, while the nested `MULTI` cohort does not retain that gain after multiplicity correction.
 3. The stricter gate preferentially removes large lesions in this realized panel; the median radius of removed theta samples is more than three times that of the retained cohort.
-4. The fixed `w=0.5` baseline remains the safer default across the stricter cohort.
+4. A post-hoc crossed diagnostic shows that most of the observed mean shift is already present when a single frozen controller is evaluated on the restricted cohort, so controller refitting alone is not a sufficient explanation.
+5. The fixed `w=0.5` baseline remains the safer default across the stricter cohort.
 
 ### Hypotheses not established
 
-The most economical mechanistic hypothesis is now that lesion scale / geometry composition changes the roughness-to-useful-width relationship, with stronger sensitivity at shorter field correlation length. **That mechanism is not established here.** The gate changes both the development distribution on which the controller is fitted and the held-out theta mixture on which it is scored. This run therefore identifies full-protocol cohort sensitivity, not yet whether the causal contribution enters through controller fitting, evaluation composition, or both.
+The most economical mechanistic hypothesis is now that lesion scale / geometry composition changes the roughness-to-useful-width relationship, with stronger sensitivity at shorter field correlation length. **That mechanism is not established here.** The confirmatory experiment identifies full-protocol cohort sensitivity; the crossed decomposition narrows the likely source but was chosen after inspecting the primary result.
 
-A clean next discriminant is a crossed analysis: fit the `SINGLE` and `MULTI` controllers separately in development, then evaluate both frozen rules on the common `MULTI` held-out rows. That isolates the training-cohort contribution; applying one frozen `SINGLE` rule to both held-out cohorts isolates the evaluation-cohort contribution.
+A clean confirmatory follow-up is therefore to predeclare the crossed design itself, including a radius-stratified common-support analysis, and test whether the apparent cohort penalty survives when lesion-radius distributions are matched without outcome-dependent selection.
 
 Nothing in this experiment establishes a physical CMB scale, a Planck/ACT beam law, a real-sky anomaly, physical non-locality, or Pontifex/Torus causality.
 
 ## Data boundary
 
-This is an internal synthetic calibration experiment. Its development and held-out sky seeds are disjoint, and all geometry gates, predictors, bins, candidate widths, and inferential contrasts are fixed without held-out outcomes.
+This is an internal synthetic calibration experiment. Its development and held-out sky seeds are disjoint, and all geometry gates, predictors, bins, candidate widths, and confirmatory inferential contrasts are fixed without held-out outcomes.
+
+The exploratory crossed decomposition uses only already-frozen rules and already-generated held-out rows, and is explicitly not promoted to confirmatory evidence.
 
 The downstream partition remains strict and untouched:
 
