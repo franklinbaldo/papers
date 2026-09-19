@@ -477,3 +477,13 @@ That negative result improves the Semantic Atlas programme. It replaces an attra
 ## Claim boundary
 
 This paper reports small-model controlled experiments and one natural-text repository experiment. It does **not** establish that larger language models lack spectral semantic structure, that manifolds are absent, that graph Laplacians cannot be useful, or that all future-horizon geometry is unpredictable. It establishes that the specific strong hypotheses tested here—generic first-Fiedler semantic bottlenecks, a corpus-independent 56%-depth confidence bottleneck, and position-only spectral prediction of future entropy under the registered natural-text protocol—did not survive their strongest preregistered tests.
+
+
+## Research programme position
+
+- **Initiative:** Semantic Atlas / spectral structure
+- **Scope:** Spectral measurements of representation geometry and their utility as cross-model structural descriptors.
+- **Not claimed here:** Spectral agreement is not treated as interventional equivalence or evidence for Torus.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
