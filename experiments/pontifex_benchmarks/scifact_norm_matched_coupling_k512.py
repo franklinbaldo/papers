@@ -34,6 +34,7 @@ K = 512
 N_NULL = 63
 N_STRATA = 8
 SEED = 20260919
+EXPECTED_ANCHOR_SHA = "5a581b24b09b874bd65e759dfeabbe721eb66f947994470ceb3cee8768f4e80a"
 
 
 def residual_norm_strata(residual: np.ndarray, n_strata: int) -> tuple[np.ndarray, list[np.ndarray]]:
@@ -109,6 +110,8 @@ def main() -> None:
     )
     args = ap.parse_args()
 
+    if args.seed != SEED:
+        raise RuntimeError(f"protocol freezes seed={SEED}")
     if args.k != K:
         raise RuntimeError(f"protocol freezes K={K}")
     if args.n_null != N_NULL:
@@ -177,7 +180,7 @@ def main() -> None:
         "validation_ids_sha256": parent.EXPECTED_VAL_SHA,
         "test_ids_sha256": parent.EXPECTED_TEST_SHA,
         "corpus_ids_sha256": parent.EXPECTED_CORPUS_SHA,
-        "anchor_ids_sha256": parent.EXPECTED_ANCHOR_SHA,
+        "anchor_ids_sha256": EXPECTED_ANCHOR_SHA,
     }
     for key, value in expected.items():
         if frozen_manifest[key] != value:
