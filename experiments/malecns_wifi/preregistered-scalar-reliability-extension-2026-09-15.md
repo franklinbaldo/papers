@@ -1,3 +1,7 @@
+---
+type: "Protocol"
+---
+
 # Preregistered extension — scalar reliability peer coupling
 
 Date: 2026-09-15
