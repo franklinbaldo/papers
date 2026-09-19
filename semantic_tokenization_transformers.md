@@ -1256,3 +1256,13 @@ experimentally, not a measured result.
 ---
 
 *End of paper*
+
+
+## Research programme position
+
+- **Initiative:** Semantic Tokenization Transformers
+- **Scope:** Semantic chunks/codes as computational units for sequence modeling and corpus-grounded reconstruction.
+- **Not claimed here:** STT is an application of semantic representations, not evidence for Pontifex, Semantic Atlas, or Torus.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
