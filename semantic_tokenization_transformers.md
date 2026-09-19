@@ -84,7 +84,7 @@ To reconstruct readable text from semantic codes, we introduce a hybrid approach
 - Merges overlapping chunks with LCS-based stitching
 - Applies disciplined LLM-based normalization with strict copy-editing constraints
 
-This approach produces fluent paraphrases that preserve core concepts and factual content without hallucination, though it does not aim for word-for-word reconstruction of the original text.
+This reconstruction path is designed to produce fluent paraphrases while preserving core concepts and factual content; hallucination and retrieval error remain empirical failure modes measured in Section 5, and word-for-word reconstruction is not the objective.
 
 ### 1.4 Contributions
 
@@ -358,13 +358,13 @@ Typical weights: $\lambda_{\text{AR}} = 0.6$, $\lambda_{\text{MASK}} = 0.3$, $\l
 
 #### 3.2.4 Training Details
 
-**Context length:** We train on sequences of 2,000-8,000 semantic codes, corresponding to hundreds of pages in BPE tokens. This is feasible due to the dramatic sequence compression.
+**Proposed context length:** 2,000-8,000 semantic codes, intended to correspond to hundreds of pages in BPE tokens if the predicted compression is realized. Feasibility at this scale is an evaluation target, not a reported training result.
 
 **Batch size:** Similar to standard LM training, we use large batch sizes (512-2048 sequences) to stabilize training.
 
-**Optimization:** AdamW [Loshchilov & Hutter, 2019] with learning rate warmup and cosine decay. Peak learning rate: $3 \times 10^{-4}$.
+**Proposed optimization:** AdamW [Loshchilov & Hutter, 2019] with learning rate warmup and cosine decay; candidate peak learning rate $3 \times 10^{-4}$.
 
-**Regularization:** Dropout (0.1), weight decay (0.1), and gradient clipping (1.0).
+**Proposed regularization:** dropout (0.1), weight decay (0.1), and gradient clipping (1.0), subject to the tuning protocol below.
 
 ### 3.3 Semantically Grounded Decoding (Text Reconstruction)
 
@@ -558,7 +558,9 @@ Our implementation consists of several modular components:
 - LCS-based merger
 - LLM normalization service (with API fallback)
 
-### 4.2 Computational Requirements
+### 4.2 Computational Budget Targets (Illustrative, Not Measured)
+
+The quantities in this subsection are planning estimates for the proposed experiment, not measurements from an executed STT training run. They must be replaced or accompanied by measured wall-clock, memory, energy, and hardware data in any empirical follow-up.
 
 **Preprocessing (one-time):**
 - Embedding generation: For a 100GB corpus (≈25B BPE tokens), assuming 150M chunks and 0.1s per chunk with batching, ≈4-5 GPU-hours on A100
