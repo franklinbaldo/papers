@@ -484,6 +484,12 @@ programme regardless of how that verification resolves.
   scan for the same idea. Not an independent assessment; see the
   editorial note at the top of that file.
 
+## Shared cross-program evaluation contracts
+
+For any claim that multiple observers add information beyond one observer, Pontifex now reuses the [Synergy Geometry protocol](experiments/synergy_geometry/protocol.md) rather than defining a project-specific notion of "synergy". The minimum ladder is best-single → static weighted combination → interaction-capable combination → shuffled-coupling null.
+
+For programme-level comparison against static geometry and inverse semantic querying, Pontifex participates in the prospective [Unified Semantic Identification Benchmark](experiments/unified_semantic_identification/protocol.md). A Pontifex-specific gain is therefore an incremental held-out effect over the nested non-Pontifex arm, not merely a good absolute score.
+
 ## Research programme position
 
 - **Initiative:** Pontifex
