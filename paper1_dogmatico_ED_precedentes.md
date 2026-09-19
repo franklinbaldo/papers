@@ -1,679 +1,222 @@
 ---
 type: "Dogmatic Paper"
-title: "Fundamentação de Embargos de Declaração e Saídas Legítimas diante de Precedente Vinculante: duas contribuições dogmáticas do CPC 2015"
-description: "Embargos de Declaracao e saidas legitimas diante de precedente vinculante (umbrella da serie dogmatica)."
-tags: [paper1-dogmatico]
+title: "Embargos de Declaração e Respostas a Precedentes Vinculantes: síntese dogmática, limites de competência e aplicação parcial silenciosa"
+description: "Síntese dogmática sobre embargos de declaração e precedentes vinculantes, com correção do art. 1.024, §4º, delimitação de competência e uma proposta analítica para identificar aplicação parcial silenciosa."
+tags: [paper1-dogmatico, embargos-de-declaracao, precedentes, cpc, fundamentacao]
 timestamp: 2026-07-09T12:12:59+00:00
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
-# Fundamentação de Embargos de Declaração e Saídas Legítimas diante de Precedente Vinculante: duas contribuições dogmáticas do CPC 2015
+# Embargos de Declaração e Respostas a Precedentes Vinculantes: síntese dogmática, limites de competência e aplicação parcial silenciosa
 
-**Franklin Silveira Baldo**
-Procurador do Estado de Rondônia (OAB/RO 5733)
-Diretor da Procuradoria do Patrimônio Imobiliário — PGE-RO
-Porto Velho, RO
+**Franklin Silveira Baldo**  
+Independent Researcher
 
----
+> **Nota de escopo.** Esta versão substitui formulações anteriores que tratavam como descobertas autônomas proposições já presentes na doutrina e na jurisprudência brasileiras. O artigo é uma síntese dogmática com duas propostas mais estreitas: uma prescrição de redação para embargos quando a integração puder modificar o resultado, com limite cognitivo de determinação única; e uma organização analítica das respostas a precedentes que destaca a categoria de `aplicação parcial silenciosa`. A taxonomia não altera competências processuais nem transforma fundamentação suficiente em autorização universal para afastar precedente vinculante.
 
 ## Resumo
 
-O presente artigo desenvolve duas contribuições dogmáticas autônomas
-extraídas do sistema de fundamentação do Código de Processo Civil de
-2015. A primeira diz respeito à natureza dos Embargos de Declaração:
-demonstra-se, a partir dos arts. 1.022 e 1.024, §3º, do CPC, que
-(i) os vícios sanáveis por embargos não se restringem ao plano
-formal — omissão sobre questão de mérito é omissão —, e que (ii) os
-efeitos infringentes são consequência automática do acolhimento quando
-a sanação do vício importar modificação do julgado, não pretensão
-autônoma que se deva formular subsidiariamente. A fórmula reiterada
-na prática forense de "subsidiariamente, requer-se a atribuição de
-efeitos infringentes" é dogmaticamente imprecisa e deve ser
-substituída. A segunda contribuição diz respeito ao regime de
-precedentes vinculantes: demonstra-se que o art. 927, §1º, combinado
-com os arts. 489, §1º, V e VI, do CPC, configura não duas mas cinco
-saídas legítimas para o tribunal diante de precedente vinculante
-invocado — aplicar corretamente, distinguir fundamentadamente,
-reconhecer superação superveniente do tribunal-fonte, superar
-racionalmente com apontamento expresso de erro, e abster-se de
-invocar. Essa leitura penta-partida reflete o caráter racional —
-não meramente hierárquico — da vinculação a precedente no direito
-brasileiro e tem implicações imediatas para a prática de Embargos
-de Declaração, de Recurso Especial e de Recurso Extraordinário. O
-artigo ilustra ambas as contribuições com análise de acórdão real
-do Tribunal de Justiça do Estado de Rondônia.
+Este artigo aproxima dois problemas recorrentes da prática processual brasileira: a relação entre Embargos de Declaração e modificação do julgado e o modo de controlar a fundamentação de decisões que lidam com precedentes vinculantes. No primeiro eixo, a literatura e a jurisprudência anteriores ao CPC de 2015 já sustentavam que vícios declaratórios podem atingir matéria de mérito e que a modificação do resultado pode decorrer da própria correção do vício, sem constituir pedido autônomo de reforma. O CPC vigente contempla expressamente essa hipótese no art. 1.024, §4º. A contribuição aqui defendida é mais estreita: formular o pedido primariamente como sanação do vício e distinguir os casos em que os comprometimentos já assumidos pelo julgador determinam univocamente a consequência da integração daqueles em que a correção exige nova escolha meritória.
 
-**Palavras-chave**: Embargos de Declaração; efeitos infringentes;
-fundamentação; precedentes vinculantes; art. 489 do CPC; art. 927
-do CPC; distinguishing; overruling; superação racional.
+No segundo eixo, o artigo rejeita tanto a aplicação mecânica quanto a ideia oposta de que o dever de fundamentação elimina os limites de competência do sistema de precedentes. Os arts. 489, §1º, V e VI, e 927 do CPC impõem deveres analíticos, mas não autorizam, por si sós, qualquer órgão inferior a revisar formalmente um precedente vinculante. Propõe-se um mapa de cinco situações analíticas — aplicação; distinção; reconhecimento de revisão ou superação pelo órgão competente; contestação ou não aplicação apenas quando juridicamente admitida, com indicação expressa de seus limites; e irrelevância do precedente porque questão independente resolve o caso — e utiliza-se esse mapa para caracterizar a `aplicação parcial silenciosa`: invocar um precedente como fundamento e omitir, sem explicação, uma qualificação materialmente relevante de sua razão decisória. A utilidade da categoria é de auditoria da fundamentação, não de criação de uma nova competência para superar precedentes.
 
----
+**Palavras-chave**: Embargos de Declaração; efeitos modificativos; fundamentação; precedentes vinculantes; art. 489 do CPC; art. 927 do CPC; distinguishing; competência; aplicação parcial silenciosa.
 
 ## Abstract
 
-This article develops two autonomous dogmatic contributions derived
-from the system of judicial reasoning (fundamentação) of the
-Brazilian Code of Civil Procedure of 2015. The first concerns the
-nature of Embargos de Declaração (clarification motions): it
-demonstrates, from arts. 1,022 and 1,024, §3, of the CPC, that
-(i) the defects curable by such motions are not restricted to formal
-matters — an omission about a merit question is an omission — and
-that (ii) infringement effects are an automatic consequence of
-granting the motion when curing the defect implies modification of
-the judgment, not an autonomous claim to be formulated subsidiarily.
-The formula routinely used in forensic practice of "subsidiarily,
-requests infringement effects" is dogmatically imprecise and should
-be replaced. The second contribution concerns the regime of binding
-precedents: it demonstrates that art. 927, §1, combined with arts.
-489, §1, V and VI, of the CPC, configures not two but five legitimate
-responses for a court faced with an invoked binding precedent —
-correct application, justified distinction, recognition of subsequent
-supersession by the source court, rational supersession with express
-identification of error, and abstention from invocation. This
-five-pronged reading reflects the rational — not merely hierarchical
-— character of precedent binding in Brazilian law, with immediate
-implications for the practice of Embargos de Declaração, Special
-Appeals, and Extraordinary Appeals. The article illustrates both
-contributions with analysis of a real decision of the Court of
-Justice of the State of Rondônia.
+This paper connects two recurring problems in Brazilian civil procedure: the relation between clarification motions (*Embargos de Declaração*) and changes in the judgment, and the reasoning duties of courts dealing with binding precedent. Earlier Brazilian doctrine and case law already recognized that declaratory defects may concern merits issues and that a change in outcome may follow from curing the defect rather than from a separate request for reform. The current Code expressly contemplates such modification in art. 1,024, §4. The narrower proposal defended here is a drafting rule centered on curing the defect, coupled with a cognitive boundary between cases in which the court's existing commitments uniquely determine the integrated outcome and cases requiring a genuinely new merits choice.
 
-**Keywords**: Embargos de Declaração; infringement effects; judicial
-reasoning; binding precedents; art. 489 CPC; art. 927 CPC;
-distinguishing; overruling; rational supersession.
+For precedent, the paper rejects both mechanical obedience and the opposite proposition that reason-giving alone dissolves competence constraints. Arts. 489, §1, V–VI, and 927 impose analytical duties but do not, by themselves, authorize every lower court to formally revise binding precedent. The paper offers a five-situation analytical map — application; distinguishing; recognition of revision or supersession by the competent court; contestation or nonapplication only where legally available and expressly bounded; and irrelevance because an independent dispositive issue resolves the case — and uses it to isolate `silent partial application`: invoking a precedent while omitting, without explanation, a materially relevant qualification in its controlling reasoning. The category is an audit device for judicial reasoning, not a new source of overruling competence.
 
----
+**Keywords**: clarification motions; modification of judgment; judicial reasoning; binding precedent; Brazilian Code of Civil Procedure; distinguishing; competence; silent partial application.
 
 ## 1. Introdução
 
-O Código de Processo Civil de 2015 consolidou dois sistemas
-estreitamente conectados: o dever qualificado de fundamentação das
-decisões judiciais, disciplinado principalmente no art. 489, e o
-regime de precedentes vinculantes, disciplinado nos arts. 926 e 927.
-A conexão não é acidental. O art. 489, §1º, V e VI, que exige
-identificação dos fundamentos determinantes do precedente e
-demonstração da aderência do caso a esses fundamentos — ou, em
-alternativa, fundamentação expressa da distinção ou da superação —
-é precisamente o dispositivo que torna operacional o regime de
-precedentes do art. 927. Um sistema sem o outro seria incompleto:
-precedentes vinculantes sem dever de fundamentação específica seriam
-letra morta; fundamentação qualificada sem regime de precedentes
-seria exigência sem referencial.
-
-A prática forense, contudo, ainda não assimilou integralmente as
-implicações desse sistema integrado. Duas confusões persistem com
-frequência notável.
-
-A primeira é a concepção dos Embargos de Declaração como recurso
-de natureza estritamente formal, apto apenas a sanar vícios de
-redação ou de estrutura externa da decisão, e incapaz de alcançar
-o mérito. Dessa concepção deriva a prática — dogmaticamente
-equivocada — de formular em sede de embargos pedido autônomo e
-subsidiário de "efeitos infringentes", como se a reforma da decisão
-fosse pretensão distinta da sanação do vício, exigindo veículo
-recursal próprio.
-
-A segunda é a concepção do precedente vinculante como mecanismo
-de submissão hierárquica: o tribunal inferior, diante de precedente
-do STF ou do STJ, limitaria-se à escolha binária entre seguir ou
-não seguir, sem espaço para confronto racional. Dessa concepção
-derivam dois erros opostos: de um lado, a aplicação mecânica e
-acrítica do precedente — invocação da ementa sem identificação dos
-fundamentos determinantes, sem demonstração de ajuste do caso,
-sem enfrentamento das ressalvas contidas no próprio enunciado; de
-outro, o afastamento silencioso do precedente — a decisão que,
-sem declarar que está superando, simplesmente ignora a ratio ou
-aplica seletivamente apenas a porção que lhe convém.
-
-O presente artigo demonstra que o CPC 2015 não comporta nenhuma
-dessas concepções. Na seção 2, a partir de leitura detida dos arts.
-1.022 e 1.024, §3º, demonstra-se que: (i) os vícios sanáveis por
-embargos são definidos pelo modo — obscuridade, contradição, omissão
-—, não pelo objeto — processual ou meritório; e (ii) os efeitos
-infringentes são consequência automática do acolhimento, não
-pretensão autônoma. Na seção 3, a partir da conjugação dos arts. 927,
-§1º, e 489, §1º, V e VI, demonstra-se que o sistema configura cinco
-saídas legítimas para o tribunal diante de precedente vinculante, e
-que o regime é racional, não hierárquico. Na seção 4, ambas as
-contribuições são ilustradas com análise de acórdão real. A seção 5
-conclui.
-
----
-
-## 2. Os Embargos de Declaração no CPC 2015: escopo amplo e infringência como consequência
-
-### 2.1 O vício é definido pelo modo, não pelo objeto
-
-O art. 1.022 do CPC estabelece o cabimento dos Embargos de
-Declaração nos seguintes termos: "cabem embargos de declaração
-contra qualquer decisão judicial para: I — esclarecer obscuridade
-ou eliminar contradição; II — suprir omissão de ponto ou questão
-sobre o qual devia se pronunciar o juiz de ofício ou a requerimento;
-III — corrigir erro material."
-
-O parágrafo único do mesmo dispositivo amplia o alcance,
-equiparando ao rol do caput as hipóteses do art. 489, §1º — ou
-seja, os casos em que a decisão não enfrenta argumento capaz de
-infirmar a conclusão, invoca precedente sem identificar os
-fundamentos determinantes, ou aplica tese jurídica sem demonstrar
-ajuste do caso.
-
-A leitura que prevaleceu historicamente — e que ainda circula em
-parcela da doutrina — extraía dessas disposições uma restrição que
-o texto não contém: a de que os vícios sanáveis por embargos seriam
-apenas vícios "formais", relativos à estrutura externa da decisão,
-sem alcançar o mérito. Essa leitura não se sustenta à luz do texto
-do CPC 2015.
-
-Os conceitos de obscuridade, contradição e omissão definidos no
-art. 1.022 são definidos pela modalidade do defeito, não pela matéria
-sobre a qual recaem. Obscuridade é falta de clareza — pode incidir
-sobre a fundamentação de mérito tão bem quanto sobre a fundamentação
-processual. Contradição é incompatibilidade entre proposições — pode
-ocorrer entre premissas meritórias tanto quanto entre premissas
-processuais. Omissão é ausência de pronunciamento sobre ponto que
-deveria ter sido enfrentado — e a expressão "ponto ou questão sobre
-o qual devia se pronunciar o juiz" não distingue entre questão
-processual e questão de mérito.
-
-A orientação do Superior Tribunal de Justiça é de longa data nesse
-sentido. Os embargos de declaração são cabíveis para sanar omissão
-sobre questão de mérito que o tribunal devia ter enfrentado,
-contradição entre fundamentos meritórios do voto, e obscuridade no
-alcance do dispositivo relativamente ao mérito da causa. Trata-se
-de jurisprudência consolidada, que o CPC 2015 não apenas não
-restringiu como explicitamente reforçou mediante o parágrafo único
-do art. 1.022 (que equipara ao rol do caput as hipóteses do art.
-489, §1º, notoriamente relativas ao conteúdo da fundamentação).
-
-A consequência prática é direta: o advogado ou procurador que
-identifica, no acórdão, omissão sobre tese meritória que a parte
-havia suscitado, ou contradição entre fundamentos meritórios do
-voto, ou fundamento genérico que não enfrenta argumento capaz de
-infirmar a conclusão — tem, em todos esses casos, vício sanável
-por embargos, independentemente de que o vício recaia sobre o mérito
-e não sobre uma questão meramente processual ou de redação.
-
-Importa demarcar o que está sendo afirmado. Não se está dizendo que
-os embargos de declaração são sucedâneo de apelação ou de recurso
-ordinário. O que se está dizendo é que a distinção relevante para
-o cabimento dos embargos é a modalidade do vício — obscuridade,
-contradição, omissão —, não a natureza da matéria sobre a qual o
-vício recai. Vício de fundamentação sobre questão de mérito é vício;
-sanável por embargos se se tratar de obscuridade, contradição ou
-omissão; insanável por embargos se se tratar de erro de julgamento
-puro que não se enquadre em nenhuma dessas modalidades.
-
-### 2.2 Os efeitos infringentes como consequência automática do acolhimento
-
-A segunda confusão — a formulação de pedido subsidiário de
-"efeitos infringentes" — é mais sutil e mais difundida. Encontra-se
-em petições de embargos de declaração de todas as instâncias, em
-obras doutrinárias, e em decisões que acolhem ou rejeitam embargos
-com fundamento nessa terminologia.
-
-O art. 1.024, §3º, do CPC é o dispositivo central para o
-entendimento correto do tema: "caso o acolhimento dos embargos de
-declaração implique modificação da decisão embargada, o embargado
-que já tiver interposto outro recurso contra a decisão originária
-tem o direito de complementar ou alterar suas razões, nos exatos
-limites da modificação, no prazo de quinze dias, contado da
-intimação da decisão nos embargos de declaração."
-
-A redação é reveladora. O §3º não fala em "embargos infringentes"
-nem em "atribuição de efeitos infringentes". Fala em "acolhimento
-dos embargos de declaração" que "implique modificação da decisão
-embargada". A modificação é tratada como consequência possível do
-acolhimento, não como objeto autônomo de pedido.
-
-A estrutura lógica do dispositivo é a seguinte: (a) os embargos
-são acolhidos para sanar vício; (b) a sanação do vício pode ou não
-implicar modificação da decisão; (c) se implicar, o embargado tem
-direito de complementar as razões do recurso anterior. O legislador
-não previu, nesse esquema, nenhum pedido de "efeitos infringentes":
-a modificação não é objeto de pedido — é consequência da sanação.
-
-Isso é, de um lado, logicamente necessário. O pedido de embargos
-é o pedido de sanação do vício — de esclarecimento da obscuridade,
-de eliminação da contradição, de suprimento da omissão. Uma vez
-sanado o vício, a decisão corrigida pode ser diferente da decisão
-original. Essa diferença não precisa ser "atribuída" pelo tribunal;
-ela decorre automaticamente da integração do julgado — precisamente
-nos casos em que o marco de comprometimentos do tribunal determina
-univocamente o desfecho corrigido. Quando a integração deixa mais de
-um desfecho igualmente compatível com os comprometimentos já
-assumidos, a determinação do resultado exige novo juízo, não mera
-integração automática; ver `paper1A_embargos_declaracao.md` §5.3–§5.6
-para o tratamento completo dessa distinção, incluindo a lacuna
-doutrinária bilateralmente reconhecida quanto à prevalência empírica
-de cada caso. O tribunal
-que acolhe embargos para suprir omissão sobre questão que levaria
-à procedência do pedido não está "dando efeitos infringentes" ao
-recurso: está cumprindo sua função integrativa e chegando, por
-força da integração, a resultado diferente.
-
-De outro lado, a confusão tem raízes históricas identificáveis.
-O CPC de 1973, em sua redação original e em parte de sua
-jurisprudência, tratou com ambiguidade a relação entre a natureza
-integrativa dos embargos e a possibilidade de reforma. Parte da
-doutrina desenvolveu a categoria dos "embargos infringentes" como
-categoria autônoma, distinta dos embargos integrativos ordinários,
-com requisitos mais exigentes e sujeitos a maior desconfiança dos
-tribunais. O CPC 2015 encerrou essa ambiguidade. Não existe, no
-texto do CPC 2015, categoria de "embargos infringentes". Existe
-acolhimento de embargos de declaração com consequência de modificação
-— que é o único caminho que o sistema admite.
-
-A implicação para a prática é direta. A fórmula "subsidiariamente,
-requer-se a atribuição de efeitos infringentes ao presente recurso"
-deve ser substituída. A formulação correta é algo como: "requer-se
-o acolhimento dos presentes embargos para sanar os vícios apontados
-e, na medida em que a sanação importe modificação do julgamento —
-nos termos do art. 1.024, §3º, do Código de Processo Civil —, seja
-revisado o v. acórdão embargado nos pontos em que a integração da
-fundamentação impactar o resultado".
-
-A diferença não é meramente retórica. A formulação subsidiária
-sugere que a reforma é pretensão distinta, sujeita a requisitos
-mais elevados, que o tribunal pode rejeitar mesmo acolhendo os
-embargos. A formulação correta deixa claro que a reforma, se
-ocorrer, é consequência automática da integração — o tribunal não
-"atribui" efeitos infringentes, ele simplesmente cumpre a função
-de sanar o vício e verifica, depois, se o dispositivo precisa ser
-ajustado.
-
-Há uma implicação processual adicional. Se os efeitos infringentes
-são consequência automática do acolhimento — e não objeto autônomo
-de pedido —, o tribunal que acolhe os embargos e detecta que a
-sanação importaria modificação do julgado não pode deixar de fazer
-essa modificação com fundamento em que "não foram pedidos efeitos
-infringentes". A modificação não depende de pedido; depende apenas
-de que o acolhimento implique, logicamente, resultado diferente.
-
----
-
-## 3. As cinco saídas legítimas diante de precedente vinculante
-
-### 3.1 A leitura hierárquica e seus limites
-
-A concepção mais simples do sistema de precedentes vinculantes é
-hierárquica: o STF decide, os demais tribunais obedecem. O tribunal
-inferior, diante de precedente vinculante do STF, teria apenas duas
-opções — seguir ou não seguir —, sendo que não seguir equivaleria
-a desobediência.
-
-Essa concepção tem apelo intuitivo, mas não resiste ao exame dos
-dispositivos do CPC 2015. O art. 489, §1º, V e VI, não trata a
-vinculação ao precedente como obediência cega. Pelo contrário,
-exige que a decisão que invoca precedente identifique os fundamentos
-determinantes do precedente e demonstre que o caso se ajusta a esses
-fundamentos. E exige que a decisão que deixa de seguir precedente
-demonstre a distinção ou a superação. Esses dispositivos pressupõem
-que o tribunal tem — e deve exercer — juízo próprio sobre o
-precedente, sua ratio, sua aplicabilidade ao caso, e seus possíveis
-erros.
-
-A doutrina processual brasileira contemporânea mais refinada
-converge para leitura não-hierárquica da vinculação a precedente.
-Marinoni, em obra de referência, defende que precedente não é
-comando — é razão. O tribunal inferior não é obrigado a seguir o
-precedente porque o STF tem mais poder; é vinculado à ratio do
-precedente porque a ratio articula razão jurídica que, salvo
-demonstração de erro, deve se aplicar a casos análogos. Mitidiero
-desenvolve linha similar, enfatizando que a vinculação ao precedente
-é racional e não autoritativa, e que a superação do precedente pelo
-tribunal inferior — quando fundamentada — é possibilidade que o
-sistema admite e que preserva, não viola, a integridade do sistema
-de precedentes.
-
-### 3.2 A partição em cinco saídas
-
-A partir da conjugação dos arts. 927, §1º, e 489, §1º, V e VI, é
-possível identificar com precisão as saídas legítimas disponíveis
-ao tribunal diante de precedente vinculante invocado. Não são duas
-(seguir ou não seguir); são cinco.
-
-**Primeira saída: aplicação correta.** O tribunal invoca o
-precedente, identifica seus fundamentos determinantes — a ratio
-decidendi, não as obiter dicta —, e demonstra que o caso sob
-julgamento se ajusta a esses fundamentos. Esta é a saída ordinária,
-prevista no art. 489, §1º, V. A aplicação correta não é simples
-menção ao enunciado de súmula ou transcrição de ementa; exige o
-percurso de identificação e de demonstração de ajuste.
-
-**Segunda saída: distinção fundamentada.** O tribunal identifica
-os fundamentos determinantes do precedente e demonstra que o caso
-sob julgamento não satisfaz esses fundamentos — há diferença
-substantiva que justifica não aplicar a ratio do precedente. Esta
-é a saída do distinguishing, prevista no art. 489, §1º, VI. O
-distinguishing genuíno não afasta o precedente por discordância
-de resultado; afasta-o por identificação de diferença relevante
-entre os casos.
-
-**Terceira saída: reconhecimento de superação superveniente.** O
-tribunal registra que o tribunal-fonte do precedente invocado —
-o STF, o STJ, o próprio tribunal em relação à sua jurisprudência
-— já superou aquele precedente em jurisprudência posterior. Esta
-é saída declarativa: o tribunal não está superando o precedente
-por autoridade própria; está registrando fato externo — que o
-precedente, naquele momento, já não existe como tal. A saída exige
-identificação do precedente posterior que promoveu a superação.
-
-**Quarta saída: superação racional com apontamento expresso de
-erro.** O tribunal, mesmo sendo inferior ao tribunal-fonte do
-precedente, pode confrontar o precedente vinculante se — e somente
-se — demonstrar expressa e fundamentadamente o erro na ratio do
-precedente. Não basta discordar do resultado; é necessário apontar
-onde a razão do precedente falha como argumento — vício lógico
-interno à ratio, descompasso com norma superveniente, ou
-inconsistência com princípios constitucionais que o precedente não
-considerou adequadamente.
-
-Esta é a saída que reflete com maior clareza o caráter racional
-da vinculação. A distinção entre a quarta e a terceira saída é
-relevante: na terceira, o tribunal reconhece que o tribunal-fonte
-já se afastou do precedente; na quarta, o tribunal inferior é que
-promove o afastamento, por força de argumento próprio. O ônus
-argumentativo da quarta saída é o mais elevado das cinco — e é
-exatamente esse ônus que legitima a superação.
-
-O CPC 2015 não proíbe essa saída. O art. 489, §1º, VI, exige
-"fundamentação expressa" para o afastamento de precedente, não
-"autorização do tribunal superior". A restrição é argumentativa,
-não de competência. O que o sistema veda é o afastamento silencioso
-— a decisão que prescinde do precedente sem declarar que está
-superando e sem apresentar o argumento.
-
-**Quinta saída: abstenção da invocação.** O tribunal simplesmente
-não invoca o precedente. Esta é a saída "de entrada" — quem não
-invoca o precedente não entra no espaço das obrigações que a
-invocação gera. Não é propriamente uma saída no plano do
-enforcement, mas é logicamente importante: ela diz que a obrigação
-de seguir, distinguir ou superar é condicional à invocação. Um
-tribunal que decide o caso por outros fundamentos, sem invocar o
-precedente, não está descumprindo nada.
-
-A quinta saída tem implicação prática relevante para a análise de
-vícios de fundamentação: o tribunal que invoca o precedente
-vincula-se às quatro saídas substantivas. Tendo escolhido invocar,
-não pode limitar-se a uma aplicação parcial silenciosa — que não
-é aplicação correta (porque ignora parte da ratio), não é
-distinguishing (porque não identifica diferença relevante), não
-é reconhecimento de superação (porque não há precedente posterior
-invocado), e não é superação racional (porque não aponta erro).
-Aplicação parcial silenciosa de precedente vinculante é vício de
-fundamentação nos termos do art. 489, §1º, V, do CPC.
-
-### 3.3 A saída de superação racional e o precedente brasileiro
-
-A quarta saída merece desenvolvimento adicional, por ser a menos
-intuitiva e a mais contestada.
-
-A objeção mais frequente é de natureza prática: se tribunais
-inferiores puderem "superar" precedentes do STF por força de
-argumento próprio, a vinculação se esvaziaria. A objeção confunde,
-contudo, duas coisas distintas: a possibilidade de superação
-racional e a facilidade de superação racional.
-
-A possibilidade existe — o CPC 2015 não a proíbe, e a teoria do
-precedente que informa o sistema não a exclui. O que torna a
-superação racional difícil — e essa dificuldade é funcionalmente
-importante — é o ônus argumentativo qualificado que ela exige.
-Apontar "erro expresso" na ratio de precedente do STF é tarefa
-genuinamente difícil: exige identificação precisa do fundamento
-determinante, demonstração de que esse fundamento é internamente
-defectivo como argumento ou está em descompasso com norma
-superveniente, e ainda observância dos princípios da segurança
-jurídica e da proteção da confiança — considerações que devem
-informar a superação racional pelos valores que encarnam, ainda que
-sem apoio direto no art. 927, §4º, do CPC, dispositivo cujo objeto é
-a autorrevisão de jurisprudência pelo próprio tribunal que a firmou,
-não o afastamento por tribunal inferior. A
-maioria dos tribunais, a maioria das vezes, não conseguirá superar
-racionalmente precedente do STF — não porque a possibilidade seja
-vedada, mas porque o ônus argumentativo é alto.
-
-Essa estrutura é, aliás, mais robusta do que a hierárquica. Um
-sistema puramente hierárquico não tem mecanismo para corrigir erros
-do próprio STF exceto pelo próprio STF. Um sistema racional tem
-mecanismo: o tribunal inferior que identifica erro grave na ratio
-do precedente pode apontá-lo com o ônus argumentativo qualificado,
-criando pressão para que o próprio STF reveja a ratio. O sistema
-funciona melhor — produz jurisprudência mais coerente no longo prazo
-— quando a vinculação é racional e não meramente autoritativa.
-
-A doutrina que mais claramente captura essa estrutura no Brasil é
-a de Marinoni, para quem o precedente é "razão que não pode ser
-desconsiderada sem razão mais forte". A frase é precisa: não basta
-discordar — é necessário razão mais forte. E razão mais forte é
-exatamente o que a quarta saída exige.
-
-### 3.4 A aplicação parcial silenciosa como vício
-
-A identificação das cinco saídas legítimas tem uma implicação que
-merece destaque específico, porque está presente em parcela
-relevante das situações de fundamentação inadequada em relação a
-precedentes vinculantes.
-
-Chama-se aqui de "aplicação parcial silenciosa" a prática de
-invocar o precedente vinculante para se valer da porção que
-favorece a conclusão pretendida, ignorando a porção — inclusive
-ressalvas expressas no enunciado do próprio precedente — que
-desfavorece essa conclusão ou a ela se opõe.
-
-A aplicação parcial silenciosa não é nenhuma das cinco saídas
-legítimas. Não é aplicação correta — porque não identifica os
-fundamentos determinantes em sua integralidade. Não é
-distinguishing — porque não demonstra diferença relevante entre
-os casos. Não é reconhecimento de superação superveniente — porque
-não há precedente posterior invocado. Não é superação racional —
-porque não aponta erro algum. E, tendo escolhido invocar o
-precedente, não é abstenção.
-
-A aplicação parcial silenciosa é, portanto, vício de fundamentação
-nos termos do art. 489, §1º, V, do CPC: a decisão invoca precedente
-sem identificar os fundamentos determinantes — pois a ratio inclui
-a ressalva que foi ignorada — e sem demonstrar que o caso se ajusta
-à ratio integral.
-
----
-
-## 4. Ilustração: o Acórdão Marilene e os dois sistemas
-
-### 4.1 O caso
-
-A Apelação Cível 7003561-54.2024.8.22.0010 foi julgada pela 2ª
-Câmara Especial do Tribunal de Justiça do Estado de Rondônia em
-29 de abril de 2026, com relatoria do Des. Jorge Luiz dos Santos
-Leal. O IPERON — Instituto de Previdência dos Servidores do Estado
-de Rondônia — interpôs a apelação contra sentença que havia
-reconhecido a licitude da acumulação de cargos pela servidora
-Marilene Betiol.
-
-A servidora havia sido nomeada originariamente, em 23 de março de
-1998, para o cargo de Especialista em Supervisão Escolar, com
-posse fundada no Decreto Estadual 7.999/1997. Em momento posterior,
-foi reenquadrada para o cargo de Professora Classe C, com regime
-de 40 horas, por força da Lei Complementar Estadual n. 680/2012.
-
-A questão jurídica central era se o cargo de Especialista em
-Supervisão Escolar — nomenclatura original do cargo, anterior ao
-reenquadramento — integrava a carreira do magistério para fins do
-art. 37, XVI, "b", da Constituição Federal, que autoriza a
-acumulação de cargos em caso de dois cargos de professor ou de
-professor com técnico ou científico.
-
-### 4.2 O fundamento invocado pelo acórdão e a ressalva ignorada
-
-O acórdão recorrido transcreveu, em sua fundamentação, a ementa
-da ADI 3.772/STF, decidida pelo Supremo Tribunal Federal sob a
-relatoria do Min. Carlos Britto, com julgamento em 9 de outubro
-de 2009. A ementa da ADI 3.772 tem a seguinte parte dispositiva
-relevante:
-
-> "As funções de direção, coordenação e assessoramento pedagógico
-> integram a carreira do magistério, desde que exercidos, em
-> estabelecimentos de ensino básico, por professores de carreira,
-> **excluídos os especialistas em educação**, fazendo jus aqueles
-> que as desempenham ao regime especial de aposentadoria
-> estabelecido nos arts. 40, §5º, e 201, §8º, da Constituição
-> Federal." (grifo acrescentado)
-
-A ressalva "excluídos os especialistas em educação" é expressa e
-integra o enunciado da ementa. O acórdão a transcreveu. A seguir,
-concluiu pela licitude da acumulação de cargos pela servidora —
-que havia sido nomeada originariamente exatamente como Especialista
-em Supervisão Escolar.
-
-Esse movimento — transcrever a ementa com a ressalva e concluir
-em sentido incompatível com a ressalva — é o exemplo prototípico
-de aplicação parcial silenciosa de precedente vinculante. Não é
-aplicação correta: a identificação dos fundamentos determinantes
-do precedente exige enfrentar a ressalva, não ignorá-la. Não é
-distinguishing: a diferença relevante — se Supervisor Escolar é
-ou não especialista em educação para fins da ressalva — não foi
-enfrentada. Não é reconhecimento de superação superveniente: o
-acórdão não invoca precedente posterior do STF que haja superado
-a ressalva. Não é superação racional: o acórdão não aponta erro
-algum na ratio da ADI 3.772 nem na ressalva que ela contém.
-
-O acórdão escolheu invocar a ADI 3.772 — vinculou-se, portanto,
-às quatro saídas substantivas — e não tomou nenhuma delas.
-
-### 4.3 A dimensão dos Embargos de Declaração
-
-Os Embargos de Declaração interpostos pelo IPERON identificaram
-quatro vícios no acórdão: omissão sobre a ressalva da ADI 3.772,
-contradição entre a premissa transcrita e a conclusão sustentada,
-aplicação seletiva de precedente vinculante sem adoção de nenhuma
-das saídas legítimas, e omissão sobre o Parecer Prévio do TCE-RO
-(PPL-TC 00027/19).
-
-Do ponto de vista das duas contribuições deste artigo, o exemplo
-ilustra ambas.
-
-Quanto à primeira contribuição: os vícios identificados nos
-embargos são, em sua maioria, vícios de mérito — a omissão sobre
-a ressalva da ADI 3.772 é omissão sobre questão de mérito (a
-natureza jurídica do cargo de Supervisor Escolar para fins
-constitucionais), e a contradição é contradição entre fundamentos
-meritórios. O cabimento dos embargos não estava em questão — e
-corretamente, pois a natureza meritória do vício não afasta o
-cabimento. O pedido, por sua vez, foi formulado de modo a tratar
-a eventual reforma como consequência da integração, não como
-pretensão autônoma.
-
-Quanto à segunda contribuição: o vício de aplicação seletiva de
-precedente vinculante — a não adoção de nenhuma das cinco saídas
-após a invocação da ADI 3.772 — está ancorado diretamente na
-partição que este artigo apresenta. O acórdão invocou o precedente
-e optou pelo que não é saída: a invocação parcial silenciosa.
-
----
-
-## 5. Conclusão
-
-O CPC 2015 trouxe duas inovações que a prática forense ainda
-assimila de modo incompleto.
-
-A primeira é o escopo amplo dos vícios sanáveis por Embargos de
-Declaração. O art. 1.022 não restringe o cabimento dos embargos
-a vícios formais no sentido raso. Omissão sobre questão de mérito
-é omissão; contradição entre fundamentos meritórios é contradição;
-obscuridade no alcance do dispositivo sobre matéria de mérito é
-obscuridade. O que define o vício não é o objeto — processual ou
-meritório —, mas o modo: obscuridade, contradição, omissão. A
-prática que restringe os embargos ao formal está equivocada, e o
-CPC 2015 é inequívoco a esse respeito.
-
-A segunda inovação é a ausência, no CPC 2015, de "embargos
-infringentes" como categoria autônoma. O art. 1.024, §3º, trata
-a modificação da decisão embargada como consequência possível do
-acolhimento dos embargos, não como objeto de pedido distinto. A
-fórmula "subsidiariamente, requer-se a atribuição de efeitos
-infringentes" é dogmaticamente imprecisa e deve ser substituída
-pela formulação correta: requer-se o acolhimento dos embargos
-para sanar os vícios apontados e, na medida em que a sanação
-importe modificação do julgamento nos termos do art. 1.024, §3º,
-do CPC, seja revisado o julgado.
-
-Quanto ao regime de precedentes, o CPC 2015 configura — pela
-conjugação dos arts. 927, §1º, e 489, §1º, V e VI — cinco saídas
-legítimas para o tribunal diante de precedente vinculante invocado:
-aplicação correta, distinção fundamentada, reconhecimento de
-superação superveniente, superação racional com apontamento expresso
-de erro, e abstenção da invocação. A quinta saída (abstenção) é
-logicamente distinta das demais porque opera antes da invocação;
-as quatro substantivas operam depois. Quem invoca vincula-se a uma
-das quatro. Quem não invoca não entra no espaço das obrigações.
-
-A leitura penta-partida reflete o caráter racional — não
-meramente hierárquico — da vinculação a precedente no direito
-brasileiro. O tribunal inferior não é obrigado a seguir o
-precedente do STF porque o STF tem mais poder; é vinculado à
-ratio do precedente porque a ratio articula razão jurídica que,
-salvo demonstração de erro qualificada, deve se aplicar a casos
-análogos. A possibilidade de superação racional preserva, não
-viola, a integridade do sistema: um sistema que não admite
-confronto argumentativo com os precedentes é um sistema que não
-tem mecanismo para corrigir os próprios erros.
-
-A aplicação parcial silenciosa de precedente vinculante — invocar
-o precedente para se valer da porção favorável e ignorar a porção
-desfavorável ou as ressalvas expressas do enunciado — é vício de
-fundamentação nos termos do art. 489, §1º, V, do CPC, e pode ser
-impugnada por Embargos de Declaração. O tribunal que invoca
-precedente e não adota nenhuma das quatro saídas substantivas não
-está, formalmente, seguindo o precedente; está usando o nome do
-precedente para ocultar a ausência de fundamentação adequada.
-
----
+O CPC de 2015 reforçou simultaneamente o dever de fundamentação e a disciplina de precedentes. O art. 489, §1º, V exige que a decisão que invoque precedente ou súmula identifique seus fundamentos determinantes e demonstre a adequação do caso; o inciso VI exige explicação quando a decisão deixa de seguir precedente, jurisprudência ou súmula invocados pela parte, por distinção ou superação. O art. 927, por sua vez, determina que juízes e tribunais observem as fontes vinculantes ali enumeradas e manda aplicar, nesse contexto, o regime de fundamentação do art. 489.
+
+Esses dispositivos têm duas consequências que precisam ser mantidas juntas. A primeira é que precedentes não podem ser manejados como rótulos: citar uma ementa não substitui a reconstrução da razão que controla o caso. A segunda é que a exigência de razões não apaga a força vinculante nem redistribui competências. Distinguir, criticar, sinalizar necessidade de revisão, deixar de aplicar em hipótese juridicamente reconhecida e revisar formalmente uma tese são atos distintos.
+
+O mesmo cuidado de separar categorias é útil nos Embargos de Declaração. A oposição relevante não é entre matéria “formal” e matéria “de mérito”, mas entre defeito declaratório e mera pretensão de rejulgamento. E, quando a correção de um defeito altera a conclusão, é necessário distinguir a integração cujo resultado já é determinado pelos compromissos assumidos daquela que abre escolhas novas e exige cognição adicional.
+
+As versões iniciais deste artigo apresentavam algumas dessas proposições em linguagem de maior originalidade. Auditorias temporais posteriores do próprio repositório mostraram que isso era excessivo. A doutrina e a jurisprudência anteriores ao corte público deste trabalho já continham a arquitetura “modificação como consequência da integração”, o debate sobre não aplicação de precedentes por órgãos inferiores e a distinção entre não aplicação no caso e revisão formal pelo tribunal competente. Esta versão incorpora essas correções e restringe sua pretensão a uma síntese prática e a categorias mais estreitas.
+
+## 2. Embargos de Declaração: defeito, integração e eventual modificação
+
+### 2.1 O defeito declaratório pode incidir sobre o mérito
+
+O art. 1.022 do CPC admite Embargos de Declaração para esclarecer obscuridade, eliminar contradição, suprir omissão e corrigir erro material. A modalidade do defeito, e não a natureza substantiva ou processual do tema, define o cabimento. Uma omissão pode recair sobre uma questão de mérito; uma contradição interna pode envolver premissas meritórias; uma obscuridade pode impedir a compreensão do próprio dispositivo.
+
+Isso não transforma os embargos em recurso de revisão geral. Se a parte apenas pretende substituir um juízo de mérito por outro e não identifica defeito do art. 1.022, falta a função integrativa ou aclaratória que justifica a via declaratória. A distinção correta, portanto, é entre correção de defeito e rediscussão autônoma, não entre “forma” e “mérito”.
+
+Essa proposição não é nova. A auditoria temporal deste projeto localizou, antes do corte do Paper 1A, doutrina e jurisprudência que já tratavam como ordinária a possibilidade de defeito declaratório meritório e de alteração do resultado quando necessária à sua correção. Em especial, Nery Jr. e Nery, Monteiro Neto, a linha do STJ sobre “consequência necessária” e Talamini antecedem a formulação deste programa. A contribuição possível do presente texto é organizar essa base para a prática e explicitar seu limite cognitivo, não reivindicar sua descoberta.
+
+### 2.2 Modificação não é um segundo pedido autônomo
+
+O dispositivo correto para a consequência processual da modificação é o **art. 1.024, §4º**, e não o §3º. O §3º disciplina a hipótese em que o órgão julgador recebe os Embargos de Declaração como agravo interno; o §4º cuida da situação em que o acolhimento dos embargos modifica a decisão e assegura ao embargado que já havia interposto outro recurso a possibilidade de complementar ou alterar suas razões nos limites da modificação.
+
+O §4º confirma que o sistema contempla a modificação como possível resultado do julgamento dos embargos. Ele não cria, contudo, uma teoria inédita de efeitos modificativos. Muito antes do CPC de 2015, doutrina e decisões do STJ já descreviam a alteração do resultado como consequência da correção do defeito quando a integração necessariamente conduzisse a outra conclusão.
+
+Por isso, a redação prática mais precisa é formular como pedido principal a correção dos vícios identificados e acrescentar que, **se e na medida em que** a integração validamente realizada alterar a conclusão, o dispositivo seja ajustado. Essa forma evita sugerir que existe um “pedido subsidiário de efeitos infringentes” juridicamente separado da correção do defeito.
+
+Uma formulação possível é:
+
+> requer-se o acolhimento dos embargos para sanar os vícios identificados e, caso a integração da decisão validamente determine alteração de sua conclusão, que o dispositivo seja ajustado nos limites decorrentes da correção, observando-se o contraditório aplicável.
+
+A vantagem dessa redação é conceitual: ela não trata a reforma como um favor adicional nem dispensa a demonstração do defeito. Tampouco implica que toda omissão conduza automaticamente a um único resultado.
+
+### 2.3 O limite de determinação única
+
+Há pelo menos duas situações diferentes sob a expressão genérica “efeitos modificativos”. Na primeira, as premissas jurídicas e fáticas já adotadas pelo próprio julgador, acrescidas apenas da proposição que deveria ter sido enfrentada, determinam uma única conclusão compatível. Nesse caso, a mudança pode ser descrita como consequência integrativa: corrigir o defeito completa um raciocínio já comprometido com um resultado.
+
+Na segunda, sanar a omissão abre alternativas que não estavam decididas pelas premissas anteriores. O tribunal precisa valorar prova, escolher entre normas concorrentes, construir nova premissa ou exercer discricionariedade interpretativa ainda não comprometida. Aqui, dizer que a modificação é “automática” esconde uma cognição adicional. O Paper 1A desenvolve essa distinção como fronteira entre integração reconhecível e cognição potencialmente generativa.
+
+Esse limite também impede que a fórmula “consequência da integração” seja convertida em licença para obter novo julgamento por meio de embargos. A tese prática é modesta: não é necessário um pedido autônomo de “efeitos infringentes” para que o resultado mude quando a correção do defeito o exige; mas a necessidade da mudança deve ser demonstrada, e casos não determinados pelas premissas existentes não podem ser fingidos como mera consequência lógica.
+
+## 3. Precedentes vinculantes: razão, força normativa e competência
+
+### 3.1 Dever analítico não equivale a liberdade irrestrita de afastamento
+
+Os arts. 489 e 927 afastam dois extremos. De um lado, uma decisão não está adequadamente fundamentada apenas porque menciona uma súmula, um tema ou uma ementa. De outro, a exigência de fundamentação não significa que qualquer decisão contrária a um precedente vinculante se torne legítima quando acompanhada de razões extensas.
+
+A estrutura é simultaneamente racional e institucional. Razões importam: o julgador deve identificar a ratio, demonstrar aderência ou explicar por que ela não controla o caso. Mas a fonte do precedente, o tipo de precedente, a via processual e as competências para revisão, cancelamento ou superação formal também importam. O art. 489 regula a qualidade da fundamentação; ele não é, isoladamente, uma cláusula geral de transferência de competência para revisão de precedentes.
+
+A literatura brasileira anterior ao corte deste paper já discutia intensamente a possibilidade de não aplicação em instância inferior. Ataíde Jr. e Peixoto trataram do *anticipatory overruling*; Nogueira e Malafaia distinguiram a não aplicação/superação no caso concreto da revisão formal pelo tribunal competente; Ribeiro e Costa defenderam a possibilidade de não aplicação por juiz singular sob forte carga argumentativa; Pitta desenvolveu a distinção entre não aplicação no caso e modificação da tese pelo órgão de origem. Há também doutrina em sentido mais restritivo. O ponto, portanto, não pode ser apresentado como descoberta deste artigo.
+
+### 3.2 Um mapa de cinco situações analíticas
+
+Para fins de auditoria da fundamentação, é útil separar cinco situações. Elas não constituem uma lista estatutária exaustiva nem cinco permissões equivalentes.
+
+**1. Aplicação.** O precedente efetivamente controla o caso. A decisão identifica seus fundamentos determinantes e demonstra a correspondência entre esses fundamentos e os fatos juridicamente relevantes.
+
+**2. Distinção.** Existe diferença relevante entre o caso atual e o domínio de aplicação da ratio. A decisão explicita essa diferença e mostra por que ela altera a incidência do precedente.
+
+**3. Reconhecimento de revisão, cancelamento ou superação pelo órgão competente.** O precedente perdeu ou teve alterada sua força em razão de ato posterior do tribunal-fonte ou do mecanismo competente. O julgador não cria a revisão; identifica e aplica o novo estado jurídico.
+
+**4. Contestação, sinalização ou não aplicação juridicamente admitida, dentro dos limites de competência.** Há situações discutidas na doutrina — por exemplo, *anticipatory overruling* sob condições restritas ou outras hipóteses de não aplicação no caso concreto — em que o órgão inferior pode expor razões contra a continuidade da ratio ou deixar de aplicá-la segundo o regime jurídico pertinente. Essa categoria não significa que “basta fundamentar”. Deve-se indicar qual mecanismo jurídico permite a atuação no caso, distinguir não aplicação concreta de revisão formal e preservar a competência do tribunal autorizado a alterar a tese vinculante quando essa competência for exclusiva.
+
+**5. Precedente não controlador por questão independente.** O caso pode ser resolvido por questão antecedente ou independente que torne o precedente juridicamente irrelevante para o desfecho. Esta situação não é “abstenção de invocar”. O dever do art. 927 não nasce da vontade do julgador de mencionar ou silenciar sobre uma fonte vinculante. Se o precedente é aplicável e controla a questão necessária ao julgamento, o simples silêncio não elimina o dever de observá-lo. A quinta situação só existe quando a decisão mostra por que outra questão efetivamente torna a ratio não controladora.
+
+Esse quinto ponto corrige uma formulação anterior deste artigo. Não é seguro dizer que “quem não invoca não entra no espaço das obrigações”. O art. 927 dirige-se a juízes e tribunais e não condiciona sua incidência à citação voluntária do precedente pelo próprio julgador.
+
+### 3.3 Não aplicação no caso e revisão formal não são a mesma operação
+
+A distinção entre as duas operações é essencial para evitar ambiguidade terminológica. Uma decisão inferior pode, conforme a hipótese reconhecida pelo direito aplicável, deixar de aplicar um precedente a um caso, distingui-lo, registrar sua erosão ou formular crítica que sinalize necessidade de revisão. Outra coisa é substituir, cancelar ou revisar formalmente a tese vinculante para o sistema.
+
+Essa distinção tem antecedentes diretos na literatura brasileira e aparece com especial clareza no debate sobre *anticipatory overruling* e sobre a competência do tribunal-fonte. Ela também é central para a arquitetura de diálogo institucional desenvolvida no Paper 1D. A reclamação constitucional, em campos nos quais é cabível, pode funcionar como canal de confronto entre o caso e o precedente; o próprio STF já descreveu essa função dialogal na Rcl 24.026/DF. Isso não torna a reclamação um mecanismo universal para qualquer precedente nem impõe que o tribunal superior revise formalmente sua tese sempre que considere persuasiva uma crítica.
+
+Em suma: razão e competência não são alternativas. A qualidade argumentativa permite auditar aplicação, distinção, crítica e eventual não aplicação; a competência determina quem pode produzir qual efeito institucional.
+
+### 3.4 Aplicação parcial silenciosa
+
+A categoria mais específica defendida neste artigo é a `aplicação parcial silenciosa`. Ela ocorre quando uma decisão **usa** um precedente como fundamento para sua conclusão, mas omite sem explicação uma qualificação, condição ou parcela da ratio que é materialmente relevante para o caso.
+
+A categoria não depende de tratar cada frase da ementa como ratio decidendi. É necessário demonstrar três elementos:
+
+1. a proposição omitida integra efetivamente os fundamentos determinantes ou uma condição expressa de incidência do precedente;
+2. essa proposição é relevante para os fatos ou para a questão jurídica atual;
+3. a decisão utiliza o precedente como fundamento, mas não enfrenta a tensão produzida pela proposição omitida.
+
+Se esses elementos estiverem presentes, o problema não é simplesmente “discordar do STF” nem “aplicar só parte de um texto”. É um problema de fundamentação: a decisão apresenta o precedente como razão a seu favor sem explicar uma limitação da própria razão que invocou. Dependendo do caso, o defeito pode se enquadrar no art. 489, §1º, V, e pode também gerar omissão relevante para fins do art. 1.022.
+
+A categoria deve ser usada com cautela. Uma passagem não controladora, uma *obiter dictum*, uma condição faticamente ausente ou uma questão tornada irrelevante por fundamento independente não cria “aplicação parcial silenciosa”. O teste exige reconstrução da ratio e da materialidade da omissão.
+
+## 4. O caso Marilene como teste de fundamentação
+
+### 4.1 Proveniência verificável
+
+O caso usado como ilustração é a Apelação Cível **7003561-54.2024.8.22.0010**, TJRO, relatoria do Des. Jorge Luiz dos Santos Leal, envolvendo o IPERON e Marilene Betiol. Registro público derivado do Diário de Justiça Eletrônico Nacional identifica decisão unânime de não provimento, publicada em 1º de maio de 2026, e resume a controvérsia sobre a natureza do cargo estadual de Especialista em Supervisão Escolar, posteriormente reenquadrado como Professora Classe C, para fins de acumulação e aposentadoria.
+
+A ementa pública registra, entre os fundamentos, ADI 3.772, Súmula 726, Tema 965, arts. 64 e 67, §2º, da LDB e o reenquadramento funcional da servidora. Portanto, esta versão não trata o simples fato de o cargo originário conter a palavra “Especialista” como prova suficiente de erro do acórdão. A questão exige enfrentar a trajetória funcional, a legislação educacional e o exato alcance dos precedentes citados.
+
+### 4.2 ADI 3.772: correção temporal e material
+
+A ADI 3.772 foi julgada pelo STF em **29 de outubro de 2008**, e não em 2009. Sua ementa estabelece, em síntese, que funções de direção, coordenação e assessoramento pedagógico podem integrar a carreira do magistério quando exercidas em estabelecimento de ensino básico por professores de carreira, excluindo especialistas em educação dessa extensão. O DJe publicou o acórdão em março de 2009 e houve republicação em outubro de 2009; essa republicação não altera a data do julgamento.
+
+Esse precedente cria uma pergunta de fundamentação no caso Marilene: como se articulam a nomenclatura e natureza do cargo originário de Especialista em Supervisão Escolar, o reenquadramento posterior como Professora Classe C, as regras da LDB e a condição “professor de carreira” utilizada pelo STF? A resposta pode favorecer qualquer dos lados conforme as fontes aplicáveis; o ponto deste paper é que a decisão deve tornar a articulação explícita se usa a ADI 3.772 como fundamento.
+
+Assim, a ilustração é deliberadamente mais estreita do que nas versões anteriores. Não se afirma, apenas a partir da ementa pública disponível, que o TJRO necessariamente praticou aplicação parcial silenciosa. Afirma-se que o caso oferece um teste: **se** uma condição material da ratio é relevante e **se** a decisão invoca o precedente sem resolver a tensão entre essa condição e o percurso funcional concreto, há uma omissão argumentativa a ser examinada. A conclusão jurídica final depende do acórdão integral e das fontes funcionais do caso.
+
+### 4.3 O papel dos Embargos de Declaração
+
+Nessa moldura, Embargos de Declaração têm uma função precisa. Eles podem exigir que a decisão enfrente uma condição relevante da ratio, uma contradição interna entre premissas adotadas ou uma questão omitida que deveria ter sido decidida. A eventual alteração do resultado não precisa ser formulada como pedido autônomo de “efeitos infringentes”; se a correção do defeito, com contraditório e dentro dos limites cognitivos adequados, determinar outra conclusão, a decisão integrada deve refletir essa consequência.
+
+O caso conecta, portanto, as duas partes do artigo sem antecipar o mérito: a teoria dos embargos fornece o instrumento de correção da fundamentação; a análise de precedentes identifica o tipo de pergunta que a decisão precisa responder.
+
+## 5. Prior art e delimitação das contribuições
+
+As auditorias claim-specific do repositório produziram três correções que passam a integrar esta versão.
+
+Primeiro, a arquitetura “efeitos modificativos como consequência da integração, não como pedido principal autônomo” é anterior ao CPC de 2015 e ao presente trabalho. Nery Jr. e Nery, Mattos, Monteiro Neto, decisões do STJ e Talamini ocupam o núcleo da proposição. O residual deste programa está na prescrição específica de redação e, de forma ainda parcial e sujeita a novos antecedentes, na fronteira cognitiva de determinação única.
+
+Segundo, a possibilidade e os limites de não aplicação de precedente por órgão inferior já eram objeto de doutrina brasileira antes do corte público. Nogueira e Malafaia, Ribeiro e Costa, Pitta e a literatura de *anticipatory overruling* ocupam componentes centrais do que as primeiras versões chamavam de “quarta saída”. Por isso, este artigo não reivindica como novidade a autorização genérica de “superação racional”. Sua proposta é usar um mapa de situações para impedir que crítica argumentativa, não aplicação concreta e revisão formal sejam confundidas.
+
+Terceiro, a ideia de vinculação racional, de dever argumentativo em duas direções e de reclamação como possível canal de diálogo também possui antecedentes diretos. Mendes já descrevia o dever de fundamentação em estrutura de mão dupla; a Rcl 24.026/DF descreveu a reclamação como instrumento de diálogo entre caso concreto e precedente vinculante; a literatura de sinalização e *anticipatory overruling* antecede a arquitetura institucional deste projeto. O Paper 1D, por isso, deve ser lido como refinamento de uma integração já existente, não como descoberta de que precedente admite diálogo.
+
+Os relatórios temporais que documentam essas conclusões são:
+
+- `audits/prior-art/paper1a-embargos-declaracao-2026-09-18.md`;
+- `audits/prior-art/paper1b-five-exits-precedents-2026-09-18.md`;
+- `audits/prior-art/paper1d-vinculacao-racional-dialogo-institucional-2026-09-18.md`.
+
+Esses relatórios são buscas negativas e positivas delimitadas por seus protocolos. A ausência de um antecedente exato para uma combinação não é prova de prioridade absoluta.
+
+## 6. Conclusão
+
+Embargos de Declaração podem corrigir defeitos que recaem sobre matéria de mérito, mas não constituem atalho para uma nova apelação. Quando a correção do defeito determina uma mudança no resultado, a modificação pode decorrer da própria integração; o art. 1.024, §4º, disciplina uma consequência processual dessa hipótese. Esse núcleo é anterior ao CPC de 2015 e deve ser creditado como tal. A proposta prática remanescente é redigir o pedido em torno da correção do vício e explicitar o limite entre integração determinada e nova cognição.
+
+No campo dos precedentes, o dever de fundamentação é forte, mas competência continua importando. Aplicar, distinguir, reconhecer revisão pelo órgão competente, contestar ou deixar de aplicar apenas em canal juridicamente admitido e decidir por questão independente são situações diferentes. O silêncio voluntário sobre um precedente aplicável não é uma quinta saída. Da mesma forma, fundamentação extensa não converte automaticamente um órgão inferior em tribunal competente para revisar formalmente a tese vinculante.
+
+A `aplicação parcial silenciosa` permanece útil como categoria de auditoria desde que seja aplicada com rigor: é preciso demonstrar que a decisão invocou o precedente, que a condição omitida pertence à sua razão controladora e que a condição é material para o caso. A categoria não substitui distinguishing, não transforma *obiter dictum* em ratio e não decide, por si só, o mérito.
+
+O resultado é menos grandioso do que a versão inicial deste artigo e, por isso mesmo, mais defensável: uma síntese que preserva a força normativa dos precedentes, torna explícitos os limites de competência e oferece instrumentos práticos para localizar defeitos reais de integração e fundamentação.
 
 ## Referências
 
-CÂMARA, Alexandre Freitas. *O novo processo civil brasileiro*. 6.
-ed. São Paulo: Atlas, 2020.
+ATAÍDE JR., Jaldemiro Rodrigues de; PEIXOTO, Ravi. “Flexibilidade, stare decisis e o desenvolvimento do anticipatory overruling no direito brasileiro.” *Revista de Processo*, v. 236, 2014, p. 279–301.
 
-DIDIER JR., Fredie; CUNHA, Leonardo Carneiro da; BRAGA, Paula
-Sarno; OLIVEIRA, Rafael Alexandria de. *Curso de direito processual
-civil*. Vol. 3. 16. ed. Salvador: JusPodivm, 2019.
+BRASIL. Código de Processo Civil — Lei nº 13.105, de 16 de março de 2015, texto compilado. Disponível em: <https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm>.
 
-HART, Herbert L. A. *O conceito de direito*. Tradução de A.
-Ribeiro Mendes. 3. ed. Lisboa: Fundação Calouste Gulbenkian, 2001.
+MATTOS, Carlos Alberto Barbosa de. “Embargos de declaração: efeitos infringentes?” *Migalhas*, 10 ago. 2006. Disponível em: <https://www.migalhas.com.br/depeso/26231/embargos-de-declaracao--efeitos-infringentes>.
 
-KELSEN, Hans. *Teoria pura do direito*. Tradução de João Baptista
-Machado. 6. ed. São Paulo: Martins Fontes, 1998.
+MACÊDO, Lucas Buril de. “Transformação, Sinalização e Superação Antecipada e sua Pertinência ao Sistema de Precedentes Brasileiro.” *Revista de Processo Comparado*, v. 3, 2016, p. 89–120.
 
-MACÊDO, Lucas Buril de. *Precedentes judiciais e o direito
-processual civil*. 3. ed. Salvador: JusPodivm, 2019.
+MENDES, Anderson Cortez. “Dever de Fundamentação no Novo Código de Processo Civil e os Precedentes Vinculantes.” *Revista Eletrônica de Direito Processual*, v. 16, 2015. DOI: <https://doi.org/10.12957/redp.2015.18434>.
 
-MARINONI, Luiz Guilherme. *Precedentes obrigatórios*. 5. ed. São
-Paulo: Revista dos Tribunais, 2016.
+MONTEIRO NETO, João Pereira. “Os denominados ‘efeitos modificativos’ em embargos de declaração são mesmo excepcionais?” *Jus Navigandi*, 28 jan. 2010. Disponível em: <https://jus.com.br/artigos/14260/os-denominados-efeitos-modificativos-em-embargos-de-declaracao-sao-mesmo-excepcionais>.
 
-MARINONI, Luiz Guilherme; ARENHART, Sérgio Cruz; MITIDIERO,
-Daniel. *Novo código de processo civil comentado*. 3. ed. São
-Paulo: Revista dos Tribunais, 2017.
+NERY JR., Nelson; NERY, Rosa Maria de Andrade. *Código de Processo Civil Comentado*. São Paulo: Revista dos Tribunais, várias edições. A versão final deve ser lida em conjunto com a verificação de edição documentada no audit do Paper 1A; este artigo não atribui aos autores posição contrária à arquitetura consequência-não-pedido.
 
-MITIDIERO, Daniel. *Cortes superiores e cortes supremas: do
-controle à interpretação, da jurisprudência ao precedente*. 3.
-ed. São Paulo: Revista dos Tribunais, 2017.
+NOGUEIRA E MALAFAIA, Evie. “Decisões de efeito vinculante no CPC/15: revisão x superação.” *Empório do Direito*, 12 fev. 2020. Disponível em: <https://emporiododireito.com.br/leitura/abdpro-116-decisoes-de-efeito-vinculante-no-cpc-15-revisao-x-superacao>.
 
-MITIDIERO, Daniel. *Precedentes: da persuasão à vinculação*. 4.
-ed. São Paulo: Revista dos Tribunais, 2021.
+PITTA, Fernanda Pagotto Gomes. *Mecanismos processuais de superação dos precedentes nos Tribunais Superiores*. Tese de doutorado, PUC-SP, registro institucional público em 2025.
 
-NERY JR., Nelson; NERY, Rosa Maria de Andrade. *Código de processo
-civil comentado*. 17. ed. São Paulo: Revista dos Tribunais, 2018.
+RIBEIRO, Flávia Pereira; COSTA, César Augusto. “Precedentes vinculantes: Possibilidade de superação pelo juiz singular.” *Migalhas*, 12 jun. 2024. Disponível em: <https://www.migalhas.com.br/depeso/409097/precedentes-vinculantes-possibilidade-de-superacao-pelo-juiz-singular>.
 
-RAZ, Joseph. *The authority of law: essays on law and morality*.
-2. ed. Oxford: Oxford University Press, 2009.
+STF. ADI 3.772/DF, Tribunal Pleno, rel. orig. Min. Carlos Britto, rel. p/ acórdão Min. Ricardo Lewandowski, julgamento em 29 out. 2008. Notícia institucional de conclusão do julgamento: <https://noticias.stf.jus.br/postsnoticias/professores-que-exercerem-cargos-de-direcao-pedagogica-poderao-ter-aposentadoria-especial/>.
 
-STRECK, Lenio Luiz. *O que é isto — decido conforme minha
-consciência?* 6. ed. Porto Alegre: Livraria do Advogado, 2017.
+STF. Reclamação 24.026/DF, decisão de 1º jun. 2016, Min. Dias Toffoli.
 
-WAMBIER, Teresa Arruda Alvim. *Recurso especial, recurso
-extraordinário e ação rescisória*. 3. ed. São Paulo: Revista dos
-Tribunais, 2016.
+STJ. EDcl no REsp 1.185.201/DF, Quinta Turma, julgamento em 18 ago. 2011, DJe 3 out. 2011.
+
+STJ. REsp 1.698.774/RS, Terceira Turma, rel. Min. Nancy Andrighi, julgamento em 1º set. 2020, DJe 9 set. 2020.
+
+TALAMINI, Eduardo. “Embargos de declaração: efeitos no CPC/15.” *Migalhas*, 22 mar. 2016. Disponível em: <https://www.migalhas.com.br/depeso/236300/embargos-de-declaracao-->.
+
+TJRO. Apelação Cível 7003561-54.2024.8.22.0010, rel. Des. Jorge Luiz dos Santos Leal. Registro público de publicação no DJEN/CNJ, com ementa e movimentação de 1º maio 2026, indexado em: <https://jurimais.com.br/processo/70035615420248220010>.
 
 ---
 
-*Artigo submetido para publicação em [VEÍCULO]. Versão de
-9 de julho de 2026. Processo: Apelação Cível 7003561-54.2024.8.22.0010,
-TJRO, 2ª Câmara Especial, j. 29.04.2026.*
+**Versão 0.1 — preprint.** Esta versão arquiva a síntese dogmática revisada após auditorias claim-specific. Não há submissão a periódico declarada neste manuscrito, e nenhum DOI ou depósito Zenodo é pressuposto pelo texto.
