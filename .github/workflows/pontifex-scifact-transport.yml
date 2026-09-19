@@ -1,0 +1,46 @@
+name: Pontifex BEIR SciFact transport
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_benchmarks/scifact_transport.py"
+      - "experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-TRANSPORT-2026-09-19.md"
+      - ".github/workflows/pontifex-scifact-transport.yml"
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Restore SciFact data and encoder cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/pontifex-scifact
+            ~/.cache/huggingface
+          key: pontifex-scifact-transport-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-scifact-transport-v1-
+
+      - name: Run untouched-test SciFact transport benchmark
+        run: |
+          uv run experiments/pontifex_benchmarks/scifact_transport.py \
+            --budgets 16 32 64 128 256 512 \
+            --seed 20260919 \
+            --cache-dir .cache/pontifex-scifact \
+            --output /tmp/pontifex-scifact-transport.json
+
+      - name: Upload benchmark record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-scifact-transport
+          path: /tmp/pontifex-scifact-transport.json
+          if-no-files-found: error
