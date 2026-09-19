@@ -79,7 +79,7 @@ The prompt catalog itself should be an Open Knowledge Format bundle. Each prompt
 
 ```yaml
 ---
-type: agent-prompt
+type: "Companion Note"
 prompt_id: falsify-live-boundary-v3
 generator: mutation
 intent: "Probe the cheapest live falsifier before adding implementation."
