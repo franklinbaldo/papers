@@ -75,7 +75,7 @@ The discipline was:
 
 Scientific negatives return successful workflow exit codes. The CI result answers whether the experiment executed correctly; the artifact records whether the hypothesis passed its registered gates.
 
-All core experiments are implemented under `experiments/semantic_atlas/spectral_bottleneck/` and executed by GitHub Actions on pinned model revisions.
+All core experiments are implemented under `semantic-atlas/experiments/spectral_bottleneck/` and executed by GitHub Actions on pinned model revisions.
 
 ## 3. Synthetic validation: the instrument can see a real bottleneck
 
@@ -445,7 +445,7 @@ The repository contains the full protocol sequence rather than only the final fa
 
 Key files include:
 
-- `experiments/semantic_atlas/spectral_bottleneck/experiment.py` — planted synthetic bottleneck;
+- `semantic-atlas/experiments/spectral_bottleneck/experiment.py` — planted synthetic bottleneck;
 - `real_model_experiment.py` — first registered real-model smoke;
 - `observer_comparison.py` — explicitly post-hoc observer sensitivity;
 - `confirmatory_endpoint.py` — fresh endpoint confirmation;

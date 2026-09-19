@@ -28,7 +28,7 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Empirical scope.** This paper reports the static result selected by the preregistered large-gallery gate in `experiments/semantic_atlas/protocol_scale_mknn.md`. It does not claim observer-independent semantic geometry, causal mechanism, temporal dynamics, Blackwell ordering, or reconstructability of one embedding space from another. Dynamic susceptibility remains a separate downstream programme.
+> **Empirical scope.** This paper reports the static result selected by the preregistered large-gallery gate in `semantic-atlas/experiments/protocol_scale_mknn.md`. It does not claim observer-independent semantic geometry, causal mechanism, temporal dynamics, Blackwell ordering, or reconstructability of one embedding space from another. Dynamic susceptibility remains a separate downstream programme.
 
 ## Abstract
 
@@ -330,8 +330,8 @@ That is enough to justify an Atlas as a comparative object. The map should not b
 
 ## Reproducibility and provenance
 
-The terminal findings record is `experiments/semantic_atlas/SCALE_MKNN_RESULTS.md` on the scale-gate branch and records the preregistered disposition `scale_stable`, `observer_specific_gap_survives`, `static paper released=true`.
+The terminal findings record is `semantic-atlas/experiments/SCALE_MKNN_RESULTS.md` on the scale-gate branch and records the preregistered disposition `scale_stable`, `observer_specific_gap_survives`, `static paper released=true`.
 
-The frozen protocol, corpus manifest, exact-draw code, aggregate results, embeddings manifests, and terminal figure are preserved under `experiments/semantic_atlas/` and in the durable prerelease `semantic-atlas-scale-v1-data`. The primary corpus hash is `3333172fb665cd6de92117f6a825de7bb250c4b18a248d74acbec810405f89c8`.
+The frozen protocol, corpus manifest, exact-draw code, aggregate results, embeddings manifests, and terminal figure are preserved under `semantic-atlas/experiments/` and in the durable prerelease `semantic-atlas-scale-v1-data`. The primary corpus hash is `3333172fb665cd6de92117f6a825de7bb250c4b18a248d74acbec810405f89c8`.
 
 No threshold, corpus rule, model revision, gallery schedule, or terminal classification rule was changed after observing the N=100k outcome.

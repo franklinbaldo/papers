@@ -43,7 +43,7 @@ This suggests a definition of time that begins not with an external clock but wi
 
 A naive formulation would measure time by the raw length of the message. That is insufficient. The same payload can travel through paths of different causal depth. Conversely, a long history can later be represented by a short index. Compression changes the representation of the past, not necessarily the number or ordering of the events that produced it.
 
-The motivating companion framework, developed in `generative_machine_teaching.md`, introduces a self-tokenizing language in which concatenation is the only primitive operation. In its strict track, the learner remains externally evaluated on the primitive bit stream, while a demonstrated construction may receive a stable index and executable proof so that later inference can use it as one internal symbol. The present paper asks what follows when that adaptive representational mechanism is applied recursively to causal histories themselves.
+The motivating companion framework, developed in `machine-teaching/generative-machine-teaching.md`, introduces a self-tokenizing language in which concatenation is the only primitive operation. In its strict track, the learner remains externally evaluated on the primitive bit stream, while a demonstrated construction may receive a stable index and executable proof so that later inference can use it as one internal symbol. The present paper asks what follows when that adaptive representational mechanism is applied recursively to causal histories themselves.
 
 Three observations drive the proposal.
 

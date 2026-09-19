@@ -581,8 +581,8 @@ If the answer is yes, the graph exists before the map.
 
 The machine-checked core is in:
 
-`formalizations/interventional_latent_graph/InterventionalLatentGraph.lean`
+`pontifex/formalizations/interventional-latent-graph/InterventionalLatentGraph.lean`
 
 with scope and trusted-boundary notes in:
 
-`formalizations/interventional_latent_graph/README.md`
+`pontifex/formalizations/interventional-latent-graph/README.md`

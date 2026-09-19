@@ -48,7 +48,7 @@ This produces a testable alternative to a global-PCA picture of semantic space. 
 
 ## 1. Scope: a follow-up, not a revision
 
-The original [Semantic Atlas](semantic_atlas.md) proposes a multiscale map of language-model dynamics expressed in a calibrated Semantic Reference Frame (SRF), with semantic quasars fixing an external reference geometry, an atlas estimating local transition and reachability structure, and a Semantic Servo providing closed-loop control.
+The original [Semantic Atlas](semantic-atlas/semantic-atlas.md) proposes a multiscale map of language-model dynamics expressed in a calibrated Semantic Reference Frame (SRF), with semantic quasars fixing an external reference geometry, an atlas estimating local transition and reachability structure, and a Semantic Servo providing closed-loop control.
 
 Nothing in the present paper requires that proposal to be rewritten. The original programme already distinguishes global reference geometry from model-specific dynamics and already treats semantic trajectories as richer objects than isolated embeddings. The narrower question here is:
 
@@ -600,7 +600,7 @@ The most interesting possibility is that the model's enormous activation space c
 
 ## 12. References
 
-- Baldo, F. (2026). *Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models*. `semantic_atlas.md` in this repository.
+- Baldo, F. (2026). *Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models*. `semantic-atlas/semantic-atlas.md` in this repository.
 - Bhalla, U., Fel, T., Rager, C., Feucht, S., Haklay, T., Wurgaft, D., et al. (2026). *Do Sparse Autoencoders Capture Concept Manifolds?* arXiv:2604.28119. https://arxiv.org/abs/2604.28119.
 - Bigelow, E., Sarfati, R., Wurgaft, D., Lewis, O., McGrath, T., Merullo, J., Geiger, A., & Lubana, E. S. (2026). *Stories in Space: In-Context Learning Trajectories in Conceptual Belief Space*. arXiv:2605.12412. https://arxiv.org/abs/2605.12412.
 - Cheeger, J. (1970). *A Lower Bound for the Smallest Eigenvalue of the Laplacian*. In *Problems in Analysis (Papers Dedicated to Salomon Bochner)*, Princeton University Press, 195–199.

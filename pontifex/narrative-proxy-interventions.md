@@ -924,7 +924,7 @@ Ahuja, K., Mahajan, D., Wang, Y., & Bengio, Y. (2023). Interventional causal rep
 
 Baldo, F. S. (2026a). *Pontifex: Byte-Level Occlusion with Multi-Space Convergence for Tokenizer-Free, Cross-Modal Interpretability*. Research manuscript, \`pontifex.md\`.
 
-Baldo, F. S. (2026b). *Interventional Latent Graphs: Binary Distinctions as Minimal Operational Edges Between Representation Spaces*. Research manuscript, \`interventional_latent_graph.md\`.
+Baldo, F. S. (2026b). *Interventional Latent Graphs: Binary Distinctions as Minimal Operational Edges Between Representation Spaces*. Research manuscript, \`pontifex/interventional-latent-graph.md\`.
 
 Berg, S., Beckett, I. R., Costa, M., et al. (2026). Sexual dimorphism in the complete *Drosophila* male central nervous system connectome. Official publication 3 September 2026; MaleCNS v1.0 released 8 June 2026. Janelia FlyEM Male CNS Connectome Project.
 
