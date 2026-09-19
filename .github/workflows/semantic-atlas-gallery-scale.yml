@@ -3,14 +3,14 @@ name: Semantic Atlas gallery-scale gate
 on:
   pull_request:
     paths:
-      - "experiments/semantic_atlas/gallery_scale_v1.json"
-      - "experiments/semantic_atlas/protocol_gallery_scale_v1.md"
-      - "experiments/semantic_atlas/src/semantic_atlas/gallery_scale.py"
-      - "experiments/semantic_atlas/src/semantic_atlas/embedding_cache.py"
-      - "experiments/semantic_atlas/src/semantic_atlas/relational_dynamics.py"
-      - "experiments/semantic_atlas/scripts/run_gallery_scale.py"
-      - "experiments/semantic_atlas/tests/test_gallery_scale.py"
-      - "experiments/semantic_atlas/pyproject.toml"
+      - "semantic-atlas/experiments/gallery_scale_v1.json"
+      - "semantic-atlas/experiments/protocol_gallery_scale_v1.md"
+      - "semantic-atlas/experiments/src/semantic_atlas/gallery_scale.py"
+      - "semantic-atlas/experiments/src/semantic_atlas/embedding_cache.py"
+      - "semantic-atlas/experiments/src/semantic_atlas/relational_dynamics.py"
+      - "semantic-atlas/experiments/scripts/run_gallery_scale.py"
+      - "semantic-atlas/experiments/tests/test_gallery_scale.py"
+      - "semantic-atlas/experiments/pyproject.toml"
       - ".github/workflows/semantic-atlas-gallery-scale.yml"
   workflow_dispatch:
 
@@ -23,7 +23,7 @@ jobs:
     timeout-minutes: 240
     defaults:
       run:
-        working-directory: experiments/semantic_atlas
+        working-directory: semantic-atlas/experiments
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,7 +33,7 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: experiments/semantic_atlas/pyproject.toml
+          cache-dependency-path: semantic-atlas/experiments/pyproject.toml
       - name: Detect preserved scale artifact
         id: preserved
         run: |
@@ -61,9 +61,9 @@ jobs:
         with:
           name: semantic-atlas-gallery-scale-v1
           path: |
-            experiments/semantic_atlas/artifacts/gallery_scale_v1.json
-            experiments/semantic_atlas/artifacts/gallery_scale_v1.png
-            experiments/semantic_atlas/artifacts/embedding_cache_gallery_scale_v1/**
+            semantic-atlas/experiments/artifacts/gallery_scale_v1.json
+            semantic-atlas/experiments/artifacts/gallery_scale_v1.png
+            semantic-atlas/experiments/artifacts/embedding_cache_gallery_scale_v1/**
           retention-days: 90
       - name: Persist exact observations on same-repository PR
         if: steps.preserved.outputs.exists != 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
@@ -71,9 +71,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add experiments/semantic_atlas/artifacts/gallery_scale_v1.json
-          git add experiments/semantic_atlas/artifacts/gallery_scale_v1.png
-          git add experiments/semantic_atlas/artifacts/embedding_cache_gallery_scale_v1
+          git add semantic-atlas/experiments/artifacts/gallery_scale_v1.json
+          git add semantic-atlas/experiments/artifacts/gallery_scale_v1.png
+          git add semantic-atlas/experiments/artifacts/embedding_cache_gallery_scale_v1
           if ! git diff --cached --quiet; then
             git commit -m "data: persist gallery-scale v1 observations"
             git push origin HEAD:${{ github.event.pull_request.head.ref }}

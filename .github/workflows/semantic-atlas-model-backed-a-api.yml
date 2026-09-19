@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 90
     defaults:
       run:
-        working-directory: experiments/semantic_atlas
+        working-directory: semantic-atlas/experiments
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,6 +28,6 @@ jobs:
         with:
           name: semantic-atlas-model-backed-a-v2-api
           path: |
-            experiments/semantic_atlas/artifacts/model_backed_a_v2_api.json
-            experiments/semantic_atlas/artifacts/embedding_cache_v2_api/**
+            semantic-atlas/experiments/artifacts/model_backed_a_v2_api.json
+            semantic-atlas/experiments/artifacts/embedding_cache_v2_api/**
           if-no-files-found: error
