@@ -1,5 +1,5 @@
 ---
-type: "Experiment Protocol"
+type: "Protocol"
 title: "Pontifex STS-B latent-space transport benchmark"
 timestamp: 2026-09-19T08:06:00-04:00
 tags: [pontifex, benchmark, stsb, latent-transport, leakage-audit]
