@@ -1,3 +1,7 @@
+---
+type: "Protocol"
+---
+
 # Preregistered replication — reliability-weighted peer coupling
 
 Date: 2026-09-15.
