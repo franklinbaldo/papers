@@ -1,0 +1,74 @@
+name: Pontifex Banking77 classification transport
+
+on:
+  push:
+    branches:
+      - "experiment/pontifex-banking77-classification"
+    paths:
+      - "experiments/pontifex_benchmarks/banking77_classification_transport.py"
+      - "experiments/pontifex_benchmarks/PROTOCOL-BANKING77-CLASSIFICATION-2026-09-19.md"
+      - ".github/workflows/pontifex-banking77-classification.yml"
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Restore benchmark embedding cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/pontifex-banking77
+            ~/.cache/huggingface
+          key: pontifex-banking77-v1-${{ runner.os }}-${{ hashFiles('experiments/pontifex_benchmarks/banking77_classification_transport.py') }}
+          restore-keys: |
+            pontifex-banking77-v1-${{ runner.os }}-
+            pontifex-models-v1-${{ runner.os }}-
+
+      - name: Run frozen external fine-grained classification benchmark
+        run: |
+          uv run experiments/pontifex_benchmarks/banking77_classification_transport.py \
+            --cache-dir .cache/pontifex-banking77 \
+            --output /tmp/pontifex-banking77-classification.json
+
+      - name: Publish benchmark summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f /tmp/pontifex-banking77-classification.json ]; then
+            python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          p = json.loads(Path('/tmp/pontifex-banking77-classification.json').read_text())
+          with open(Path(os.environ['GITHUB_STEP_SUMMARY']), 'a') as f:
+              f.write('## Pontifex Banking77 classification transport\n\n')
+              f.write(f"Leakage audit: **{p['leakage_audit']['status']}**\n\n")
+              f.write(f"A-only accuracy: **{p['reference_scores']['A_only']['accuracy']:.6f}**\n\n")
+              f.write(f"B-oracle accuracy: **{p['reference_scores']['B_oracle']['accuracy']:.6f}**\n\n")
+              names = ['Procrustes','RankProcrustes','Ridge','CCA','PLS','RFF_Ridge','MLP','Pontifex','RankPontifex','ShuffledPontifex']
+              f.write('| K | ' + ' | '.join(names) + ' |\n')
+              f.write('|---:|' + '|'.join(['---:'] * len(names)) + '|\n')
+              for row in p['results_by_budget']:
+                  vals = [row['test'][n]['accuracy'] for n in names]
+                  f.write('| ' + str(row['K']) + ' | ' + ' | '.join(f'{v:.6f}' for v in vals) + ' |\n')
+              f.write('\n```json\n')
+              f.write(json.dumps(p['quality_matched_frontier'], indent=2))
+              f.write('\n```\n')
+          PY
+          fi
+
+      - name: Upload auditable benchmark artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-banking77-classification
+          path: /tmp/pontifex-banking77-classification.json
+          if-no-files-found: warn
