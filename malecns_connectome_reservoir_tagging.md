@@ -1,9 +1,22 @@
 ---
 type: "Technical Paper"
 title: "MaleCNS as a Frozen Reservoir for Byte-Level Legal Sequence Tagging: Paired Controls and Training-Regime Diagnostics"
-description: "Living empirical paper testing whether a frozen recurrent reservoir constrained by the Drosophila MaleCNS connectome adds useful sequence-tagging signal beyond byte-only and degree-preserving shuffled controls."
+description: "Empirical baseline testing whether a frozen recurrent reservoir constrained by the Drosophila MaleCNS connectome adds useful byte-level legal sequence-tagging signal beyond degree-preserving shuffled and byte-only controls."
 tags: [malecns, drosophila, connectome, reservoir-computing, sequence-tagging, legal-nlp, kaggle]
 timestamp: 2026-09-13T13:07:00-04:00
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: draft
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    version: "0.1"
 ---
 
 # MaleCNS as a Frozen Reservoir for Byte-Level Legal Sequence Tagging
@@ -14,7 +27,7 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Status.** Living empirical paper. The first five-seed experiment is complete and reported below. A preregistered training-regime diagnostic is running separately and will be incorporated without rewriting the baseline result. The untouched test split remains reserved for a later confirmatory run.
+> **Status.** Archival candidate for the completed five-seed v0.1 baseline. The negative/indeterminate baseline result below is frozen as a first-class result. The preregistered training-regime diagnostic and later untouched-test confirmation are follow-up work and do not retroactively alter this baseline claim.
 
 ## Abstract
 
@@ -40,11 +53,15 @@ The present study asks a deliberately narrow question:
 
 The experiment is not a claim that the implemented dynamics reproduce Drosophila neurophysiology. MaleCNS supplies recurrent topology and contact-count structure. The rate dynamics, input mapping, leak parameter, recurrent gain, loss, and readout are engineered choices.
 
-## 2. Background
+## 2. Background and nearest prior work
 
 MaleCNS v1.0 was released by the Janelia FlyEM project on 8 June 2026 and covers the male fruit fly brain and ventral nerve cord. The project page reports the official publication on 3 September 2026 and licenses the dataset under CC BY. The public release exposes flat connectivity files, annotations, synapses, skeletons, and other representations suitable for programmatic analysis.
 
-The immediate methodological precedent is Costi et al. (2025), who used Drosophila connectome topology and synaptic-weight information to construct computational reservoirs for multivariate chaotic time-series prediction. Their study compared connectome-derived reservoirs with randomized and hybrid controls and reported increased resilience to overfitting in the tested time-series setting. The present work changes both the connectome release and the task: it uses MaleCNS v1.0 and performs byte-level sequence tagging over Portuguese legal decisions.
+Connectome-as-reservoir computation itself predates this study. Suárez et al.'s `conn2res` framework treats biological connectivity matrices as reservoir architectures, supports supervised task datasets and trained readouts, and includes connectivity rewiring/manipulation for topology studies. Morra et al. transplanted a Drosophila lateral-horn connectome into a reservoir computer before the MaleCNS release. Costi et al. (2025), the immediate methodological precedent for this experiment, used Drosophila connectome topology and synaptic-weight information to construct reservoirs for multivariate chaotic time-series prediction and compared them with randomized and hybrid controls. These works mean that neither a frozen biological graph with a trained readout nor randomized topology/weight controls are contributions of the present paper.
+
+Reservoir computing had also already reached NLP sequence labeling: Huang, Wang & Safarzadeh (2025) used an echo-state-network component for named-entity recognition. More importantly, before this paper's first public commit, Codex & Alex Wormuth's *Flies Are All You Need* (2026-09-11) had already coupled MaleCNS v1.0 to language-model inputs as a frozen anatomical reservoir with a trained readout and a direct no-graph control. Thus MaleCNS + language input + frozen reservoir + trained readout is not claimed as new here.
+
+The narrower experimental contribution tested in this paper is the conjunction of **byte-level Portuguese legal span tagging**, a **directed degree-preserving shuffled recurrent null** that preserves low-order graph statistics and the recurrent weight multiset, a **non-recurrent byte-only baseline**, and **paired seeds/data/optimization**. The claim-specific prior-art audit did not locate that exact package before the paper's 2026-09-13 cutoff, but that negative search result is not a claim of exhaustive priority.
 
 The purpose of the matched shuffled control here is therefore central rather than cosmetic. If recurrence itself helps, both the MaleCNS and shuffled reservoirs may outperform a non-recurrent byte baseline. Evidence specifically about biological topology requires MaleCNS to beat a null that preserves low-order graph statistics while destroying much of the higher-order wiring organization.
 
@@ -344,6 +361,7 @@ The experiment code and workflows live in `franklinbaldo/franklinbaldo.github.io
 Key provenance:
 
 - CausaGanha data commit: `7c3d6557bb692932553622ae6e00493ba04e534f`;
+- experiment implementation/workflow commit: `b68aa9f03f5972f0e0ebf3eb3a4770e12af2e7a0`;
 - v1 five-seed workflow run: `34767179457`;
 - v1 artifact digest: `sha256:fa4d7c058f2ac495897794885344ec9e34b43b9577f8931855718788ad39b656`;
 - MaleCNS annotations SHA-256: `2177e246113e4cfbf1e7772ec37c6da1955ff22e8063d0b1f833101f99a9a3b2`;
@@ -366,3 +384,7 @@ If v2 shows that best checkpoints occur well after epoch three, the original bas
 1. Male CNS Connectome Project. HHMI Janelia FlyEM. MaleCNS v1.0 release and project resources. https://male-cns.janelia.org/
 2. Male CNS Connectome Downloads. HHMI Janelia FlyEM. https://male-cns.janelia.org/download/
 3. Costi, L.; Hadjiivanov, A.; Dold, D.; Hale, Z. F.; Izzo, D. "The Drosophila Connectome as a Computational Reservoir for Time-Series Prediction." *Biomimetics* 10(5), 341 (2025). https://doi.org/10.3390/biomimetics10050341
+4. Suárez, L. E. et al. "Connectome-based reservoir computing with the conn2res toolbox." *Nature Communications* 15 (2024). https://www.nature.com/articles/s41467-024-44900-4
+5. Morra, J.; Flynn, M.; Amann, A.; Daley, D. "Multifunctionality in a Connectome-Based Reservoir Computer." arXiv:2306.01885 (2023). https://arxiv.org/abs/2306.01885
+6. Huang, H.; Wang, H.; Safarzadeh, H. "Incorporating echo state network and sand cat swarm optimization algorithm based on quantum for named entity recognition." *Scientific Reports* (2025). https://www.nature.com/articles/s41598-025-02275-6
+7. Codex; Wormuth, A. "Flies Are All You Need." Preprint, 2026-09-11. https://artificialscientific.com/papers/flies-are-all-you-need ; code: https://github.com/nftechie/flm
