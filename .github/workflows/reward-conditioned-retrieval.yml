@@ -3,12 +3,12 @@ name: Reward-conditioned retrieval experiment
 on:
   pull_request:
     paths:
-      - "experiments/reward_conditioned_retrieval/**"
+      - "relay-systems/experiments/reward-conditioned-retrieval/**"
       - ".github/workflows/reward-conditioned-retrieval.yml"
   push:
     branches: [main]
     paths:
-      - "experiments/reward_conditioned_retrieval/**"
+      - "relay-systems/experiments/reward-conditioned-retrieval/**"
       - ".github/workflows/reward-conditioned-retrieval.yml"
 
 jobs:
@@ -20,14 +20,14 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-          cache-dependency-path: experiments/reward_conditioned_retrieval/requirements.txt
+          cache-dependency-path: relay-systems/experiments/reward-conditioned-retrieval/requirements.txt
       - name: Install dependencies
-        run: python -m pip install -r experiments/reward_conditioned_retrieval/requirements.txt
+        run: python -m pip install -r relay-systems/experiments/reward-conditioned-retrieval/requirements.txt
       - name: Run unit tests
-        working-directory: experiments/reward_conditioned_retrieval
+        working-directory: relay-systems/experiments/reward-conditioned-retrieval
         run: python -m unittest -v test_experiment.py
       - name: Run smoke experiment
-        working-directory: experiments/reward_conditioned_retrieval
+        working-directory: relay-systems/experiments/reward-conditioned-retrieval
         run: >-
           python experiment.py
           --train-episodes 1000

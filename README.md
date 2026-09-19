@@ -1,105 +1,54 @@
 ---
 type: "Index"
 title: "papers"
-description: "Catalogo e guia de leitura dos papers deste repositorio e do aparato de debate que os acompanha."
-timestamp: 2026-09-08T20:48:00-04:00
-okf_version: "0.1"
+description: "Research workspace organized by active research line, with OKF-native concepts and preserved historical experiments."
+okf_version: "0.2"
 ---
 
 # papers
 
-Position papers and working drafts.
+Research workspace for Franklin Silveira Baldo.
 
-## Raciocínio Jurídico Auditável (CPC 2015) — série dogmática
+The repository is organized by **research line at the root**. Papers,
+experiments, formalizations and line-specific prior-art work stay together.
+Cross-cutting repository information lives in `about/`; concluded or
+superseded research apparatus lives in `archive/`.
 
-- `paper1_dogmatico_ED_precedentes.md` — Embargos de Declaração e saídas legítimas diante de precedente vinculante (umbrella)
-- `paper1A_embargos_declaracao.md` — escopo dos vícios e efeitos infringentes
-- `paper1B_cinco_saidas_precedentes.md` — cinco saídas legítimas (art. 927 §1º c/c art. 489 §1º V–VI)
-- `paper1C_categorias_processuais_formalizacao.md` — categorias processuais e formalização
-- `paper1D_vinculacao_racional_dialogo_institucional.md` — vinculação racional e diálogo institucional
-- `paper1E_custos_argumentativos.md` — custos argumentativos
-- `paper1F_reputacao_sistema_juridico.md` — reputação no sistema jurídico
-- `paper1G_livre_convencimento_patrimonialismo.md` — livre convencimento e patrimonialismo
+Start with [the bundle index](index.md) or the
+[research map](about/research-map.md).
 
-## Eixo metodológico-formal
+## Main active lines
 
-- `pipeline_lean_argdown.md` — pipeline em Lean 4 + Argdown para auditoria de raciocínio jurídico
-- `proveniencia_claims.md` — proveniência de claims
-- `embedding_seeded_tournament.md` — ESHTR: avaliação por painel de LLMs
-- `semantic_tokenization_transformers.md` — STT (position paper)
-- `structural_identification_from_restricted_truths.md` — teoria matemática de identificação estrutural relativa a classe de hipóteses, equivalência, família de verdades e custo, com núcleo formalizado em Lean 4
+- [Pontifex](pontifex/)
+- [MaleCNS](malecns/)
+- [Semantic Atlas](semantic-atlas/)
+- [Auditable Legal Reasoning](auditable-legal-reasoning/)
+- [Machine Discovery](machine-discovery/)
+- [Machine Teaching](machine-teaching/)
+- [Informational Time](informational-time/)
+- [Relay Systems](relay-systems/)
+- [Structural Identification](structural-identification/)
+- [Schmidhuber Meter](schmidhuber-meter/)
 
-## Eixo Semantic Atlas / navegação semântica
+Focused lines remain first-class root directories rather than being hidden in
+a miscellaneous bucket.
 
-- `semantic_atlas.md` — Semantic Reference Frame com quasars artificiais, atlas multiescala, reachability, semantic gravity e controle closed-loop
-- `semantic_atlas_manifolds.md` — extensão manifold-aware: charts locais, geometria espectral, bottlenecks e steering tangente ao suporte semântico
-- `dynamic_quasar_reference_frames.md` — propõe Dynamic Quasar Reference Frames (DQRF): quasars que ancoram campos vetoriais canônicos, inicialmente vorticais, para medir trajetória, fluxo, reachability e custo de controle em um gauge dinâmico comum; inclui extensão multiescala inspirada em Navier–Stokes e experimentos contra o SRF estático
+## Repository-wide infrastructure
 
-## Eixo aprendizagem algorítmica / machine teaching
+- [About](about/) — authorship, publication policy and research map.
+- [Archive](archive/) — concluded/superseded experiments with historical vocabulary preserved.
+- [Scripts](scripts/) — repository automation.
+- [Audits](audits/) — genuinely cross-cutting/publication audits.
+- [OKF contracts](.okf/) — bundle-local type specifications.
 
-- `generative_machine_teaching.md` — previsão do próximo bit como tarefa primitiva; tokenização endógena, adaptativa ao contexto, com provas de montagem e currículos procedurais binários
-- `informational_time.md` — tempo como concatenação: tokenização recursiva como representação adaptativa sobre o fluxo primitivo, simetria e profundidade causal informacional
-- `informational_time_negentropy_clarifications.md` — máxima entropia relativa ao observador; separação entre flutuação, lei externa estruturada e reconhecimento relacional de agente
-- `pedagogical_signal_extraction.md` — irregularidade estruturada e extração de invariantes preditivos; tokens como instrumentos internos, não como segmentação canônica
+## Naming rule
 
-## Eixo comunicação emergente / controle black-box
+Active canonical paths are semantic, lower-case and kebab-case. Historical
+sequence labels such as `paper1g`, `phase3`, session and round numbers are
+kept only where they are intrinsic to preserved experimental history.
 
-- `rl_relay_transducers.md` — transdutores discretos treinados por RL, memória textual associativa e comunicação por canais formados por LLMs congeladas ou coadaptadas
-- `forbidden_relay.md` — pré-registro benigno de transmissão exata por cadeias de LLMs sem vazamento literal intermediário (resultados ainda não coletados)
+## OKF
 
-## Eixo descoberta por máquinas / epistemologia computacional
-
-- `machine_discovery.md` — descoberta como transição certificada entre estados epistêmicos, com novidade relativa, proveniência auditável e expansão recursiva do currículo
-
-## Eixo alignment / agent-bounding
-
-- `affordance_restriction.md` — alignment by affordance restriction: padrão para agentes auditáveis em domínios delimitados (PINK como exemplo trabalhado)
-- `interstitial_agent.md` — agência, persistência informacional e segurança end-to-end em cadeias de LLMs conectadas por transdutores aprendidos
-
-## Eixo segurança de sistemas / driver rehosting
-
-- `contract_aware_driver_rehosting.md` — methodology paper proposing contract-aware SystemBuffer shadow checking, framed by privilege ceilings and researcher affordance floors
-
-## Eixo interpretabilidade
-
-- `pontifex.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
-- `interventional_latent_graph.md` — Interventional Latent Graphs: espaços latentes como vértices, uma intervenção compartilhada por aresta, contraste binário como mínimo operacional discreto e topologia global tratada como hipótese a testar; inclui companion Lean 4
-- `o3-originality-assessment.md` — esboço exploratório (saída de sessão de IA) de checagem de prior art para o Pontifex; não é avaliação independente — ver nota editorial no início do arquivo
-
-## Eixo empírico
-
-- `empirical_evaluation.md` — desenho pré-registrado de avaliação empírica em corpus do TJRO (resultados ainda não coletados)
-
-## Eixo física matemática / fusão
-
-- `vortex_cumulation_fusion.md` — agenda falsificável que testa se a cumulação anisotrópica de vórtice do blow-up de Navier–Stokes pode sobreviver, em regime pré-singular, à passagem para MHD compressível e produzir thermalização útil em hotspots de MTF/MagLIF; inclui a derivação negativa de que a energia do núcleo incompressível tende a zero
-
-## Síntese
-
-- `sintese_programa.md` — síntese do programa "Raciocínio Jurídico Auditável" (eixos dogmático + metodológico-formal + empírico, onze papers; não cobre os eixos de alignment e interpretabilidade abaixo, tratados como linha de pesquisa correlata mas distinta)
-
-## Companion pieces
-
-- `machine_interaction_program.md` — mapa editorial que conecta machine teaching, informational time, signal extraction, machine discovery, interstitial agency, relay transducers e Forbidden Relay
-- `otherwise/` — argumentos adversariais
-- `yesindeed/` — argumentos de suporte
-- `synthesis/` — árbitro: funde `otherwise/`/`yesindeed/` e roda os ciclos de edição que absorvem conclusões assentadas de volta aos papers principais
-- `PROTOCOL.md` — regras do aparato de debate acima (papéis, gatilho de absorção, corte de debates em loop)
-
-## Log
-
-- `synthesis/blog/` — registro corrente de sessões, um arquivo datado por sessão (ativo desde 2026-05-13)
-- `session_log.md` — registro de duas sessões de verificação de referências em 2026-05-12, anterior ao mecanismo acima; mantido como histórico, não recebe novas entradas
-- `propostas_melhoria_2026-07-09.md` — auditoria externa do programa e propostas de melhoria (2026-07-09)
-
-## Formato dos documentos (OKF)
-
-Todo arquivo `.md` deste repositório (exceto `okf/index.md`, reservado
-por convenção) carrega front matter YAML com pelo menos um campo
-`type`, conforme o [Open Knowledge Format](okf/SPEC.md) v0.1. Os
-`type` usados aqui são um vocabulário fechado e documentado em
-`okf/types/` (um arquivo por tipo — `Dogmatic Paper`, `Adversarial
-Critique`, `Session Log Entry`, etc.); `okf/validate.py` roda em CI
-a cada PR e falha se um documento não tiver front matter válido ou
-usar um `type` não registrado. Comece por `okf/index.md` para a
-lista completa de tipos e o que cada um exige.
+The repository targets OKF v0.2 and is validated by
+`franklinbaldo/okf-parser`. The former vendored v0.1 specification and custom
+validator are preserved under `archive/legacy-okf-v0.1/`.

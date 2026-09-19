@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - name: Validate OKF v0.2 bundle
+        uses: franklinbaldo/okf-parser@v0.45.9
+        with:
+          path: .
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - name: Install PyYAML
-        run: pip install pyyaml markdown
-      - name: Validate OKF frontmatter
-        run: python3 okf/validate.py
       - name: Test Zenodo deposit preparation
         run: python3 scripts/zenodo_prepare.py --self-test
       - name: Validate all Zenodo-ready paper bundles

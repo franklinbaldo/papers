@@ -3,13 +3,13 @@ name: Synergy geometry apparatus tests
 on:
   pull_request:
     paths:
-      - 'experiments/synergy_geometry/**'
+      - 'synergy-geometry/experiments/**'
       - '.github/workflows/synergy-geometry-tests.yml'
   push:
     branches:
       - 'experiment/synergy-geometry-**'
     paths:
-      - 'experiments/synergy_geometry/**'
+      - 'synergy-geometry/experiments/**'
       - '.github/workflows/synergy-geometry-tests.yml'
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: experiments/synergy_geometry
+        working-directory: synergy-geometry/experiments
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

@@ -3,15 +3,15 @@ name: Interventional latent graph Lean proofs
 on:
   pull_request:
     paths:
-      - 'interventional_latent_graph.md'
-      - 'formalizations/interventional_latent_graph/**'
+      - 'pontifex/interventional-latent-graph.md'
+      - 'pontifex/formalizations/interventional-latent-graph/**'
       - '.github/workflows/interventional-latent-graph-lean.yml'
   push:
     branches:
       - 'paper/interventional-latent-graph'
     paths:
-      - 'interventional_latent_graph.md'
-      - 'formalizations/interventional_latent_graph/**'
+      - 'pontifex/interventional-latent-graph.md'
+      - 'pontifex/formalizations/interventional-latent-graph/**'
       - '.github/workflows/interventional-latent-graph-lean.yml'
 
 jobs:
@@ -31,4 +31,4 @@ jobs:
       - name: Check interventional latent graph proofs
         run: |
           "$HOME/.elan/bin/elan" run leanprover/lean4:v4.22.0 \
-            lean formalizations/interventional_latent_graph/InterventionalLatentGraph.lean
+            lean pontifex/formalizations/interventional-latent-graph/InterventionalLatentGraph.lean
