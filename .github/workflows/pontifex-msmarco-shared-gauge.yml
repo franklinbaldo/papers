@@ -1,0 +1,110 @@
+name: Pontifex MS MARCO shared-gauge follow-up
+
+on:
+  push:
+    branches:
+      - "experiment/pontifex-msmarco-pilot-run"
+    paths:
+      - "experiments/pontifex_benchmarks/msmarco_shared_gauge.py"
+      - "experiments/pontifex_benchmarks/PROTOCOL-MSMARCO-SHARED-GAUGE-2026-09-19.md"
+      - ".github/workflows/pontifex-msmarco-shared-gauge.yml"
+  workflow_dispatch:
+
+jobs:
+  shared-gauge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Reconstruct frozen label-blind candidate manifest
+        run: |
+          uv run experiments/pontifex_benchmarks/msmarco_candidate_manifest.py \
+            --queries 256 \
+            --hits 100 \
+            --transport-docs 1024 \
+            --output /tmp/msmarco-pilot-manifest.json \
+            --pid-output /tmp/msmarco-pilot-pids.json
+
+      - name: Restore compact paired feature stores from parent pilot
+        id: feature-cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/pontifex-msmarco-pilot
+          key: pontifex-msmarco-pilot-v1-${{ hashFiles('experiments/pontifex_benchmarks/msmarco_candidate_manifest.py', 'experiments/pontifex_red1/extract_sample_store.py') }}
+
+      - name: Extract ANCE vectors on unexpected cache miss
+        if: steps.feature-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p .cache/pontifex-msmarco-pilot
+          uv run experiments/pontifex_red1/extract_sample_store.py \
+            --index msmarco-v1-passage.ance \
+            --pid-file /tmp/msmarco-pilot-pids.json \
+            --output .cache/pontifex-msmarco-pilot/ance.npz
+
+      - name: Free ANCE full-index disk on unexpected cache miss
+        if: steps.feature-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import pathlib
+          import shutil
+          meta = json.load(open('.cache/pontifex-msmarco-pilot/ance.json'))
+          name = meta['index_dir_name']
+          for root in (pathlib.Path.home() / '.cache', pathlib.Path('/tmp')):
+              if not root.exists():
+                  continue
+              for path in root.rglob(name):
+                  if path.is_dir():
+                      shutil.rmtree(path, ignore_errors=True)
+          PY
+
+      - name: Extract TCT vectors on unexpected cache miss
+        if: steps.feature-cache.outputs.cache-hit != 'true'
+        run: |
+          uv run experiments/pontifex_red1/extract_sample_store.py \
+            --index msmarco-v1-passage.tct_colbert-v2-hnp \
+            --pid-file /tmp/msmarco-pilot-pids.json \
+            --output .cache/pontifex-msmarco-pilot/tct.npz
+
+      - name: Run prospective shared-gauge control
+        run: |
+          uv run experiments/pontifex_benchmarks/msmarco_shared_gauge.py \
+            --manifest /tmp/msmarco-pilot-manifest.json \
+            --a-store .cache/pontifex-msmarco-pilot/ance.npz \
+            --b-store .cache/pontifex-msmarco-pilot/tct.npz \
+            --output /tmp/msmarco-shared-gauge.json
+
+      - name: Publish summary
+        if: always()
+        run: |
+          echo '## Pontifex MS MARCO shared-gauge follow-up' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f /tmp/msmarco-shared-gauge.json ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/msmarco-shared-gauge.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-msmarco-shared-gauge
+          path: |
+            /tmp/msmarco-pilot-manifest.json
+            /tmp/msmarco-pilot-pids.json
+            /tmp/msmarco-shared-gauge.json
+            .cache/pontifex-msmarco-pilot/ance.json
+            .cache/pontifex-msmarco-pilot/tct.json
+          if-no-files-found: warn
