@@ -46,7 +46,7 @@ Observed mean absolute error:
 | 50% | 0.069491 | 0.069795 | **0.069276** |
 | 80% | 0.080469 | 0.080333 | **0.080094** |
 
-Evaluation context counts were 23,995 fresh / 6,005 stale at 20%; 15,063 / 14,937 at 50%; and 6,082 / 23,918 at 80%.
+Evaluation context counts were 23,995 fresh / 6,005 stale at 20%; 15,063 / 14,937 at 50%; and 6,082 / 23,918 stale at 80%.
 
 During training, the learned mean losses also separated in the expected direction: on fresh-camera contexts, fixed 4/8 was better than stateless dynamic; on stale-camera contexts, stateless dynamic was better than fixed 4/8.
 
@@ -57,6 +57,14 @@ This is a **small but consistent positive result**, not a large performance jump
 The important result is architectural: Run 6's heuristic need not be discarded. A higher-level coordinator can learn **which recruitment rule to invoke under which lawful sensor-health context**. This is a closer analogue of the proposed MaleCNS coordinator than a single hard-coded formula.
 
 The bandit is deliberately a cheap conventional baseline. A future MaleCNS coordinator must beat it under the same inputs, feedback contract, compute budget, and prevalence shifts.
+
+## Prior-art boundary — 2026-09-19 audit
+
+A claim-level audit is recorded in [`audits/prior-art/malecns-contextual-recruitment-2026-09-19.md`](../../audits/prior-art/malecns-contextual-recruitment-2026-09-19.md).
+
+Contextual bandits, contextual-bandit sensor management, delayed bandit feedback, adaptive resource allocation from sensor/system health, and meta-level contextual selection among already-defined systems or policies are all established pre-cutoff ideas. In particular, Pavlidis et al. (2010) apply bandits with covariates to sensor management; Ngo et al. (2020) select among pre-built edge-compute models from input context; Santana et al. (2020) use a contextual meta-bandit to choose among pre-trained independent systems; and Kamalakannan et al. (2026) use a sensor/system-state contextual bandit for adaptive sensing/resource decisions against fixed and heuristic baselines.
+
+RUN7 therefore **does not claim invention of contextual bandits, meta-policy selection, sensor-health-aware allocation, delayed feedback, or learned selection among existing policies**. Its defensible contribution is narrower: an executed, reality-bounded, matched-compute MaleCNS-colony benchmark with the exact two recruitment arms, camera-age-only decision context, prevalence-shift evaluation, and a conventional baseline that a future MaleCNS coordinator must beat.
 
 ## Reality-bound status
 
