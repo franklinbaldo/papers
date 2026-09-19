@@ -16,7 +16,7 @@ It is designed to answer a limited, auditable question:
 
 > Given only public evidence, how strong is the combination of earlier public priority, substantive technical overlap, historical discoverability, and missing bibliographic credit between one claim and one later work?
 
-It does **not** infer plagiarism, copying, intent, bad faith, negligence, or causal derivation. Those require independent evidence and are outside the base score.
+It does **not** infer plagiarism, copying, intent, bad faith, negligence, independent reinvention, or causal derivation. Those require independent evidence and are outside the base score.
 
 # Unit of analysis
 
@@ -44,6 +44,8 @@ All components must be supported by public evidence.
 
 Strong evidence includes arXiv v1 timestamps, DOI online-first records, proceedings, releases, public PRs, and public repository commits whose relevant content can be inspected.
 
+`P` is confidence in **public ordering**, not probability that the earlier author privately conceived the idea first.
+
 ## O — Substantive overlap
 
 Overlap is decomposed rather than inferred from abstract-level semantic similarity:
@@ -68,6 +70,8 @@ O = mean(
 
 Missing components are not silently imputed.
 
+The equal-weight mean is **provisional**. The five components are not assumed to be statistically independent or equally predictive of citation expectation. Audits should preserve the component vector so that future calibrations can reweight or replace the aggregate without destroying the evidence record.
+
 ## D — Historical discoverability
 
 `D ∈ [0,1]` uses only reconstructible public proxies available before or around publication of B:
@@ -78,7 +82,7 @@ Missing components are not silently imputed.
 - bibliographic proximity, including whether B cites work that cites A;
 - venue/repository visibility.
 
-It does not estimate what B's authors actually knew or read.
+It does not estimate what B's authors actually knew or read. High discoverability is therefore evidence about the historical information environment, not evidence of exposure.
 
 ## C — Credit received
 
@@ -86,7 +90,7 @@ It does not estimate what B's authors actually knew or read.
 
 A direct, substantively appropriate citation can approach 1. Partial or indirect acknowledgment may receive an intermediate value. No located acknowledgment is 0.
 
-Citation context should be inspected where possible: merely citing A for an unrelated fact is not automatically full claim-level credit.
+Citation context must be inspected where possible. The audit should distinguish at least whether the citation is used as background, support, method/reuse, comparison, critique, or explicit priority acknowledgment. Merely citing A for an unrelated fact is not automatically full claim-level credit, and citation presence by itself is not proof that the cited work was read or causally influential.
 
 # Base score
 
@@ -98,7 +102,9 @@ B = P × O × D × (1 - C)
 SM_base = 10 × B
 ```
 
-This is a provisional, transparent baseline. It is preferred over a learned probability of "citation expected" until a sufficiently large expert-annotated calibration set exists.
+This is a **provisional, uncalibrated composite indicator**, not a probability, causal estimate, or validated measurement scale. It is preferred over an uncalibrated learned probability of "citation expected" until a sufficiently large expert-annotated calibration set exists.
+
+The multiplicative form and equal component weights are modeling choices. Because weighting, normalization, and aggregation can change composite-indicator rankings, any consequential comparison should preserve the raw component vector and report a sensitivity analysis under plausible alternative weights/aggregations. If a pair's qualitative interpretation changes materially under reasonable alternatives, that instability is part of the result.
 
 # Impact is separate
 
@@ -120,20 +126,22 @@ dependency_evidence: unknown
 
 Possible stronger states require positive independent evidence, such as a public discussion, correspondence made public by an authorized source, explicit reuse, documented access, or another verifiable connection.
 
-Temporal priority + overlap + no citation is never sufficient by itself.
+Temporal priority + overlap + no citation is never sufficient by itself. A low or intermediate score likewise cannot establish independent reinvention. Causal labels belong only in `dependency_evidence` when positively supported.
 
 # Interpretation
 
-Suggested descriptive bands for `SM_base`:
+Version 0.1 is not empirically calibrated, so its numeric cut points have **no validated mapping** to expert judgments of citation obligation or missing credit. Until calibration, the preferred report is the raw component vector plus continuous `SM_base` and uncertainty/sensitivity information.
 
-- **0–2** — ordinary convergence or weak citation expectation.
-- **2–4** — plausible reinvention; antecedent exists but specificity or discoverability is limited.
-- **4–6** — citation eyebrow raised: meaningful public antecedence and overlap.
-- **6–8** — Schmidhuber territory: strong, discoverable, distinctive antecedent with little or no located credit.
-- **8–9.5** — full Schmidhuber: unusually strong observable citation deficit.
-- **9.5–10** — reserve for exceptionally strong public evidence; the number still does not itself establish plagiarism or derivation.
+If bins are useful only for visualization, use neutral versioned labels:
 
-These labels are communicative, not adjudications of misconduct.
+- **0–2** — v0.1 bin A;
+- **2–4** — v0.1 bin B;
+- **4–6** — v0.1 bin C;
+- **6–8** — v0.1 bin D;
+- **8–9.5** — v0.1 bin E;
+- **9.5–10** — v0.1 bin F.
+
+Do not label bins as "reinvention", "convergence", misconduct, copying, or any other causal state. The earlier mnemonic labels are retired for scored interpretation because the base score was explicitly designed not to identify dependency.
 
 # Minimum audit template
 
@@ -157,9 +165,12 @@ overlap_rare_conjunction:
 
 discoverability:
 credit_received:
+citation_function:
 
 formula_version:
 sm_base:
+component_uncertainty:
+sensitivity_analysis:
 
 impact_as_of:
 sm_impact:
@@ -168,7 +179,21 @@ dependency_evidence:
 evidence_as_of:
 ```
 
-The body should provide the evidence for each non-null value, the important queries used, relevant negative searches, and uncertainty.
+The body should provide the evidence for each non-null value, the important queries used, relevant negative searches, and uncertainty. A scored assessment should not hide disagreement between annotators behind a single decimal value.
+
+# Calibration and falsification contract
+
+Version 0.1 should be treated as a testable measurement proposal. Calibration should use blinded expert judgments on claim pairs and include hard negative controls such as common-knowledge claims, reversed chronology, low discoverability, canonical/obliterated-by-incorporation cases, generic overlap, simultaneous discoveries, and cases where a citation is present but serves a different function.
+
+At minimum, test:
+
+- inter-annotator reliability for `P`, all overlap components, `D`, and `C`;
+- correlation/ranking agreement between `SM_base` and blinded expert judgments of whether a citation is expected;
+- robustness of rankings to plausible weights, normalization choices, and additive/geometric/multiplicative alternatives;
+- out-of-domain stability across fields with different citation norms;
+- calibration of any interpretation thresholds before attaching semantic labels to score ranges.
+
+If plausible model choices produce frequent rank reversals, the aggregate should be downgraded to a dashboard/vector rather than presented as a stable scalar index. If expert judgments do not show useful out-of-sample agreement with the score, the v0.1 formula should be replaced rather than defended by construction.
 
 # Relationship to prior-art audits
 
@@ -185,3 +210,7 @@ A candidate published **after** the subject cutoff may be `later_independent`, `
 The raw components are canonical; the aggregate formula is versioned.
 
 This allows later empirical calibration without destroying earlier audit evidence. A future statistically calibrated model may replace the version 0.1 product, but historical assessments must retain the formula version used and remain reproducible.
+
+# Falsification revision — 2026-09-19
+
+A claim-level adversarial audit after the initial prior-art pass found two material problems in the uncalibrated v0.1 presentation: composite-indicator rankings can be sensitive to weighting/aggregation choices, and the earlier interpretation labels `ordinary convergence` / `plausible reinvention` silently suggested causal states that `SM_base` is not designed to identify. Formula v0.1 is preserved for reproducibility, but sensitivity analysis is now required for consequential comparisons and causal interpretation labels are retired. See `audits/prior-art/schmidhuber-meter-falsification-2026-09-19.md`.
