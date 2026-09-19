@@ -1,4 +1,5 @@
 ---
+type: "Companion Note"
 okf_version: "0.2"
 title: "Agent Successor Policy v2 — First Executable Semantic Policy"
 description: "Implementation note connecting the ASP research architecture to the first trajectory-conditioned, reward-reranked, Jina-backed executable baseline in O Vigia."
