@@ -23,7 +23,7 @@ Porto Velho, Brazil
 ## Abstract
 
 This paper provides empirical evaluation of the Lean 4 pipeline
-for auditing legal arguments (the Lean 4 pipeline paper, `pipeline_lean_argdown.md`) using the
+for auditing legal arguments (the Lean 4 pipeline paper, `auditable-legal-reasoning/lean-argdown-pipeline.md`) using the
 Embedding-Seeded Hierarchical Tournament Ranking method (ESHTR).
 We apply the pipeline to a corpus of Brazilian state court decisions
 from the Tribunal de Justiça do Estado de Rondônia (TJRO), assess
@@ -382,7 +382,7 @@ broader corpus but still within TJRO.
 ## 6. Conclusion
 
 This paper presents the empirical evaluation design for the pipeline
-developed in `pipeline_lean_argdown.md`, using the ESHTR method and the
+developed in `auditable-legal-reasoning/lean-argdown-pipeline.md`, using the ESHTR method and the
 dual-axis rubric that addresses the COURTREASONER pathology. The
 design is pre-registered; results will be added upon data collection.
 
