@@ -1,0 +1,45 @@
+name: Pontifex NFCorpus local shared-warp replication
+
+on:
+  push:
+    branches:
+      - "experiment/pontifex-red1-nfcorpus-prereg-run"
+      - "experiment/pontifex-red-1"
+    paths:
+      - "experiments/pontifex_benchmarks/nfcorpus_local_shared_warp_replication_k256.py"
+      - "experiments/pontifex_benchmarks/PROTOCOL-NFCORPUS-LOCAL-SHARED-WARP-REPLICATION-K256-2026-09-19.md"
+      - ".github/workflows/pontifex-nfcorpus-local-shared-warp.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replicate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install experiment dependencies
+        run: >-
+          python -m pip install
+          "httpx>=0.28"
+          "numpy>=2.0"
+          "scikit-learn>=1.7"
+          "scipy>=1.14"
+          "sentence-transformers>=5.0"
+          "huggingface-hub>=0.34"
+      - name: Run preregistered NFCorpus replication
+        working-directory: experiments/pontifex_benchmarks
+        env:
+          TOKENIZERS_PARALLELISM: "false"
+        run: |
+          python nfcorpus_local_shared_warp_replication_k256.py \
+            --output /tmp/pontifex-nfcorpus-local-shared-warp-k256.json \
+            | tee /tmp/pontifex-nfcorpus-local-shared-warp-k256.log
+          echo "RESULT_JSON_BEGIN"
+          cat /tmp/pontifex-nfcorpus-local-shared-warp-k256.json
+          echo "RESULT_JSON_END"

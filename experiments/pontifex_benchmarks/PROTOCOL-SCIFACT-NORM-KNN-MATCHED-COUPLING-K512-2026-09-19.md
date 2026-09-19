@@ -1,3 +1,11 @@
+---
+type: "Protocol"
+title: "Pontifex SciFact residual-norm plus A-KNN matched coupling K=512"
+description: "Frozen feasibility-ladder protocol for the residual-norm and A-KNN matched coupled-versus-independent null on SciFact."
+tags: [pontifex, scifact, red-1, null, knn, locality, protocol]
+timestamp: 2026-09-19T14:00:00-04:00
+---
+
 # Protocol: SciFact residual-norm + A-KNN matched coupling specificity, K=512
 
 Status: **prospective/adaptive follow-up, frozen before the new D_test read**.
