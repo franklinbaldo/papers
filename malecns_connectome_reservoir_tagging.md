@@ -47,11 +47,35 @@ The first seed's training loss continued to fall sharply through epoch three, bu
 
 Reservoir computing separates a recurrent dynamical substrate from a comparatively small trainable interface. In the classical formulation, the recurrent graph is usually random and frozen while an input mapping and readout are fitted to a task. This makes reservoir computing a natural setting for asking whether the structure of a biological connectome contains computationally useful inductive bias without requiring end-to-end training of the recurrent network.
 
-The present study asks a deliberately narrow question:
+The completed five-seed baseline asked a deliberately narrow question:
 
-> Given the same input representation, trainable adapter, readout, data windows, and optimization procedure, does a frozen recurrent reservoir constrained by MaleCNS wiring improve byte-level legal sequence tagging relative to simpler or topology-destroying controls?
+> Given the same input representation, trainable adapter, readout, data windows, and optimization procedure, does a frozen recurrent reservoir constrained by a 512-neuron MaleCNS subgraph improve byte-level legal sequence tagging relative to simpler or topology-destroying controls?
 
-The experiment is not a claim that the implemented dynamics reproduce Drosophila neurophysiology. MaleCNS supplies recurrent topology and contact-count structure. The rate dynamics, input mapping, leak parameter, recurrent gain, loss, and readout are engineered choices.
+That question is now recognized as methodologically narrower than the intended MaleCNS hypothesis. The intended test is not merely whether an arbitrary signal can be injected into a biological graph and decoded at the other end. It is whether a **biologically addressed whole-CNS system**, driven through plausible sensory and reinforcement interfaces and closed through plausible action outputs, can learn useful behavior more efficiently than matched controls.
+
+The old experiment therefore does not reproduce Drosophila neurophysiology and must not be read as if it did. MaleCNS supplied only recurrent topology/contact-count structure, while input placement, state dynamics, loss and readout were engineered. The next-generation experiment must make those interface choices part of the scientific hypothesis rather than treat them as arbitrary plumbing.
+
+### 1.1 Biological-interface contract for the intended experiment
+
+The whole-CNS experiment should define a typed interface between an external task and the fly connectome.
+
+**Sensory entry.** Task observations must be mapped onto sensory populations or pathways with a defensible biological analogue rather than projected uniformly into arbitrary high-degree neurons. Candidate channels include visual input through optic-lobe/visual pathways; olfactory-like input through olfactory sensory/projection pathways; gustatory/nutrient-like input through gustatory receptor pathways; and mechanosensory/proprioceptive-like input through peripheral/VNC-associated pathways. A task-specific adapter may transform external measurements into these channel semantics, but its targets inside MaleCNS must be anatomically declared and versioned.
+
+**Appetitive reinforcement.** Positive reinforcement must be delivered through populations that plausibly encode reward/motivation in Drosophila. The design should represent octopaminergic and dopaminergic reward pathways as biologically motivated modulatory inputs, rather than add an abstract scalar reward to every recurrent unit.
+
+**Aversive reinforcement.** Penalties must likewise stimulate aversive/punishment pathways with plausible anatomy and timing. Distinct dopaminergic populations support appetitive and aversive reinforcement; omission of expected punishment can itself recruit reward-encoding circuitry. Therefore positive reward, punishment, and relief/omission should be represented as distinct events rather than merely opposite signs of one scalar.
+
+**Internal state.** Hunger/satiety, arousal and other task-relevant motivational variables should enter only through explicit biologically motivated modulatory channels when used. They must not be hidden privileged state supplied directly to the readout.
+
+**Action readout.** Actions should be decoded from motor or descending/VNC populations whose anatomy is compatible with the behavior being modeled. A trainable actuator adapter is allowed, but the source neuronal populations and its capacity must be declared and matched in controls.
+
+**Closed loop.** The environment evolves from decoded actions; the new sensory state returns through the declared sensory pathways; reward/penalty/relief enters through the declared reinforcement pathways; and only then does the next MaleCNS state evolve. This perception→state→action→environment→sensory/reinforcement cycle is the experimental unit.
+
+**Reward semantics.** The optimization objective used by the external trainer may remain mathematically explicit, but its injection into MaleCNS must pass through a biologically motivated reinforcement transducer. Reward shaping must distinguish at least appetitive reward, aversive punishment and omission/relief when the task contains those semantics. Any engineered shaping term without a plausible biological interpretation must be labeled as such and ablated.
+
+**Controls.** Whole-brain shuffled/rewired/null connectomes must preserve the same declared sensory populations, reinforcement populations, action populations, adapter capacity, curriculum, optimization budget and reward transduction. Otherwise a difference cannot be attributed to the biological graph.
+
+This contract intentionally separates two claims: the task optimizer may be artificial, but the **location, sign, timing and pathway by which sensory and reinforcement information enters the connectome are part of the biological hypothesis**.
 
 ## 2. Background and nearest prior work
 
