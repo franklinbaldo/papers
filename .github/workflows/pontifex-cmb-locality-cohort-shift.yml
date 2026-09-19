@@ -1,0 +1,73 @@
+name: Pontifex CMB locality cohort-shift ablation
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_locality_cohort_shift_ablation.py"
+      - "experiments/pontifex_torus/PAPER-ADDENDUM-CMB-LOCALITY-COHORT-SHIFT-2026-09-19.md"
+      - ".github/workflows/pontifex-cmb-locality-cohort-shift.yml"
+  workflow_dispatch:
+    inputs:
+      dev_skies:
+        description: "Development base skies"
+        required: false
+        default: "12"
+      heldout_skies:
+        description: "Held-out base skies"
+        required: false
+        default: "24"
+
+jobs:
+  locality-cohort-shift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run nested-cohort ablation
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            DEV=12
+            HELD=24
+          else
+            DEV="${{ github.event.inputs.dev_skies || '12' }}"
+            HELD="${{ github.event.inputs.heldout_skies || '24' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_locality_cohort_shift_ablation.py \
+            --dev-skies "$DEV" \
+            --heldout-skies "$HELD" \
+            --theta-per-cell 4 \
+            --bins 3 \
+            --beam-width-ratios 0.125 0.25 0.5 1.0 \
+            --baseline-width 0.5 \
+            --metric-k0 4 8 16 \
+            --remote-shifts 0.25 0.5 0.75 \
+            --single-remote-shift 0.5 \
+            --ny 64 --nx 128 \
+            --seed 20260923 \
+            --rows /tmp/pontifex-cmb-locality-cohort-shift.jsonl \
+            --output /tmp/pontifex-cmb-locality-cohort-shift.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-locality-cohort-shift.json ]; then
+            echo "## CMB locality cohort-shift ablation" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-locality-cohort-shift.json")); print(json.dumps({"design":x["design"],"development":x["development"],"heldout":x["heldout"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-locality-cohort-shift
+          path: |
+            /tmp/pontifex-cmb-locality-cohort-shift.json
+            /tmp/pontifex-cmb-locality-cohort-shift.jsonl
+          if-no-files-found: warn
