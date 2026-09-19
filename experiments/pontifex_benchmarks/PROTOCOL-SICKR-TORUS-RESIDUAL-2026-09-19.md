@@ -1,5 +1,5 @@
 ---
-type: "Experiment Protocol"
+type: "Protocol"
 title: "Pontifex Torus SICK-R residual transport benchmark"
 description: "Prospective cross-benchmark test of a low-capacity local residual field on top of the same Procrustes coarse A→B alignment, with the official SICK relatedness metric and strict same-K information budget."
 timestamp: 2026-09-19T08:58:00-04:00
@@ -26,11 +26,35 @@ The A/B model pair was selected before this SICK-R run from the earlier STS-B wo
 
 # Same-K information contract
 
-For every K, all fitted transport methods may consume exactly the same K unlabeled A↔B sentence correspondences drawn from the SICK train split. No SICK relatedness label is used to fit or tune the transport. Hyperparameters for the Torus residual are selected only by leave-one-out reconstruction within those same K correspondence pairs. The validation split is used only for pre-test diagnostics; it does not add A↔B correspondences to the fitting budget. Test is final evaluation only.
+For every K, all fitted transport methods may consume exactly the same K unlabeled A↔B sentence correspondences drawn from the SICK train split. No SICK relatedness label is used to fit or tune the transport. Hyperparameters for the Torus residual are selected only from those same K correspondence pairs. The validation split is used only for pre-test diagnostics; it does not add A↔B correspondences to the fitting budget. Test is final evaluation only.
 
 Train sentences that occur verbatim in validation or test are excluded before the anchor permutation. The script records dataset fingerprints, candidate/overlap counts, anchor hashes, split hashes and the seed.
 
 Pretraining overlap between A and B is classified as `possible`; overlap between either encoder's unknown pretraining corpus and SICK is `unknown`. Such pretraining overlap is not adapter leakage. Test labels, test B coordinates, or target-derived test information entering fit/selection would be leakage and are prohibited.
+
+Split contract for this benchmark:
+
+- `D_assembly`: not used; both encoders are frozen external artifacts and no assembly fit occurs here.
+- `D_student`: eligible SICK train sentences used for the K unlabeled A↔B anchors.
+- `D_val`: SICK validation, diagnostic reporting only.
+- `D_test`: SICK test, final scoring only.
+
+`D_student`, `D_val`, and `D_test` are exact-text de-overlapped at the anchor boundary, and neither `D_val` nor `D_test` participates in transport fit or hyperparameter selection.
+
+# Pre-result code-audit amendment: strict cross-fitting
+
+A static implementation audit found that the first implementation's claimed leave-one-out selector excluded an anchor from the **residual kernel**, but computed the coarse Procrustes map once from all K anchors. Therefore the held-out anchor's B coordinate still influenced the coarse map and its centroids. This is not validation/test leakage, but it makes the anchor reconstruction selector optimistic and the original phrase “leave-one-out” too strong.
+
+The correction is made from code structure, without consulting any SICK test outcome to choose it. The confirmatory selector is now deterministic **4-fold outer cross-fitting** over the same K anchors:
+
+1. the already-seeded anchor order is assigned to folds by index modulo 4;
+2. for each fold, fit Procrustes and the residual field on the other three folds only;
+3. predict the held-out fold with no held-out B coordinate entering either coarse fit or residual basis;
+4. aggregate held-out B-coordinate cosine loss across all K anchors;
+5. choose `(tau, lambda)` once from that cross-fitted loss;
+6. only after selection, refit the deployment map/residual field on all K anchors.
+
+The old pseudo-LOO selector may be reported as a **legacy diagnostic only** so that the effect of the correction is visible; it is not allowed to select the confirmatory model.
 
 # Methods
 
@@ -65,7 +89,7 @@ Frozen hyperparameter grid:
 - `tau ∈ {0.02, 0.05, 0.10, 0.20, 0.40, 0.80}`
 - `lambda ∈ {0.25, 0.50, 1.00, 1.50}`
 
-Select `(tau, lambda)` using only the K anchors, by leave-one-out residual reconstruction: each anchor's residual prediction excludes that anchor from the kernel weights, and the selected pair minimizes mean `1 - cosine(predicted_B_i, true_B_i)`. No task labels participate.
+Select `(tau, lambda)` using only the K anchors by the strict 4-fold cross-fitted B-coordinate reconstruction loss defined above. No task labels participate.
 
 # Controls / baselines
 
@@ -76,7 +100,7 @@ At each K report:
 3. paired Procrustes coarse map.
 4. paired Procrustes + Torus residual.
 5. same paired Procrustes + **shuffled residual field** (residual vectors permuted across anchors; same capacity and K).
-6. fully shuffled A↔B correspondence Procrustes + residual control.
+6. fully shuffled A↔B correspondence Procrustes + residual control, using the same strict cross-fitted selector.
 7. Ridge A→B baseline if it can be tuned using only the same K pairs without consuming extra validation correspondences; otherwise record it as deferred rather than giving it privileged information.
 
 # Primary decision rules
@@ -103,6 +127,6 @@ On validation and test, using B only as evaluation oracle, report:
 
 Record K, number of task labels used for fitting (`0`), stored anchor floats, coarse-map size, residual storage, selected scalars, fit/selection time and test inference time. The key fair comparison is paired Procrustes versus the same paired Procrustes plus residual at identical K and access to the same correspondence information.
 
-# Leakage audit status before run
+# Leakage audit status before corrected run
 
-`PASS / protocol-frozen`: no test result has been inspected for this SICK-R experiment at protocol freeze. Dataset and model pair are known from public sources/prior STS-B work, but SICK test outcomes for this implementation have not been used to choose the above K values, hyperparameter grids or decision rules.
+`PASS / protocol-amended-before-outcome-inspection`: no SICK test outcome was consulted to choose the cross-fit correction, K values, model pair, hyperparameter grids or decision rules. The correction tightens the within-`D_student` selection boundary; it does not consume `D_val` or `D_test`.
