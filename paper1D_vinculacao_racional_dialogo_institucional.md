@@ -1,685 +1,273 @@
 ---
 type: "Dogmatic Paper"
-title: "Vinculação Racional e Diálogo Institucional: o Dever de Fundamentação como Limite Simétrico no Sistema Brasileiro de Precedentes"
-description: "Vinculacao racional a sumula vinculante e simetria do dever de fundamentacao entre o afastamento e o julgamento da reclamacao."
-tags: [paper1d]
+title: "Súmula Vinculante, Reclamação e Diálogo Institucional: fundamentação, competência e evolução do precedente"
+description: "Arquitetura competência-sensível do diálogo entre decisão inferior e STF por meio da reclamação contra súmula vinculante, com dever de engajamento argumentativo sem confundir fundamentação com autorização para revisão formal."
+tags: [paper1d, precedentes, sumula-vinculante, reclamacao, fundamentacao, dialogo-institucional, competencia]
 timestamp: 2026-07-09T12:12:59+00:00
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
-# Vinculação Racional e Diálogo Institucional: o Dever de Fundamentação como Limite Simétrico no Sistema Brasileiro de Precedentes
+# Súmula Vinculante, Reclamação e Diálogo Institucional: fundamentação, competência e evolução do precedente
 
-**Franklin Silveira Baldo**
-Procurador do Estado de Rondônia (OAB/RO 5733)
-Diretor da Procuradoria do Patrimônio Imobiliário — PGE-RO
-Porto Velho, RO
+**Franklin Silveira Baldo**  
+Independent Researcher
 
----
+> **Nota de escopo e prioridade.** Esta versão incorpora a auditoria temporal de prior art de 18 de setembro de 2026. Não reivindica novidade para o dever bilateral de fundamentação no uso de precedentes, para a ideia de reclamação como possível canal de diálogo, nem para técnicas de sinalização ou *anticipatory overruling*. A contribuição residual é mais estreita: organizar, no domínio específico **STF + súmula vinculante**, a sequência `sinal argumentativo do órgão inferior → reclamação processualmente cabível → engajamento fundamentado do STF → preservação, distinção ou eventual evolução formal do precedente`, mantendo separadas a obrigação de fundamentar, a força vinculante e a competência para revisar ou cancelar a súmula.
 
 ## Resumo
 
-O presente artigo defende que o sistema brasileiro de precedentes
-vinculantes não institui vinculação meramente autoritativa para o
-Judiciário. O que o sistema institui é vinculação à *forma* de
-afastamento: o órgão jurisdicional que afasta precedente vinculante
-— inclusive súmula vinculante — sem expor as razões comete vício
-processual; o órgão que afasta *com razões expostas* opera dentro
-do espaço legítimo. Dessa premissa decorre consequência que a
-literatura processual brasileira não desenvolveu de modo sistemático:
-o dever de fundamentação do art. 489, §1º, do CPC é *simétrico* —
-aplica-se tanto ao órgão que afasta o precedente quanto ao órgão
-que julga a reclamação. O Supremo Tribunal Federal, ao julgar
-reclamação contra decisão que afastou súmula vinculante com razões
-expostas, está obrigado a enfrentar essas razões — não pode responder
-com mera reafirmação da autoridade da súmula. Se as razões expostas
-pelo órgão inferior são convincentes, o STF deve revisar ou distinguir
-a súmula; se não são, deve refutá-las com fundamentação que as
-enfrente. O resultado é estrutura de diálogo institucional racional:
-a reclamação não é mecanismo de silenciamento do argumento, mas
-canal pelo qual argumentos que resistem ao confronto alcançam o
-tribunal competente para revisar o precedente. O artigo engaja a
-teoria do diálogo institucional (Waldron, Mendes) e a doutrina de
-precedentes de Marinoni e Mitidiero, e examina as implicações para
-a prática de reclamação constitucional e para a evolução da
-jurisprudência do STF.
+A súmula vinculante combina força constitucionalmente vinculante, dever geral de fundamentação e um mecanismo próprio de controle por reclamação. Esses elementos não autorizam duas simplificações opostas: nem a força vinculante transforma a fundamentação em formalidade dispensável, nem a mera exposição de razões pelo órgão inferior converte qualquer afastamento em resultado juridicamente legítimo. Este artigo propõe uma leitura competência-sensível da relação entre esses elementos. O órgão inferior deve aplicar, distinguir ou, quando o regime jurídico admitir, formular crítica ou não aplicação concreta com a carga argumentativa correspondente; a revisão ou o cancelamento formal da súmula permanecem submetidos à competência e ao procedimento do STF. Quando uma reclamação é processualmente cabível, ela pode levar ao Supremo um desacordo concretamente estruturado. O STF, ao decidir, deve enfrentar os argumentos materialmente pertinentes ao objeto da reclamação, mas não está automaticamente obrigado a revisar a súmula sempre que a crítica seja persuasiva: pode preservar a orientação, reconhecer distinção, determinar novo julgamento nos limites legais ou, pelo mecanismo competente, evoluir formalmente o precedente. A literatura anterior e a própria Rcl 24.026/DF já descreviam a reclamação como instrumento de diálogo; por isso, a contribuição aqui defendida é a integração explícita entre **competência, engajamento argumentativo e caminhos de evolução**, inicialmente confinada à súmula vinculante e sem generalização para todos os precedentes qualificados.
 
-**Palavras-chave**: precedentes vinculantes; súmula vinculante;
-vinculação racional; diálogo institucional; reclamação constitucional;
-fundamentação; art. 489 do CPC; art. 103-A da CF; Supremo Tribunal
-Federal; juizados especiais.
-
----
+**Palavras-chave:** súmula vinculante; reclamação constitucional; precedentes; fundamentação; competência; diálogo institucional; STF; art. 489 do CPC; art. 103-A da Constituição.
 
 ## Abstract
 
-This article argues that the Brazilian system of binding precedents
-does not institute purely authoritative binding for the Judiciary.
-What the system institutes is binding as to the *form* of departure:
-the court that departs from a binding precedent — including a binding
-súmula — without exposing reasons commits a procedural defect; the
-court that departs *with reasons exposed* operates within the
-legitimate space. From this premise follows a consequence that
-Brazilian procedural literature has not systematically developed:
-the duty of reasoning under art. 489, §1, of the CPC is *symmetric*
-— it applies both to the court departing from the precedent and
-to the court judging the reclamação (constitutional complaint). The
-Supreme Court, when judging a reclamação against a decision that
-departed from a binding súmula with reasons exposed, is obligated
-to engage with those reasons — it cannot respond with mere
-reaffirmation of the súmula's authority. If the reasons exposed
-by the lower court are convincing, the STF must revise or distinguish
-the súmula; if not, it must refute them with reasoning that engages
-them. The result is a structure of rational institutional dialogue:
-the reclamação is not a silencing mechanism but a channel through
-which arguments that survive confrontation reach the court competent
-to revise the precedent. The article engages the theory of
-institutional dialogue (Waldron, Mendes) and the precedent doctrine
-of Marinoni and Mitidiero, and examines implications for the practice
-of reclamação constitucional and for the evolution of STF
-jurisprudence.
+A Brazilian binding súmula combines constitutionally binding force, a general duty to give reasons, and a specific complaint mechanism before the Supreme Federal Court (STF). These features rule out two opposite simplifications: binding force does not make reason-giving dispensable, and the mere provision of reasons by a lower court does not automatically make every departure lawful. This paper offers a competence-sensitive account of their interaction. Lower courts must apply, distinguish, or, where the legal regime permits, articulate criticism or case-specific nonapplication under the applicable argumentative burden; formal revision or cancellation of the binding súmula remains subject to the STF's competence and procedure. When a constitutional complaint is procedurally available, it can transmit a structured concrete disagreement to the Supreme Court. The STF must engage arguments that are material to the complaint's lawful scope, but a persuasive challenge does not automatically entail formal revision of the súmula: the Court may preserve the rule, recognize a distinction, order a new decision within the statutory framework, or evolve the precedent through the competent mechanism. Earlier scholarship and STF Complaint 24,026/DF already described constitutional complaint as a dialogue instrument. The paper's bounded contribution is therefore the explicit integration of **competence, reasoned engagement, and pathways of precedent evolution**, initially limited to the STF/binding-súmula setting rather than generalized to every qualified precedent.
 
-**Keywords**: binding precedents; binding súmula; rational binding;
-institutional dialogue; reclamação constitucional; judicial reasoning;
-art. 489 CPC; art. 103-A CF; Supreme Court; special courts.
+**Keywords:** binding súmula; constitutional complaint; precedent; reason-giving; competence; institutional dialogue; Brazilian Supreme Court.
 
 ---
 
 ## 1. Introdução
 
-A súmula vinculante é o mecanismo de vinculação mais intenso do
-sistema jurídico brasileiro. Prevista no art. 103-A da Constituição
-Federal e disciplinada pela Lei 11.417/2006, ela vincula não apenas
-os demais órgãos do Poder Judiciário mas também a Administração
-Pública direta e indireta, nas esferas federal, estadual e
-municipal. O mecanismo de enforcement é a reclamação constitucional
-ao Supremo Tribunal Federal, que pode anular o ato administrativo
-ou cassar a decisão judicial que a contrarie.
+A súmula vinculante é um caso especialmente útil para estudar a tensão entre autoridade e razão no sistema brasileiro de precedentes. O art. 103-A da Constituição atribui efeito vinculante ao enunciado aprovado pelo STF, e a Lei 11.417/2006 disciplina sua edição, revisão, cancelamento e o uso da reclamação contra ato administrativo ou decisão judicial que a contrarie, negue vigência ou a aplique indevidamente.
 
-Diante desse arranjo, a intuição mais comum — e a concepção que
-parte da doutrina e da jurisprudência reproduz sem questionar — é
-a de que a súmula vinculante institui obrigação de resultado: o
-órgão vinculado deve chegar à mesma conclusão que a súmula enuncia,
-sob pena de reclamação e cassação. Nessa concepção, a vinculação
-é meramente autoritativa: vale porque o STF assim decidiu, e o
-órgão inferior não tem autoridade para discordar.
+A existência dessa força vinculante não elimina o dever de fundamentação. O art. 93, IX, da Constituição permanece aplicável às decisões judiciais e o CPC de 2015 explicita, no art. 489, §1º, encargos de identificação, aplicação, distinção e enfrentamento argumentativo associados a precedentes.
 
-Este artigo defende tese diferente, com três argumentos
-encadeados.
+Mas a relação entre esses comandos exige cuidado. Versões anteriores deste artigo sustentavam uma oposição forte entre “vinculação de forma” e “vinculação de resultado”: uma decisão inferior que expusesse razões para afastar a súmula estaria, por isso só, operando legitimamente dentro do sistema. Essa formulação era excessiva. A obrigação de dar razões não substitui a força vinculante nem distribui competência para revisão formal do precedente.
 
-O primeiro argumento é de leitura normativa: o sistema brasileiro,
-com o CPC 2015, não institui vinculação de resultado para o
-Judiciário. Institui vinculação de forma — o dever de expor as
-razões do afastamento (art. 489, §1º, VI). O juiz que afasta
-súmula vinculante sem expor razões comete vício processual. O juiz
-que afasta *com razões expostas* está operando dentro do sistema,
-que previu exatamente para isso o mecanismo da reclamação.
+A formulação arquivável é mais estreita. Há três planos que precisam permanecer distintos:
 
-O segundo argumento é de simetria normativa: o dever de
-fundamentação do art. 489, §1º, do CPC é simétrico. Aplica-se
-ao órgão que afasta o precedente — que deve expor as razões do
-afastamento. E aplica-se igualmente ao STF que julga a reclamação —
-que deve enfrentar as razões expostas, não pode responder com mera
-reafirmação da autoridade da súmula. A simetria decorre do fato de
-que o art. 489 não excepciona o STF de seu âmbito de aplicação,
-e a CF não cria imunidade de fundamentação para o STF.
+1. **força vinculante:** define o peso jurídico do enunciado e os órgãos alcançados;
+2. **dever de fundamentação:** define como uma decisão deve justificar aplicação, distinção ou outro tratamento juridicamente disponível; e
+3. **competência e procedimento de evolução:** definem quem pode revisar, cancelar ou substituir formalmente a súmula e por qual mecanismo.
 
-O terceiro argumento é de teoria sistêmica: esse arranjo — em que
-o órgão inferior expõe razões e o STF é obrigado a enfrentá-las
-ao julgar a reclamação — produz estrutura de diálogo institucional
-racional. A reclamação não é mecanismo de silenciamento do argumento;
-é canal pelo qual argumentos que sobrevivem ao confronto alcançam
-o tribunal competente para revisar o precedente. O sistema tem
-mecanismo de depuração argumentativa que a concepção autoritativa
-não percebe.
+A tese deste paper é que, quando esses três planos são respeitados, a reclamação pode funcionar como um canal institucional de circulação de razões sem perder sua função de preservação da autoridade do STF. O órgão inferior pode produzir um sinal argumentativo relevante; a reclamação, se cabível, transporta o conflito; o STF engaja as razões na medida em que pertencem ao objeto processual; e o resultado pode ser preservação, distinção, correção do julgamento concreto ou eventual evolução formal por mecanismo competente.
 
-A tese tem implicações práticas imediatas. Para o órgão inferior
-que identifica razões sólidas para afastar precedente vinculante:
-a exposição cuidadosa das razões não é ato de rebeldia processual,
-é contribuição ao sistema. Para o STF que julga reclamação: o
-julgamento que não enfrenta as razões expostas pelo órgão reclamado
-viola o art. 489, §1º, e produz precedente que pode ser questionado
-nos mesmos termos. Para a teoria do precedente: a súmula vinculante
-não é verdade jurídica definitiva que o sistema preserva a qualquer
-custo — é proposição que o sistema mantém enquanto resistir ao
-melhor argumento disponível.
-
-A seção 2 desenvolve o primeiro argumento: vinculação de forma,
-não de resultado. A seção 3 desenvolve o segundo: a simetria do
-dever de fundamentação. A seção 4 desenvolve o terceiro: o diálogo
-institucional como estrutura sistêmica. A seção 5 examina as
-implicações para a prática da reclamação constitucional. A seção 6
-conclui.
+Essa arquitetura não é inteiramente nova. Anderson Cortez Mendes já tratava o dever de fundamentação em precedentes como uma “via de mão dupla” em 2015; a Rcl 24.026/DF, em 2016, descreveu a reclamação como “instrumento de promoção do diálogo” entre o caso concreto e precedentes vinculantes; a literatura brasileira de *anticipatory overruling* também já ocupava o espaço de sinalização por órgãos inferiores. O objetivo, portanto, não é reivindicar esses ingredientes, mas integrá-los sob uma fronteira explícita de competência.
 
 ---
 
-## 2. Vinculação de forma, não de resultado
+## 2. O baseline jurídico: vinculação, fundamentação e competência
 
-### 2.1 O que o sistema institui
+### 2.1 O efeito vinculante é real
 
-A leitura corrente da súmula vinculante — e, por extensão, do
-sistema de precedentes vinculantes do art. 927 do CPC — identifica
-vinculação com obrigação de resultado: o órgão vinculado deve
-decidir no mesmo sentido que o precedente enuncia.
+O art. 103-A da Constituição confere efeito vinculante às súmulas aprovadas pelo STF nos termos constitucionais. A Lei 11.417/2006 dá consequência processual a essa força: seu art. 7º prevê reclamação ao Supremo contra decisão judicial ou ato administrativo que contrarie, negue vigência ou aplique indevidamente enunciado vinculante.
 
-Essa leitura tem apoio na literalidade do art. 103-A da CF: a
-súmula vinculante "terá efeito vinculante em relação aos demais
-órgãos do Poder Judiciário". E tem apoio na lógica da segurança
-jurídica: se os órgãos inferiores podem afastar precedentes
-vinculantes por razões próprias, a uniformização que esses
-precedentes pretendem garantir fica comprometida.
+Esse baseline impede uma conclusão simplista: não é correto dizer que a única obrigação do órgão inferior é “expor razões” e que qualquer resultado se torna legítimo desde que bem fundamentado. A fundamentação é necessária, mas sua suficiência depende da operação jurídica que o órgão pretende realizar e da competência que o ordenamento lhe atribui.
 
-Essa leitura, porém, não resiste à conjugação do sistema de
-precedentes com o sistema de fundamentação do CPC 2015.
+### 2.2 O art. 489 acrescenta encargos analíticos, não uma licença geral de overruling
 
-O art. 489, §1º, VI, do CPC estabelece que não se considera
-fundamentada a decisão que "deixar de seguir enunciado de súmula,
-jurisprudência ou precedente invocado pela parte, sem demonstrar
-a existência de distinção no caso em julgamento ou a superação do
-entendimento". A disposição é clara em sua estrutura: não diz que
-o órgão jurisdicional não pode deixar de seguir o precedente; diz
-que, se deixar de seguir sem demonstração de distinção ou superação,
-a decisão não está fundamentada.
+O art. 489, §1º, V, exige mais do que a citação de um precedente: a decisão deve identificar seus fundamentos determinantes e demonstrar a aderência do caso. O inciso VI, por sua vez, exige demonstração de distinção ou superação quando a autoridade invocada deixa de ser seguida, dentro do campo de incidência do dispositivo.
 
-A obrigação que o dispositivo institui é de *forma*: o afastamento
-deve ser fundamentado. Não é obrigação de *resultado*: o afastamento
-não é proibido. A distinção é fundamental: um sistema que proibisse
-o afastamento não precisaria do inciso VI — bastaria uma norma que
-dissesse "é vedado ao juiz deixar de seguir precedente vinculante".
-O fato de que o inciso VI disciplina a *forma* do afastamento —
-e não proíbe o afastamento — revela a estrutura do sistema.
+Essas regras tornam a decisão auditável. Elas não significam, isoladamente, que todo juiz recebeu competência para cancelar ou substituir precedente vinculante. A palavra “superação” deve ser lida junto com a estrutura institucional do precedente concreto, inclusive as regras de competência e procedimento.
 
-### 2.2 O espaço legítimo do afastamento fundamentado
+Essa distinção também aparece na literatura e na jurisprudência anteriores ao corte deste paper. O debate brasileiro já separava, com diferentes graus de permissividade, a crítica ao precedente, o *anticipatory overruling*, a não aplicação concreta e a revisão formal pela corte-fonte.
 
-Se a obrigação é de forma, o afastamento com razões expostas é,
-por definição, afastamento dentro do sistema. O órgão que expõe
-as razões do afastamento — identificando a distinção ou o erro na
-ratio — não está desafiando o sistema; está usando o canal que o
-sistema previu para isso.
+### 2.3 Revisão e cancelamento da súmula pertencem ao mecanismo competente
 
-A consequência necessária é que o mérito do argumento exposto é
-questão separada da legitimidade do ato de afastar. Um juiz de
-juizado especial que afasta súmula vinculante com argumento fraco
-está errado no mérito — mas está dentro do sistema. Um juiz que
-afasta com argumento forte também está dentro do sistema — e, além
-disso, contribui para que o STF, ao julgar a reclamação, encontre
-material para revisar ou distinguir a súmula.
+A Lei 11.417/2006 trata separadamente da edição, revisão e cancelamento das súmulas vinculantes. Uma decisão inferior, por melhor fundamentada que seja, não reescreve o enunciado vinculante para o sistema. Ela pode distinguir, apontar tensão, registrar transformação jurídica, construir crítica ou utilizar outra técnica de não aplicação juridicamente admitida; a alteração formal do enunciado exige o procedimento e a competência próprios.
 
-Isso não significa que o afastamento fundamentado é sempre acertado.
-Significa que o sistema tem mecanismo específico para verificar se
-é acertado: a reclamação. O papel da reclamação, nesse quadro, não
-é apenas cassar a decisão divergente — é também avaliar a qualidade
-do argumento que sustentou o afastamento.
-
-### 2.3 A prática forense e a confusão entre forma e resultado
-
-A prática forense frequentemente confunde os dois planos. Tribunais
-que denegam seguimento a recurso com fundamento em precedente
-vinculante — sem identificar os fundamentos determinantes do
-precedente nem demonstrar ajuste do caso — estão violando o art.
-489, §1º, V, na pretensão de cumprir o art. 927. A invocação do
-precedente para encerrar o debate, sem o percurso de identificação
-e demonstração, é exatamente a "simples invocação" que o inciso V
-proíbe.
-
-O mesmo raciocínio vale para a súmula vinculante. O órgão que
-aplica a súmula vinculante sem identificar que o caso se enquadra
-nos fundamentos determinantes que a geraram — sem demonstrar que
-o caso não é distinguível do caso paradigma da súmula — não está
-cumprindo a súmula; está invocando sua autoridade como substituto
-da fundamentação.
-
-O sistema proíbe esse substituto tanto para quem afasta quanto
-para quem aplica. A súmula vinculante não é carta branca para
-dispensar a fundamentação; é precedente qualificado que exige
-identificação de fundamentos determinantes e demonstração de ajuste
-— como qualquer outro precedente vinculante do art. 927.
+Esse ponto é decisivo para evitar que “diálogo” vire sinônimo de ausência de hierarquia. O diálogo institucional aqui defendido opera **dentro** de uma estrutura de autoridade, não em substituição a ela.
 
 ---
 
-## 3. A simetria do dever de fundamentação
+## 3. O dever de fundamentação em duas direções
 
-### 3.1 O art. 489 e o STF
+### 3.1 A aplicação também precisa ser justificada
 
-O argumento central deste artigo é que o dever de fundamentação
-do art. 489, §1º, é *simétrico*: aplica-se ao órgão que afasta
-o precedente e aplica-se ao STF que julga a reclamação contra
-esse afastamento.
+Uma decisão que aplica uma súmula vinculante não está dispensada de explicar por que o caso se enquadra na proposição relevante. A autoridade do enunciado não substitui a demonstração de aderência, especialmente quando a parte apresenta argumento material de distinção ou de não incidência.
 
-O fundamento normativo é simples: o art. 489 do CPC não contém
-exceção para o STF. O art. 489 dispõe sobre "decisão judicial" —
-sem qualificação de qual órgão a profere. As decisões do STF são
-decisões judiciais; estão no âmbito de aplicação do dispositivo.
+Nesse sentido, o dever de fundamentação age em mais de uma direção: ele disciplina tanto a utilização do precedente quanto o tratamento de argumentos que procuram afastar sua incidência. Essa estrutura geral já estava presente na doutrina anterior ao paper e não é reivindicada como contribuição original.
 
-Poder-se-ia objetar que o STF, como tribunal constitucional, está
-sujeito a regime especial que o CPC não pode alcançar. A objeção
-não procede por duas razões. Primeira: o STF aplica o CPC em
-matéria processual civil nas ações que tramitam no âmbito de sua
-competência. Segunda e mais importante: o dever de fundamentação
-adequada é exigência constitucional, não apenas infraconstitucional.
-O art. 93, IX, da CF exige que todas as decisões do Poder Judiciário
-sejam fundamentadas, sob pena de nulidade. O STF está sujeito ao
-art. 93, IX, da CF, e o art. 489, §1º, do CPC é operacionalização
-infraconstitucional desse mandamento constitucional.
+### 3.2 O julgamento da reclamação também é decisão judicial fundamentada
 
-### 3.2 O que significa enfrentar as razões expostas
+A reclamação não suspende o art. 93, IX, da Constituição. Quando o STF decide se a decisão reclamada respeitou a súmula vinculante, sua conclusão também precisa ser fundamentada.
 
-Quando o STF julga reclamação contra decisão que afastou súmula
-vinculante com razões expostas, o dever de fundamentação simétrico
-exige que o STF enfrente essas razões.
+O conteúdo desse dever, porém, depende do objeto da reclamação. O STF não precisa transformar toda reclamação em procedimento abstrato de revisão da súmula nem enfrentar questões estranhas à controvérsia processualmente posta. O que se exige é algo mais preciso: argumentos capazes de alterar a conclusão **dentro do objeto juridicamente disponível da reclamação** não podem ser substituídos por mera afirmação de autoridade.
 
-Enfrentar as razões não significa concordar com elas. Significa
-não poder ignorá-las. O STF que julga a reclamação e simplesmente
-reafirma a autoridade da súmula — sem identificar por que as razões
-expostas pelo órgão inferior não são suficientes para distinção
-ou superação — está proferindo decisão que não se considera
-fundamentada nos termos do art. 489, §1º, IV: não enfrentou o
-argumento capaz, em tese, de infirmar a conclusão.
+Isso permite separar dois cenários.
 
-O ônus do STF ao julgar a reclamação é proporcional à qualidade
-do argumento exposto pelo órgão inferior. Se o argumento do órgão
-inferior é fraco — distinção sem diferença substantiva, superação
-sem identificação de erro —, o STF cumpre seu dever de fundamentação
-com resposta relativamente simples: demonstra que a distinção ou
-a superação não satisfaz os requisitos do art. 489, §1º, VI.
+No primeiro, a decisão inferior simplesmente diverge do resultado vinculante sem distinção, mudança normativa, questão de incidência ou fundamento juridicamente reconhecível. A resposta do STF pode ser relativamente curta: demonstrar a incompatibilidade entre a decisão reclamada e a súmula pode resolver o caso.
 
-Se o argumento do órgão inferior é forte — identifica erro real
-na ratio da súmula, demonstra descompasso com norma superveniente,
-aponta inconsistência com princípio constitucional que a súmula
-não considerou —, o STF tem ônus maior: deve enfrentar o argumento
-substancialmente. A resposta "a súmula vinculante assim determina"
-não é fundamentação; é circularidade que o art. 489, §1º, IV,
-proíbe expressamente.
+No segundo, a decisão inferior apresenta uma diferença fática ou jurídica material, uma alegação de inadequação da aplicação da súmula ou uma transformação superveniente que é relevante para decidir a própria reclamação. Nessa hipótese, a conclusão sobre conformidade depende de avaliar o argumento apresentado. O engajamento se torna parte da fundamentação da decisão do STF.
 
-**Objeção antecipada: conformidade e mérito na reclamação.** A objeção
-mais precisa ao argumento desta seção sustenta que o dever de
-fundamentação do art. 489, §1º, IV, não alcança o julgamento de
-reclamação constitucional porque o objeto da reclamação é distinto do
-objeto do mérito: a reclamação verifica se a decisão reclamada foi
-formalmente adequada ao precedente — questão A (conformidade) —, não se
-o precedente é substancialmente correto — questão B (mérito). As razões
-expostas pelo órgão inferior endereçam a questão B e não seriam, nessa
-leitura, objeto que a reclamação deva enfrentar.
+### 3.3 Simetria não significa identidade de posição institucional
 
-Essa separação entre conformidade formal e correção substancial é
-analiticamente defensável em uma classe específica de casos: aqueles em
-que o afastamento fundamentado não envolve distinção ou superação
-genuína, mas mera divergência de resultado. Nesses casos, a verificação
-formal é suficiente: o STF constata que a decisão diverge da súmula sem
-fundamento adequado e cassa com base nessa constatação.
+A expressão “simetria” deve ser usada com cuidado. O juiz inferior e o STF não ocupam posições equivalentes, nem têm as mesmas competências. O ponto simétrico é limitado: ambos proferem decisões que precisam oferecer razões juridicamente suficientes para as operações que realizam.
 
-A separação não está disponível, porém, para a classe de casos em que o
-afastamento envolve *feature* inovadora — distinção ou superação que não
-foi antecipada na formulação original da súmula. Nesses casos, verificar
-se o afastamento satisfaz os requisitos do art. 489, §1º, VI requer que
-o STF avalie se a distinção ou superação alegada é genuína. A questão A
-e a questão B tornam-se processualmente inseparáveis: a conformidade
-formal pressupõe posição sobre o mérito do argumento exposto. Para essa
-classe de casos, o dever de fundamentação simétrico permanece em sua
-plenitude.
-
-### 3.3 A simetria e a hierarquia
-
-A tese da simetria pode parecer incompatível com a hierarquia: se
-o STF está sujeito ao mesmo dever de fundamentação que o juiz de
-primeiro grau, onde fica a hierarquia?
-
-A resposta é que hierarquia e simetria de deveres operam em planos
-distintos. A hierarquia determina *quem tem a última palavra*: nas
-hipóteses do art. 102 da CF, o STF tem. Isso significa que o
-acórdão do STF é definitivo e que a decisão que afastou a súmula
-vinculante pode ser cassada.
-
-A simetria determina *como se chega à última palavra*: por
-fundamentação adequada, não por reafirmação de autoridade. O STF
-pode ter a última palavra e, ainda assim, estar obrigado a chegar
-a ela pelo caminho da fundamentação — que inclui o enfrentamento
-dos argumentos expostos pelo órgão reclamado.
-
-A hierarquia sem simetria é autoritarismo processual: o tribunal
-superior decide porque decide, sem dever de justificar além da
-própria posição hierárquica. O sistema brasileiro, com o art. 489,
-§1º, e com o art. 93, IX, da CF, rejeita esse modelo — para todos
-os órgãos, inclusive o STF.
-
-Há, nesse ponto, relevante paralelo com a doutrina de Raz sobre
-autoridade legítima. Raz argumenta que autoridade se justifica
-quando o sujeito à autoridade segue melhor as razões que se aplicam
-a ele obedecendo à diretiva da autoridade do que tentando agir
-diretamente segundo essas razões. Essa justificação é dependente
-de conteúdo — a autoridade se justifica porque tipicamente produz
-resultados melhores, não apenas porque tem poder. Se a autoridade
-produz resultado pior — se o precedente do STF contém erro racional
-que o órgão inferior identificou — a justificação da autoridade
-enfraquece. E o modo pelo qual o sistema processa esse enfraquecimento
-é exatamente o ciclo reclamação-enfrentamento-revisão que este
-artigo descreve.
+A autoridade final do STF permanece. A simetria de fundamentação não é simetria de competência, de força institucional ou de poder de revisão.
 
 ---
 
-## 4. Diálogo institucional como estrutura sistêmica
+## 4. Reclamação como canal condicionado de diálogo
 
-### 4.1 A teoria do diálogo institucional
+### 4.1 O antecedente direto da Rcl 24.026/DF
 
-A teoria do diálogo institucional, desenvolvida principalmente na
-literatura constitucional comparada, parte da premissa de que a
-interpretação constitucional não é monopólio de nenhum órgão —
-nem mesmo do tribunal constitucional. Diferentes órgãos —
-legislativo, executivo, judiciário em diferentes instâncias —
-contribuem para o processo de determinação do significado do
-direito, e esse processo é melhor compreendido como diálogo ao
-longo do tempo do que como declaração definitiva de um único órgão.
+A ideia de reclamação como diálogo não nasce neste paper. Na Rcl 24.026/DF, decisão de 1º de junho de 2016, o STF descreveu a reclamação como possível “instrumento de promoção do diálogo” entre o caso concreto e precedentes vinculantes. A decisão tratou de aplicação equivocada, peculiaridades do caso que podem justificar *distinguishing* e situações excepcionais de transformação jurídica ou fática capazes de motivar reexame do precedente.
 
-Waldron desenvolveu a crítica ao "judicial supremacy" como arranjo
-que subtrai da deliberação democrática questões que deveriam ser
-debatidas politicamente. Conrado Hübner Mendes adaptou a teoria
-para o constitucionalismo brasileiro, argumentando que o STF deve
-ser compreendido como "último mas não definitivo" intérprete da
-Constituição — suas decisões são definitivas no caso concreto,
-mas não encerram o debate constitucional.
+A mesma decisão também ilustra o limite: a reclamação ali não foi admitida por ausência de esgotamento da instância ordinária. O canal de diálogo é processualmente condicionado. Ele não é substituto geral de recurso nem mecanismo disponível em qualquer situação em que uma parte queira rediscutir um precedente.
 
-O argumento deste artigo é distinto mas convergente: o diálogo
-não é apenas entre o STF e o legislativo ou o executivo — é também
-entre o STF e os órgãos inferiores do Judiciário. E o canal
-processual desse diálogo é exatamente a reclamação constitucional.
+### 4.2 A arquitetura residual
 
-### 4.2 A reclamação como canal de diálogo
+A contribuição organizacional deste paper pode ser representada por quatro etapas:
 
-Na concepção autoritativa, a reclamação tem função de cassação:
-o STF cassa a decisão que desrespeitou a súmula e encerra o
-episódio. O órgão inferior foi corrigido; o precedente foi
-reafirmado; o diálogo não existe.
+**1. Sinal argumentativo inferior.** O órgão inferior identifica uma questão relevante para a aplicação da súmula — por exemplo, distinção, alcance, transformação jurídica superveniente ou crítica institucional — e a torna auditável na fundamentação.
 
-Na concepção que este artigo defende, a reclamação tem função
-adicional: é o canal pelo qual o argumento exposto pelo órgão
-inferior alcança o STF. Se o argumento é fraco, o STF cassa com
-fundamento simples. Se o argumento é forte, o STF enfrenta — e
-ao enfrentar, pode revisar ou distinguir a súmula.
+**2. Canal processualmente disponível.** Se os requisitos da reclamação estiverem presentes, o desacordo chega ao STF pelo mecanismo constitucional/legal de preservação de sua autoridade. Se a reclamação não for cabível, outro canal recursal ou procedimental deve cumprir essa função.
 
-O feedback loop completo tem quatro momentos:
+**3. Engajamento pelo STF.** O Supremo verifica a aderência da decisão reclamada à súmula e enfrenta os argumentos que sejam materialmente necessários para essa verificação. O dever é de engajamento racional dentro do objeto processual, não de concordância com o órgão inferior.
 
-**Primeiro momento**: o órgão inferior identifica, no caso concreto,
-razão para afastar a súmula vinculante — distinção, superação
-racional, descompasso normativo superveniente. Expõe as razões
-com o ônus argumentativo qualificado que o art. 489, §1º, VI,
-exige.
+**4. Resultado competência-sensível.** O STF pode preservar a aplicação da súmula, reconhecer distinção ou aplicação indevida, cassar a decisão e ordenar novo julgamento nos limites legais ou, se a controvérsia revelar problema mais amplo, alimentar o procedimento competente de revisão/cancelamento/evolução do enunciado.
 
-**Segundo momento**: a parte favorecida pela súmula interpõe
-reclamação. O argumento exposto pelo órgão inferior chega ao STF.
+A sequência transforma o desacordo em informação institucional sem apagar a diferença entre “argumento que merece resposta” e “argumento que juridicamente vence”.
 
-**Terceiro momento**: o STF julga a reclamação. Está obrigado,
-pelo art. 489, §1º, IV, a enfrentar os argumentos expostos. Se
-os argumentos são fracos, cassa com fundamento substancial. Se
-os argumentos são fortes, tem duas opções: (a) distinguir —
-reconhece que o caso é diferente do caso paradigma da súmula e
-mantém a súmula com alcance redefinido; (b) revisar — cancela ou
-revisa a súmula se os argumentos revelam erro ou descompasso que
-compromete a ratio.
+### 4.3 A reclamação não é canal universal de todos os precedentes
 
-**Quarto momento**: o julgamento da reclamação produz novo
-precedente — sobre a aplicação da súmula ao tipo de caso levantado
-pelo órgão inferior, ou sobre a revisão da súmula. Esse precedente
-alimenta o sistema para casos futuros.
+A arquitetura deste artigo é deliberadamente limitada à relação STF + súmula vinculante. A própria evolução jurisprudencial mostra que a reclamação não serve uniformemente como mecanismo de controle de toda espécie de precedente qualificado.
 
-### 4.3 A obrigação simétrica como condição do diálogo
+A Rcl 36.476/SP, julgada pela Corte Especial do STJ em 2020, tornou-se referência para a limitação do uso da reclamação como simples mecanismo de controle da aplicação concreta de precedente repetitivo. A existência de regimes diferentes é razão para resistir à tentação de generalizar a presente arquitetura a todo o art. 927.
 
-O diálogo institucional funciona como mecanismo de depuração
-argumentativa apenas se a obrigação de fundamentação for simétrica.
-Se o STF pode responder à reclamação com mera reafirmação da
-autoridade da súmula — sem enfrentar os argumentos expostos —,
-o diálogo é de fachada: o órgão inferior fala, o STF não ouve,
-a súmula é reafirmada sem que seus fundamentos tenham sido
-examinados.
-
-A simetria é a condição que torna o diálogo genuíno. Quando ambos
-os lados — o órgão que afasta e o STF que julga a reclamação —
-estão sujeitos ao mesmo dever de fundamentação, o sistema produz
-resultado mais robusto: ou a súmula sobrevive ao confronto
-argumentativo e é reafirmada com fundamentos explícitos, ou revela
-fragilidade que o STF precisa endereçar.
-
-A intuição é análoga ao que Habermas chama de condições de
-comunicação ideal: o argumento que não pode ser refutado pelo
-melhor argumento disponível deve ser aceito. O sistema de
-precedentes vinculantes com dever simétrico de fundamentação é
-uma institucionalização parcial dessa intuição: não qualquer
-argumento prevalece, mas o argumento que não foi adequadamente
-refutado — incluindo o argumento do órgão inferior que o STF não
-quis enfrentar — mantém sua força.
-
-### 4.4 A súmula vinculante como proposição revisável
-
-A consequência mais substantiva dessa estrutura é que a súmula
-vinculante não é verdade jurídica imune a revisão. É proposição
-que o sistema mantém enquanto resistir ao melhor argumento
-disponível.
-
-Isso não implica instabilidade. A súmula vinculante tem presunção
-forte de correção — foi editada pelo STF, com quórum qualificado
-(dois terços dos membros, art. 103-A da CF), após reiteradas
-decisões no mesmo sentido. Essa presunção não é ilidida por qualquer
-argumento; é ilidida apenas por argumento que identifica erro real
-ou descompasso normativo.
-
-A diferença entre presunção forte e verdade imune é funcionalmente
-importante. A verdade imune não pode ser questionada pelo sistema;
-a presunção forte pode ser questionada, mas com ônus argumentativo
-qualificado. O sistema brasileiro, ao exigir que o afastamento
-seja fundamentado e ao exigir que o STF enfrente as razões expostas
-ao julgar a reclamação, adota o modelo da presunção forte — não
-da verdade imune.
+O paper pode inspirar comparações futuras entre tipos de precedente, mas essas comparações exigem análise separada de competência, cabimento, exaurimento de instância e função processual do respectivo mecanismo de controle.
 
 ---
 
-## 5. Implicações para a prática da reclamação constitucional
+## 5. Sinalização, anticipatory overruling e revisão formal
 
-### 5.1 Para o órgão que afasta o precedente
+A literatura brasileira anterior ao paper já discutia como um órgão inferior pode reagir a precedente cuja força começa a erodir. Lucas Buril de Macêdo, em 2016, examinou transformação, sinalização e *anticipatory overruling*, defendendo a pertinência de uma técnica ajustada ao sistema brasileiro.
 
-A tese deste artigo tem implicação direta para a estratégia dos
-órgãos que identificam razão para afastar precedente vinculante.
+Esse antecedente permite formular com mais precisão o papel do órgão inferior.
 
-A exposição cuidadosa das razões não é ato de rebeldia — é
-contribuição ao sistema. O órgão inferior que identifica, no caso
-concreto, distinção genuína ou erro racional no precedente, e que
-expõe essa identificação com o ônus argumentativo que o art. 489,
-§1º, VI, exige, está operando dentro do sistema e alimentando o
-canal de diálogo.
+### 5.1 Crítica e sinalização
 
-A consequência prática é que a qualidade da fundamentação do
-afastamento determina a qualidade do debate que se travará na
-reclamação. Argumento bem articulado — que identifica com precisão
-a diferença substantiva ou o erro na ratio — cria para o STF o
-ônus de responder substancialmente. Argumento mal articulado —
-que diverge de resultado sem identificar distinção ou erro — é
-mais facilmente cassado com fundamentação simples.
+A forma menos controversa de desacordo é a sinalização: o órgão registra as razões pelas quais considera o precedente problemático, preservando-as para recurso ou revisão, sem fingir ter competência formal para apagar a orientação vinculante.
 
-### 5.2 Para o STF ao julgar a reclamação
+### 5.2 Distinguishing
 
-Para o STF, a tese implica que o julgamento da reclamação não pode
-ser tratado como verificação mecânica de conformidade: "a decisão
-reclamada contraria a súmula X; casso". Esse modelo de julgamento
-viola o art. 489, §1º, IV, quando a decisão reclamada expôs razões
-substanciais para o afastamento.
+Quando existe diferença material entre o caso e o domínio de incidência do enunciado, a operação é distinção. A reclamação pode então testar se a diferença indicada é juridicamente real ou apenas uma tentativa de contornar a súmula.
 
-O STF que se recusa a enfrentar razões substanciais expostas pelo
-órgão reclamado produz dois efeitos sistêmicos negativos. Primeiro,
-enfraquece o precedente que reafirma: uma súmula reafirmada sem
-que seus fundamentos tenham sido examinados diante do melhor
-argumento contra ela é precedente mais frágil, não mais robusto.
-Segundo, desincentiva a exposição de razões pelos órgãos inferiores:
-se a reclamação resulta em cassação independentemente da qualidade
-do argumento exposto, o incentivo para expor razões cuidadosas
-diminui.
+### 5.3 Anticipatory overruling e outras formas de não aplicação concreta
 
-A longo prazo, o modelo de julgamento de reclamação que enfrenta
-substancialmente os argumentos expostos — e que revisa ou distingue
-quando os argumentos são convincentes — produz sistema de
-precedentes mais coerente e mais resistente ao questionamento.
+Alguns regimes e construções doutrinárias admitem, em condições estreitas, que um órgão inferior deixe de aplicar precedente diante de sinais suficientemente fortes de sua superação futura ou de transformação jurídica relevante. Essa possibilidade não deve ser convertida numa licença genérica. O nome da técnica, seus requisitos e sua compatibilidade com a espécie concreta de precedente precisam ser explicitados.
 
-### 5.3 Para a revisão de súmulas vinculantes
+### 5.4 Revisão ou cancelamento formal
 
-A estrutura de diálogo que este artigo descreve tem implicação
-para o processo de revisão de súmulas vinculantes. O art. 103-A,
-§2º, da CF prevê a revisão ou cancelamento de súmula vinculante
-por iniciativa dos legitimados. A tese deste artigo sugere um canal
-adicional: o julgamento reiterado de reclamações em que o STF
-precisa enfrentar argumentos contra a súmula é oportunidade
-sistemática para o próprio STF avaliar se a súmula ainda resiste
-ao melhor argumento disponível.
-
-Casos em que o STF, ao julgar reclamações, reiteradamente precisa
-fazer esforço argumentativo crescente para sustentar a súmula —
-distinguindo, qualificando, esclarecendo — são sinais de que a
-súmula pode ter alcance excessivamente amplo ou fundamentos que
-precisam ser revistos. O diálogo, acumulado ao longo de vários
-julgamentos de reclamação, produz material para a revisão que
-o processo formal de cancelamento ou revisão de súmula pode
-incorporar.
-
-**Condição de contorno: a lacuna do direito puramente estadual.** A
-estrutura de diálogo aqui descrita pressupõe que o argumento exposto
-pelo órgão inferior alcança o STF por via processualmente adequada.
-Essa pressuposição tem uma lacuna identificável: casos de direito
-puramente estadual nos quais não existe via recursal extraordinária
-apta a levar a questão ao STF ou ao STJ, e em que a reclamação por
-violação de súmula vinculante é o único mecanismo de controle
-disponível. Nessa classe, o canal de diálogo funciona somente se a
-reclamação é admitida e o STF se pronuncia sobre o argumento exposto.
-
-O alcance do art. 103-A, §3º, da CF é objeto de disputa relevante
-para essa classe. A leitura que a tese deste artigo pressupõe — que
-o dispositivo autoriza o STF a determinar o alcance da súmula ao
-julgar a reclamação — é contestada por leitura alternativa segundo a
-qual o art. 103-A, §3º, opera somente quando a reclamação é julgada
-procedente ("julgando-a procedente"), governando a forma do provimento
-(anulação do ato administrativo ou cassação da decisão judicial), não
-a competência do STF para deliberar sobre a aplicabilidade da súmula
-à *feature* específica do caso. Nessa leitura alternativa, reclamações
-denegadas por razão formal não produzem pronunciamento sobre o alcance
-da súmula, e a cobertura desta permanece indeterminada para a classe
-de casos envolvida. A via de revisão formal da súmula (art. 103-A, §2º,
-da CF) existe mas requer iniciativa voluntária dos legitimados. O
-presente artigo registra essa condição de contorno sem pretender
-resolvê-la.
-
-### 5.4 O caso dos juizados especiais
-
-Os juizados especiais merecem atenção específica porque são o
-nível mais baixo da hierarquia judiciária e, ao mesmo tempo, o
-nível que mais frequentemente lida com matérias que são objeto de
-súmula vinculante — especialmente em matéria previdenciária,
-tributária, e de direito do consumidor.
-
-A concepção autoritativa da vinculação cria incentivo perverso
-para os juizados: como as decisões dos juizados não comportam
-recurso ordinário (em muitos sistemas de juizado, a decisão de
-turma recursal é final), a súmula vinculante opera de modo
-especialmente intenso — e a reclamação ao STF é o único mecanismo
-de controle disponível.
-
-Nesse contexto, a tese deste artigo tem implicação prática
-imediata: o juiz de juizado especial que identifica, no caso
-concreto, razão sólida para afastar súmula vinculante não apenas
-pode mas, em certo sentido, deve expor essa razão com o ônus
-argumentativo qualificado. Ao fazê-lo, alimenta o canal de diálogo
-que pode, a longo prazo, produzir revisão ou distinção da súmula
-pelo STF. Ao silenciar — aplicando a súmula mecanicamente mesmo
-diante de caso que a ela não se ajusta — produz injustiça no caso
-concreto e priva o sistema do argumento que poderia corrigi-la.
+A revisão/cancelamento da súmula é operação institucional distinta. Ela altera o status normativo do enunciado para além do caso concreto e depende do procedimento competente do STF. Uma crítica inferior pode motivar essa evolução, mas não a produz por si mesma.
 
 ---
 
-## 6. Conclusão
+## 6. O que significa “diálogo institucional” neste paper
 
-O sistema brasileiro de precedentes vinculantes não institui
-vinculação meramente autoritativa para o Judiciário. Institui
-vinculação de forma: o órgão que afasta precedente vinculante sem
-expor razões comete vício processual; o órgão que afasta com razões
-expostas opera dentro do sistema. Essa estrutura é consequência
-direta do art. 489, §1º, VI, do CPC — que disciplina a *forma*
-do afastamento, não proíbe o afastamento.
+A expressão não é usada aqui para afirmar igualdade entre os participantes nem para negar hierarquia. Ela descreve uma circulação estruturada de razões entre posições institucionais diferentes.
 
-O dever de fundamentação é simétrico. O art. 489, §1º, aplica-se
-ao órgão que afasta o precedente e aplica-se ao STF que julga a
-reclamação. O STF que responde à reclamação com mera reafirmação
-da autoridade da súmula — sem enfrentar os argumentos expostos pelo
-órgão reclamado — profere decisão que não se considera fundamentada
-nos termos do art. 489, §1º, IV. A simetria é condição normativa,
-não opção de política judicial.
+O diálogo existe quando:
 
-Dessa estrutura emerge mecanismo de diálogo institucional racional:
-a reclamação constitucional não é apenas mecanismo de cassação da
-decisão divergente — é canal pelo qual argumentos que resistem ao
-confronto alcançam o STF. Quando o STF enfrenta substancialmente
-esses argumentos — revisando ou distinguindo quando os argumentos
-são convincentes, refutando quando não são —, o sistema produz
-precedentes mais robustos e mais coerentes.
+1. o argumento inferior é identificável e auditável;
+2. existe um canal processual legítimo para que ele chegue ao órgão competente;
+3. o órgão competente enfrenta o argumento na medida em que ele é necessário ao objeto que deve decidir; e
+4. o resultado preserva a alocação de competência, inclusive quando rejeita o argumento.
 
-A súmula vinculante, sob essa leitura, é proposição que o sistema
-mantém enquanto resistir ao melhor argumento disponível. Não é
-verdade imune a revisão; é presunção forte que cede ao argumento
-qualificado. Essa concepção não enfraquece o sistema de precedentes;
-o fortalece, porque os precedentes que sobrevivem ao confronto
-argumentativo têm autoridade mais genuína do que os que são
-reafirmados por força de autoridade sem enfrentar questionamento.
+Esse conceito é mais estreito do que a teoria constitucional geral de diálogo entre Poderes. Também é mais estreito do que afirmar que toda reclamação é, por natureza, dialógica. Muitas reclamações podem ser resolvidas por aplicação relativamente direta da súmula; outras nem sequer são admissíveis.
+
+A utilidade do conceito está em identificar uma possibilidade institucional concreta: o mecanismo de enforcement pode também transportar informação relevante para a manutenção, delimitação ou evolução do precedente.
+
+---
+
+## 7. Objeções e limites
+
+### 7.1 “Se a súmula é vinculante, não há diálogo”
+
+A vinculação limita os resultados disponíveis ao órgão inferior, mas não torna desnecessária a identificação do alcance do enunciado, a análise de distinções ou a consideração de transformações jurídicas. A própria existência de reclamações sobre aplicação indevida mostra que “obedecer à súmula” não é uma operação mecânica em todos os casos.
+
+### 7.2 “Se há diálogo, o órgão inferior pode sempre desobedecer com boas razões”
+
+Não. Essa é precisamente a formulação abandonada nesta versão. Boas razões podem sustentar distinção, crítica, sinalização ou outra técnica juridicamente disponível; não criam, por si, competência para cancelar ou substituir a súmula.
+
+### 7.3 “Se o argumento é persuasivo, o STF deve revisar a súmula”
+
+Também não. O STF deve fundamentar a decisão que profere e enfrentar os argumentos materiais que integram o objeto da reclamação. O resultado pode ser distinção, reconhecimento de aplicação indevida, cassação e novo julgamento, preservação do enunciado ou, por procedimento adequado, futura revisão/cancelamento. Não existe automatismo “argumento persuasivo → revisão formal dentro da reclamação”.
+
+### 7.4 “A ideia de reclamação como diálogo já existia”
+
+Correto. A Rcl 24.026/DF é antecedente direto e é tratada como tal. O paper não reivindica a descoberta da função dialógica. Sua contribuição residual é ordenar a sequência inteira sob uma fronteira explícita entre razão e competência e conectar o sinal inferior ao conjunto de resultados processualmente possíveis.
+
+### 7.5 “O dever bilateral de fundamentar também já existia”
+
+Correto. Anderson Cortez Mendes já descrevia o dever de fundamentação no regime de precedentes como uma via de mão dupla em 2015, e a jurisprudência posterior consolidou encargos específicos ligados à aplicação e à não aplicação. A palavra “simetria” não é tratada como fonte de novidade.
+
+---
+
+## 8. Implicações práticas
+
+Para o órgão inferior, a principal recomendação é separar a operação jurídica pretendida. Uma decisão deve dizer se está aplicando a súmula, distinguindo, registrando alteração superveniente, formulando crítica institucional ou utilizando técnica específica de não aplicação. Quanto maior a distância em relação ao resultado ordinariamente imposto pelo precedente, maior a necessidade de indicar a base jurídica e a competência para o movimento.
+
+Para a parte que pretende reclamar, a pergunta não é apenas “a decisão contrariou a súmula?”, mas também “qual é o ponto de aderência, distinção ou aplicação indevida que a reclamação permite ao STF decidir?”. Isso ajuda a manter a reclamação dentro de seu objeto próprio.
+
+Para o STF, a arquitetura propõe uma disciplina de decisão: separar autoridade do enunciado, questão concreta de incidência e eventual necessidade de evolução institucional. A Corte pode preservar sua autoridade e, ao mesmo tempo, tratar argumentos inferiores como informação juridicamente relevante quando eles incidem sobre o problema que a reclamação precisa resolver.
+
+---
+
+## 9. Prior art e limite da contribuição
+
+A auditoria temporal do paper identificou cinco antecedentes especialmente relevantes.
+
+**Mendes (2015)** ocupa a ideia geral de dever de fundamentação em duas direções no regime de precedentes e impede que “simetria” ou “via de mão dupla” sejam tratados como novidade ampla.
+
+**Rcl 24.026/DF (2016)** ocupa diretamente a caracterização da reclamação como instrumento de diálogo entre caso concreto e precedente vinculante, além de mencionar *distinguishing* e possível reexame diante de mudança relevante.
+
+**Macêdo (2016)** ocupa parte importante do espaço de sinalização e *anticipatory overruling* por órgãos inferiores.
+
+**REsp 1.698.774/RS (2020)** reforça que o ônus específico do art. 489, §1º, VI se relaciona ao campo dos precedentes/súmulas vinculantes, retirando originalidade de qualquer descrição genérica desse encargo.
+
+**Rcl 36.476/SP (2020)** funciona como restrição de escopo: reclamação não é canal uniforme de controle para todos os precedentes qualificados.
+
+A contribuição residual, se útil, é a combinação explícita desses elementos em uma arquitetura de quatro passos específica para STF + súmula vinculante e centrada na distinção entre **engajamento argumentativo** e **competência para evolução formal**.
+
+A busca não permite afirmar prioridade absoluta para essa combinação. Resultados negativos são apenas limites do levantamento realizado.
+
+---
+
+## 10. Conclusão
+
+A relação entre súmula vinculante, fundamentação e reclamação é melhor descrita sem escolher entre dois extremos: obediência sem argumento e liberdade de afastamento sempre que o órgão inferior ofereça razões.
+
+A súmula tem efeito vinculante real. O dever de fundamentação também é real. A competência para revisão formal permanece institucionalmente alocada. Quando uma reclamação é cabível, esses três elementos podem formar um circuito racional: o órgão inferior torna o problema explícito; a reclamação leva a controvérsia ao STF; o Supremo enfrenta o que for material ao objeto da reclamação; e o resultado preserva, distingue, corrige a aplicação concreta ou alimenta mecanismo competente de evolução do precedente.
+
+Essa arquitetura é um modelo de **diálogo sob competência**, não de diálogo contra a competência. Ela reconhece antecedentes diretos para a função dialógica e para a bilateralidade argumentativa, abandona a tese excessiva de que “razões bastam para legitimar qualquer afastamento” e evita a inferência também excessiva de que toda crítica persuasiva exige revisão formal imediata da súmula.
 
 ---
 
 ## Referências
 
-ALEXY, Robert. *Teoria dos direitos fundamentais*. Tradução de
-Virgílio Afonso da Silva. 2. ed. São Paulo: Malheiros, 2011.
+BRASIL. **Constituição da República Federativa do Brasil de 1988**, art. 93, IX, e art. 103-A, com redação introduzida pela EC 45/2004. <https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm>.
 
-CÂMARA, Alexandre Freitas. *O novo processo civil brasileiro*. 6.
-ed. São Paulo: Atlas, 2020.
+BRASIL. **Lei nº 11.417, de 19 de dezembro de 2006.** Regulamenta o art. 103-A da Constituição Federal e disciplina edição, revisão, cancelamento e reclamação relativa a súmula vinculante. <https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11417.htm>.
 
-DIDIER JR., Fredie; CUNHA, Leonardo Carneiro da. *Curso de direito
-processual civil*. Vol. 3. 16. ed. Salvador: JusPodivm, 2019.
+BRASIL. **Lei nº 13.105, de 16 de março de 2015 — Código de Processo Civil.** Texto compilado. <https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm>.
 
-HABERMAS, Jürgen. *Direito e democracia: entre facticidade e
-validade*. Vol. I. Tradução de Flávio Beno Siebeneichler. 2. ed.
-Rio de Janeiro: Tempo Brasileiro, 2003.
+MACÊDO, Lucas Buril de. **Transformação, Sinalização e Superação Antecipada e sua Pertinência ao Sistema de Precedentes Brasileiro.** Revista de Processo Comparado, v. 3, 2016, p. 89–120.
 
-HART, Herbert L. A. *O conceito de direito*. Tradução de A.
-Ribeiro Mendes. 3. ed. Lisboa: Fundação Calouste Gulbenkian, 2001.
+MENDES, Anderson Cortez. **Dever de Fundamentação no Novo Código de Processo Civil e os Precedentes Vinculantes.** Revista Eletrônica de Direito Processual, v. 16, 2015. DOI: 10.12957/redp.2015.18434.
 
-MACÊDO, Lucas Buril de. *Precedentes judiciais e o direito
-processual civil*. 3. ed. Salvador: JusPodivm, 2019.
+STF. **Reclamação 24.026/DF.** Rel. Min. Dias Toffoli, decisão de 1º jun. 2016.
 
-MARINONI, Luiz Guilherme. *Precedentes obrigatórios*. 5. ed.
-São Paulo: Revista dos Tribunais, 2016.
+STJ. **REsp 1.698.774/RS.** Terceira Turma, Rel. Min. Nancy Andrighi, julgado em 1º set. 2020, DJe 9 set. 2020.
 
-MARINONI, Luiz Guilherme. *A ética dos precedentes: justificativa
-do novo CPC*. 3. ed. São Paulo: Revista dos Tribunais, 2018.
+STJ. **Rcl 36.476/SP.** Corte Especial, Rel. Min. Nancy Andrighi, julgado em 5 fev. 2020, DJe 6 mar. 2020.
 
-MENDES, Conrado Hübner. *Constitutional courts and deliberative
-democracy*. Oxford: Oxford University Press, 2013.
+### Registro de auditoria de prioridade
 
-MITIDIERO, Daniel. *Cortes superiores e cortes supremas: do
-controle à interpretação, da jurisprudência ao precedente*. 3.
-ed. São Paulo: Revista dos Tribunais, 2017.
-
-MITIDIERO, Daniel. *Precedentes: da persuasão à vinculação*. 4.
-ed. São Paulo: Revista dos Tribunais, 2021.
-
-NERY JR., Nelson; NERY, Rosa Maria de Andrade. *Código de processo
-civil comentado*. 17. ed. São Paulo: Revista dos Tribunais, 2018.
-
-RAZ, Joseph. *The authority of law: essays on law and morality*.
-2. ed. Oxford: Oxford University Press, 2009.
-
-RAZ, Joseph. *The morality of freedom*. Oxford: Clarendon Press,
-1986.
-
-STRECK, Lenio Luiz. *O que é isto — decido conforme minha
-consciência?* 6. ed. Porto Alegre: Livraria do Advogado, 2017.
-
-WALDRON, Jeremy. *Law and disagreement*. Oxford: Oxford University
-Press, 1999.
-
-ZANETI JR., Hermes. *O valor vinculante dos precedentes: teoria
-dos precedentes normativos formalmente vinculantes*. 4. ed.
-Salvador: JusPodivm, 2019.
-
----
-
-*Este artigo integra a série "Raciocínio Jurídico Auditável"
-(Papers 1A, 1B, 1C e 1D). Versão de 17 de junho de 2026.*
+A decomposição de claims, os cutoffs públicos, as buscas e as classificações usadas para limitar a originalidade desta versão estão preservados em `audits/prior-art/paper1d-vinculacao-racional-dialogo-institucional-2026-09-18.md`. O registro é parte da proveniência do preprint e não substitui as fontes jurídicas e acadêmicas externas.
