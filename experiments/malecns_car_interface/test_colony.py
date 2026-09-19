@@ -8,6 +8,7 @@ from colony import (
     disagreement,
     freshness_weighted_value,
     median_value,
+    summarize_modality,
 )
 
 
@@ -81,6 +82,32 @@ class ColonyTests(unittest.TestCase):
             SpecialistReport("b", "speed", 10.1, 1.0, age_ms=85.0),
         ]
         self.assertEqual(age_spread_ms(reports), 70.0)
+
+    def test_modality_summary_preserves_common_mode_staleness(self):
+        reports = [
+            SpecialistReport(
+                "camera-1", "yaw-rate", 0.10, 0.9, age_ms=620.0, modality="camera"
+            ),
+            SpecialistReport(
+                "camera-2", "yaw-rate", 0.12, 0.8, age_ms=640.0, modality="camera"
+            ),
+            SpecialistReport(
+                "camera-3", "yaw-rate", 0.11, 0.85, age_ms=630.0, modality="camera"
+            ),
+        ]
+        summary = summarize_modality(reports, specialist_id="camera-summary")
+        self.assertEqual(summary.modality, "camera")
+        self.assertEqual(summary.channel, "yaw-rate")
+        self.assertAlmostEqual(summary.value, 0.11)
+        self.assertAlmostEqual(summary.age_ms, 630.0)
+
+    def test_modality_summary_rejects_mixed_modalities(self):
+        reports = [
+            SpecialistReport("camera", "yaw-rate", 0.1, 0.9, modality="camera"),
+            SpecialistReport("imu", "yaw-rate", 0.1, 0.9, modality="imu"),
+        ]
+        with self.assertRaises(ValueError):
+            summarize_modality(reports, specialist_id="mixed")
 
 
 if __name__ == "__main__":

@@ -17,6 +17,7 @@ class SpecialistReport:
     confidence: float
     novelty: float = 0.0
     age_ms: float = 0.0
+    modality: str | None = None
 
     def __post_init__(self) -> None:
         if not 0.0 <= self.confidence <= 1.0:
@@ -110,6 +111,42 @@ def consensus_weighted_value(
     if weight_sum <= 0.0:
         return center
     return sum(report.value * report.confidence for report in inliers) / weight_sum
+
+
+def summarize_modality(
+    reports: Iterable[SpecialistReport],
+    *,
+    specialist_id: str,
+) -> SpecialistReport:
+    """Collapse redundant specialists into one lawful modality-level report.
+
+    The summary deliberately uses robust medians for value, self-confidence,
+    novelty, and age. This makes the hierarchy explicit without inventing any
+    simulator-side truth. All input reports must estimate the same semantic
+    channel from the same declared modality (for example, several camera flies
+    estimating yaw-rate or several IMU flies estimating the same quantity).
+    """
+
+    items = list(reports)
+    if not items:
+        raise ValueError("at least one specialist report is required")
+
+    channels = {report.channel for report in items}
+    modalities = {report.modality for report in items}
+    if len(channels) != 1:
+        raise ValueError("modality summary requires one semantic channel")
+    if len(modalities) != 1 or None in modalities:
+        raise ValueError("modality summary requires one declared modality")
+
+    return SpecialistReport(
+        specialist_id=specialist_id,
+        channel=next(iter(channels)),
+        value=median_value(items),
+        confidence=float(median(report.confidence for report in items)),
+        novelty=float(median(report.novelty for report in items)),
+        age_ms=float(median(report.age_ms for report in items)),
+        modality=next(iter(modalities)),
+    )
 
 
 def disagreement(reports: Iterable[SpecialistReport]) -> float:
