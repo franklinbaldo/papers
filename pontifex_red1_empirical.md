@@ -53,21 +53,31 @@ Run `35455793508` completed a label-free, frozen-manifest comparison against CCA
 
 Across K={16,32,64,128,256,512}, none of those three classical families reached the precomputed A-to-B midpoint (`0.650389`) or the 90%-to-B target (`0.654635`). This is useful comparative evidence **only for these frozen methods, budgets and SciFact setup**. It does not establish universal transport superiority.
 
+### 2.5 MS MARCO pilot: negative transfer result
+
+Run `35457043627` completed the separately frozen 256-query ANCE→TCT-ColBERT-v2 HN+ MS MARCO pilot with leakage audit `PASS`: dev qrels were excluded from candidate generation, fitting and hyperparameter selection, candidate documents were excluded from document-side transport fitting, and qrels were loaded only after rankings were frozen.
+
+On the common BM25 candidate pool, A-only ANCE scored `0.346215` MRR@10 and B-oracle TCT scored `0.373555`. At K=512, Pontifex scored only `0.222483`, essentially tied with Procrustes (`0.222836`) and far below A-only, while shuffled-correspondence Pontifex scored `0.013194`. Thus the paired correspondence carries real structure relative to shuffle, but the present transport formulation does **not** preserve enough retrieval geometry to recover even the native A-space baseline on this pilot.
+
+This is a genuine negative result against plug-and-play or universal transport claims, not evidence that transport is impossible. Both encoders are MS-MARCO-family models, the evaluation is a 256-query pilot over a frozen candidate pool, and it is not an official full-dev leaderboard result. Detailed record: `experiments/pontifex_benchmarks/FINDINGS-MSMARCO-PILOT-2026-09-19.md`.
+
 ## 3. Current evidence / hypothesis boundary
 
 Supported: under the frozen SciFact K=512 setup, shared query/document warp coherence is robust to global, residual-magnitude-matched, and coarse balanced-group nulls; and the tested Pontifex map substantially outperforms CCA, PLS and RFF+ridge coordinate mappings at the same K=512 correspondence budget.
 
 Not supported: the stronger claim that exact residual-to-anchor identity is necessary. It has now failed the same predeclared two-part criterion under three completed null families. Also not supported: robustness to **tight** source-space locality, because the completed balanced-group run's own donor-distance diagnostics show that its groups were not genuinely local.
 
-Still hypotheses or outside this diagnostic: causal semantic locality, an intrinsic or physical torus, universal transport superiority, native-B superiority, low-budget superiority, cross-dataset generalization, and Assembly-to-student generalization.
+The MS MARCO pilot adds a separate negative boundary: current Pontifex transport does not generalize as a plug-and-play retrieval upgrade across the tested ANCE→TCT representation pair. That failure coexists with the positive SciFact shared-warp result; neither should be generalized beyond its frozen design.
+
+Still hypotheses or outside these diagnostics: causal semantic locality, an intrinsic or physical torus, universal transport superiority, native-B superiority, low-budget superiority, broad cross-dataset generalization, and Assembly-to-student generalization.
 
 ## 4. Prospective stronger discrimination: residual norm + hard A-KNN donor constraint
 
-The next frozen protocol replaces the weak balanced-group notion of locality with a direct rank constraint. Inside each of the eight 64-anchor residual-norm strata, every anchor may receive a residual only from one of its **16 nearest non-self neighbors in normalized `D_student` A-space**. Each of the 63 coupled and 63 independent nulls is a unique perfect-matching derangement on that fixed bipartite candidate graph. The graph and both banks are hashed before the first `D_test` grade read.
+The first hard-locality run (`35460716096`) required every residual donor to lie among the 16 nearest non-self anchors inside the same residual-norm stratum. It failed **before any D_test qrel grade was read** because at least one directed 16-NN bipartite stratum admitted no perfect derangement. This is a combinatorial protocol-feasibility result, not evidence for or against retrieval performance.
 
-The run must report donor cosine-distance and donor-rank diagnostics, and it fails rather than silently widening the neighborhood if any accepted donor exceeds rank 16. The semantic-specificity decision rule remains unchanged: paired-query 95% interval strictly above zero **and** finite-bank `p<=0.05`.
+The revised protocol freezes the donor-rank ladder `[16,20,24,32,48,63]` and, using `D_student` geometry only, selects the smallest rank cap for which every residual-norm stratum admits a perfect derangement. Only then are the exact candidate graph and the 63 coupled + 63 independent permutation banks frozen and hashed. `D_test` relevance grades remain sealed until after that point. The rank choice therefore solves a nuisance-design feasibility constraint without tuning on test performance.
 
-This is adaptive/prospective, not an independent replication. A positive result would strengthen only the narrow claim that exact residual identity adds utility beyond residual magnitude and a hard source-space locality constraint. A negative result would further weaken exact-identity claims. Either outcome leaves broader torus, causality, and physical-topology hypotheses unproven.
+The semantic-specificity decision rule remains unchanged: paired-query 95% interval strictly above zero **and** finite-bank `p<=0.05`. A positive result would strengthen only the narrow claim that exact residual identity adds utility beyond residual magnitude and the tightest feasible frozen A-space donor-rank constraint. A negative result would further weaken exact-identity claims. Either outcome leaves broader torus, causality, and physical-topology hypotheses unproven.
 
 ## Reproducibility
 
@@ -76,4 +86,7 @@ This is adaptive/prospective, not an independent replication. A positive result 
 - completed norm-matched K=512: `https://github.com/franklinbaldo/papers/actions/runs/35455793661`
 - completed balanced-group norm+local K=512: `https://github.com/franklinbaldo/papers/actions/runs/35457676312`
 - completed classical baselines: `https://github.com/franklinbaldo/papers/actions/runs/35455793508`
-- hard-locality prospective protocol: `experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-KNN-MATCHED-COUPLING-K512-2026-09-19.md`
+- completed MS MARCO pilot: `https://github.com/franklinbaldo/papers/actions/runs/35457043627`
+- infeasible hard rank-16 locality attempt: `https://github.com/franklinbaldo/papers/actions/runs/35460716096`
+- revised KNN feasibility-ladder run: `https://github.com/franklinbaldo/papers/actions/runs/35461028519`
+- revised hard-locality protocol: `experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-KNN-MATCHED-COUPLING-K512-2026-09-19.md`
