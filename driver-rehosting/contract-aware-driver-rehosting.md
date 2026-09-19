@@ -26,7 +26,7 @@ yet may lower the cost of relocation, synthetic requests, memory tracing, and
 process-local fuzzing. We call the invariant authorization boundary the
 **privilege ceiling** and the set of research actions affordable under an
 explicit resource budget the **researcher affordance floor**. This usage follows
-the repository's [affordance-restriction framework](affordance_restriction.md);
+the repository's [affordance-restriction framework](affordance-restriction/affordance-restriction.md);
 it is intentionally distinct from LiteBox's capability-based access registry.
 
 The primary technical proposal is a fixture-driven SystemBuffer Shadow Checker

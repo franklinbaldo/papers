@@ -62,7 +62,7 @@ The Forbidden Relay benchmark can operationalize these distinctions by measuring
 
 ### 2.5 Machine discovery — PR #242
 
-`machine_discovery.md`, **When the Learner Changes the Curriculum**, treats discovery as a transition between versioned public epistemic states. It separates correctness, certification, novelty, provenance, public uptake, and downstream fertility.
+`machine-discovery/machine-discovery.md`, **When the Learner Changes the Curriculum**, treats discovery as a transition between versioned public epistemic states. It separates correctness, certification, novelty, provenance, public uptake, and downstream fertility.
 
 It supplies the **epistemic destination** of a learned communication system. Successful transmission through a relay is not a discovery. It becomes relevant to machine discovery only if the terminal artifact is independently certified, novel relative to a frozen prior state, provenance-auditable, publicly admitted, and useful to later learners.
 
@@ -70,19 +70,19 @@ The relay papers contribute a provenance problem to that framework: when an arti
 
 ### 2.6 Interstitial agency — PR #243
 
-`interstitial_agent.md`, **The Interstitial Agent**, provides the philosophical and alignment-level account of goal-directed control between model calls. It distinguishes surface from functional message persistence, local from end-to-end compliance, direct generation from downstream reconstruction, and benign communication from policy-evasion use.
+`interstitial-agent/interstitial-agent.md`, **The Interstitial Agent**, provides the philosophical and alignment-level account of goal-directed control between model calls. It distinguishes surface from functional message persistence, local from end-to-end compliance, direct generation from downstream reconstruction, and benign communication from policy-evasion use.
 
 It receives constraints from informational time and the negentropy clarification: interstitial agency must be causal and intervention-sensitive, not inferred merely from order or compression. It receives the opacity/noise vocabulary from Structured Irregularity. It supplies the safety ontology for the formal and empirical relay papers.
 
 ### 2.7 RL relay transducers — PR #244
 
-`rl_relay_transducers.md` formalizes relay transmitters, receivers, and transceivers; constrained edit and retrieval actions; embedding-indexed textual memory; black-box LLM channels; policy-gradient learning; joint training; curriculum optimization; distributed rollout; and side-channel controls.
+`relay-systems/rl-relay-transducers.md` formalizes relay transmitters, receivers, and transceivers; constrained edit and retrieval actions; embedding-indexed textual memory; black-box LLM channels; policy-gradient learning; joint training; curriculum optimization; distributed rollout; and side-channel controls.
 
 It is the **mechanical bridge** among the programme's abstractions. Endogenous registries from machine teaching can populate associative memory. Informational depth becomes a measurable property of trajectories. Progressive decodability becomes an auxiliary diagnostic. Provenance requirements from machine discovery determine what versions and actions a distributed rollout must record.
 
 ### 2.8 Forbidden Relay — PR #245
 
-`forbidden_relay.md` pre-registers one deliberately narrow experiment: transmit an exact benign target through an LLM chain while preventing literal occurrence of that target in intermediate LLM outputs.
+`relay-systems/forbidden-relay.md` pre-registers one deliberately narrow experiment: transmit an exact benign target through an LLM chain while preventing literal occurrence of that target in intermediate LLM outputs.
 
 It is not a general test of teaching, intelligence, agency, discovery, or safety. It is an **instrumented case study** capable of producing evidence relevant to each:
 
@@ -190,9 +190,9 @@ For the conceptual arc:
 1. `generative_machine_teaching.md` — how a learner and vocabulary can be constructed;
 2. `pedagogical_signal_extraction.md` — how a learner distinguishes structure from noise and opacity;
 3. `informational_time.md` plus its clarification — how interaction depth and agent recognition are defined;
-4. `interstitial_agent.md` — where agency and safety reside in composed systems;
-5. `rl_relay_transducers.md` — how to build and train the mechanism;
-6. `forbidden_relay.md` — how to test one bounded case;
-7. `machine_discovery.md` — when any terminal product could alter accepted public knowledge.
+4. `interstitial-agent/interstitial-agent.md` — where agency and safety reside in composed systems;
+5. `relay-systems/rl-relay-transducers.md` — how to build and train the mechanism;
+6. `relay-systems/forbidden-relay.md` — how to test one bounded case;
+7. `machine-discovery/machine-discovery.md` — when any terminal product could alter accepted public knowledge.
 
-For implementation, begin with `rl_relay_transducers.md` and treat the other papers as definitions of the controls, diagnostics, and claims that the implementation must not conflate.
+For implementation, begin with `relay-systems/rl-relay-transducers.md` and treat the other papers as definitions of the controls, diagnostics, and claims that the implementation must not conflate.

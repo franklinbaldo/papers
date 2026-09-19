@@ -9,7 +9,7 @@ timestamp: 2026-09-18T14:00:00-04:00
 # Publication State
 
 This repository uses an optional `publication` frontmatter object on paper
-concepts. It is a producer-defined OKF extension: OKF v0.1 explicitly permits
+concepts. It is a producer-defined OKF extension: OKF v0.2 explicitly permits
 additional frontmatter keys.
 
 The field has two jobs that must stay separate:

@@ -483,6 +483,6 @@ A useful scientometric instrument should make priority disputes narrower, more r
 The machine-readable operational definition for this paper is maintained in:
 
 - [Schmidhuber Meter OKF concept](okf/schmidhuber-meter.md)
-- [Citation Debt Assessment OKF type](okf/types/citation-debt-assessment.md)
+- [Citation Debt Assessment OKF type](.okf/specs/citation-debt-assessment.md)
 
 The OKF definition is the source of truth for automated audits; this paper provides the scientific rationale and methodology. Formula version 0.1 is frozen for reproducibility, while interpretation and future calibration remain explicitly revisable.

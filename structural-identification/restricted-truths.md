@@ -717,7 +717,7 @@ The Lean file proves the corresponding finite claims and the final theorem `thre
 The machine-checked core lives at:
 
 ```text
-formalizations/structural_identification/StructuralIdentification.lean
+structural-identification/formalizations/StructuralIdentification.lean
 ```
 
 The paper and formalization are versioned together in this repository. The archival source commit therefore pins both the prose and the exact Lean file. The repository workflow `.github/workflows/structural-identification-lean.yml` checks that file with `leanprover/lean4:v4.22.0`; an archival candidate is not considered reproducible unless that check is green for the frozen source revision.
