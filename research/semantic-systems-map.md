@@ -625,13 +625,15 @@ Each escalated issue should state:
 
 ## 29. Priority queue
 
-### P0 — correct before expanding the programme
+### P0 — correction bundle in PR #668
+
+The five P0 items are being corrected together in [PR #668](https://github.com/franklinbaldo/papers/pull/668). Items 1–4 are textual/methodological corrections; item 5 now has a frozen prospective protocol and moves to execution only after this correction PR lands.
 
 1. **Pontifex core vs explicit transport** — [#670](https://github.com/franklinbaldo/papers/issues/670). Clarify that coordinate-free intervention comparison is the core primitive and explicit transport is an optional later stage.
 2. **Observer-relative semantics in STT** — [#671](https://github.com/franklinbaldo/papers/issues/671). Prevent one teacher embedding from silently becoming the semantic ontology.
 3. **Semantic Atlas global-geometry boundary** — [#672](https://github.com/franklinbaldo/papers/issues/672). Make local relational evidence the default and label stronger universal geometry as hypothesis.
 4. **Shared multi-observer evaluator** — [#673](https://github.com/franklinbaldo/papers/issues/673). Consolidate RED-1 / Assembly / observer-fusion metrics into Synergy Geometry.
-5. **Unified Semantic Identification Benchmark** — [#674](https://github.com/franklinbaldo/papers/issues/674). This is the main anti-duplication experiment: determine whether Atlas, Pontifex and Perquire contain complementary information under one frozen evaluation contract.
+5. **Unified Semantic Identification Benchmark** — [#674](https://github.com/franklinbaldo/papers/issues/674). The design debt is resolved by the prospective protocol at `experiments/unified_semantic_identification/protocol.md`; scientific execution remains open and must not be represented as completed evidence.
 
 ### P1 — unify language and prevent future divergence
 
