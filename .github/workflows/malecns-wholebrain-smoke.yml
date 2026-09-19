@@ -1,0 +1,112 @@
+name: MaleCNS whole-brain semantic smoke
+
+on:
+  pull_request:
+    paths:
+      - "experiments/malecns_wifi/src/malecns_wifi/fly_assisted.py"
+      - "experiments/malecns_wifi/tests/test_fly_assisted.py"
+      - "experiments/malecns_wifi/scripts/smoke_wholebrain_state.py"
+      - "experiments/malecns_wifi/whole-brain-semantic-state.md"
+      - ".github/workflows/malecns-wholebrain-smoke.yml"
+  push:
+    branches:
+      - experiment/malecns-whole-brain-semantic-state
+    paths:
+      - "experiments/malecns_wifi/**"
+      - ".github/workflows/malecns-wholebrain-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: malecns-wholebrain-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  targeted-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: experiments/malecns_wifi/pyproject.toml
+      - name: Install train/dev extras
+        working-directory: experiments/malecns_wifi
+        run: uv sync --extra dev --extra train
+      - name: Test differentiable whole-brain readouts
+        working-directory: experiments/malecns_wifi
+        run: uv run pytest -q tests/test_fly_assisted.py
+
+  real-input-smoke:
+    needs: targeted-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      INPUT_DIR: experiments/malecns_wifi/artifacts/wholebrain-smoke-inputs
+      OUTPUT_DIR: experiments/malecns_wifi/artifacts/wholebrain-smoke
+      RELEASE_BASE: https://github.com/franklinbaldo/papers/releases/download/malecns-confirmatory-inputs-v1
+      EXPECTED_FEATURES_HASH: ab494d7e0b615c9633e7
+      EXPECTED_GRAPH_HASH: 214106d04307618db054cb977a691d48d431b771
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: experiments/malecns_wifi/pyproject.toml
+      - name: Install experiment
+        working-directory: experiments/malecns_wifi
+        run: uv sync
+      - name: Download canonical frozen inputs
+        shell: bash
+        run: |
+          mkdir -p "$INPUT_DIR" "$OUTPUT_DIR"
+          curl --fail --location --retry 5 --retry-all-errors \
+            "$RELEASE_BASE/graph.npz" -o "$INPUT_DIR/graph.npz"
+          curl --fail --location --retry 5 --retry-all-errors \
+            "$RELEASE_BASE/multitag-features.features.npz" -o "$INPUT_DIR/features.npz"
+      - name: Verify canonical experiment fingerprints
+        working-directory: experiments/malecns_wifi
+        run: |
+          uv run python - <<'PY'
+          import hashlib
+          import os
+          import numpy as np
+          from malecns_wifi import load_graph
+
+          def array_fingerprint(array):
+              values = np.ascontiguousarray(np.asarray(array, dtype=np.float32))
+              digest = hashlib.blake2b(values.tobytes(), digest_size=10)
+              digest.update(str(values.shape).encode())
+              return digest.hexdigest()
+
+          features = np.load('artifacts/wholebrain-smoke-inputs/features.npz', allow_pickle=False)
+          block = np.hstack([features['absolute'], features['sensation']])
+          got_features = array_fingerprint(block)
+          matrix = load_graph('artifacts/wholebrain-smoke-inputs/graph.npz')
+          got_graph = array_fingerprint(matrix.data) + array_fingerprint(matrix.indices.astype(np.float32))
+          print({'features_hash': got_features, 'graph_hash': got_graph, 'chunks': len(block)})
+          if got_features != os.environ['EXPECTED_FEATURES_HASH']:
+              raise SystemExit(f'feature fingerprint mismatch: {got_features}')
+          if got_graph != os.environ['EXPECTED_GRAPH_HASH']:
+              raise SystemExit(f'graph fingerprint mismatch: {got_graph}')
+          if len(block) != 355:
+              raise SystemExit(f'expected 355 chunks, got {len(block)}')
+          PY
+      - name: Run one-document whole-brain CPU smoke
+        working-directory: experiments/malecns_wifi
+        run: |
+          uv run python scripts/smoke_wholebrain_state.py \
+            --features artifacts/wholebrain-smoke-inputs/features.npz \
+            --graph artifacts/wholebrain-smoke-inputs/graph.npz \
+            --output artifacts/wholebrain-smoke/report.json \
+            --seed 0
+      - name: Preserve smoke report
+        uses: actions/upload-artifact@v4
+        with:
+          name: malecns-wholebrain-real-input-smoke
+          path: experiments/malecns_wifi/artifacts/wholebrain-smoke/report.json
+          if-no-files-found: error
+          retention-days: 90

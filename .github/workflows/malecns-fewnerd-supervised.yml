@@ -1,0 +1,51 @@
+name: MaleCNS Few-NERD positional reservoir tests
+
+on:
+  pull_request:
+    paths:
+      - "experiments/malecns_wifi/src/malecns_wifi/token_reservoir.py"
+      - "experiments/malecns_wifi/src/malecns_wifi/fewnerd_cache.py"
+      - "experiments/malecns_wifi/src/malecns_wifi/token_probe.py"
+      - "experiments/malecns_wifi/scripts/build_fewnerd_semantic_cache.py"
+      - "experiments/malecns_wifi/scripts/encode_fewnerd_tokens.py"
+      - "experiments/malecns_wifi/scripts/run_fewnerd_probe.py"
+      - "experiments/malecns_wifi/tests/test_token_reservoir.py"
+      - "experiments/malecns_wifi/pyproject.toml"
+      - ".github/workflows/malecns-fewnerd-supervised.yml"
+  push:
+    branches:
+      - experiment/malecns-fewnerd-supervised
+    paths:
+      - "experiments/malecns_wifi/**"
+      - ".github/workflows/malecns-fewnerd-supervised.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: malecns-fewnerd-supervised-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  positional-reservoir-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: experiments/malecns_wifi/pyproject.toml
+      - name: Install dev/train/fewnerd extras (CPU torch)
+        working-directory: experiments/malecns_wifi
+        run: |
+          uv venv
+          uv pip install --index-strategy unsafe-best-match \
+            --extra-index-url https://download.pytorch.org/whl/cpu \
+            -e ".[dev,train,fewnerd]"
+      - name: Test positional reservoir, word-pooling, BIO span metrics
+        working-directory: experiments/malecns_wifi
+        env:
+          PYTHONPATH: scripts
+        run: uv run --no-sync pytest -q tests/test_token_reservoir.py
