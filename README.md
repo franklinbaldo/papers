@@ -63,6 +63,7 @@ Position papers and working drafts.
 ## Eixo interpretabilidade
 
 - `pontifex.md` — Pontifex: byte-level occlusion + convergência multi-espaço para interpretabilidade tokenizer-free e cross-modal (position paper)
+- `interventional_latent_graph.md` — Interventional Latent Graphs: espaços latentes como vértices, uma intervenção compartilhada por aresta, contraste binário como mínimo operacional discreto e topologia global tratada como hipótese a testar; inclui companion Lean 4
 - `o3-originality-assessment.md` — esboço exploratório (saída de sessão de IA) de checagem de prior art para o Pontifex; não é avaliação independente — ver nota editorial no início do arquivo
 
 ## Eixo empírico
