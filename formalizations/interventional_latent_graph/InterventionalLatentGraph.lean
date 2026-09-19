@@ -99,9 +99,9 @@ theorem length_append {Space : Type u} {Intervention : Type v}
     (append p q).length = p.length + q.length := by
   induction p with
   | nil =>
-      rfl
+      simp [append, length]
   | cons i h rest ih =>
-      simp [append, length, ih]
+      simp [append, length, ih, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
 
 end Walk
 
