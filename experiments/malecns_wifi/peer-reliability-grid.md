@@ -1,3 +1,7 @@
+---
+type: "Protocol"
+---
+
 # Peer-reliability grid — exploratory preregistration
 
 Status: exploratory follow-up, registered before reading the grid result.
