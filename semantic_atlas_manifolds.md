@@ -56,27 +56,27 @@ Nothing in the present paper requires that proposal to be rewritten. The origina
 
 The simplest implementation partitions a semantic space into points, neighborhoods, cells, or graph nodes. That is a sensible first experiment. But if concepts themselves occupy curved or multidimensional low-dimensional structures, then a point cloud may be only the sampling of a more structured object. A useful follow-up is therefore to replace neither the SRF nor the atlas, but to refine the local state representation.
 
-The resulting architecture becomes:
+The resulting architecture has two measurement scales that meet in the atlas rather than one undifferentiated pipeline:
 
-```text
-language model activations
-          ↓
-concept-manifold featurizer
-          ↓
-local manifold coordinates + active concept blocks
-          ↓
-Semantic Reference Frame / quasars
-          ↓
-manifold-aware Semantic Atlas
-          ↓
-local support graph / diffusion operator / spectral observables
-          ↓
-inter-manifold route + intra-manifold path
-          ↓
-geometry-aware Semantic Servo
-          ↓
-lexical generation
+```mermaid
+flowchart LR
+    H[Language-model activations] --> F[Concept-manifold featurizer]
+    F --> L[Local state<br/>active charts + intrinsic coordinates]
+    H --> G[Global state<br/>calibrated SRF position]
+    Q[Semantic quasars<br/>reference geometry] --> G
+    L --> A[Manifold-aware Semantic Atlas]
+    G --> A
+    A --> S[Support graph + diffusion<br/>+ spectral observables]
+    A --> R[Inter-manifold route]
+    A --> P[Intra-manifold path]
+    S --> R
+    S --> P
+    R --> C[Geometry-aware Semantic Servo]
+    P --> C
+    C --> Y[Lexical generation]
 ```
+
+The split is load-bearing: the SRF locates conceptual regions globally, while chart coordinates and support geometry describe motion inside them. Neither branch is claimed to be sufficient by itself; the testable object is their coordinated contribution to prediction, routing, and control.
 
 The original point-space Atlas is retained as a baseline throughout. If manifold structure does not improve prediction, compression, routing, or control, the extension should be rejected while the broader Semantic Atlas programme remains intact.
 

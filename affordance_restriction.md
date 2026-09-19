@@ -111,7 +111,14 @@ Catalog entries are Gherkin `.feature` files in Brazilian-Portuguese keyword var
 
 Figure 2 illustrates a small canon: one Tier 1 outcome (registering a procedural deadline), two Tier 2 concretizations of it (electronic citation in defense procedure; mere-acknowledgment for non-deadline communications), and one Tier 3 leaf specializing one of the Tier 2 cases for the situation where no work-box has been assigned to the case file. Leaves — nodes with no children — are the only entries the agent may bind directly. Non-leaves are *abstract*: adding a deeper specialization that concretizes them automatically retires them from direct binding for that branch.
 
-**Figure 2.** *Tier hierarchy in the canon. Tier 1 declares outcome; Tier 2 concretizes Tier 1 via `@concretiza:` edges pointing at content hashes; Tier 3 adds situational specialization. The graph is a DAG by construction (edges flow only from higher tiers to strictly lower tiers).*
+```mermaid
+flowchart BT
+    T2A["Tier 2 · electronic citation<br/>abstract after specialization"] -->|concretizes by hash| T1["Tier 1 · register procedural deadline<br/>doctrinal outcome"]
+    T2B["Tier 2 · mere acknowledgment<br/>bindable leaf"] -->|concretizes by hash| T1
+    T3["Tier 3 · no work-box assigned<br/>bindable leaf"] -->|concretizes by hash| T2A
+```
+
+**Figure 2.** *Tier hierarchy in the canon. Concretization references point from more specific entries to strictly lower tiers by content hash. The Tier 2 citation entry becomes abstract once the Tier 3 specialization exists; only leaves remain directly bindable.*
 
 ### 4.3 Traversal, Not Matching
 
