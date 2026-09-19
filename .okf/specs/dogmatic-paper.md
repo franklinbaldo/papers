@@ -9,8 +9,8 @@ timestamp: 2026-07-09T00:00:00Z
 # Dogmatic Paper
 
 **`type` value:** `"Dogmatic Paper"`
-**Applies to:** `paper1_dogmatico_ED_precedentes.md`, `paper1A_embargos_declaracao.md` through `paper1G_livre_convencimento_patrimonialismo.md` (8 files at repo root).
-**Examples:** `paper1B_cinco_saidas_precedentes.md`, `paper1D_vinculacao_racional_dialogo_institucional.md`.
+**Applies to:** `auditable-legal-reasoning/embargos-de-declaracao-e-precedentes-vinculantes.md`, `auditable-legal-reasoning/embargos-de-declaracao-cpc-2015.md` through `auditable-legal-reasoning/livre-convencimento-patrimonialismo-judicial.md` (8 files at repo root).
+**Examples:** `auditable-legal-reasoning/cinco-saidas-precedentes-vinculantes.md`, `auditable-legal-reasoning/vinculacao-racional-dialogo-institucional.md`.
 
 ## Purpose
 
@@ -20,7 +20,7 @@ argumentation grounded in statute, doctrine, and (where available) real
 case law. These papers are in Portuguese, target legal practitioners
 and academics, and together form the "eixo dogmatico" of the
 Raciocinio Juridico Auditavel research programme (see
-`sintese_programa.md`).
+`auditable-legal-reasoning/research-program.md`).
 
 ## Required fields (beyond OKF baseline)
 
@@ -36,8 +36,8 @@ None beyond OKF's own required `type`.
 - `tags` — at minimum, the paper's own short slug (`paper1a` .. `paper1g`,
   or `paper1-dogmatico` for the umbrella), so debate documents that
   attack or defend the paper's theses can be found by the same tag.
-  See `okf/types/adversarial-critique.md` and
-  `okf/types/supportive-defense.md`.
+  See `.okf/specs/adversarial-critique.md` and
+  `.okf/specs/supportive-defense.md`.
 - `timestamp` — last substantive edit, not last mechanical edit
   (renames, frontmatter addition). Derived from `git log` at adoption
   time; keep it current by hand when the doctrinal content changes,
@@ -54,7 +54,7 @@ too:
 - `## Objeções e Respostas` (where applicable) — anticipated
   counterarguments and responses; this is where absorbed conclusions
   from the adversarial/supportive debate apparatus land (see
-  `PROTOCOL.md`).
+  `archive/adversarial-paper-development/protocol.md`).
 - `## Referências` — bibliography.
 - A closing italicized line: series membership and version date.
 
@@ -64,5 +64,5 @@ Dogmatic Papers are the ones most frequently targeted by
 `Adversarial Critique` / `Supportive Defense` documents. When absorbing
 a debate conclusion into a Dogmatic Paper's body, prefer adding a
 scoped qualifier or a new short paragraph over rewriting existing
-prose — see the commit history of `paper1B_cinco_saidas_precedentes.md`
+prose — see the commit history of `auditable-legal-reasoning/cinco-saidas-precedentes-vinculantes.md`
 for a worked example of incremental, well-cited absorption.

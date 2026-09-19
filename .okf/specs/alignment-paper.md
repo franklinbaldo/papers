@@ -44,7 +44,7 @@ is the reference example:
   the pattern does *not* eliminate, not just ones it solves.
 - A validation/deployment-status section that distinguishes completed
   work from planned work explicitly (phase numbers, dates), the same
-  discipline `okf/types/empirical-paper.md` requires but applied to
+  discipline `.okf/specs/empirical-paper.md` requires but applied to
   engineering milestones rather than experimental results.
 
 ## Notes

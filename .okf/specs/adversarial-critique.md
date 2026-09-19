@@ -9,9 +9,9 @@ timestamp: 2026-07-09T00:00:00Z
 # Adversarial Critique
 
 **`type` value:** `"Adversarial Critique"`
-**Applies to:** the 8 non-blog files directly under `otherwise/`
-(e.g. `otherwise/paper1b-rational-supersession.md`). Does **not**
-apply to `otherwise/blog/*.md` — see `okf/types/session-log-entry.md`
+**Applies to:** the 8 non-blog files directly under `archive/adversarial-paper-development/otherwise/`
+(e.g. `archive/adversarial-paper-development/otherwise/paper1b-rational-supersession.md`). Does **not**
+apply to `archive/adversarial-paper-development/otherwise/blog/*.md` — see `.okf/specs/session-log-entry.md`
 for those.
 
 ## Purpose
@@ -19,8 +19,8 @@ for those.
 An Adversarial Critique is the *current, cumulative* state of one
 attack thread against one target paper's thesis — not a single
 session's output. It is edited in place, round over round, by the
-adversarial role described in `PROTOCOL.md`. The corresponding
-`otherwise/blog/` entries are the append-only session-by-session
+adversarial role described in `archive/adversarial-paper-development/protocol.md`. The corresponding
+`archive/adversarial-paper-development/otherwise/blog/` entries are the append-only session-by-session
 changelog of edits to this file; the critique document itself is the
 living synthesis.
 
@@ -46,14 +46,14 @@ Every existing Adversarial Critique opens with:
 
 Beyond that, structure is round-numbered and cumulative (`### Round N`
 or equivalent) rather than fixed; see any existing file for the
-pattern in practice, since PROTOCOL.md does not mandate one and the
+pattern in practice, since archive/adversarial-paper-development/protocol.md does not mandate one and the
 apparatus has converged on a workable structure organically.
 
 ## Notes
 
-Per `PROTOCOL.md`'s revised absorption trigger, when a round contains
+Per `archive/adversarial-paper-development/protocol.md`'s revised absorption trigger, when a round contains
 an explicit bilateral concession, that conclusion should be queued
 for absorption into the target Dogmatic/Technical Paper rather than
 waiting for the next fixed edit cycle. This type spec doesn't enforce
 that (OKF frontmatter has no field for "pending absorption"); it's a
-process note, tracked in `synthesis/blog/` and `PROTOCOL.md` instead.
+process note, tracked in `archive/adversarial-paper-development/synthesis/blog/` and `archive/adversarial-paper-development/protocol.md` instead.

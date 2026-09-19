@@ -10,7 +10,7 @@ timestamp: 2026-08-13T00:00:00Z
 
 **`type` value:** `"Adversarial Blog"`
 
-**Applies to:** dated files under `otherwise/blog/` that record a complete
+**Applies to:** dated files under `archive/adversarial-paper-development/otherwise/blog/` that record a complete
 adversarial round, including its trigger, argument selection, discarded
 alternatives, assessment, open questions, and resulting paper changes.
 
@@ -24,7 +24,7 @@ contest, and absorb it without reconstructing the argument from a terse log.
 
 Use this type only when the document itself carries the substantive adversarial
 argument. A short dated activity record remains a `Session Log Entry`; the
-living cross-round attack thread at `otherwise/<slug>.md` remains an
+living cross-round attack thread at `archive/adversarial-paper-development/otherwise/<slug>.md` remains an
 `Adversarial Critique`.
 
 ## Required fields beyond the OKF baseline

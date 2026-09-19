@@ -19,7 +19,7 @@ An Audit Report is a dated, external (i.e. not produced by the routine
 debate apparatus itself) review that finds and proposes fixes for
 problems, then records what was actually decided and executed,
 distinct from the proposal. It complements, but is not a replacement
-for, `synthesis/blog/`'s ongoing per-session record.
+for, `archive/adversarial-paper-development/synthesis/blog/`'s ongoing per-session record.
 
 ## Required fields (beyond OKF baseline)
 

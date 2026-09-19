@@ -29,7 +29,7 @@ keeps that behavior. This is a deliberate divergence from OKF's literal
 reserved-filename convention, not an oversight — `README.md` is **not**
 in OKF's reserved-filename list (`index.md`, `log.md` only), so under a
 strict reading it required frontmatter like any other concept document,
-which it now has. `okf/index.md` uses the literal reserved filename
+which it now has. `.okf/index.md` uses the literal reserved filename
 (frontmatter-free, per spec) for the `okf/` subdirectory specifically,
 where GitHub's special-casing doesn't apply and OKF's own convention is
 the more natural fit.
