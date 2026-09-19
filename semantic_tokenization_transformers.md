@@ -4,6 +4,20 @@ title: "Semantic Tokenization Transformers: Pre-training on High-Level Vector Co
 description: "STT: pre-treinamento em codigos vetoriais de alto nivel com decodificacao semanticamente ancorada (position paper)."
 tags: [stt]
 timestamp: 2026-07-09T12:12:59+00:00
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
 # Semantic Tokenization Transformers: Pre-training on High-Level Vector Codes with Semantically Grounded Decoding
@@ -41,7 +55,7 @@ This mismatch between tokenization granularity and semantic structure has severa
 
 4. **Alignment challenges:** The representations learned at the subword level must be aggregated (via pooling or special tokens) for downstream tasks that operate on semantic units like sentences or documents.
 
-We propose a radical departure: **train the Transformer directly on semantic codes**, treating chunks of text (phrases, sentences, or short passages) as the atomic units. This approach, which we call **Semantic Tokenization Transformers (STT)**, consists of three main components:
+STT proposes to **train a Transformer directly on semantic codes**, treating chunks of text (phrases, sentences, or short passages) as the atomic units. This is not a claim that higher-level semantic language modeling or quantized semantic representations are new primitives: sentence-level modeling over pre-trained embeddings predates STT [Ippolito et al., 2020], and Large Concept Models / Quant-LCM already combine a pre-trained sentence representation space with autoregressive concept modeling and RVQ [LCM team et al., 2024]. The unresolved STT proposal is the full reconstruction-oriented composition described below. It consists of three main components:
 
 ### 1.1 Offline Semantic Tokenization
 
@@ -77,13 +91,13 @@ This approach produces fluent paraphrases that preserve core concepts and factua
 This article is a **position paper**: its contributions are conceptual and
 methodological, not empirical. Specifically:
 
-1. **Semantic tokenization pipeline (proposal):** A complete offline framework for converting text corpora into sequences of semantic codes while preserving document structure.
+1. **Corpus-grounded reconstruction composition (candidate contribution):** overlapping semantic chunks are mapped through a fixed pre-trained representation and quantized, but predicted codes are returned to text through real corpus medoids, coherent path selection, overlap stitching, and constrained surface normalization rather than treating semantic/RVQ modeling itself as novel.
 
-2. **STT architecture (proposal):** Transformer variants (single-stream and dual-stream) for autoregressive modeling of semantic code sequences with multiple training objectives.
+2. **Explicit separation of error sources:** the protocol distinguishes semantic-code prediction error, representative-retrieval error, path-selection error, stitching error, and additions/deletions introduced by the final normalizer.
 
-3. **Semantically grounded decoding method (proposal):** A retrieval-based reconstruction pipeline intended to produce fluent paraphrases preserving core concepts through medoid selection and disciplined normalization.
+3. **Matched baseline ladder:** the proposal is evaluated not only against BPE models but against continuous sentence/concept modeling, Quant-LCM/RVQ-style semantic modeling, semantic-token reduction, conventional learned decoding, and successive reconstruction ablations.
 
-4. **Falsifiable evaluation protocol:** A set of explicit, pre-registered predictions and failure criteria (Section 5) under which each design claim can be tested.
+4. **Falsifiable position-paper protocol:** all sequence-length, fidelity, cost, and downstream-performance statements remain prospective design targets with explicit failure criteria; no empirical advantage is claimed in this version.
 
 The remainder of this paper is organized as follows: Section 2 reviews related work, Section 3 details the proposed method, Section 4 describes implementation considerations, Section 5 presents the evaluation protocol and falsifiable predictions, Section 6 discusses limitations, and Section 7 concludes with future directions.
 
@@ -97,7 +111,7 @@ Vector Quantization (VQ) has a long history in compression and signal processing
 
 Residual Vector Quantization (RVQ) [Zeghidour et al., 2021] improves upon flat VQ by quantizing residuals hierarchically, enabling better reconstruction with multiple codebooks at different scales. This approach has been successfully applied in neural audio codecs like SoundStream [Zeghidour et al., 2021] and EnCodec [Défossez et al., 2022].
 
-Our work applies RVQ to text embeddings but diverges in a key way: rather than training the encoder and quantizer end-to-end, we leverage pre-trained embedding models as teachers and perform quantization offline. This decouples semantic representation from the discrete tokenization, allowing us to benefit from the latest embedding models without retraining.
+Applying vector quantization to text representations is not by itself an STT contribution. In particular, Quant-LCM discretizes pre-trained SONAR sentence representations with RVQ and models the resulting higher-level units autoregressively [LCM team et al., 2024]. STT likewise uses a fixed pre-trained semantic representation and offline quantization. Its remaining architectural question is whether the different chunking and corpus-grounded reconstruction path described in Section 3 adds measurable value over continuous-LCM and Quant-LCM-style comparators.
 
 ### 2.2 Alternative Tokenization Schemes
 
@@ -109,9 +123,13 @@ Several recent works have explored alternatives to BPE tokenization:
 
 **Hierarchical tokenization** [Nawrot et al., 2022] maintains multiple levels of granularity but still builds upon BPE or WordPiece as the base.
 
-None of these approaches shift to semantic chunks as the fundamental unit, nor do they leverage pre-trained embeddings for offline codebook construction.
+This landscape is broader than those token-free and patch-based examples. H-Net learns content- and context-dependent chunks end-to-end from bytes [Hwang et al., 2025], while SemToken uses contextual semantic embeddings and local semantic clustering to reduce token redundancy for long-context modeling [Liu & Yu, 2025]. These approaches differ from STT's fixed teacher/RVQ interface, but they predate the general motivation of moving computation from fixed BPE positions toward coarser semantic or content-aware units.
 
-### 2.3 Semantic Compression and Retrieval
+### 2.3 Semantic-Level Language Modeling and Compression
+
+The closest pre-cutoff comparator is **Large Concept Models (LCM)** [LCM team et al., 2024]. LCM treats sentences as concepts in the pre-trained SONAR representation space and trains autoregressive models at that semantic level. Its Quant-LCM variants discretize SONAR representations with Residual Vector Quantization and predict quantized semantic units. Therefore the mechanism "pre-trained semantic representation + RVQ + autoregressive higher-level language modeling" is prior art for STT, not its novelty claim.
+
+Earlier, Ippolito et al. [2020] modeled stories as sequences of pre-trained sentence embeddings, predicted the next sentence embedding, and selected the next sentence from fluent candidates. Kaiser et al. [2018] had already shown the more generic pattern of autoregressively modeling a shorter discrete latent sequence and decoding the full surface sequence from it. STT's candidate contribution must consequently be evaluated as a narrower **composition**, especially its overlapping fixed chunks and corpus-grounded reconstruction path, rather than as the invention of semantic-level or compressed latent language modeling.
 
 Recent work on LLM-based compression [Wingate et al., 2023; Chevalier et al., 2023] demonstrates that models can summarize text into compact representations while preserving key information. However, these approaches typically operate in natural language space and lack the discrete structure necessary for efficient Transformer training.
 
@@ -119,9 +137,9 @@ Retrieval-augmented generation (RAG) [Lewis et al., 2020] and memory-augmented t
 
 ### 2.4 Decoding and Reconstruction
 
-Traditional VQ-VAE models decode via learned neural decoders trained end-to-end [van den Oord et al., 2017]. More recent work on controlled generation explores using retrieval of real examples [Hashimoto et al., 2018] or copy mechanisms [Gu et al., 2016].
+Traditional VQ-VAE models decode via learned neural decoders trained end-to-end [van den Oord et al., 2017]. More recent work on controlled generation explores retrieval of real examples [Hashimoto et al., 2018] or copy mechanisms [Gu et al., 2016]. DReSD retrieves real candidate token sequences through contextual dense embeddings for speculative decoding [Gritta et al., 2025], and Ippolito et al. [2020] likewise select real fluent sentence candidates from predicted sentence-level representations. Retrieval-grounded continuation is therefore not new by itself.
 
-Our faithful decoding method combines aspects of both: we use retrieval of real medoids for each code but apply modern LLM-based normalization with carefully engineered prompts to ensure fluency without hallucination. This hybrid approach is particularly important for high-stakes domains where factual accuracy is paramount.
+STT's unresolved decoding proposal is the more specific chain **code -> multiple real corpus representatives -> coherent path selection -> overlap stitching -> constrained surface normalization**. The protocol below must test each stage against simpler alternatives, including a conventional learned decoder and nearest-representative-only retrieval. The normalizer is intended to improve surface fluency without adding content; whether it actually respects that constraint is an empirical question, not an architectural guarantee.
 
 ---
 
@@ -352,11 +370,11 @@ Typical weights: $\lambda_{\text{AR}} = 0.6$, $\lambda_{\text{MASK}} = 0.3$, $\l
 
 A critical component of STT is the ability to convert sequences of semantic codes back into readable, coherent text. Naive approaches (e.g., simply looking up the nearest chunk for each code and concatenating) produce text with severe artifacts: duplications at boundaries, incoherent transitions, and lexical inconsistencies.
 
-We propose a semantically grounded decoding pipeline that ensures:
-1. **Non-hallucination:** All content is grounded in real chunks from the corpus
-2. **Conceptual fidelity:** Core ideas and factual information are preserved
-3. **Coherence:** Smooth semantic transitions between chunks
-4. **Fluency:** Readable prose with correct grammar and punctuation
+We propose a semantically grounded decoding pipeline designed to target four properties that must be measured separately:
+1. **Grounding:** retrieved content comes from real corpus chunks, while retrieval errors remain possible
+2. **Conceptual fidelity:** core ideas and factual information should be preserved
+3. **Coherence:** path selection and stitching should improve transitions between chunks
+4. **Fluency:** constrained normalization should improve surface form without ungrounded additions
 
 Note that our goal is **semantic reconstruction**, not word-for-word replication. The output is a fluent paraphrase that preserves the essential meaning and factual content of the original text.
 
@@ -510,7 +528,7 @@ For production systems where LLM inference is too expensive or privacy-sensitive
 
 **Inference:** Given a code sequence, generate text autoregressively
 
-This decoder learns to reconstruct text closely matching the original corpus examples from codes, achieving high semantic fidelity without hallucination. It is deterministic, fast, and private. Depending on training data and capacity, it can achieve near-exact reconstruction or produce natural paraphrases.
+This decoder is a conventional learned-decoder baseline for reconstructing text from codes. Its fidelity, hallucination/error profile, latency, and privacy properties must be measured rather than assumed; depending on data and capacity it may reconstruct closely or produce lossy paraphrases. It is included precisely because the medoid/path/normalization composition must earn its additional complexity against a learned decoder.
 
 **Trade-off:** Requires training overhead and corpus-specific adaptation, but eliminates ongoing LLM costs.
 
@@ -576,7 +594,7 @@ Key hyperparameters and typical ranges:
 | $\alpha$ (local score) | 0.5-2.0 | 1.0 |
 | $\beta$ (coherence score) | 0.1-1.0 | 0.5 |
 
-**Ablation study (Section 5)** validates these choices.
+**Ablation study (Section 5)** is intended to test these choices; none is validated in this position paper.
 
 ---
 
@@ -595,10 +613,18 @@ results. We mark each prediction as such.*
 - **Legal corpus:** 50K legal documents (case law, statutes), 2GB
 - **Code:** 1M Python repositories from GitHub, 10GB
 
-**Baselines:**
-- **GPT-2 (BPE):** Standard Transformer with 50K BPE vocabulary
-- **Longformer:** Sparse attention Transformer for long contexts [Beltagy et al., 2020]
-- **SLED:** Sliding window encoding for long documents [Ivgi et al., 2023]
+**Baseline ladder (matched budget wherever applicable):**
+- **GPT-2 (BPE):** standard Transformer with a conventional subword stream
+- **Continuous sentence/concept LM:** an Ippolito/LCM-style higher-level semantic model without RVQ [Ippolito et al., 2020; LCM team et al., 2024]
+- **Quant-LCM/RVQ:** pre-trained semantic representations quantized with RVQ and modeled autoregressively [LCM team et al., 2024]; this is the principal comparator for the core semantic-code mechanism
+- **Semantic-token reduction:** a SemToken-style semantic compression baseline and an H-Net-style learned chunking baseline where practical [Liu & Yu, 2025; Hwang et al., 2025]
+- **Conventional learned decoder:** semantic codes decoded by a trained sequence-to-sequence decoder, without corpus-medoid path selection
+- **Nearest representative only:** retrieve the single nearest corpus representative per predicted code, without path search, stitching, or LLM normalization
+- **Medoid + path:** multiple medoids plus coherent path selection, without overlap stitching or normalization
+- **Medoid + path + stitching:** add overlap reconstruction but no final normalizer
+- **Full STT reconstruction:** medoid/path + overlap stitching + constrained normalization
+- **Longformer:** sparse attention Transformer for long contexts [Beltagy et al., 2020]
+- **SLED:** sliding-window long-document baseline [Ivgi et al., 2023]
 
 **Evaluation metrics:**
 
@@ -689,6 +715,8 @@ Ablations to be reported: number of medoids per code (1, 3, 5, 10);
 coherence weight β ∈ {0, 0.5, 1.0, 1.5}; with and without LCS merging;
 with and without LLM normalization.
 
+**Error decomposition.** Every reconstruction evaluation should attribute failures to the earliest identifiable stage rather than report only end-to-end text quality: (E1) semantic-code prediction, (E2) representative retrieval, (E3) path selection among valid representatives, (E4) overlap stitching, and (E5) additions/deletions or meaning changes introduced by normalization. A full-STT gain is scientifically meaningful only if it survives matched-budget comparison with Quant-LCM-style modeling and the simpler reconstruction baselines above; a gain caused solely by a more powerful final normalizer should not be attributed to semantic tokenization.
+
 ### 5.4 Falsifiable Predictions — Downstream Tasks
 
 **P5 — Long-document QA.** On a long-context QA benchmark (e.g.,
@@ -746,6 +774,10 @@ mechanisms would explain its advantages:
 *The comparisons below describe **design differences** between STT and
 prior approaches, not measured advantages.*
 
+**vs. LCM / Quant-LCM:** LCM is the principal scientific comparator for the core higher-level semantic modeling mechanism. It already uses a pre-trained semantic representation space for autoregressive concept modeling, and Quant-LCM already quantizes that space with RVQ. STT therefore does not claim those ingredients as novel. Its additional machinery must demonstrate value through the corpus-grounded reconstruction composition and the matched ablations in Section 5.
+
+**vs. sentence-level embedding LMs, H-Net, and SemToken:** sentence-level modeling over pre-trained embeddings [Ippolito et al., 2020] and semantic/content-aware chunking or token reduction [Hwang et al., 2025; Liu & Yu, 2025] occupy much of the broad "reason above BPE" motivation. STT differs in using fixed overlapping chunks, a fixed semantic teacher/RVQ interface, and a reconstruction path based on real corpus representatives; these are design differences whose utility remains to be tested.
+
 **vs. Traditional VQ-VAE:** STT uses a pre-trained teacher instead of
 end-to-end training, with the intent of leveraging existing semantic
 knowledge and shortening the iteration loop. It is also designed for
@@ -770,6 +802,8 @@ lossy summarization. Whether this design choice translates into
 better downstream performance is to be tested per Section 5.
 
 ### 6.3 Limitations and Failure Cases
+
+**Prior-art boundary and complexity burden:** semantic-level language modeling, pre-trained sentence embeddings, RVQ over a semantic representation space, and semantic/content-aware token reduction all predate STT. The position paper therefore makes no component-level novelty claim for them. The remaining candidate contribution is compositional, and the added medoid/path/stitching/normalization machinery should be rejected if it does not beat simpler Quant-LCM-style and learned-decoder controls at comparable compute, data, and reconstruction quality.
 
 **Embedding model dependence:** The quality of semantic codes is bounded by the teacher model's capabilities. Weaknesses in the embedding space (e.g., poor handling of negation, sarcasm, or cultural context) propagate to the codes.
 
@@ -844,11 +878,12 @@ Train and release open-source lightweight decoders for common domains (news, boo
 
 We have presented Semantic Tokenization Transformers (STT) as a
 **proposal** for language model pre-training that shifts the
-fundamental unit from subwords to semantic chunks. The contribution
-of this position paper is the design — combining pre-trained
-embeddings, residual vector quantization, and retrieval-based
-decoding via medoids — together with a falsifiable evaluation
-protocol (Section 5). We do not report measurements.
+fundamental unit from subwords to semantic chunks. The candidate contribution
+of this position paper is narrower than semantic-level modeling or RVQ themselves:
+it is the reconstruction-oriented composition of fixed overlapping semantic codes,
+real corpus medoids, coherent path selection, overlap stitching, and constrained
+surface normalization, together with a matched baseline ladder and falsifiable
+error decomposition (Section 5). We do not report measurements.
 
 The design predicts, and the protocol of Section 5 is intended to
 test, that STT should yield:
@@ -897,6 +932,8 @@ Défossez, A., et al. (2022). High fidelity neural audio compression. *arXiv pre
 
 Devlin, J., et al. (2019). BERT: Pre-training of deep bidirectional transformers for language understanding. *Proceedings of NAACL-HLT*, 4171-4186.
 
+Gritta, M., Xue, H., & Lampouras, G. (2025). DReSD: Dense Retrieval for Speculative Decoding. *Findings of the Association for Computational Linguistics: ACL 2025*. arXiv:2502.15572.
+
 Gray, R. (1984). Vector quantization. *IEEE ASSP Magazine*, 1(2), 4-29.
 
 Gu, J., et al. (2016). Incorporating copying mechanism in sequence-to-sequence learning. *Proceedings of ACL*, 1631-1640.
@@ -905,15 +942,25 @@ Guo, R., et al. (2020). Accelerating large-scale inference with anisotropic vect
 
 Hashimoto, T. B., et al. (2018). A retrieve-and-edit framework for predicting structured outputs. *Advances in Neural Information Processing Systems*, 31.
 
+Hwang, S., Wang, B., & Gu, A. (2025). Dynamic Chunking for End-to-End Hierarchical Sequence Modeling. arXiv:2507.07955.
+
+Ippolito, D., Grangier, D., Eck, D., & Callison-Burch, C. (2020). Toward Better Storylines with Sentence-Level Language Models. *Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics*, 7472-7478. doi:10.18653/v1/2020.acl-main.666.
+
 Ivgi, M., et al. (2023). Efficient long-text understanding with short-text models. *Transactions of the Association for Computational Linguistics*, 11, 284-299.
 
 Johnson, J., Douze, M., & Jégou, H. (2019). Billion-scale similarity search with GPUs. *IEEE Transactions on Big Data*, 7(3), 535-547.
 
 Joshi, M., et al. (2020). SpanBERT: Improving pre-training by representing and predicting spans. *Transactions of the Association for Computational Linguistics*, 8, 64-77.
 
+Kaiser, L., Bengio, S., Roy, A., Vaswani, A., Parmar, N., Uszkoreit, J., & Shazeer, N. (2018). Fast Decoding in Sequence Models Using Discrete Latent Variables. *Proceedings of the 35th International Conference on Machine Learning*, PMLR 80, 2390-2399.
+
 Kudo, T., & Richardson, J. (2018). SentencePiece: A simple and language independent approach to subword tokenization. *Proceedings of EMNLP: System Demonstrations*, 66-71.
 
+LCM team, Barrault, L., Duquenne, P.-A., Elbayad, M., Kozhevnikov, A., et al. (2024). Large Concept Models: Language Modeling in a Sentence Representation Space. arXiv:2412.08821.
+
 Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *Advances in Neural Information Processing Systems*, 33, 9459-9474.
+
+Liu, D., & Yu, Y. (2025). SemToken: Semantic-Aware Tokenization for Efficient Long-Context Language Modeling. arXiv:2508.15190.
 
 Loshchilov, I., & Hutter, F. (2019). Decoupled weight decay regularization. *International Conference on Learning Representations*.
 
