@@ -1,5 +1,5 @@
 ---
-type: "Adjudication"
+type: "Findings Record"
 title: "Joint adjudication rules for the two preregistered MaleCNS forecasts"
 description: "Event definitions fixed before any matched-drive or Qwen result exists, so that both frozen forecasts are scored against the same disambiguated events."
 tags: [malecns, forecast, preregistration, brier, adjudication]
