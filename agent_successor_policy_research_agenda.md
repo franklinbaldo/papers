@@ -1,4 +1,5 @@
 ---
+type: "Companion Note"
 okf_version: "0.2"
 title: "Agent Successor Policy — Research Agenda and Falsifiable Questions"
 description: "Open architectural questions and experiments for trajectory-conditioned semantic policies."
