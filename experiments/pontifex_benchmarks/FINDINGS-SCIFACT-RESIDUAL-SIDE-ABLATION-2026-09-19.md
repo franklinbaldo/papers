@@ -1,5 +1,5 @@
 ---
-type: "Findings"
+type: "Findings Record"
 title: "Pontifex SciFact residual-side ablation findings"
 description: "Held-out SciFact retrieval shows a positive non-additive two-sided residual interaction without a reliable full-map improvement over Procrustes."
 timestamp: 2026-09-19T10:43:00-04:00
