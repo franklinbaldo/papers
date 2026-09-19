@@ -14,11 +14,19 @@ Prospective protocol. No result is implied by this document.
 
 This protocol converts the methodological requirements recorded in `malecns_connectome_reservoir_tagging.md` and the reality-bounded ladder in `experiments/malecns_car_interface/README.md` into one executable confirmatory contract. The historical 512-neuron open-loop tagging run remains a diagnostic of that reduced formulation and is not evidence for or against the hypothesis tested here.
 
+The claim-specific prior-art/falsification boundary for this protocol is recorded in `../../audits/prior-art/malecns-whole-cns-closed-loop-2026-09-19.md`. Whole-adult-Drosophila connectome control, fixed connectome processing units, connectome reservoirs and degree-preserving topology controls all predate this protocol. The local question is therefore the narrower conjunction tested here, not whether connectomes can be used as controllers in general.
+
 ## Primary question
 
 Under the same lawful sensors, actuators, reward channels, trainable interface capacity, optimizer, curriculum, evaluation budget and seeds, does a frozen whole-MaleCNS connectome core produce better closed-loop control than matched null brains and a conventional controller?
 
 The primary scientific comparison is topology/dynamics-specific. Adapter success by itself is not evidence for MaleCNS.
+
+### Interpretation boundary
+
+The v1 frozen-core experiment tests whether MaleCNS is useful as a **connectome-constrained dynamical substrate under external learning**. It does not test a complete biological theory of how Drosophila learns from reinforcement. Known fly learning mechanisms include dopamine-gated synaptic plasticity and persistent neural traces; those mechanisms are not created merely by freezing a connectome graph and routing reward into biologically named populations.
+
+This distinction is deliberate. The first priority is to put the whole MaleCNS in a minimal closed control loop and observe what it can and cannot do. A biologically motivated local-plasticity model is a later discriminator if reward/credit assignment emerges as an observed failure mode, not a prerequisite for the first drive.
 
 ## Frozen substrate boundary
 
@@ -59,6 +67,8 @@ Collisions, wrong-way travel, route violation and other predeclared failures ent
 
 Expected reward omitted after a predictive state and relief after cessation of an aversive condition are separate event types in the run log. Their transduction may share or differ from appetitive/aversive pathways, but the choice must be frozen before test scoring.
 
+The appetitive/aversive/omission partition is an engineering abstraction with biological motivation, not a claim that fly reinforcement is a context-free signed scalar. Compartment, timing, movement and internal state can alter dopaminergic meaning; v1 records the simplification rather than pretending to model all of it.
+
 ### Internal state
 
 If motivational state, fatigue, novelty or uncertainty is supplied as an internal channel, it must be generated from past lawful observations/actions/rewards only. No hidden simulator variable may be relabeled as internal state.
@@ -83,7 +93,9 @@ Engineered shaping is permitted only when declared before training and separatel
 
 Reward near the target must retain pressure for precision rather than flatten prematurely. When continuous target error is available lawfully, use a monotone late-precision term that increases the marginal value of further improvement near the goal. The exact bounded transform and scale are frozen per stage; no post-test tuning is allowed.
 
-Temporal credit assignment is part of the trainable external interface unless a biologically motivated local mechanism is explicitly implemented. Delayed/terminal rewards must use the same credit-assignment algorithm in true and null brains.
+Do **not** pre-solve delayed reward before the first C1 run. Begin with the simplest causal immediate/proximal reward and the same minimal external training rule in true and null brains. Once the loop learns anything at all, measure temporal-credit tolerance with a preregistered reward-delay sweep rather than adding machinery speculatively.
+
+If delay becomes a measured failure mode, compare at least: (a) the same frozen core with an explicit external eligibility/credit mechanism, and (b) a separately declared biologically motivated local-plasticity/trace arm. Any such plasticity arm changes the scientific question and must be matched in the null brains. Success of the frozen v1 core must not be described as evidence that Drosophila's endogenous delayed-reward mechanism has been reproduced.
 
 ## Curriculum
 
@@ -124,7 +136,7 @@ Promotion between stages is based on validation episodes only. Test episodes are
 Every confirmatory stage must include, with identical external budgets:
 
 1. true whole-MaleCNS core;
-2. degree-preserving rewired connectome;
+2. degree-preserving rewired connectome controls;
 3. weight/sign-matched random/null connectome appropriate to the implementation;
 4. adapter-only/no-connectome control receiving the same lawful inputs;
 5. conventional controller or RL baseline appropriate to the stage.
@@ -132,6 +144,10 @@ Every confirmatory stage must include, with identical external budgets:
 Where feasible, also include a monolithic MaleCNS and the sensor-colony variant under matched total trainable parameters and compute.
 
 Null brains receive the same sensory populations by role, action adapter size, reward transduction contract, optimizer, curriculum schedule and stopping rule. Differences in convergence caused only by extra optimization or capacity are not topology evidence.
+
+For an exploratory C1 smoke test, one deterministic degree-preserving rewiring is sufficient to get the car moving and expose gross failures. **Confirmatory topology inference requires multiple independently generated degree-preserving rewired graphs**, shared/matched from-scratch initialization, and reporting between-rewiring variance; one lucky null graph is not a sufficient causal control.
+
+To test whether biological addressing itself matters, the confirmatory control set must also include a capacity-matched random/anatomically implausible assignment of the same lawful sensory/reward/action channels. If biological and random assignments are equivalent, the result supports generic graph geometry rather than biological pathway semantics.
 
 ## Data split and selection firewall
 
@@ -160,10 +176,10 @@ Internal state diagnostics are explanatory only and cannot substitute for task p
 
 A MaleCNS-specific advantage requires all of the following on the frozen primary endpoint:
 
-1. paired improvement over the degree-preserving rewired control;
+1. paired improvement over the distribution of degree-preserving rewired controls, not merely one convenient rewiring;
 2. paired improvement over the adapter-only/conventional baseline selected for the stage;
 3. the preregistered uncertainty interval for the primary contrast excludes zero and exceeds the declared minimum practical effect;
-4. the gain survives matched resource accounting;
+4. the gain survives matched resource, initialization and dynamical-scale accounting;
 5. no privileged-state or interface-capacity asymmetry explains the result.
 
 If the true connectome does not clear the matched null and conventional baselines, record the result as a failure of the tested formulation. Do not rescue the claim by increasing reservoir size, changing reward semantics or opening another test set after observing the result.
@@ -174,12 +190,14 @@ Each run must preserve:
 
 - MaleCNS source/provenance and graph hash;
 - exact biological-interface population map;
-- null-generation method and seed;
+- null-generation method, graph realization IDs and seeds;
+- initialization policy shared/matched across arms;
 - lawful sensor manifest and rates/latencies;
 - actuator manifest;
 - reward/value terms and biological/engineered classification;
 - trainable parameter counts per arm;
 - optimizer and temporal-credit settings;
+- recurrent/activity/spectral normalization or other dynamical-scale choices;
 - curriculum stage and promotion criterion;
 - train/validation/test manifests;
 - code commit, environment version and random seeds;
@@ -187,10 +205,12 @@ Each run must preserve:
 
 ## First execution target
 
-Execute C1 before any full-driving claim: one actuator, one signal, true whole-MaleCNS versus degree-preserving rewiring, adapter-only and a simple conventional controller. This isolates whether the closed biological core contributes anything before sensor fusion and multi-actuator complexity are introduced.
+Execute C1 before any full-driving claim: one actuator, one signal, true whole-MaleCNS versus a degree-preserving rewiring, adapter-only and a simple conventional controller. This is a fast exploratory loop whose job is to discover whether the closed biological core contributes anything before sensor fusion and multi-actuator complexity are introduced.
 
-A C1 failure is scientifically useful and blocks escalation until the failure mode is understood. A C1 success permits C2 but does not imply driving competence.
+Do not delay C1 to implement every confirmatory control or a complete fly-learning model. If the exploratory result is interesting enough to support a topology claim, rerun the frozen task with the full rewired ensemble, matched initialization/dynamical accounting and biological-address randomization before treating the effect as confirmatory.
+
+A C1 failure is scientifically useful and blocks escalation only long enough to identify the concrete failure mode. It should not trigger speculative addition of sensor-fusion, clock, trust or delayed-credit machinery unrelated to that observed failure. A C1 success permits C2 but does not imply driving competence.
 
 ## Claim boundary
 
-This protocol tests a whole-system closed-loop MaleCNS formulation. It does not assert that the connectome is a general reinforcement learner, that Drosophila reward biology is completely captured by the chosen proxy populations, or that success in simulation transfers to a road vehicle. Those stronger claims require separate evidence.
+This protocol tests a whole-system closed-loop MaleCNS formulation as a frozen connectome-constrained substrate under external learning. It does not assert that the connectome is a general reinforcement learner, that the frozen graph reproduces dopamine-gated Drosophila synaptic learning, that Drosophila reward biology is completely captured by the chosen proxy populations, or that success in simulation transfers to a road vehicle. Those stronger claims require separate evidence.
