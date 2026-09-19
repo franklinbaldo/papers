@@ -1,5 +1,5 @@
 ---
-type: "PreregisteredForecast"
+type: "Protocol"
 title: "MaleCNS semantic tagging — ChatGPT forecast before matched-drive/Qwen results"
 timestamp: 2026-09-14T18:30:00-04:00
 status: "frozen"
