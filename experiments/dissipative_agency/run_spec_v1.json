@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "experiment": "sparse-intelligence-dissipative-agency-v1",
+  "status": "preregistered-not-run",
+  "paper": "sparse_intelligence_dissipative_universe.md",
+  "seeds": [42, 1337, 2026],
+  "calibration_seeds": [7, 19, 73],
+  "substrate": {
+    "n_entities_max": 150000,
+    "domain_size": [1000.0, 1000.0],
+    "dimensions": 2,
+    "dt0": 0.005,
+    "r_local": 2.5,
+    "theta_bh": 0.6,
+    "performance_target_only": "10^5+ entities; no FPS claim until benchmarked"
+  },
+  "physics": {
+    "gamma_damping": 0.1,
+    "sigma_noise": 0.35,
+    "lambda_0_sweep": {
+      "min": 0.0,
+      "max": 120.0,
+      "rate": 0.05,
+      "direction": ["up", "down"],
+      "interpretation": "candidate influx control parameter; ignition and extinction thresholds are measured outcomes"
+    }
+  },
+  "entity_lifecycle": {
+    "theta_birth": 0.78,
+    "theta_death": 0.42,
+    "tau_birth_ticks": 150,
+    "tau_death_ticks": 80,
+    "requires_hysteresis": true,
+    "controller_energy_must_be_positive": true,
+    "note": "coherence/lifecycle gates determine persistence eligibility but do not by themselves certify agency"
+  },
+  "agency_certificate": {
+    "definition": "paired counterfactual pruning of reachable future volume in the fixed-dimensional entity macrostate",
+    "paired_noise_required": true,
+    "macrostate": {
+      "space": "q_A in R^d",
+      "maximum_dimension": 16,
+      "dimension_must_be_frozen_before_confirmatory_run": true,
+      "normalization": "per-coordinate center and scale fitted on calibration_seeds only, then frozen",
+      "no_dimension_expansion_after_outcome_inspection": true
+    },
+    "rollouts_per_branch": 256,
+    "primary_horizon_base_ticks": 100,
+    "supporting_horizons_base_ticks": [25, 500],
+    "estimator": {
+      "name": "regularized_gaussian_logdet_volume",
+      "formula": "0.5 * logdet(Sigma + epsilon * I)",
+      "epsilon": 0.0001,
+      "units": "nats in calibration-normalized macrostate coordinates"
+    },
+    "controlled_condition": "V_controlled,h from q_A rollouts under step(members, some(control), xi)",
+    "free_condition": "V_free,h from q_A rollouts under step(members, none, xi)",
+    "effect": "DeltaV_h = V_free,h - V_controlled,h",
+    "minimum_meaningful_effect_nats": 0.10,
+    "confidence": {
+      "method": "paired bootstrap over matched rollout indices, recomputing both covariance log-determinants",
+      "confidence_level": 0.95,
+      "bootstrap_replicates": 2000,
+      "primary_success_rule": "lower confidence bound for DeltaV at the primary horizon > 0.10 nats"
+    },
+    "power_and_precision_gate": {
+      "required_before_confirmatory_run": true,
+      "maximum_95ci_half_width_nats": 0.05,
+      "dimension_to_rollout_ratio_minimum": 16,
+      "rule": "calibration-only estimator study must satisfy both CI half-width and rollout/dimension gates; otherwise v1 is RED and any change to d, M, epsilon, effect threshold, or estimator requires run_spec_v2 before confirmatory outcomes are inspected"
+    },
+    "sensitivity_only_not_substitutable": [
+      "knn_entropy",
+      "covering_radius",
+      "trace_covariance"
+    ],
+    "crystal_guard": "future-volume contraction certifies causal control only; persistent agency additionally requires lifecycle viability, positive resource balance, nontrivial throughput, and action-cost accounting"
+  },
+  "multirate_clocks": {
+    "base_dt": 0.005,
+    "level_multipliers": {
+      "0": 1,
+      "1": 2,
+      "2": 4,
+      "3": 8
+    },
+    "status": "engineering baseline, not biological law"
+  },
+  "metabolism": {
+    "e0_endowment": 10.0,
+    "kappa_base": 0.05,
+    "kappa_action": 0.02,
+    "eta_harvest": 0.12,
+    "per_controller_instance_ledger_required": true,
+    "ledger_fields": [
+      "energy_start",
+      "energy_end",
+      "harvest",
+      "action_work",
+      "standing_cost",
+      "reserved_compute_charge",
+      "measured_normalized_compute",
+      "bath_exchange",
+      "dissipation",
+      "numerical_residual"
+    ]
+  },
+  "hypotheses": {
+    "H1_recursive_control": {
+      "claim": "recursive control produces preregistered persistence/hierarchy effects beyond passive, detection-only, and shallow-control universes",
+      "maleCNS_specific": false,
+      "may_succeed_if_H2_fails": true
+    },
+    "H2_connectome_topology": {
+      "claim": "MaleCNS topology differs from topology-destroying and matched synthetic controller controls under identical interfaces and charged budgets",
+      "primary_budget_rule": "matched topology controllers pay the same reserved compute charge per controller invocation and share the same action-energy ceiling; cheaper implementation runtime cannot create a metabolic advantage in H2",
+      "efficiency_secondary_measure": "actual normalized operation count and wall-clock cost are recorded per instance but are not allowed to alter the primary H2 energy charge",
+      "may_fail_if_H1_succeeds": true
+    }
+  },
+  "universes": [
+    {
+      "id": "A_passive",
+      "controller": null,
+      "recursive_promotion": false
+    },
+    {
+      "id": "B_detection_only",
+      "controller": "null_passive_cluster",
+      "recursive_promotion": false
+    },
+    {
+      "id": "C_shallow",
+      "controller": "malecns",
+      "max_controller_level": 1,
+      "recursive_promotion": false
+    },
+    {
+      "id": "D_recursive",
+      "controller": "malecns",
+      "recursive_promotion": true
+    }
+  ],
+  "controller_ablations": [
+    "malecns",
+    "degree_preserving_shuffled_malecns",
+    "random_recurrent_reservoir",
+    "compact_ctrnn",
+    "linear_controller",
+    "random_action_controller",
+    "none"
+  ],
+  "split_world": {
+    "eligibility": {
+      "minimum_level": 2,
+      "max_original_material_retention": 0.01,
+      "minimum_theseus_index": 10.0
+    },
+    "branches": [
+      "intact",
+      "severed",
+      "matched_noise",
+      "temporally_shuffled"
+    ],
+    "same_exogenous_noise_stream": true,
+    "shock": "standardized momentum impulse J_shock selected only by the frozen calibration procedure",
+    "stress_calibration": {
+      "candidate_impulse_magnitudes": [0.25, 0.5, 1.0, 2.0, 4.0],
+      "calibration_population": "eligible entities from calibration_seeds only",
+      "reference_branch": "severed",
+      "target_death_fraction_min": 0.20,
+      "target_death_fraction_max": 0.40,
+      "selection_rule": "choose the smallest candidate magnitude whose severed-branch death fraction falls in [0.20, 0.40]; freeze it before confirmatory runs",
+      "failure_rule": "if no candidate magnitude enters the target band, v1 remains RED and the grid may change only in run_spec_v2",
+      "purpose": "ensure the intervention battery reaches the viability boundary rather than testing only gentle perturbations"
+    },
+    "horizon_base_ticks": 500,
+    "measure": [
+      "reachable_future_volume",
+      "coherence",
+      "survival",
+      "recovery_time",
+      "energy",
+      "turnover",
+      "causal_signature"
+    ]
+  },
+  "theseus": {
+    "material_retention_metric": "S0",
+    "turnover_metric": "Theta_k",
+    "signature": {
+      "intervention_battery": [
+        "momentum impulses in +x, -x, +y, -y at the frozen boundary-stress magnitude",
+        "phase reset of 10 percent of immediate constituents",
+        "random constituent dropout of 5 percent"
+      ],
+      "response_sampling_base_ticks": [0, 10, 25, 50, 100, 250, 500],
+      "representation": "concatenated calibration-normalized q_A response trajectory over the frozen intervention battery",
+      "distance": "normalized Frobenius distance between response matrices",
+      "epsilon_calibration": "95th percentile of within-entity repeated-intervention distances on calibration_seeds only; value frozen before confirmatory turnover runs",
+      "no_posthoc_signature_change": true
+    },
+    "full_replacement_requires": [
+      "disjoint_initial_and_current_members",
+      "controller_instance_replaced",
+      "causal_signature_distance_below_frozen_epsilon"
+    ]
+  },
+  "figure_1": {
+    "panel_A": "D_max(lambda_0) upward vs downward sweep",
+    "panel_B": "G_k with neutral line G=1",
+    "panel_C": "Theta_k and S0 material retention",
+    "panel_D": "split-world intervention recovery curves"
+  },
+  "numerical_gates": {
+    "compare_barnes_hut_to_exact_small_n": true,
+    "trajectory_level_validation": true,
+    "repeat_key_results_with_stricter_theta_bh": true,
+    "exact_short_range_self_exclusion": true,
+    "closed_passive_limit_conservation_checks": [
+      "energy where the chosen passive integrator/force law implies conservation",
+      "linear momentum where boundary conditions and force law imply conservation",
+      "symmetry/invariance checks appropriate to the passive dynamics"
+    ],
+    "driven_energy_ledger_identity": "DeltaE = W_controller + W_bath - D + epsilon_numerical",
+    "per_controller_and_global_energy_ledgers_required": true,
+    "numerical_residual_tolerance_must_be_frozen_from_calibration_before_confirmatory_run": true,
+    "no_emergence_claim_before_numerical_validation": true
+  },
+  "claims_boundary": {
+    "v1_scale_claim": "recursive scale-consistency across simulator-defined discrete levels",
+    "explicitly_not_claimed": [
+      "continuous scale invariance",
+      "scale-free agency",
+      "automatic discovery of physically privileged coarse-graining scales"
+    ],
+    "deferred_experiment": "search over continuous or overlapping coarse-grainings with agency certification used to discover candidate causal boundaries"
+  },
+  "primary_outcomes": [
+    "lambda_ignite",
+    "lambda_extinguish",
+    "hysteresis_gap",
+    "D_max",
+    "G_k",
+    "Theta_k",
+    "S0",
+    "primary_horizon_DeltaV",
+    "causal_signature_similarity",
+    "split_world_survival_difference"
+  ],
+  "failure_modes_are_independent": [
+    "no statistically resolved counterfactual future-volume pruning",
+    "no metabolic advantage",
+    "no recursive advantage over shallow control",
+    "no causal-signature continuity after full turnover",
+    "no MaleCNS-specific topology effect"
+  ]
+}
