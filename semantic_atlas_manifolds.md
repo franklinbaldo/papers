@@ -46,6 +46,19 @@ This produces a testable alternative to a global-PCA picture of semantic space. 
 
 ---
 
+## Evidence boundary: manifold is a local model class, not the semantic ontology
+
+The manifold extension is evaluated as a **local/mesoscale model class** for observer-relative representation structure. Evidence that a chart, tangent model, diffusion operator, or geodesic improves prediction/control over matched point-space baselines supports that local model in the declared observer and gauge.
+
+It does **not** imply that:
+
+- all observers share the same manifold;
+- local charts glue into one observer-independent global manifold;
+- successful cross-model chart alignment proves metric identity;
+- a visually coherent rendered atlas is the underlying semantic world.
+
+Cross-observer claims require separately fitted calibration mappings and held-out relational tests. The default common evidence layer remains local relational invariants, consistent with [Semantic Observers](semantic_observers.md), [Semantic Atlas static geometry](semantic_atlas_static_geometry.md), and the [Semantic Systems Research Map](research/semantic-systems-map.md).
+
 ## 1. Scope: a follow-up, not a revision
 
 The original [Semantic Atlas](semantic_atlas.md) proposes a multiscale map of language-model dynamics expressed in a calibrated Semantic Reference Frame (SRF), with semantic quasars fixing an external reference geometry, an atlas estimating local transition and reachability structure, and a Semantic Servo providing closed-loop control.
