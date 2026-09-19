@@ -61,6 +61,31 @@ publication:
 `targets` is advisory and intentionally open-ended. The validator only
 requires it to be a list of non-empty strings.
 
+## Public Zenodo rights policy
+
+For a public Zenodo deposit under the repository's current authorial policy,
+the content remains publicly accessible while economic/commercial reuse is the
+restricted category. The current Zenodo metadata representation is therefore:
+
+```yaml
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    access_right: open
+    license: cc-by-nc-4.0
+```
+
+The license MUST still be explicit in each Zenodo-ready paper. This repository
+policy removes the need to re-open the same rights choice paper by paper, but
+it does not make a draft manuscript `ready` and does not resolve scientific,
+editorial, doctrinal, versioning, or archival-scope decisions.
+
+This policy records the present grant only. It does not encode an automatic
+relicensing date or a future ten-year change rule. Any later time-triggered
+additional grant must be recorded separately and explicitly rather than being
+inferred from `cc-by-nc-4.0`.
+
 ## External records
 
 External events are recorded under `records`:
