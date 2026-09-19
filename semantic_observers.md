@@ -870,6 +870,12 @@ Zhang, L., Yang, Q., & Agrawal, A. (2025). **Assessing and Learning Alignment of
 Zhu, T., Han, T., Guibas, L., Pătrăucean, V., & Ovsjanikov, M. (2026). **Dynamic Reflections: Probing Video Representations with Text Alignment.** ICLR 2026. arXiv:2511.02767. https://arxiv.org/abs/2511.02767
 
 
+## Shared cross-program evaluation contracts
+
+Multi-observer reconstruction claims use the programme-wide [Synergy Geometry protocol](experiments/synergy_geometry/protocol.md): best single observer, static weighted combination, interaction-capable combination, channel ablation/corruption, and shuffled correspondence controls must remain distinct.
+
+Observer informativeness and parallax also provide the held-out-observer validity layer for the prospective [Unified Semantic Identification Benchmark](experiments/unified_semantic_identification/protocol.md). In that benchmark, an observation channel is incrementally informative only when it improves a frozen held-out-observer structural endpoint over the nested arm without that channel.
+
 ## Research programme position
 
 - **Initiative:** Semantic Observers
