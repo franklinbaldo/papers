@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       paper:
-        description: "Repository-relative paper path (for example semantic_atlas.md)"
+        description: "Repository-relative paper path (for example semantic-atlas/semantic-atlas.md)"
         required: true
         type: string
       publish:
