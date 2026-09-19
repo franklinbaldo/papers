@@ -3,14 +3,14 @@ name: Semantic Atlas — natural future entropy
 on:
   pull_request:
     paths:
-      - "experiments/semantic_atlas/spectral_bottleneck/natural_future_entropy.py"
-      - "experiments/semantic_atlas/spectral_bottleneck/test_natural_future_entropy.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/natural_future_entropy.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/test_natural_future_entropy.py"
       - ".github/workflows/semantic-natural-future-entropy.yml"
   push:
     branches: [main]
     paths:
-      - "experiments/semantic_atlas/spectral_bottleneck/natural_future_entropy.py"
-      - "experiments/semantic_atlas/spectral_bottleneck/test_natural_future_entropy.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/natural_future_entropy.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/test_natural_future_entropy.py"
       - ".github/workflows/semantic-natural-future-entropy.yml"
   workflow_dispatch:
 
@@ -40,20 +40,20 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-          cache-dependency-path: experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+          cache-dependency-path: semantic-atlas/experiments/spectral_bottleneck/requirements-real.txt
 
       - name: Install CPU PyTorch
         run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install experiment dependencies
-        run: python -m pip install -r experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+        run: python -m pip install -r semantic-atlas/experiments/spectral_bottleneck/requirements-real.txt
 
       - name: Validate natural-text protocol
-        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        working-directory: semantic-atlas/experiments/spectral_bottleneck
         run: python -m unittest -v test_natural_future_entropy.py
 
       - name: Run label-free future-entropy experiment
-        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        working-directory: semantic-atlas/experiments/spectral_bottleneck
         run: >-
           python natural_future_entropy.py
           --model ${{ matrix.model }}
@@ -64,8 +64,8 @@ jobs:
       - name: Publish scientific summary
         if: always()
         run: |
-          if [ -f experiments/semantic_atlas/spectral_bottleneck/results-future-entropy-${{ matrix.id }}/summary.md ]; then
-            cat experiments/semantic_atlas/spectral_bottleneck/results-future-entropy-${{ matrix.id }}/summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f semantic-atlas/experiments/spectral_bottleneck/results-future-entropy-${{ matrix.id }}/summary.md ]; then
+            cat semantic-atlas/experiments/spectral_bottleneck/results-future-entropy-${{ matrix.id }}/summary.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload result artifact
@@ -73,5 +73,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: semantic-natural-future-entropy-${{ matrix.id }}
-          path: experiments/semantic_atlas/spectral_bottleneck/results-future-entropy-${{ matrix.id }}/
+          path: semantic-atlas/experiments/spectral_bottleneck/results-future-entropy-${{ matrix.id }}/
           if-no-files-found: error

@@ -3,12 +3,12 @@ name: Semantic spectral confidence — depth scan
 on:
   pull_request:
     paths:
-      - "experiments/semantic_atlas/spectral_bottleneck/confidence_depth_scan.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/confidence_depth_scan.py"
       - ".github/workflows/semantic-spectral-confidence-depth.yml"
   push:
     branches: [main]
     paths:
-      - "experiments/semantic_atlas/spectral_bottleneck/confidence_depth_scan.py"
+      - "semantic-atlas/experiments/spectral_bottleneck/confidence_depth_scan.py"
       - ".github/workflows/semantic-spectral-confidence-depth.yml"
   workflow_dispatch:
 
@@ -38,20 +38,20 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-          cache-dependency-path: experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+          cache-dependency-path: semantic-atlas/experiments/spectral_bottleneck/requirements-real.txt
 
       - name: Install CPU PyTorch
         run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install experiment dependencies
-        run: python -m pip install -r experiments/semantic_atlas/spectral_bottleneck/requirements-real.txt
+        run: python -m pip install -r semantic-atlas/experiments/spectral_bottleneck/requirements-real.txt
 
       - name: Validate inherited transfer corpus
-        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        working-directory: semantic-atlas/experiments/spectral_bottleneck
         run: python -m unittest -v test_confidence_transfer.py
 
       - name: Run full depth profile
-        working-directory: experiments/semantic_atlas/spectral_bottleneck
+        working-directory: semantic-atlas/experiments/spectral_bottleneck
         run: >-
           python confidence_depth_scan.py
           --model ${{ matrix.model }}
@@ -63,8 +63,8 @@ jobs:
       - name: Publish depth profile summary
         if: always()
         run: |
-          if [ -f experiments/semantic_atlas/spectral_bottleneck/results-depth-${{ matrix.id }}/summary.md ]; then
-            cat experiments/semantic_atlas/spectral_bottleneck/results-depth-${{ matrix.id }}/summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f semantic-atlas/experiments/spectral_bottleneck/results-depth-${{ matrix.id }}/summary.md ]; then
+            cat semantic-atlas/experiments/spectral_bottleneck/results-depth-${{ matrix.id }}/summary.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload depth profile artifact
@@ -72,5 +72,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: semantic-spectral-confidence-depth-${{ matrix.id }}
-          path: experiments/semantic_atlas/spectral_bottleneck/results-depth-${{ matrix.id }}/
+          path: semantic-atlas/experiments/spectral_bottleneck/results-depth-${{ matrix.id }}/
           if-no-files-found: error
