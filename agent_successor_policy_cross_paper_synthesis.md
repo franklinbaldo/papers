@@ -1,4 +1,5 @@
 ---
+type: "Companion Note"
 okf_version: "0.2"
 title: "Agent Successor Policy — Cross-Paper Synthesis"
 description: "Synthesis of architectural and experimental connections between ASP and the existing papers programme."
