@@ -94,6 +94,23 @@ The result is deliberately narrower than “trust gating is always better.” Wi
 
 The experiment also clarifies what probe-then-trust does **not** solve. It does not decide which specialist should be activated next: all eight extra probes are still paid for. It therefore isolates trust/admission from acquisition and should be combined later with a lawful acquisition policy rather than conflated with value-of-information.
 
+## Prior-art and falsification boundary
+
+A claim-level audit is recorded in [`audits/prior-art/malecns-probe-trust-2026-09-19.md`](../../audits/prior-art/malecns-probe-trust-2026-09-19.md).
+
+The audit materially narrows the interpretation of this run:
+
+- fault detection/isolation and GNSS RAIM/FDE have separated **measurement availability** from **measurement acceptance/exclusion** for decades, so the generic probe-versus-trust split is established prior art rather than a standalone novelty claim;
+- cross-sensor inconsistency/conflict without ground truth is also established; disagreement is useful evidence, but it does not identify which participant is wrong;
+- hard exclusion has known missed-detection and **wrong-exclusion** failure modes, so mean MAE alone is not enough for an actuator-facing integrity argument;
+- fixed fault thresholds have known sensitivity to system state and noise. The present `0.12` threshold was calibrated under one synthetic generator at 20% high-confidence faults and should be treated as a condition-specific baseline, not a transportable constant;
+- simultaneous/correlated faults are a separate isolation problem. Wrong modalities may agree with each other, defeating a simple cross-modal-consensus trust signal;
+- abrupt legitimate state changes can also create large disagreement with a stale reference estimate and therefore need explicit recovery/change-point tests.
+
+Accordingly, RUN11's defensible contribution is the **executed MaleCNS-specific matched-compute control result**: under this generator, separating paid acquisition from admission improves mean error once confidently wrong specialist reports are prevalent enough, while the same fixed gate is neutral or slightly harmful at low injected fault rates.
+
+The next learned gate should therefore be compared not only with `always trust` and this fixed gate, but also with an adaptive/statistically calibrated hard gate and a soft robust/reliability-weighted fusion baseline. It should be stress-tested under fault-prevalence/magnitude shift, confidence miscalibration, correlated faults, common upstream bias, asynchronous latency, and abrupt legitimate state transitions. If those simpler robust baselines match a learned gate, the added coordinator complexity has not earned attribution.
+
 ## Reality-bound status
 
 Decision-time trust inputs are only reports that have already been physically/digitally acquired: scalar value, declared confidence, timestamp-derived age and cross-modal agreement. In a real ordinary car these can be produced from phone/OBD/declared sensors and specialist processing latency.
