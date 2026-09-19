@@ -1,0 +1,58 @@
+name: Pontifex SciFact KNN null locality calibration K512
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - experiment/pontifex-red-1
+    paths:
+      - experiments/pontifex_benchmarks/scifact_knn_null_locality_calibration_k512.py
+      - experiments/pontifex_benchmarks/scifact_norm_knn_feasibility_ladder_k512.py
+      - .github/workflows/pontifex-scifact-knn-null-locality-calibration-k512.yml
+
+jobs:
+  calibrate-locality-k512:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Restore SciFact representation cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/pontifex-scifact
+            ~/.cache/huggingface
+          key: pontifex-scifact-knn-locality-calibration-k512-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-scifact-norm-knn-feasible-k512-v1-
+            pontifex-scifact-norm-local-k512-v1-
+            pontifex-scifact-norm-matched-k512-v1-
+            pontifex-scifact-coupling-k512-v1-
+      - name: Calibrate frozen KNN null locality on D_student only
+        run: |
+          uv run experiments/pontifex_benchmarks/scifact_knn_null_locality_calibration_k512.py \
+            --seed 20260919 \
+            --k 512 \
+            --n-null 63 \
+            --n-norm-strata 8 \
+            --cache-dir .cache/pontifex-scifact \
+            --output /tmp/pontifex-scifact-knn-null-locality-calibration-k512.json
+      - name: Publish result summary
+        if: always()
+        run: |
+          echo '## Pontifex SciFact KNN null locality calibration K=512' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f /tmp/pontifex-scifact-knn-null-locality-calibration-k512.json ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/pontifex-scifact-knn-null-locality-calibration-k512.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload calibration record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-scifact-knn-null-locality-calibration-k512
+          path: /tmp/pontifex-scifact-knn-null-locality-calibration-k512.json
+          if-no-files-found: error

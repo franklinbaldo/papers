@@ -1,0 +1,68 @@
+name: Pontifex STS-B Procrustes isometry audit
+
+on:
+  push:
+    branches:
+      - "experiment/pontifex-red-1"
+    paths:
+      - "experiments/pontifex_benchmarks/stsb_procrustes_isometry_audit.py"
+      - ".github/workflows/pontifex-stsb-procrustes-isometry-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EMB_CACHE: .cache/pontifex-stsb/stsb-minilm-mpnet-v1.npz
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Restore encoder weights
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: pontifex-stsb-models-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-stsb-models-v1-${{ runner.os }}
+            pontifex-models-v1-${{ runner.os }}-
+
+      - name: Restore encoded STS-B union
+        uses: actions/cache@v4
+        with:
+          path: .cache/pontifex-stsb
+          key: pontifex-stsb-emb-v1-minilm-mpnet-audit-${{ hashFiles('experiments/pontifex_benchmarks/stsb_procrustes_isometry_audit.py') }}
+          restore-keys: |
+            pontifex-stsb-emb-v1-minilm-mpnet-
+
+      - name: Run Procrustes isometry audit
+        run: |
+          uv run experiments/pontifex_benchmarks/stsb_procrustes_isometry_audit.py \
+            --budgets 8 16 32 64 128 256 \
+            --controls 16 \
+            --seed 20260919 \
+            --cache "$EMB_CACHE" \
+            --output /tmp/pontifex-stsb-procrustes-isometry-audit.json
+
+      - name: Publish summary
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-stsb-procrustes-isometry-audit.json ]; then
+            echo '## Pontifex STS-B Procrustes isometry audit' >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/pontifex-stsb-procrustes-isometry-audit.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-stsb-procrustes-isometry-audit
+          path: /tmp/pontifex-stsb-procrustes-isometry-audit.json
+          if-no-files-found: error

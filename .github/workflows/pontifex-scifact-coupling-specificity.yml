@@ -1,0 +1,49 @@
+name: Pontifex SciFact coupling-specificity null
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_benchmarks/scifact_coupling_specificity.py"
+      - "experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-COUPLING-SPECIFICITY-2026-09-19.md"
+      - ".github/workflows/pontifex-scifact-coupling-specificity.yml"
+  workflow_dispatch:
+
+jobs:
+  coupling-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Restore SciFact minimal representation cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/pontifex-scifact
+            ~/.cache/huggingface
+          key: pontifex-scifact-coupling-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-scifact-side-v1-
+            pontifex-scifact-transport-v2-
+            pontifex-scifact-transport-v1-
+
+      - name: Run label-sealed coupling-specificity null
+        run: |
+          uv run experiments/pontifex_benchmarks/scifact_coupling_specificity.py \
+            --k 256 \
+            --n-null 31 \
+            --seed 20260919 \
+            --cache-dir .cache/pontifex-scifact \
+            --output /tmp/pontifex-scifact-coupling-specificity.json
+
+      - name: Upload coupling-specificity record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-scifact-coupling-specificity
+          path: /tmp/pontifex-scifact-coupling-specificity.json
+          if-no-files-found: error

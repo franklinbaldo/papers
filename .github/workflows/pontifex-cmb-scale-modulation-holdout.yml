@@ -1,0 +1,72 @@
+name: Pontifex CMB scale-modulation held-out test
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_scale_modulation_holdout.py"
+      - "experiments/pontifex_torus/cmb_metric_spectrum_control.py"
+      - "experiments/pontifex_torus/cmb_metric_beam_ladder.py"
+      - "experiments/pontifex_torus/cmb_beam_scale_holdout.py"
+      - ".github/workflows/pontifex-cmb-scale-modulation-holdout.yml"
+  workflow_dispatch:
+    inputs:
+      dev_skies:
+        description: "Independent development base skies"
+        required: false
+        default: "8"
+      heldout_skies:
+        description: "Independent held-out base skies"
+        required: false
+        default: "16"
+
+jobs:
+  scale-modulation-holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run held-out scale-modulation test
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            DEV=8
+            HELD=16
+          else
+            DEV="${{ github.event.inputs.dev_skies || '8' }}"
+            HELD="${{ github.event.inputs.heldout_skies || '16' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_scale_modulation_holdout.py \
+            --dev-skies "$DEV" \
+            --heldout-skies "$HELD" \
+            --theta-per-cell 2 \
+            --bins 3 \
+            --beam-width-ratios 0.125 0.25 0.5 1.0 \
+            --baseline-width 0.5 \
+            --metric-k0 4 8 16 \
+            --ny 64 --nx 128 \
+            --rows /tmp/pontifex-cmb-scale-modulation-holdout.jsonl \
+            --output /tmp/pontifex-cmb-scale-modulation-holdout.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-scale-modulation-holdout.json ]; then
+            echo "## CMB scale-modulation held-out test" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-scale-modulation-holdout.json")); print(json.dumps({"frozen_rule":x["frozen_rule"],"heldout":x["heldout"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-scale-modulation-holdout
+          path: |
+            /tmp/pontifex-cmb-scale-modulation-holdout.json
+            /tmp/pontifex-cmb-scale-modulation-holdout.jsonl
+          if-no-files-found: warn

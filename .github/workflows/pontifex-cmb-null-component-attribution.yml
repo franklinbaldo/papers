@@ -1,0 +1,73 @@
+name: Pontifex CMB null-component attribution
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_null_component_attribution.py"
+      - "experiments/pontifex_torus/cmb_occlusion_mc.py"
+      - "experiments/pontifex_torus/cmb_matched_null_robustness_ladder.py"
+      - ".github/workflows/pontifex-cmb-null-component-attribution.yml"
+  workflow_dispatch:
+    inputs:
+      skies:
+        description: "Independent synthetic skies"
+        required: false
+        default: "12"
+      theta_per_cell:
+        description: "Fixed theta replicates per geometry x occlusion cell"
+        required: false
+        default: "4"
+      null_maps:
+        description: "Matched null maps per theta"
+        required: false
+        default: "128"
+
+jobs:
+  null-component-attribution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run score-component attribution
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SKIES=12
+            THETA_PER_CELL=4
+            NULL_MAPS=128
+          else
+            SKIES="${{ github.event.inputs.skies || '12' }}"
+            THETA_PER_CELL="${{ github.event.inputs.theta_per_cell || '4' }}"
+            NULL_MAPS="${{ github.event.inputs.null_maps || '128' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_null_component_attribution.py \
+            --skies "$SKIES" \
+            --theta-per-cell "$THETA_PER_CELL" \
+            --null-maps "$NULL_MAPS" \
+            --ny 64 --nx 128 \
+            --scores /tmp/pontifex-cmb-null-component-scores.jsonl \
+            --output /tmp/pontifex-cmb-null-component-attribution.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-null-component-attribution.json ]; then
+            echo "## CMB null-component attribution" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-null-component-attribution.json")); print(json.dumps({"design":x["design"],"tail_attribution":x["tail_attribution"],"by_component":x["by_component"],"zero_variance_rows":x["zero_variance_rows"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-null-component-attribution
+          path: |
+            /tmp/pontifex-cmb-null-component-attribution.json
+            /tmp/pontifex-cmb-null-component-scores.jsonl
+          if-no-files-found: warn

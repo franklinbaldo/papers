@@ -1,0 +1,72 @@
+name: Pontifex CMB radius-conditioned roughness holdout
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_radius_conditioned_roughness_holdout.py"
+      - "experiments/pontifex_torus/PAPER-ADDENDUM-CMB-RADIUS-CONDITIONED-ROUGHNESS-2026-09-19.md"
+      - ".github/workflows/pontifex-cmb-radius-conditioned-roughness.yml"
+  workflow_dispatch:
+    inputs:
+      dev_skies:
+        description: "Development base skies"
+        required: false
+        default: "12"
+      heldout_skies:
+        description: "Held-out base skies"
+        required: false
+        default: "24"
+
+jobs:
+  radius-conditioned-roughness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run radius-conditioned roughness holdout
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            DEV=12
+            HELD=24
+          else
+            DEV="${{ github.event.inputs.dev_skies || '12' }}"
+            HELD="${{ github.event.inputs.heldout_skies || '24' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_radius_conditioned_roughness_holdout.py \
+            --dev-skies "$DEV" \
+            --heldout-skies "$HELD" \
+            --theta-per-cell 8 \
+            --radius-bands 3 \
+            --roughness-bins 2 \
+            --beam-width-ratios 0.125 0.25 0.5 1.0 \
+            --baseline-width 0.5 \
+            --metric-k0 4 8 16 \
+            --ny 64 --nx 128 \
+            --seed 20260925 \
+            --rows /tmp/pontifex-cmb-radius-conditioned-roughness.jsonl \
+            --output /tmp/pontifex-cmb-radius-conditioned-roughness.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-radius-conditioned-roughness.json ]; then
+            echo "## CMB radius-conditioned roughness holdout" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-radius-conditioned-roughness.json")); print(json.dumps({"design":x["design"],"predictor_contract":x["predictor_contract"],"development":x["development"],"heldout":x["heldout"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-radius-conditioned-roughness
+          path: |
+            /tmp/pontifex-cmb-radius-conditioned-roughness.json
+            /tmp/pontifex-cmb-radius-conditioned-roughness.jsonl
+          if-no-files-found: warn

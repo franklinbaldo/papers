@@ -1,0 +1,75 @@
+name: Pontifex scale ladder
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/build_field_store.py"
+      - "experiments/pontifex_torus/virtual_resolution.py"
+      - ".github/workflows/pontifex-scale-ladder.yml"
+  workflow_dispatch:
+
+jobs:
+  scale:
+    strategy:
+      fail-fast: false
+      matrix:
+        texts: [500, 1000, 2000]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      FIELD_STORE: .cache/pontifex-scale/field-${{ matrix.texts }}-size1-allstarts-17.npz
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Restore one-lens scale field
+        id: field-cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/pontifex-scale
+          key: pontifex-scale-v1-${{ matrix.texts }}-size1-17-${{ hashFiles('experiments/pontifex_torus/build_field_store.py') }}
+
+      - name: Restore encoder weights on cold build
+        if: steps.field-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: pontifex-models-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-models-v1-${{ runner.os }}
+            pontifex-torus-${{ runner.os }}-
+            pontifex-red1-${{ runner.os }}-
+
+      - name: Build one-lens scale field
+        if: steps.field-cache.outputs.cache-hit != 'true'
+        run: |
+          uv run experiments/pontifex_torus/build_field_store.py \
+            --texts ${{ matrix.texts }} \
+            --positions 32 \
+            --sizes 1 \
+            --seed 17 \
+            --output "$FIELD_STORE"
+
+      - name: Run fixed-observation scale benchmark
+        run: |
+          uv run experiments/pontifex_torus/virtual_resolution.py \
+            --field-store "$FIELD_STORE" \
+            --seeds 0 1 2 3 4 5 6 7 8 9 \
+            --real-probes 4 8 \
+            --virtual-steps 16 128 \
+            --dense-train-grid 512 \
+            --harmonics 8 \
+            --anchors 16 \
+            --output "/tmp/pontifex-scale-${{ matrix.texts }}.json"
+
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-scale-${{ matrix.texts }}
+          path: /tmp/pontifex-scale-${{ matrix.texts }}.json
+          if-no-files-found: error

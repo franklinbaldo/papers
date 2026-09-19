@@ -1,0 +1,117 @@
+name: Pontifex MS MARCO transport pilot
+
+on:
+  push:
+    branches:
+      - "experiment/pontifex-red-1"
+    paths:
+      - "experiments/pontifex_benchmarks/msmarco_candidate_manifest.py"
+      - "experiments/pontifex_benchmarks/msmarco_transport_pilot.py"
+      - "experiments/pontifex_benchmarks/PROTOCOL-MSMARCO-PILOT-2026-09-19.md"
+      - ".github/workflows/pontifex-msmarco-pilot.yml"
+  workflow_dispatch:
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Freeze label-blind BM25 candidate manifest
+        run: |
+          uv run experiments/pontifex_benchmarks/msmarco_candidate_manifest.py \
+            --queries 256 \
+            --hits 100 \
+            --transport-docs 1024 \
+            --output /tmp/msmarco-pilot-manifest.json \
+            --pid-output /tmp/msmarco-pilot-pids.json
+
+      - name: Restore compact paired feature stores
+        id: feature-cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/pontifex-msmarco-pilot
+          key: pontifex-msmarco-pilot-v1-${{ hashFiles('experiments/pontifex_benchmarks/msmarco_candidate_manifest.py', 'experiments/pontifex_red1/extract_sample_store.py') }}
+
+      - name: Extract ANCE vectors from public mmap index
+        if: steps.feature-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p .cache/pontifex-msmarco-pilot
+          uv run experiments/pontifex_red1/extract_sample_store.py \
+            --index msmarco-v1-passage.ance \
+            --pid-file /tmp/msmarco-pilot-pids.json \
+            --output .cache/pontifex-msmarco-pilot/ance.npz
+
+      - name: Free ANCE full-index disk before TCT extraction
+        if: steps.feature-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import pathlib
+          import shutil
+
+          meta = json.load(open('.cache/pontifex-msmarco-pilot/ance.json'))
+          name = meta['index_dir_name']
+          roots = [pathlib.Path.home() / '.cache', pathlib.Path('/tmp')]
+          removed = []
+          for root in roots:
+              if not root.exists():
+                  continue
+              for path in root.rglob(name):
+                  if path.is_dir():
+                      shutil.rmtree(path, ignore_errors=True)
+                      removed.append(str(path))
+          print({'removed': removed})
+          PY
+          df -h /
+
+      - name: Extract TCT-ColBERT-v2 HN+ vectors from public mmap index
+        if: steps.feature-cache.outputs.cache-hit != 'true'
+        run: |
+          uv run experiments/pontifex_red1/extract_sample_store.py \
+            --index msmarco-v1-passage.tct_colbert-v2-hnp \
+            --pid-file /tmp/msmarco-pilot-pids.json \
+            --output .cache/pontifex-msmarco-pilot/tct.npz
+
+      - name: Run frozen transport pilot
+        run: |
+          uv run experiments/pontifex_benchmarks/msmarco_transport_pilot.py \
+            --manifest /tmp/msmarco-pilot-manifest.json \
+            --a-store .cache/pontifex-msmarco-pilot/ance.npz \
+            --b-store .cache/pontifex-msmarco-pilot/tct.npz \
+            --output /tmp/msmarco-transport-pilot.json
+
+      - name: Publish pilot summary
+        if: always()
+        run: |
+          echo '## Pontifex MS MARCO transport pilot' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f /tmp/msmarco-transport-pilot.json ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/msmarco-transport-pilot.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-msmarco-transport-pilot
+          path: |
+            /tmp/msmarco-pilot-manifest.json
+            /tmp/msmarco-pilot-pids.json
+            /tmp/msmarco-transport-pilot.json
+            .cache/pontifex-msmarco-pilot/ance.json
+            .cache/pontifex-msmarco-pilot/tct.json
+          if-no-files-found: warn

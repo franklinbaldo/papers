@@ -1,0 +1,82 @@
+name: Pontifex CMB synthetic sensitivity
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_sensitivity.py"
+      - "experiments/pontifex_torus/cmb_occlusion_mc.py"
+      - ".github/workflows/pontifex-cmb-sensitivity.yml"
+  workflow_dispatch:
+    inputs:
+      samples:
+        description: "Theta samples per trial"
+        required: false
+        default: "500"
+      null_maps:
+        description: "Matched-theta null maps per trial"
+        required: false
+        default: "8"
+      null_stat_repeats:
+        description: "Null repetitions for detection threshold"
+        required: false
+        default: "24"
+
+jobs:
+  sensitivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run synthetic sensitivity benchmark
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            uv run experiments/pontifex_torus/cmb_sensitivity.py \
+              --amplitudes 0 0.01 0.03 0.1 0.3 \
+              --families canonical warped offmodel \
+              --seeds 0 1 2 \
+              --samples 240 \
+              --null-maps 5 \
+              --null-stat-repeats 10 \
+              --ny 96 \
+              --nx 192 \
+              --output /tmp/pontifex-cmb-sensitivity.json \
+              --rows /tmp/pontifex-cmb-sensitivity.csv \
+              --plot /tmp/pontifex-cmb-sensitivity-power.png
+          else
+            uv run experiments/pontifex_torus/cmb_sensitivity.py \
+              --amplitudes 0 0.003 0.01 0.03 0.1 0.3 \
+              --families canonical warped offmodel \
+              --seeds 0 1 2 3 4 \
+              --samples "${{ github.event.inputs.samples || '500' }}" \
+              --null-maps "${{ github.event.inputs.null_maps || '8' }}" \
+              --null-stat-repeats "${{ github.event.inputs.null_stat_repeats || '24' }}" \
+              --output /tmp/pontifex-cmb-sensitivity.json \
+              --rows /tmp/pontifex-cmb-sensitivity.csv \
+              --plot /tmp/pontifex-cmb-sensitivity-power.png
+          fi
+
+      - name: Summarize sensitivity
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-sensitivity.json ]; then
+            echo "## CMB synthetic sensitivity" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-sensitivity.json")); print(json.dumps({"thresholds":x["thresholds"],"summary":x["summary"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-sensitivity
+          path: |
+            /tmp/pontifex-cmb-sensitivity.json
+            /tmp/pontifex-cmb-sensitivity.csv
+            /tmp/pontifex-cmb-sensitivity-power.png
+          if-no-files-found: warn

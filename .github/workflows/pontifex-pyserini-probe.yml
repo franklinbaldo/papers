@@ -1,0 +1,57 @@
+name: Pontifex Pyserini probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      index:
+        description: "Pyserini prebuilt FAISS alias"
+        required: false
+        default: "msmarco-v1-passage.tct_colbert-v2-hnp"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Runtime diagnostics
+        run: |
+          java -version
+          df -h /
+
+      - name: Probe prebuilt FAISS artifact
+        env:
+          INDEX_ALIAS: ${{ github.event.inputs.index || 'msmarco-v1-passage.tct_colbert-v2-hnp' }}
+        run: |
+          uv run experiments/pontifex_red1/pyserini_index_probe.py \
+            --index "$INDEX_ALIAS" \
+            --positions 0 42 8841822 \
+            --output /tmp/pyserini-index-probe.json
+
+      - name: Publish summary
+        if: always()
+        run: |
+          df -h / >> "$GITHUB_STEP_SUMMARY"
+          if [ -f /tmp/pyserini-index-probe.md ]; then
+            cat /tmp/pyserini-index-probe.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload probe artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyserini-index-probe
+          path: |
+            /tmp/pyserini-index-probe.json
+            /tmp/pyserini-index-probe.md
+          if-no-files-found: warn

@@ -1,0 +1,52 @@
+name: Pontifex torus return-to-T1
+
+on:
+  workflow_dispatch:
+
+jobs:
+  return-t1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Cache Hugging Face models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: pontifex-torus-${{ runner.os }}-${{ hashFiles('experiments/pontifex_torus/*.py') }}
+          restore-keys: |
+            pontifex-torus-${{ runner.os }}-
+            pontifex-red1-${{ runner.os }}-
+
+      - name: Run T1 -> T11 -> T1 protocol
+        run: |
+          uv run experiments/pontifex_torus/return_first_text.py \
+            --texts 120 \
+            --positions 8 \
+            --field-seed 17 \
+            --passes 16 \
+            --seeds 0 1 2 3 4 \
+            --heldout-count 30 \
+            --output /tmp/pontifex-return-t1.json
+
+      - name: Publish summary
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-return-t1.json ]; then
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/pontifex-return-t1.json >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-return-t1
+          path: /tmp/pontifex-return-t1.json
+          if-no-files-found: error

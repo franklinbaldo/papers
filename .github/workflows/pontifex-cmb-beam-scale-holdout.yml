@@ -1,0 +1,74 @@
+name: Pontifex CMB beam-scale held-out replication
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_beam_scale_holdout.py"
+      - "experiments/pontifex_torus/cmb_metric_beam_ladder.py"
+      - ".github/workflows/pontifex-cmb-beam-scale-holdout.yml"
+  workflow_dispatch:
+    inputs:
+      dev_skies:
+        description: "Development skies used only for width selection"
+        required: false
+        default: "6"
+      heldout_skies:
+        description: "Disjoint held-out skies"
+        required: false
+        default: "12"
+      null_maps:
+        description: "Matched nulls for frozen width on held-out skies"
+        required: false
+        default: "32"
+
+jobs:
+  beam-scale-holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run development/held-out beam-scale replication
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            DEV=6
+            HELDOUT=12
+            NULLS=32
+          else
+            DEV="${{ github.event.inputs.dev_skies || '6' }}"
+            HELDOUT="${{ github.event.inputs.heldout_skies || '12' }}"
+            NULLS="${{ github.event.inputs.null_maps || '32' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_beam_scale_holdout.py \
+            --dev-skies "$DEV" \
+            --heldout-skies "$HELDOUT" \
+            --theta-per-cell 3 \
+            --null-maps "$NULLS" \
+            --beam-width-ratios 0.125 0.25 0.5 1.0 \
+            --ny 64 --nx 128 \
+            --rows /tmp/pontifex-cmb-beam-scale-holdout.jsonl \
+            --output /tmp/pontifex-cmb-beam-scale-holdout.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-beam-scale-holdout.json ]; then
+            echo "## CMB beam-scale held-out replication" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-beam-scale-holdout.json")); print(json.dumps({"development_selection":x["development_selection"],"heldout_confirmation":x["heldout_confirmation"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-beam-scale-holdout
+          path: |
+            /tmp/pontifex-cmb-beam-scale-holdout.json
+            /tmp/pontifex-cmb-beam-scale-holdout.jsonl
+          if-no-files-found: warn

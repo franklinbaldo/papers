@@ -1,0 +1,67 @@
+name: Pontifex CMB metric-spectrum control
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_metric_spectrum_control.py"
+      - ".github/workflows/pontifex-cmb-metric-spectrum-control.yml"
+  workflow_dispatch:
+    inputs:
+      skies:
+        description: "Independent base sky seeds"
+        required: false
+        default: "12"
+      theta_per_cell:
+        description: "Theta replicates per geometry x occlusion cell"
+        required: false
+        default: "2"
+
+jobs:
+  metric-spectrum-control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run metric-isotropic spectrum control
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SKIES=12
+            THETA_PER_CELL=2
+          else
+            SKIES="${{ github.event.inputs.skies || '12' }}"
+            THETA_PER_CELL="${{ github.event.inputs.theta_per_cell || '2' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_metric_spectrum_control.py \
+            --skies "$SKIES" \
+            --theta-per-cell "$THETA_PER_CELL" \
+            --beam-width-ratios 0.125 0.25 0.5 1.0 \
+            --metric-k0 4 8 16 \
+            --frozen-width 0.5 \
+            --ny 64 --nx 128 \
+            --rows /tmp/pontifex-cmb-metric-spectrum-control.jsonl \
+            --output /tmp/pontifex-cmb-metric-spectrum-control.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-metric-spectrum-control.json ]; then
+            echo "## CMB metric-spectrum control" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-metric-spectrum-control.json")); print(json.dumps(x["conditions"], indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-metric-spectrum-control
+          path: |
+            /tmp/pontifex-cmb-metric-spectrum-control.json
+            /tmp/pontifex-cmb-metric-spectrum-control.jsonl
+          if-no-files-found: warn

@@ -1,0 +1,86 @@
+name: Pontifex CMB occlusion Monte Carlo
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_occlusion_mc.py"
+      - "experiments/pontifex_torus/cmb_matched_null_calibration.py"
+      - ".github/workflows/pontifex-cmb-occlusion-mc.yml"
+  workflow_dispatch:
+    inputs:
+      samples:
+        description: "Intervention parameter samples"
+        required: false
+        default: "10000"
+      null_maps:
+        description: "Cheap null maps used for calibration"
+        required: false
+        default: "8"
+      refine_top:
+        description: "First-pass extremes to refine"
+        required: false
+        default: "20"
+      refine_null_maps:
+        description: "Matched-theta null maps for each refined candidate"
+        required: false
+        default: "64"
+
+jobs:
+  cmb-occlusion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run synthetic intervention-space smoke
+        run: |
+          uv run experiments/pontifex_torus/cmb_occlusion_mc.py \
+            --mode synthetic \
+            --samples "${{ github.event_name == 'pull_request' && '600' || github.event.inputs.samples || '3000' }}" \
+            --null-maps "${{ github.event_name == 'pull_request' && '4' || github.event.inputs.null_maps || '8' }}" \
+            --refine-top "${{ github.event_name == 'pull_request' && '12' || github.event.inputs.refine_top || '20' }}" \
+            --refine-null-maps "${{ github.event_name == 'pull_request' && '48' || github.event.inputs.refine_null_maps || '64' }}" \
+            --seed 20260918 \
+            --output /tmp/pontifex-cmb-occlusion-mc.json \
+            --rows /tmp/pontifex-cmb-occlusion-mc.csv \
+            --null-scores /tmp/pontifex-cmb-null-scores.jsonl \
+            --plots /tmp/pontifex-cmb-occlusion-plots
+
+      - name: Audit small-ensemble matched-null calibration
+        run: |
+          uv run experiments/pontifex_torus/cmb_matched_null_calibration.py \
+            --rows /tmp/pontifex-cmb-occlusion-mc.csv \
+            --output /tmp/pontifex-cmb-null-calibration.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-occlusion-mc.json ]; then
+            echo "## CMB occlusion parameter Monte Carlo" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-occlusion-mc.json")); print(json.dumps({k:x[k] for k in ("mode","samples","null_maps","raw_response","matched_null_excess","matched_null_z","adaptive_refinement","phase_active_first_harmonic_abs_corr","parameter_space")}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f /tmp/pontifex-cmb-null-calibration.json ]; then
+            echo "## Small-ensemble null calibration" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-null-calibration.json")); print(json.dumps({"headline_discriminant":x["headline_discriminant"],"predictive_student_t":x["predictive_student_t"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-occlusion-mc
+          path: |
+            /tmp/pontifex-cmb-occlusion-mc.json
+            /tmp/pontifex-cmb-occlusion-mc.csv
+            /tmp/pontifex-cmb-null-scores.jsonl
+            /tmp/pontifex-cmb-null-calibration.json
+            /tmp/pontifex-cmb-occlusion-plots/
+          if-no-files-found: warn

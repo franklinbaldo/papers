@@ -1,0 +1,72 @@
+name: Pontifex CMB radius assignment permutation holdout
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_radius_assignment_permutation_holdout.py"
+      - "experiments/pontifex_torus/PAPER-ADDENDUM-CMB-RADIUS-ASSIGNMENT-PERMUTATION-2026-09-19.md"
+      - ".github/workflows/pontifex-cmb-radius-assignment-permutation.yml"
+  workflow_dispatch:
+    inputs:
+      dev_skies:
+        description: "Development base skies"
+        required: false
+        default: "12"
+      heldout_skies:
+        description: "Held-out base skies"
+        required: false
+        default: "24"
+
+jobs:
+  radius-assignment-permutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run radius assignment permutation holdout
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            DEV=12
+            HELD=24
+          else
+            DEV="${{ github.event.inputs.dev_skies || '12' }}"
+            HELD="${{ github.event.inputs.heldout_skies || '24' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_radius_assignment_permutation_holdout.py \
+            --dev-skies "$DEV" \
+            --heldout-skies "$HELD" \
+            --theta-per-cell 8 \
+            --radius-bands 3 \
+            --permutations 255 \
+            --beam-width-ratios 0.125 0.25 0.5 1.0 \
+            --baseline-width 0.5 \
+            --metric-k0 4 8 16 \
+            --ny 64 --nx 128 \
+            --seed 20260926 \
+            --rows /tmp/pontifex-cmb-radius-assignment-permutation.jsonl \
+            --output /tmp/pontifex-cmb-radius-assignment-permutation.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-radius-assignment-permutation.json ]; then
+            echo "## CMB radius assignment permutation holdout" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-radius-assignment-permutation.json")); print(json.dumps({"design":x["design"],"development":x["development"],"permutation_null":x["permutation_null"],"heldout":x["heldout"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-radius-assignment-permutation
+          path: |
+            /tmp/pontifex-cmb-radius-assignment-permutation.json
+            /tmp/pontifex-cmb-radius-assignment-permutation.jsonl
+          if-no-files-found: warn

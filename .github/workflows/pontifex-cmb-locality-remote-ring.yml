@@ -1,0 +1,71 @@
+name: Pontifex CMB matched remote-ring locality control
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_torus/cmb_locality_remote_ring_holdout.py"
+      - ".github/workflows/pontifex-cmb-locality-remote-ring.yml"
+  workflow_dispatch:
+    inputs:
+      dev_skies:
+        description: "Development base skies"
+        required: false
+        default: "12"
+      heldout_skies:
+        description: "Held-out base skies"
+        required: false
+        default: "24"
+
+jobs:
+  locality-remote-ring:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Run matched remote-ring locality control
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            DEV=12
+            HELD=24
+          else
+            DEV="${{ github.event.inputs.dev_skies || '12' }}"
+            HELD="${{ github.event.inputs.heldout_skies || '24' }}"
+          fi
+          uv run experiments/pontifex_torus/cmb_locality_remote_ring_holdout.py \
+            --dev-skies "$DEV" \
+            --heldout-skies "$HELD" \
+            --theta-per-cell 3 \
+            --bins 3 \
+            --beam-width-ratios 0.125 0.25 0.5 1.0 \
+            --baseline-width 0.5 \
+            --metric-k0 4 8 16 \
+            --remote-shift 0.5 \
+            --ny 64 --nx 128 \
+            --seed 20260921 \
+            --rows /tmp/pontifex-cmb-locality-remote-ring.jsonl \
+            --output /tmp/pontifex-cmb-locality-remote-ring.json
+
+      - name: Summarize
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-cmb-locality-remote-ring.json ]; then
+            echo "## CMB matched remote-ring locality control" >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            python -c 'import json; x=json.load(open("/tmp/pontifex-cmb-locality-remote-ring.json")); print(json.dumps({"design":x["design"],"development":x["development"],"heldout":x["heldout"]}, indent=2))' >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-cmb-locality-remote-ring
+          path: |
+            /tmp/pontifex-cmb-locality-remote-ring.json
+            /tmp/pontifex-cmb-locality-remote-ring.jsonl
+          if-no-files-found: warn

@@ -21,10 +21,12 @@ every pull request.
 * [Technical Paper](types/technical-paper.md) - English methodology/tooling papers (pipeline, provenance, ESHTR, STT).
 * [Scientific Position Paper](types/scientific-position-paper.md) - research-grounded natural-science hypotheses, syntheses, and falsifiable research agendas.
 * [Empirical Paper](types/empirical-paper.md) - pre-registered empirical evaluation design.
+* [Experiment Report](types/experiment-report.md) - executed experiment or ladder report with method, results, diagnostics, and bounded interpretation.
 * [Synthesis Paper](types/synthesis-paper.md) - capstone paper summarizing programme coherence.
 * [Alignment Paper](types/alignment-paper.md) - general AI alignment position paper.
 * [Interpretability Paper](types/interpretability-paper.md) - general interpretability position paper.
 * [Companion Note](types/companion-note.md) - subordinate supporting document for a paper.
+* [Philosophy Paper](types/philosophy-paper.md) - conceptual/philosophical argument kept distinct from empirical scientific claims.
 * [Adversarial Critique](types/adversarial-critique.md) - living attack thread against a paper's thesis.
 * [Adversarial Blog](types/adversarial-blog.md) - dated long-form record of one substantive adversarial round.
 * [Supportive Defense](types/supportive-defense.md) - living defense thread for a paper's thesis.
