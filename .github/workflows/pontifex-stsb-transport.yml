@@ -1,0 +1,67 @@
+name: Pontifex STS-B transport benchmark
+
+on:
+  push:
+    branches:
+      - "experiment/pontifex-red-1"
+    paths:
+      - "experiments/pontifex_benchmarks/stsb_transport.py"
+      - ".github/workflows/pontifex-stsb-transport.yml"
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EMB_CACHE: .cache/pontifex-stsb/stsb-minilm-mpnet-v1.npz
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Restore encoder weights
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: pontifex-stsb-models-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-stsb-models-v1-${{ runner.os }}
+            pontifex-models-v1-${{ runner.os }}-
+
+      - name: Restore encoded STS-B union
+        uses: actions/cache@v4
+        with:
+          path: .cache/pontifex-stsb
+          key: pontifex-stsb-emb-v1-minilm-mpnet-${{ hashFiles('experiments/pontifex_benchmarks/stsb_transport.py') }}
+          restore-keys: |
+            pontifex-stsb-emb-v1-minilm-mpnet-
+
+      - name: Run external STS-B benchmark
+        run: |
+          uv run experiments/pontifex_benchmarks/stsb_transport.py \
+            --budgets 8 16 32 64 128 256 \
+            --seed 20260919 \
+            --cache "$EMB_CACHE" \
+            --output /tmp/pontifex-stsb-transport.json
+
+      - name: Publish summary
+        if: always()
+        run: |
+          if [ -f /tmp/pontifex-stsb-transport.json ]; then
+            echo '## Pontifex STS-B transport benchmark' >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/pontifex-stsb-transport.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload benchmark artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-stsb-transport
+          path: /tmp/pontifex-stsb-transport.json
+          if-no-files-found: error
