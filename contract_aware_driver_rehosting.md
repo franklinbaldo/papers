@@ -4,18 +4,35 @@ title: "Contract-Aware Shadow Checking for User-Mode Windows Driver Rehosting"
 description: "A methodology for observing declared-output-boundary crossings and invalid completions in a calibrated driver-rehosting harness, framed by privilege ceilings and researcher affordance floors."
 tags: [driver-rehosting, windows, litebox, shadow-checking, security-research, methodology, dual-use]
 timestamp: 2026-08-13T00:00:00-04:00
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
 # Contract-Aware Shadow Checking for User-Mode Windows Driver Rehosting
 
-> **Position and methodology paper.** LiteBox capability brokering and two
-> read-only Windows backends have been demonstrated on unmerged draft commit
-> [`a74e5e2`](https://github.com/franklinbaldo/litebox/commit/a74e5e2d132a1981c6a5934e722000f07692526c).
-> Windows `.sys` loading, a synthetic NT ABI, shadow checking, and third-party
-> evaluation remain specifications or incomplete scaffolds. The current M1–M7
-> scaffold has not passed this paper's calibration or containment gates. This
-> paper reports no driver vulnerability. Empirical results must revise it rather
-> than be implied retroactively.
+> **Position and methodology paper — frozen v0.1.** LiteBox capability
+> brokering and two read-only Windows backends were demonstrated on unmerged
+> draft commit [`a74e5e2`](https://github.com/franklinbaldo/litebox/commit/a74e5e2d132a1981c6a5934e722000f07692526c).
+> The later M1–M7 rehosting implementation remains an open, unmerged scaffold in
+> LiteBox PR #24 (head `b8b5fd0fdf58f782ba84a48aadb406a260b541a3` as inspected for this freeze),
+> based on LiteBox main `7af6242f0729c1f0224161c7cec0afc114994cf6`.
+> Windows `.sys` loading, the synthetic NT ABI, calibrated shadow checking,
+> containment, and third-party evaluation therefore remain proposed or
+> unvalidated. This paper reports no driver vulnerability. A claim-specific
+> prior-art audit is frozen at
+> [`audits/prior-art/contract-aware-driver-rehosting-2026-09-17.md`](audits/prior-art/contract-aware-driver-rehosting-2026-09-17.md).
 
 ## Abstract
 
@@ -30,21 +47,25 @@ the repository's [affordance-restriction framework](affordance_restriction.md);
 it is intentionally distinct from LiteBox's capability-based access registry.
 
 The primary technical proposal is a fixture-driven SystemBuffer Shadow Checker
-for synthetic `METHOD_BUFFERED` requests. Its contribution is not merely driver
-rehosting, but **contract-aware semantic checking**: observing accesses that are
-physically memory-safe yet cross a logical boundary declared by the calling
-contract. The rehosting harness is the experimental vehicle that makes those
-otherwise implicit boundaries cheap to instrument and replay.
+for synthetic `METHOD_BUFFERED` requests. Prior work already establishes the
+component ideas of logical/sub-object bounds inside a larger valid allocation
+(AddressSanitizer contiguous-container annotations; EffectiveSan), the Windows
+buffered-I/O contract itself, and user-mode/emulated Windows driver analysis
+(x64dbg/`driver_unpacking`; Mandiant Speakeasy). The candidate contribution is
+therefore narrower: a Windows-specific combination that tracks both the physical
+`max(InputBufferLength, OutputBufferLength)` allocation and the caller-declared
+`OutputBufferLength`, emits a raw event when a write crosses only the latter,
+refuses to promote that event to an output overrun without independent output-
+intent evidence, requires benign shared-buffer negative controls, and separates
+fixture calibration from vulnerability confirmation.
 
-The checker records writes that cross the declared output boundary while
-remaining inside the shared physical allocation. Because that allocation also
-contains input, such a crossing is an E0 shadow event, not automatically a
-Windows-contract violation. Promotion to a confirmed output overrun requires an
-IOCTL-specific schema, source-known toy, or execution phase that establishes
-output intent. By contrast, `IoStatus.Information > OutputBufferLength` is a
-distinct invalid-completion event. The trace checker is demonstrable without
-loading or executing a `.sys`; typed serializable fixtures decouple it from the
-PE loader and synthetic NT ABI.
+Because `SystemBuffer` contains both input and output, a declared-boundary
+crossing is an E0 sensor event, not automatically a Windows-contract violation.
+Promotion to `OUTPUT_OVERRUN` requires an IOCTL-specific schema, source-known
+toy, phase/taint evidence, or an equivalent basis for output intent. By
+contrast, `IoStatus.Information > OutputBufferLength` is a distinct invalid-
+completion event. The trace checker is specified as independently exercisable
+over typed fixtures, decoupled from broad `.sys` compatibility.
 
 A PE loader, minimal NT ABI, instrumented allocator, explicit IRQL state,
 isolation, calibration, abandonment, and coordinated-disclosure gates support
@@ -90,7 +111,7 @@ programs in a Windows user-mode process. It adds a capability registry, profiles
 unavailable capabilities. CPU, SIMD, memory, clocks, and threads are inherent;
 brokered resources require policy.
 
-Two read-only brokers have been demonstrated on draft commit `a74e5e2`:
+Two read-only brokers were demonstrated on draft commit `a74e5e2`:
 `hostinfo` returns architecture and logical-processor data, and `power` queries
 AC/battery state through the Windows power stack. An ELF toy also executed
 `CPUID`, `RDTSC`, and `RDRAND` with brokered hardware set to `none`. These
@@ -109,11 +130,12 @@ flowchart LR
     M --> C[Captured output +<br/>trapped operations]
 ```
 
-The figure shows the proposed transformation boundary without implying that the stages are already demonstrated: the current evidence supports the LiteBox substrate, while `.sys` loading, the synthetic ABI, and shadow checking remain gated artifacts to be validated independently.
+**Figure 1.** *Proposed transformation boundary. The frozen evidence supports
+the LiteBox substrate only; `.sys` loading, the synthetic ABI, and calibrated
+shadow checking remain gated artifacts.*
 
-That pipeline does not impose a demonstration dependency. Every boundary has a
-typed, serializable fixture so that each module can be exercised without the
-previous stage:
+Every boundary has a typed, serializable fixture so that each module can be
+exercised without the previous stage:
 
 | Module | Fixture | Sole evidence authority |
 |---|---|---|
@@ -125,16 +147,16 @@ previous stage:
 | M6 IRQL model | transition and access sequence | IRQL contract event |
 | M7 isolation | payload plus resource policy | contained exit and structured log |
 
-M5 is therefore a standalone pure sensor over a trace. Its seeded and negative
-cases execute no PE and no hostile code. M7 gates any module that executes real
-native code; M1–M6 can still be reviewed against synthetic fixtures. This
-decomposition is tracked by LiteBox issue #16 and children #17–#23 [21]. The
-current implementation PR #24 is an unvalidated scaffold, not evidence that
-these contracts have been met [22].
+M5 is therefore specified as a standalone pure sensor over a trace. Its seeded
+and negative cases require no PE and no hostile code. M7 gates any module that
+executes real native code; M1–M6 can still be reviewed against synthetic
+fixtures. This decomposition is tracked by LiteBox issue #16 and children
+#17–#23 [21]. The current implementation PR #24 is an unvalidated scaffold, not
+evidence that these contracts have been met [22].
 
-Unresolved imports and external effects fail closed. The first executable
-target is written specifically for calibration. Third-party binaries remain
-excluded until the gate in Section 7 passes.
+Unresolved imports and external effects fail closed. The first executable target
+is written specifically for calibration. Third-party binaries remain excluded
+until the gate in Section 7 passes.
 
 ## 3. Minimal synthetic NT model
 
@@ -177,9 +199,13 @@ For a synthetic `METHOD_BUFFERED` request, the modeled I/O manager allocates
 and the declared caller-output boundary are different. With input length 64 and
 output length 8, a 32-byte write may remain inside the allocation while crossing
 the declared output boundary. A trailing guard page alone cannot observe that
-crossing.
+crossing [3, 4].
 
-The two bounds answer different questions. The physical allocation answers whether the write is memory-safe in the synthetic buffer; the caller-declared output length answers whether the write crosses the semantic output boundary. The example below shows why those predicates can disagree without yet proving an overrun.
+The two bounds answer different questions. The physical allocation answers
+whether the write is memory-safe in the synthetic buffer; the caller-declared
+output length answers whether the write crosses the API-declared output extent.
+The example below shows why those predicates can disagree without yet proving
+an overrun.
 
 ```mermaid
 flowchart LR
@@ -193,14 +219,21 @@ flowchart LR
     N --> P
 ```
 
-A guard page can detect the `PHYSICAL_OVERFLOW` branch, but not the E0 branch; promotion of E0 to `OUTPUT_OVERRUN` still requires the independent output-intent evidence described below.
+A guard page can detect the `PHYSICAL_OVERFLOW` branch, but not the E0 branch;
+promotion of E0 to `OUTPUT_OVERRUN` still requires the independent output-intent
+evidence described below.
 
-This distinction motivates a broader semantic-safety view. Conventional memory
-instrumentation asks whether an access remains inside the allocation. Contract-
-aware shadow checking additionally asks whether a physically valid access
-crosses a boundary declared by the API contract. The latter is not itself proof
-of a bug; it is a separately observable event that can be promoted only when
-operation-specific evidence establishes the semantic role of the write.
+The broad idea of enforcing a logical or sub-object bound inside a larger valid
+allocation is **not** new. AddressSanitizer contiguous-container annotations can
+poison the unused tail between a vector's logical end and capacity while the
+storage remains allocated [25], and EffectiveSan instruments sub-object bounds
+inside enclosing objects [26]. The Windows contract itself is likewise
+established: Microsoft documents the shared `SystemBuffer`, distinct input and
+output lengths, and allocation to the larger length [3]. The candidate
+contribution here is the operation-specific combination of that Windows dual
+bound with an ambiguity-aware promotion rule: a crossing of the output-length
+boundary is separately observable but is not called an output violation until
+independent evidence establishes the semantic role of the write.
 
 The checker records every write interval `W_i = [o_i, o_i + s_i)` using checked
 arithmetic and computes `H = max_i(o_i + s_i)`. It emits three distinct raw
@@ -221,9 +254,12 @@ an output overrun. Promotion to `OUTPUT_OVERRUN` requires an IOCTL-specific
 output schema, a source-known seeded toy, or phase/taint evidence that the write
 was intended as output. A benign scratch/input-tail fixture is a mandatory
 negative control. `INVALID_COMPLETION_LENGTH` remains an objective completion
-contract event because the I/O manager trusts `Information` when copying back.
+contract event because the I/O manager trusts `Information` when copying back
+[3, 4, 20].
 
-The evidence ladder is deliberately asymmetric: the sensor may emit a raw crossing cheaply, but every stronger label requires an additional independent evidentiary gate. The diagram makes clear that a boundary crossing is not promoted merely because it looks suspicious.
+The evidence ladder is deliberately asymmetric: the sensor may emit a raw
+crossing cheaply, but every stronger label requires an additional independent
+evidentiary gate.
 
 ```mermaid
 flowchart TD
@@ -251,10 +287,10 @@ IOCTL-bound, documented, and visible in output—never silently suppressed.
 
 Microsoft's current Driver Verifier configuration exposes I/O Verification;
 Enhanced I/O Verification has been subsumed into it since Windows 7 [19]. The
-documentation does not guarantee classification of this exact
-declared-boundary-within-allocation signal. Whether Driver Verifier reports the
-same seeded, output-intent-confirmed violation is therefore a controlled
-baseline question, not an assumed advantage of this checker.
+documentation does not guarantee classification of this exact declared-boundary-
+within-allocation signal. Whether Driver Verifier reports the same seeded,
+output-intent-confirmed violation is therefore a controlled baseline question,
+not an assumed advantage of this checker.
 
 ## 5. Threat model and isolation
 
@@ -341,11 +377,11 @@ shapes and includes writes into a consumed input/scratch tail with
 `IoStatus.Information <= OutputBufferLength`. At least one corpus commit
 predates detector implementation, mutations are generated independently of
 detector branches, and a held-out set is disclosed only after the checker is
-frozen. HEVD is a prospective GPL-licensed community baseline after all safety gates pass; its
-supported IOCTL paths and expected outcomes must be selected in advance, and a
-partial result must not be described as broad HEVD support. Outcomes are
-machine-readable and classified as expected finding, harness defect,
-unsupported, inconclusive, or unexpected.
+frozen. HEVD is a prospective GPL-licensed community baseline after all safety
+gates pass; its supported IOCTL paths and expected outcomes must be selected in
+advance, and a partial result must not be described as broad HEVD support.
+Outcomes are machine-readable and classified as expected finding, harness
+defect, unsupported, inconclusive, or unexpected.
 
 ## 7. Calibration and abandonment
 
@@ -353,8 +389,9 @@ No third-party driver executes merely because the toy runs. The calibration
 protocol is tracked in LiteBox issue #15 [23]. The proposed gate requires 100%
 detection and correct classification of preregistered seeded cases across
 repeated clean runs, zero unexplained findings in the conforming corpus,
-successful evaluation of the frozen held-out set, and containment of every crash and hang toy. These
-are calibration criteria, not a claim of general sensitivity.
+successful evaluation of the frozen held-out set, and containment of every
+crash and hang toy. These are calibration criteria, not a claim of general
+sensitivity.
 
 The experiment stops at read-only PE inspection if:
 
@@ -386,7 +423,7 @@ evidence remains private. The repository-level disclosure workflow is tracked
 in LiteBox issue #11 [24]. Microsoft-driver findings go to MSRC; third-party
 findings go to the vendor's security contact or `security.txt`; multivendor or
 unresponsive cases may require MSRC/MSVR or a CERT. LiteBox findings follow its
-private repository security process.
+repository security process.
 
 A report identifies product, binary version/signer/source/SHA-256, Windows and
 token conditions, deterministic reproduction and rate, expected/observed
@@ -406,7 +443,7 @@ states, private findings, and coordinated disclosure.
 
 “Super non-admin” would be technically misleading. No new Windows authorization
 is granted. The system raises practical affordance within a constrained research
-domain.
+domain only if the cost hypothesis is borne out empirically.
 
 Release is staged. Documentation and read-only PE inspection may be public.
 The toy ABI, checker, and non-weaponized synthetic corpus may be released only
@@ -420,32 +457,45 @@ Publication cannot force downstream users to preserve these controls. That
 residual dual-use risk must be reassessed at every release gate and documented
 alongside which components, targets, and evidence were withheld.
 
-## 10. Related work
+## 10. Related work and novelty boundary
 
-ECMO demonstrates peripheral transplantation for embedded-Linux-kernel
-rehosting and downstream analysis. Agamotto uses lightweight VM checkpoints to
-accelerate kernel-driver fuzzing. Drifuzz and ReUSB address hardware-dependent
-driver reachability and replay. These systems motivate dependency control, but
-our proposed experiment is narrower: a purpose-built Windows driver, no real
-device, and a declared-boundary buffered-I/O sensor.
+**Logical/sub-allocation bounds.** AddressSanitizer's contiguous-container
+annotations already distinguish a container's used range from reserved capacity
+inside one valid allocation, and report accesses in the capacity tail [25].
+EffectiveSan similarly enforces type/sub-object bounds narrower than enclosing
+storage [26]. These are direct antecedents to the *general* idea that physical
+allocation safety and a narrower logical bound can differ. This paper therefore
+does not claim “contract-aware semantic checking” as a novel abstraction merely
+because a boundary inside an allocation is instrumented.
 
-kAFL established hardware-assisted OS fuzzing and has a documented
-Windows-driver workflow; syzkaller now lists Windows as a supported platform.
-BSOD directly studies binary-only driver fuzzing across Windows, Linux, and
-FreeBSD. USBFuzz performs coverage-guided fuzzing on Linux and carries generated
-seeds into Windows dumb fuzzing, demonstrating cross-platform portability rather
-than an equivalent Windows coverage-guided workflow. HEVD provides a public
-vulnerable-driver training corpus. These are baselines and candidate corpora,
-not evidence that the proposed checker is superior.
+**Windows driver rehosting/emulation.** x64dbg's `driver_unpacking` work
+converted Windows drivers for user-mode debugging with fake kernel imports [27].
+Mandiant Speakeasy later emulated Windows kernel binaries, including
+`DriverEntry`, synthetic IRP handling, kernel structures, and memory tracing
+[28]. Driver rehosting/emulation is thus established prior art. ECMO, Agamotto,
+Drifuzz, ReUSB, kAFL, BSOD, USBFuzz and related systems further constrain any
+claim of generic workflow novelty [8–17].
 
-Windows Driver Verifier is the kernel-realistic baseline for memory and IRQL
-checks, not something this artifact replaces. The proposed contribution is a
-contract-aware, process-local sensor for semantic boundary violations that may
-remain physically memory-safe. Rehosting is the experimental mechanism that
-makes the sensor cheap to instrument and replay; the scientific contribution
-does not depend on broad or arbitrary `.sys` compatibility. Claims that it is
-earlier or cheaper are pending RQ1/RQ2b measurements and remain qualified until
-independent reproduction.
+**Windows buffered-I/O contract.** Microsoft documents the exact substrate this
+checker operationalizes: buffered IOCTLs share one `SystemBuffer`, input and
+output lengths are distinct, the allocation is sized to the larger length, and
+`IoStatus.Information` controls returned bytes [3, 4, 29]. These contract facts
+are antecedents, not discoveries of this work.
+
+After those corrections, the candidate contribution is the narrower conjunction
+not located in the repository's pre-cutoff search: synthetic `METHOD_BUFFERED`
+execution with both physical and declared-output bounds; an explicit raw event
+for crossing only the latter; deliberate non-promotion without output-intent
+evidence; a mandatory benign shared-buffer scratch/input-tail negative control;
+fixture-level calibration independent of broad `.sys` compatibility; and a
+separate evidence ladder requiring independent authorized reproduction before a
+vulnerability is called confirmed. This is a negative-search result, not proof
+of exhaustive novelty.
+
+Windows Driver Verifier remains the kernel-realistic baseline for memory and
+IRQL checks [19]. The proposed experiment must establish whether the narrower
+sensor adds calibrated information or lowers research cost; superiority is not
+assumed.
 
 ## 11. Limitations
 
@@ -456,45 +506,53 @@ may make binaries unsupported. A non-admin process sandbox is not a hypervisor.
 Instrumentation can alter behavior and can itself be defective.
 
 The affordance-floor thesis remains conceptual until research costs are
-measured. Current unmerged draft experiments establish typed brokering and CPU
-access, not calibrated `.sys` execution or the magnitude of cost reduction.
-Empirical results must revise this paper rather than be implied retroactively.
+measured. The demonstrated LiteBox draft establishes typed brokering and CPU
+access; the open PR #24 is only an M1–M7 scaffold. Neither establishes calibrated
+`.sys` execution, containment, vulnerability sensitivity, or cost reduction.
+Empirical results must revise a later version rather than be implied
+retroactively.
+
+The generalized phrase “physically in-bounds but outside a narrower semantic
+boundary” has strong antecedents in sanitizers and bounds-safety tooling. The
+paper's originality, if any, must therefore be evaluated at the Windows
+contract + ambiguity-aware promotion + calibration/evidence-protocol level.
 
 ## 12. Validation roadmap
 
-- **August–September 2026:** reconcile the RFC with the M1–M7 typed-fixture
-  decomposition, freeze the threat model, read-only PE inspector, raw-event
-  taxonomy, task protocol, corpus commit, mutation method, and VM baseline.
-- **October–November 2026:** resolve the M7 boundary choice, implement the toy
-  ABI and process-tree/time/memory/output containment, and stop if containment
-  or import bounds fail.
-- **December 2026–January 2027:** freeze the checker, execute positive,
-  negative, mutation-generated, and held-out toy trials, and publish raw data.
-- **February–March 2027:** run the counterbalanced VM/WinDbg/Driver Verifier
-  comparison; label a single-operator result as a pilot.
-- **After all gates pass:** preregister and evaluate narrowly selected HEVD
-  paths in a credential-free disposable VM. No date overrides a failed gate.
+The roadmap is prospective rather than a schedule claim. No date or implementation
+milestone overrides a failed gate.
+
+1. Freeze the M1–M7 typed-fixture contracts, threat model, raw-event taxonomy,
+   task protocol, synthetic corpus and VM/Driver-Verifier baseline.
+2. Select and validate the M7 boundary; stop if process-tree/time/memory/output
+   containment or import bounds fail.
+3. Freeze M5 and execute positive, conforming-negative, mutation-generated and
+   held-out toy trials with the benign scratch/input-tail control mandatory.
+4. Compare matched native/VM execution with WinDbg/Driver Verifier; report
+   author-only results as pilot evidence.
+5. Only after those gates pass, preregister a narrowly selected third-party or
+   HEVD evaluation in a credential-free disposable VM.
 
 ## 13. Conclusion
 
 Privilege and practical affordance are non-identical. Driver rehosting may keep
-a non-admin host token unchanged while making selected driver logic easier to
-execute, observe, and test, even though the matched native baseline may use
-different guest privileges. The stronger methodological contribution is
-contract-aware semantic checking: turning an API boundary that can lie inside a
-physically valid allocation into an explicit, testable signal without calling
-that signal a vulnerability before operation-specific evidence justifies the
-promotion.
+a non-admin host token unchanged while changing the practical cost of selected
+analysis actions, but that is an empirical cost hypothesis rather than a
+property established here.
 
-Rehosting is therefore a vehicle rather than the scientific endpoint. The
-proposal responds with narrow claims and strong gates: read-only inspection,
-fixture-independent modules, toy-first execution, fail-closed ABI,
-declared-boundary shadow events, explicit confirmation before calling an event
-a violation, bounded execution, abandonment criteria, and no vulnerability
-claim without independent reproduction or vendor confirmation. If broad driver
-rehosting proves impractical but the standalone M5 sensor calibrates, the core
-contract-aware contribution survives. If calibration fails, read-only
-inspection is the honest endpoint.
+Neither user-mode driver rehosting nor logical bounds inside larger allocations
+is novel. The method proposed in v0.1 is narrower: make the two
+`METHOD_BUFFERED` extents simultaneously observable, classify a crossing of only
+the declared output extent as a raw event, require independent output-intent
+evidence before semantic promotion, calibrate the sensor on positive and benign
+negative fixtures, and separate emulator evidence from independently reproduced
+vulnerability evidence.
+
+If broad driver rehosting proves impractical but the standalone M5 sensor
+calibrates, the Windows-specific methodological question remains testable. If
+calibration fails, read-only inspection is the honest endpoint. This archival
+version freezes that methodology without claiming the unmerged scaffold has
+already satisfied it.
 
 # Citations
 
@@ -540,8 +598,18 @@ inspection is the honest endpoint.
 
 [21] LiteBox, [Driver-rehosting module decomposition issue #16](https://github.com/franklinbaldo/litebox/issues/16) and child issues #17–#23.
 
-[22] LiteBox, [M1–M7 implementation scaffold PR #24](https://github.com/franklinbaldo/litebox/pull/24).
+[22] LiteBox, [M1–M7 implementation scaffold PR #24](https://github.com/franklinbaldo/litebox/pull/24), open and unmerged at the v0.1 freeze.
 
 [23] LiteBox, [calibration gate issue #15](https://github.com/franklinbaldo/litebox/issues/15).
 
 [24] LiteBox, [coordinated-disclosure process issue #11](https://github.com/franklinbaldo/litebox/issues/11).
+
+[25] LLVM/AddressSanitizer, [contiguous-container instrumentation discussion for libc++ `std::vector`](https://lists.llvm.org/pipermail/cfe-commits/Week-of-Mon-20140512/105270.html), 2014; see also [AddressSanitizerContainerOverflow](https://github.com/google/sanitizers/wiki/AddressSanitizerContainerOverflow).
+
+[26] Duck, G. J.; and Yap, R. H. C. [EffectiveSan: Type and Memory Error Detection using Dynamically Typed C/C++](https://arxiv.org/abs/1710.06125), 2017.
+
+[27] x64dbg / mrexodia, [Kernel driver unpacking](https://x64dbg.com/blog/2017/06/08/kernel-driver-unpacking.html) and [`driver_unpacking`](https://github.com/mrexodia/driver_unpacking), 2017.
+
+[28] Mandiant, [Emulation of Kernel Mode Rootkits With Speakeasy](https://cloud.google.com/blog/topics/threat-intelligence/emulation-of-kernel-mode-rootkits-with-speakeasy), 2021; [Speakeasy repository](https://github.com/mandiant/speakeasy).
+
+[29] Microsoft Learn, [Failure to Initialize Output Buffers](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/failure-to-initialize-output-buffers).
