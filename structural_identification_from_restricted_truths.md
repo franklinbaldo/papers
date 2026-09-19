@@ -4,6 +4,20 @@ title: "Structural Identification from Restricted Truths: Version Spaces, Invari
 description: "A mathematical theory note formalizing identification of a structure up to equivalence from a restricted family of invariant truths, with machine-checked Lean 4 proofs of the core results."
 tags: [structural-identification, model-theory, teaching-dimension, version-spaces, lean4, formal-verification]
 timestamp: 2026-08-24T03:40:00Z
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
 # Structural Identification from Restricted Truths: Version Spaces, Invariance, and the Cost of Isolating a Structure
@@ -14,7 +28,7 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Mathematical theory note with machine-checked core.** This paper does not claim that categoricity, Scott sentences, teaching dimension, distinguishing formulas, or version spaces are new. Its purpose is narrower: to place structural equivalence, admissible truth families, hypothesis classes, and explicit query cost in one formal object; prove the resulting identification laws; expose a triviality in naive formula-count definitions; and provide a Lean 4 formalization of the core propositions. The finite optimization problem is shown to be exactly a weighted hitting/set-cover problem over non-equivalent competitors.
+> **Mathematical theory note with machine-checked core.** This paper does not claim that categoricity, Scott sentences, teaching dimension, distinguishing formulas, version spaces, or generic set-cover teaching geometry are new. Its purpose is narrower: to place structural equivalence, admissible truth families, hypothesis classes, and explicit query cost in one domain-independent formal object; require admissible tests to respect the declared structural equivalence; expose a triviality in naive formula-count definitions; and provide a Lean 4 formalization of the resulting generic laws. In the finite case, the competitor-exclusion layer is a re-expression of established teaching/specification set-cover machinery after quotienting by structural equivalence.
 
 ## Abstract
 
@@ -22,7 +36,7 @@ Suppose an unknown mathematical object is known only through truths that it sati
 
 We formalize a **structural identification instance** by a universe of candidate models, an equivalence relation (typically isomorphism), a hypothesis class, a family of admissible invariant truth-valued queries, and optionally a query cost. Evidence induces a structural version space. A target is identified when every surviving candidate is equivalent to it. We prove monotonicity under evidence and hypothesis refinement; an observational-equivalence impossibility theorem; invariance of version spaces under representation changes; an exact hitting-set characterization of finite identification; and a **conjunction-collapse theorem** showing why raw sentence count is degenerate whenever conjunction is free. In finite instances, minimum-cost structural identification is weighted set cover on the non-equivalent competitors and therefore contains Set Cover as a special case.
 
-The framework is deliberately positioned between model theory and teaching complexity rather than against them. Scott sentences show that sufficiently expressive infinitary languages can characterize countable structures by a single sentence, while teaching dimension already studies minimum specifying sets in a version space. The present framework makes the bridge explicit: after quotienting by structural equivalence and restricting to invariant tests, structural identification is a teaching/specification problem on the induced truth signatures. The mathematical value is therefore not a new replacement for those theories, but a compact abstraction that makes representational invariance and query cost load-bearing. The central results are formalized and checked in Lean 4.
+The framework is deliberately positioned between model theory and teaching complexity rather than against them. Scott sentences show that sufficiently expressive infinitary languages can characterize countable structures by a single sentence, while teaching dimension already studies minimum specifying sets in a version space. A particularly close pre-cutoff antecedent, Ansari, Dutta, and Das (2026), already combines structural objects, version-space identifiability, teaching cost, and hitting-set machinery for finite partial orders. The present framework therefore does not claim novelty for those ingredients or their generic finite cover geometry. Its narrower contribution is a compact domain-independent quotient interface in which structural equivalence is an explicit parameter, admissible queries are required to respect that equivalence, arbitrary query cost is attached to the quotient version space, and the resulting generic laws are machine-checked in Lean 4.
 
 **Keywords:** structural identification, version space, isomorphism, categoricity, Scott sentence, teaching dimension, specifying set, hitting set, set cover, Lean 4
 
@@ -299,8 +313,7 @@ Define two models to be \(\mathcal Q\)-observationally equivalent when
 \mathcal A\equiv_{\mathcal Q}\mathcal B
 \quad\Longleftrightarrow\quad
 \forall q\in\mathcal Q,
-\;
-q(\mathcal A)\leftrightarrow q(\mathcal B).
+\;q(\mathcal A)\leftrightarrow q(\mathcal B).
 \]
 
 This is equivalence with respect to the available observational language, not necessarily structural equivalence.
@@ -441,7 +454,7 @@ If \(E\) identifies \(\mathcal A\), no non-equivalent competitor can satisfy all
 
 Lean: `identifies_iff_hits_competitors`.
 
-This theorem converts structural identification into a standard combinatorial optimization problem.
+This theorem is a structural-quotient restatement of established teaching/specification geometry: examples or tests eliminate subsets of competing hypotheses, and an identifying family must cover them all. Ansari, Dutta, and Das give a close pre-cutoff structural instance for finite partial orders in which version-space identifiability, teaching cost, structural complexity, and a blocker-set hitting number already coexist [7]. The contribution here is therefore not the generic cover insight, but its placement inside the explicit domain-independent quotient interface used throughout this note.
 
 ### Corollary 8.1 — Weighted set cover
 
@@ -558,6 +571,8 @@ The present note is more abstract and correspondingly more modest: it does not s
 ## 10. Relation to teaching dimension and specifying sets
 
 Goldman and Kearns define teaching dimension through the minimum number of examples a helpful teacher must reveal to uniquely identify a target concept within a concept class [4]. Later work develops recursive teaching dimension, preference-based teaching, specifying sets, and algebraic characterizations of teaching complexity [5,6].
+
+A particularly close specialized antecedent is Ansari, Dutta, and Das (2026), publicly available on 14 August 2026, ten days before the public GitHub record for this note. For finite partial orders, they combine version-space semantics, logical identifiability, teaching cost, structural complexity, and a blocker-set hitting number [7]. Their work does not use the general independently declared equivalence/query-invariance interface developed here, but it does occupy the broader combination “structural object + version space + teaching cost + hitting set.” The present note therefore treats that combination as prior machinery and limits its claim to a domain-independent quotient/interface synthesis and formalization.
 
 The structural framework reduces directly to this setting.
 
@@ -705,6 +720,8 @@ The machine-checked core lives at:
 formalizations/structural_identification/StructuralIdentification.lean
 ```
 
+The paper and formalization are versioned together in this repository. The archival source commit therefore pins both the prose and the exact Lean file. The repository workflow `.github/workflows/structural-identification-lean.yml` checks that file with `leanprover/lean4:v4.22.0`; an archival candidate is not considered reproducible unless that check is green for the frozen source revision.
+
 The file deliberately uses no algebra or model-theory library. The abstract theorems require only predicates, functions, propositions, and lists, which keeps the trusted surface small. The concrete four-group example treats the groups as already-classified isomorphism types; it verifies the discrimination logic rather than reproving group theory.
 
 The central definitions correspond directly to the mathematics:
@@ -756,26 +773,28 @@ This paper does **not** claim novelty for:
 - version spaces;
 - teaching sets, specifying sets, or teaching dimension;
 - hitting set or set cover;
+- query cost in hypothesis identification;
+- the observational-indistinguishability principle;
 - the fact that conjunction combines finitely many formulas.
 
 Any paper making those broad claims would collide immediately with established mathematics.
 
 ### 14.2 The narrower contribution
 
-The proposed contribution is the joint parameterization
+The proposed **synthesis/formalization contribution** is the domain-independent joint parameterization
 
 \[
 (\mathcal M,\sim,\mathcal H,\mathcal Q,c)
 \]
 
-and the resulting separation of four questions:
+with structural equivalence itself explicit, admissible tests required to respect it, and the resulting quotient version space linked to arbitrary query cost. It separates four questions:
 
 1. **truth** — does \(q\) hold at the target?
 2. **discrimination** — which non-equivalent competitors does \(q\) exclude?
 3. **identifiability** — does \(\mathcal Q\) separate the target from every competitor?
 4. **cost** — what is the cheapest admissible separating family under \(c\)?
 
-The framework's main conceptual correction is negative: one cannot define a useful “minimum number of truths needed to identify a structure” without controlling the grammar or cost of those truths. The conjunction-collapse theorem makes that failure explicit, while Scott complexity and teaching dimension show the two mature traditions into which a corrected definition naturally fits.
+The framework's main conceptual correction is negative: one cannot define a useful “minimum number of truths needed to identify a structure” without controlling the grammar or cost of those truths. The conjunction-collapse theorem makes that failure explicit inside this interface, while Scott complexity, teaching dimension, and the close finite-partial-order framework of Ansari, Dutta, and Das show the mature traditions and specialized prior machinery into which the corrected definition fits.
 
 The Lean formalization serves two purposes. First, it prevents hidden changes of quantifier direction or monotonicity from entering the prose. Second, it makes the paper's modest claim auditable: the generic structural laws are exactly the theorems that compile, no more.
 
@@ -848,3 +867,5 @@ That formulation is not a replacement for model theory or teaching complexity. I
 [5] Rahim Samei, Pavel Semukhin, Boting Yang, and Sandra Zilles. “Algebraic Methods Proving Sauer's Bound for Teaching Complexity.” *Theoretical Computer Science* 558, 35–50, 2014. DOI: 10.1016/j.tcs.2014.09.024.
 
 [6] Ziyuan Gao, Christoph Ries, Hans U. Simon, and Sandra Zilles. “Preference-Based Teaching.” *Journal of Machine Learning Research* 18, 1–32, 2017.
+
+[7] Faizanuddin Ansari, Debanjan Dutta, and Swagatam Das. “Identifiability and Order-Dimension Limits of In-Context Learning on Partial Orders.” arXiv:2608.14004, v1 posted 14 August 2026. https://arxiv.org/abs/2608.14004.
