@@ -12,9 +12,9 @@ from __future__ import annotations
 import random
 
 from colony import allocate_recruitment_slots
-from colony_continuous_context_ablation import _predict, _sample, train as train_whole_policy
+from colony_continuous_context_ablation import _predict, _sample
 from marginal_recruitment import marginal_recruitment_features
-from recruitment_bandit import LinearContextualPolicy, continuous_context_features
+from recruitment_bandit import LinearContextualPolicy
 
 ACTIONS = ("camera", "imu")
 FEATURE_DIM = 13
@@ -24,7 +24,7 @@ def _loss(truth, camera, imu, camera_count, imu_count):
     return abs(_predict(camera, imu, camera_count, imu_count) - truth)
 
 
-def train_marginal(*, steps=120_000, seed=20260919):
+def train_marginal(*, steps=60_000, seed=20260919):
     """Learn one-step marginal value from randomized reachable budget states."""
 
     policy = LinearContextualPolicy(ACTIONS, feature_dim=FEATURE_DIM, ridge=0.2)
@@ -107,7 +107,7 @@ def _final_allocation_oracle(truth, camera, imu):
     return best_loss, camera_count, 12 - camera_count
 
 
-def _marginal_diagnostic(*, steps=100_000, seed=20260919):
+def _marginal_diagnostic(*, steps=40_000, seed=20260919):
     """Measure how often one more specialist helps at randomized reachable states."""
 
     rng = random.Random(seed)
@@ -142,20 +142,12 @@ def _marginal_diagnostic(*, steps=100_000, seed=20260919):
     return stats
 
 
-def evaluate(
-    marginal_policy,
-    whole_policy,
-    age_profile,
-    *,
-    steps=30_000,
-    seed=20260919,
-):
+def evaluate(marginal_policy, age_profile, *, steps=10_000, seed=20260919):
     offsets = {"uniform": 51, "fresh_skew": 52, "stale_skew": 53}
     rng = random.Random(seed + offsets[age_profile])
     totals = {
         "fixed_4_8": 0.0,
         "stateless_dynamic": 0.0,
-        "run8_whole_policy": 0.0,
         "learned_marginal": 0.0,
         "final_allocation_oracle": 0.0,
     }
@@ -177,19 +169,6 @@ def evaluate(
             2 + allocation["imu"],
         )
 
-        whole_features = continuous_context_features(camera[:2], imu[:2])
-        whole_action = whole_policy.select(whole_features)
-        if whole_action == "fixed_imu_heavy":
-            totals["run8_whole_policy"] += _loss(truth, camera, imu, 4, 8)
-        else:
-            totals["run8_whole_policy"] += _loss(
-                truth,
-                camera,
-                imu,
-                2 + allocation["camera"],
-                2 + allocation["imu"],
-            )
-
         camera_count, imu_count = sequential_allocation(marginal_policy, camera, imu)
         totals["learned_marginal"] += _loss(
             truth, camera, imu, camera_count, imu_count
@@ -209,7 +188,6 @@ def evaluate(
 
 def main():
     marginal_policy = train_marginal()
-    whole_policy = train_whole_policy()
     diagnostics = _marginal_diagnostic()
     print("diagnostic,action,worsen_fraction,mean_one_step_improvement")
     for action in ACTIONS:
@@ -220,18 +198,16 @@ def main():
         )
 
     print(
-        "profile,fixed_4_8,stateless_dynamic,run8_whole_policy,"
-        "learned_marginal,final_allocation_oracle,"
-        "marginal_camera_count,oracle_camera_count"
+        "profile,fixed_4_8,stateless_dynamic,learned_marginal,"
+        "final_allocation_oracle,marginal_camera_count,oracle_camera_count"
     )
     for profile in ("uniform", "fresh_skew", "stale_skew"):
         result, marginal_camera_count, oracle_camera_count = evaluate(
-            marginal_policy, whole_policy, profile
+            marginal_policy, profile
         )
         print(
             f"{profile},{result['fixed_4_8']:.6f},"
             f"{result['stateless_dynamic']:.6f},"
-            f"{result['run8_whole_policy']:.6f},"
             f"{result['learned_marginal']:.6f},"
             f"{result['final_allocation_oracle']:.6f},"
             f"{marginal_camera_count:.3f},{oracle_camera_count:.3f}"
