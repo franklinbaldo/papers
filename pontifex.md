@@ -1,7 +1,7 @@
 ---
 type: "Interpretability Paper"
 title: "Pontifex: Byte-Level Occlusion with Multi-Space Convergence for Tokenizer-Free, Cross-Modal Interpretability"
-description: "Pontifex: byte-level occlusion + convergencia multi-espaco para interpretabilidade tokenizer-free e cross-modal (position paper)."
+description: "Pontifex: byte-level occlusion + convergencia multi-espaco para interpretabilidade tokenizer-free e cross-modal; original position paper with a living RED-1 empirical status appendix."
 tags: [pontifex]
 timestamp: 2026-07-09T12:12:59+00:00
 ---
@@ -14,11 +14,11 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Position paper.** This article proposes an architecture, an evaluation
-> protocol, and an implementation roadmap. No empirical results are
-> reported. Speed, cross-lingual consistency, and cross-modal agreement
-> figures appear only as design targets and falsifiable predictions,
-> not as measurements.
+> **Position paper with a living empirical appendix.** Sections 1–8 preserve
+> the original architecture, evaluation protocol, and implementation roadmap.
+> Section 9 records completed RED-1 experiments added later. Empirical claims
+> in §9 are limited to completed held-out runs and do not retroactively validate
+> the broader hypotheses or design targets in the original paper.
 
 ## Abstract
 
@@ -97,9 +97,10 @@ similarity scores, not high-dimensional vectors.
 
 ### 1.1 Contributions
 
-This article is a **position paper**: its contributions are
-conceptual, architectural, and methodological, not empirical.
-Specifically:
+The architecture in §§1–8 is the original **position-paper** proposal:
+its contributions are conceptual, architectural, and methodological.
+The living appendix in §9 separately records subsequent RED-1 evidence
+and keeps completed measurements distinct from hypotheses. Specifically:
 
 1. **Byte-level occlusion (proposal):** a tokenizer-free perturbation
    scheme that masks contiguous UTF-8 byte spans, with rules for
@@ -124,12 +125,13 @@ Specifically:
    a minimal text-only prototype to a multimodal release, with
    exit criteria for each phase.
 
-The remainder of the paper is organised as follows. Section 2 reviews
-related work and positions Pontifex against the closest prior art.
-Section 3 specifies the method. Section 4 describes the
+The remainder of the original paper is organised as follows. Section 2
+reviews related work and positions Pontifex against the closest prior
+art. Section 3 specifies the method. Section 4 describes the
 implementation roadmap. Section 5 sets out the evaluation protocol
 and falsifiable predictions. Section 6 discusses limitations and risks.
-Section 7 concludes.
+Sections 7–8 discuss future directions and conclude. Section 9 is a
+separately labelled living empirical appendix.
 
 ---
 
@@ -453,8 +455,9 @@ become natural:
    limit on `K`; adding audio or structured-data encoders is a
    matter of engineering, not of method.
 
-A serious empirical study, starting from Phase 1 with the exit
-criteria above, is the next step.
+The RED-1 programme has since begun. Section 9 records the current
+held-out evidence boundary; unsupported outcomes are retained as
+falsification pressure rather than overwritten by later variants.
 
 ---
 
@@ -469,6 +472,115 @@ prior-art scan, not an independent assessment (see the note at the
 top of that file); independent verification of the novelty claim is
 still pending. This paper turns the proposal into a falsifiable
 programme regardless of how that verification resolves.
+
+---
+
+## 9. RED-1 empirical status: SciFact mechanism boundary
+
+This appendix is **post-proposal** and must not be read as a
+pre-registration of the original paper. It records only completed runs
+and explicitly labels follow-ups motivated by earlier outcomes.
+
+### 9.1 Frozen information boundary
+
+The current SciFact transport diagnostics separate information into
+four roles:
+
+- `D_assembly`: SciFact text/split membership plus frozen encoder
+  identities; no relevance grades;
+- `D_student`: a deterministic 80% of exact-test-overlap-filtered
+  train queries, used as unlabeled paired representation coordinates;
+- `D_val`: the remaining 20%, used only for coordinate-space
+  selection of transport hyperparameters (`tau`, `lambda`);
+- `D_test`: official SciFact test relevance grades, opened only after
+  the transport map and the complete null-permutation banks are
+  frozen.
+
+For the K=512 mechanism diagnostic, B/MPNet coordinates for test queries
+and corpus documents are not encoded, and the task-label budget for
+fit/selection is zero. This is a transport/mechanism diagnostic rather
+than a separate sparse-student experiment, so it is **not** evidence of
+`D_assembly -> D_student` generalization.
+
+### 9.2 Completed K=512 global-permutation test
+
+The completed run `35451426518` tests whether the correct K=512
+residual-to-anchor assignment is needed for held-out SciFact retrieval
+and whether query/document maps benefit from sharing the same
+deformation.
+
+Observed nDCG@10:
+
+| Condition | nDCG@10 |
+| --- | ---: |
+| TRUE residual assignment | 0.649954 |
+| COUPLED global-null mean | 0.641013 |
+| INDEPENDENT global-null mean | 0.620021 |
+
+Two predeclared contrasts separate the claims:
+
+1. **Exact residual identity:** `TRUE - COUPLED = +0.008940`, but the
+   finite-bank upper-tail test gives `p = 0.078125` and the paired-query
+   bootstrap 95% interval is `[-0.003652, +0.021549]`. The
+   semantic-specificity criterion therefore **fails**. The completed
+   data do not establish that exact residual-to-anchor identity is
+   necessary at K=512.
+2. **Shared-warp coherence:** `COUPLED - INDEPENDENT = +0.020992`, with
+   paired-query bootstrap 95% interval `[+0.009079, +0.033756]`. This
+   criterion **passes**. The completed data support the narrower claim
+   that applying a coherent two-sided deformation preserves more
+   held-out retrieval structure than independently scrambling query and
+   document deformations.
+
+The positive second result does not rescue the negative first result:
+coherence of a shared warp is weaker than evidence for semantically
+specific local correspondence.
+
+### 9.3 Prospective nuisance-matched follow-up
+
+The global permutation also changes which residual magnitudes are
+assigned to each anchor neighborhood. After observing §9.2, a stronger
+**prospective follow-up** was frozen in
+`PROTOCOL-SCIFACT-NORM-MATCHED-COUPLING-K512-2026-09-19.md` and
+`scifact_norm_matched_coupling_k512.py`.
+
+It keeps K=512 and the same student/validation/test manifests, divides
+the true `D_student` residual bank into eight equal-count L2-norm strata,
+and uses within-stratum derangements so that no anchor keeps its true
+residual. Sixty-three coupled and sixty-three independent null draws are
+frozen before `D_test` relevance grades are opened. The predeclared
+semantic-specificity rule remains strict: paired-query bootstrap 95%
+interval above zero **and** finite-bank `p <= 0.05`.
+
+Because this experiment was designed after seeing §9.2, it is not an
+independent confirmation. Its purpose is to ask a narrower question:
+does exact residual identity add held-out utility beyond a coherent
+warp that already preserves coarse residual-magnitude structure?
+Until its run completes, this is a protocol and hypothesis, **not
+empirical evidence**.
+
+### 9.4 Evidence / hypothesis boundary
+
+**Supported by the completed SciFact K=512 run:** a shared coherent
+query/document deformation outperforms independently scrambled
+query/document deformations under the stated frozen split contract.
+
+**Not supported by that run:** the stronger claim that exact local
+semantic residual identity is necessary; the predeclared test did not
+pass.
+
+**Still hypotheses or outside this diagnostic:** a physical torus,
+causal semantic locality, universal transport superiority, native-B
+superiority, low-budget superiority, cross-dataset generalization, and
+Assembly-to-student generalization. Classical information-matched
+baselines and the norm-matched K=512 null are separate prospective
+comparisons and become evidence only after their frozen runs complete.
+
+Reproducibility pointers:
+
+- completed global K=512 run: `https://github.com/franklinbaldo/papers/actions/runs/35451426518`;
+- completed K=512 findings record: `experiments/pontifex_benchmarks/FINDINGS-SCIFACT-COUPLING-SPECIFICITY-K512-2026-09-19.md`;
+- prospective matched-null protocol: `experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-NORM-MATCHED-COUPLING-K512-2026-09-19.md`.
 
 ---
 
