@@ -1,3 +1,7 @@
+---
+type: "Protocol"
+---
+
 # Amendment — direct MTEB comparison uses a frozen MaleCNS encoder
 
 Date: 2026-09-15
