@@ -1,646 +1,307 @@
 ---
 type: "Dogmatic Paper"
-title: "Reputação como Mecanismo de Coordenação no Sistema Jurídico: Assimetria de Informação, Capital Simbólico e Recalibração pela Transparência Argumentativa"
-description: "Reputacao como mecanismo de coordenacao no sistema juridico e recalibracao pela transparencia argumentativa."
-tags: [paper1f]
+title: "Reputação Jurídica sob Verificação Direta: um canal local entre qualidade argumentativa e observação repetida"
+description: "Hipótese limitada sobre como verificação mais barata de qualidade argumentativa pode recalibrar sinais reputacionais em interações repetidas entre praticantes e cortes que observam diretamente seus trabalhos, sem inferir democratização reputacional sistêmica."
+tags: [paper1f, reputacao, informacao-assimetrica, qualidade-argumentativa, verificacao, legal-services, courts]
 timestamp: 2026-07-09T12:12:59+00:00
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
-# Reputação como Mecanismo de Coordenação no Sistema Jurídico: Assimetria de Informação, Capital Simbólico e Recalibração pela Transparência Argumentativa
+# Reputação Jurídica sob Verificação Direta: um canal local entre qualidade argumentativa e observação repetida
 
-**Franklin Silveira Baldo**
-Procurador do Estado de Rondônia (OAB/RO 5733)
-Porto Velho, RO
+**Franklin Silveira Baldo**  
+Independent Researcher
 
----
+> **Nota de escopo e prioridade.** Esta versão incorpora a auditoria temporal de prior art de 18 de setembro de 2026. Não reivindica novidade para a ideia de que informação imperfeita sobre serviços jurídicos gera dependência de reputação, certificação, afiliação ou prestígio; para vantagens reputacionais de escritórios; para efeitos de restrição informacional sobre incumbentes; nem para a proposição de que sinais objetivos/data-driven de desempenho podem competir com rankings de prestígio. A contribuição residual é mais estreita: a hipótese de um **canal local de reputação**, no qual a redução do custo de verificar propriedades textualmente identificáveis de uma peça jurídica altera a informação disponível a uma corte que observa repetidamente o mesmo praticante. A passagem desse efeito local para reputação ampla, rede profissional ou “democratização” sistêmica permanece não estabelecida.
 
 ## Resumo
 
-O sistema jurídico opera, internamente, por meio de rede de
-reputação distribuída que funciona como substituto para a
-verificação direta de qualidade argumentativa. Porque verificar
-a solidez de um argumento jurídico é caro — exige tempo, expertise
-e acesso a material que frequentemente não está disponível no
-momento da decisão —, os operadores do direito desenvolvem
-heurísticas reputacionais: advogados avaliam advogados adversários,
-juízes avaliam advogados que peticionam, tribunais avaliam juízes
-de primeiro grau, e o STF avalia tribunais recorridos. A reputação,
-nesse sistema, é o preço descentralizado da qualidade argumentativa
-— o mecanismo pelo qual informação sobre qualidade se propaga pela
-rede sem verificação direta. Este artigo demonstra que a reputação
-no sistema jurídico brasileiro rastreia proxies de qualidade
-(afiliação institucional, histórico de vitórias, network, titulação)
-em vez de qualidade diretamente, porque a opacidade argumentativa
-do sistema torna a verificação cara. Os agentes com capital
-reputacional acumulado têm interesse estrutural em manter essa
-opacidade — porque é ela que torna seu capital valioso. A redução
-tecnológica do custo de verificação da qualidade argumentativa
-perturba esse equilíbrio em dois sentidos: recalibra o capital
-reputacional existente (proxies passam a ser menos valiosos quando
-qualidade é verificável diretamente) e abre novo canal de construção
-de reputação para agentes antes excluídos do sistema. O artigo
-engaja Akerlof sobre mercados com informação assimétrica, Kreps
-sobre reputação em jogos repetidos, Bourdieu sobre campo jurídico,
-e Luhmann sobre confiança em sistemas complexos.
+A literatura sobre serviços jurídicos já trata reputação e certificação como respostas a assimetria de informação e verificação custosa de qualidade. Trabalhos anteriores também mostram que sinais de reputação podem influenciar seleção e decisões, que restrições informacionais podem favorecer incumbentes e que métricas empíricas de desempenho podem superar rankings baseados em prestígio. Este artigo não reivindica esses componentes. Sua hipótese é mais limitada: em classes de trabalho jurídico nas quais certos atributos de qualidade podem ser verificados de forma barata e reproduzível — por exemplo, omissão de precedente material, ausência de fundamento legal exigido, citação inexistente, inconsistência interna ou descumprimento identificável de requisito argumentativo — a verificação repetida pode produzir um **sinal local de confiabilidade** entre um praticante e a corte ou unidade institucional que observa diretamente suas peças. Esse efeito depende de atribuição observável, repetição, baixo custo de verificação, estabilidade suficiente dos observadores e incentivos para incorporar a informação. Não se segue daí que o sinal se propague automaticamente entre cortes, que prestigie agentes desconhecidos em toda a rede ou que elimine vantagens de afiliação. O paper distingue explicitamente dois estágios: (a) aprendizagem reputacional local por observação repetida, hipótese defendida; e (b) propagação ampla do sinal por uma rede jurídica, mecanismo futuro e não demonstrado.
 
-**Palavras-chave**: reputação; sistema jurídico; assimetria de
-informação; capital simbólico; campo jurídico; custos de verificação;
-transparência argumentativa; acesso à justiça.
-
----
+**Palavras-chave:** reputação; serviços jurídicos; assimetria de informação; qualidade argumentativa; verificação; sinais; informação; tribunais; transparência.
 
 ## Abstract
 
-The legal system operates internally through a distributed
-reputation network that functions as a substitute for direct
-verification of argumentative quality. Because verifying the
-soundness of a legal argument is costly — requiring time, expertise,
-and access to material often unavailable at the moment of decision —
-legal practitioners develop reputational heuristics: lawyers assess
-opposing lawyers, judges assess petitioning lawyers, appellate
-courts assess trial judges, and the Supreme Court assesses lower
-tribunals. Reputation, in this system, is the decentralized price
-of argumentative quality — the mechanism through which information
-about quality propagates through the network without direct
-verification. This article demonstrates that reputation in the
-Brazilian legal system tracks proxies for quality (institutional
-affiliation, win history, network, credentials) rather than quality
-directly, because the argumentative opacity of the system makes
-verification costly. Agents with accumulated reputational capital
-have a structural interest in maintaining this opacity — because
-it is what makes their capital valuable. The technological reduction
-in the cost of verifying argumentative quality disrupts this
-equilibrium in two ways, most clearly for textually-identifiable
-compliance violations (precedent omission, missing statutory grounds,
-internal inconsistency) in high-volume, low-review dockets: it
-recalibrates existing reputational capital in that domain (proxies
-become less valuable when quality is directly verifiable there) and
-opens a local channel — between a practitioner and the specific courts
-that observe their filings — for reputation-building for agents
-previously excluded from the system. The article does not establish
-network-wide reputational democratization beyond this local channel,
-nor a uniform effect across all dockets and violation types. The article engages
-Akerlof on markets with asymmetric information, Kreps on reputation
-in repeated games, Bourdieu on the legal field, and Luhmann on
-trust in complex systems.
+Legal-services research already treats reputation and certification as responses to information asymmetry and costly quality verification. Earlier work also shows that reputational signals can affect matching and adjudicative treatment, that information restrictions can favor incumbents, and that empirical performance measures can outperform prestige-based rankings. This paper does not claim those components as novel. Its narrower hypothesis concerns a **local reputation channel**: in classes of legal work where specific quality attributes can be verified cheaply and reproducibly — such as omission of a material precedent, missing required statutory grounds, nonexistent citations, internal inconsistency, or identifiable failure to satisfy an argumentative requirement — repeated verification may create a local reliability signal between a practitioner and the court or institutional unit that directly observes that practitioner's filings. The mechanism depends on observable attribution, repetition, sufficiently low verification cost, observer continuity, and incentives to use the information. It does not imply that the signal automatically propagates across courts, democratizes professional reputation network-wide, or eliminates advantages associated with institutional affiliation. The paper therefore separates (a) local reputational learning through repeated observation, which is the defended hypothesis, from (b) broad network propagation, which remains unresolved.
 
-**Keywords**: reputation; legal system; asymmetric information;
-symbolic capital; legal field; verification costs; argumentative
-transparency; access to justice.
+**Keywords:** reputation; legal services; information asymmetry; argument quality; verification; signaling; courts; transparency.
 
 ---
 
 ## 1. Introdução
 
-Quando um advogado experiente recebe a notícia de que o adversário
-no processo é colega de reputação sólida — reconhecido na área,
-com histórico de argumentação cuidadosa, com passagem por
-instituições respeitadas —, algo característico ocorre: o advogado
-revisita seu próprio raciocínio. Não porque leu os argumentos do
-adversário, que ainda não foram apresentados. Não porque encontrou
-falha no próprio argumento, que lhe parecia sólido. Mas porque a
-reputação do adversário é sinal — evidência de que seus argumentos
-tendem a ser sólidos — e esse sinal é suficiente para induzir
-revisão cautelosa.
+A reputação é especialmente valiosa quando qualidade é difícil de observar. Essa proposição é antiga na economia da informação e foi aplicada diretamente ao mercado jurídico muito antes deste paper.
 
-Esse fenômeno, aparentemente trivial, captura algo fundamental
-sobre como o sistema jurídico funciona internamente. Não funciona
-por verificação direta de qualidade argumentativa — que seria o
-ideal, mas é cara. Funciona por rede de reputação distribuída que
-propaga informação sobre qualidade de modo descentralizado, sem
-que nenhum agente precise verificar diretamente o que cada outro
-agente produz.
+Daniels descreve reputational bonding em escritórios de advocacia quando clientes não conseguem avaliar adequadamente a qualidade do serviço. Iossa e Jullien modelam informação sobre qualidade de advogados, certificação e efeitos sobre matching e decisões judiciais. Iacobucci analisa economias reputacionais de escala em firmas de advocacia. Chaserant e Harnay tratam reputação individual e coletiva como mecanismo capaz de sustentar qualidade e renda no mercado jurídico.
 
-A reputação, nesse sistema, é substituto para a verificação. Mais
-precisamente, é o que a economia chama de *screening device* em
-mercados com informação assimétrica: mecanismo que permite ao agente
-que não sabe avaliar diretamente a qualidade de um bem inferir
-essa qualidade a partir de sinais observáveis que com ela se
-correlacionam.
+Também não é nova a preocupação com entrantes e informação. Em *Bates v. State Bar of Arizona*, a Suprema Corte dos Estados Unidos observou que restrições à informação podem perpetuar a posição de advogados estabelecidos. Experimentos posteriores mostram que informação quantitativa sobre resultados jurídicos pode alterar escolha de advogado e comportamento processual.
 
-Este artigo tem quatro objetivos. Primeiro, descrever com precisão
-como a rede de reputação opera no sistema jurídico brasileiro —
-em que nós, com que mecanismos, rastreando que proxies. Segundo,
-demonstrar que os agentes com capital reputacional acumulado têm
-interesse estrutural em manter a opacidade argumentativa que torna
-a reputação necessária e valiosa. Terceiro, examinar como a redução
-de custos de verificação argumentativa perturba esse equilíbrio.
-Quarto, desenvolver as implicações para democratização do acesso
-ao sistema reputacional e, por essa via, ao sistema jurídico.
+Mais recentemente, Mojon, Mahari e Lera mostraram que rankings de escritórios baseados em prestígio podem correlacionar-se mal com desempenho litigioso e que rankings data-driven podem prever melhor resultados futuros. O trabalho também explicita uma dinâmica de retroalimentação de prestígio e apresenta métricas empíricas como instrumento de redução de assimetria informacional.
 
-O artigo integra programa de pesquisa mais amplo sobre racionalidade
-do sistema de precedentes brasileiro (Papers 1A a 1E desta série),
-e desenvolve a dimensão reputacional que os papers anteriores não
-capturaram.
+Esses antecedentes retiram força de uma formulação ampla segundo a qual “tecnologia torna qualidade observável, reduz prestígio e democratiza reputação”. Essa formulação já está substancialmente ocupada.
+
+A pergunta deste paper é diferente: **o que acontece dentro de uma interação jurídica repetida quando a corte consegue verificar diretamente, a baixo custo, propriedades específicas de qualidade de peças atribuíveis ao mesmo praticante?**
+
+A unidade de análise passa da “rede jurídica inteira” para um vínculo local entre observador institucional e produtor jurídico.
 
 ---
 
-## 2. Reputação como mecanismo de coordenação
+## 2. O que a reputação faz quando a qualidade é cara de verificar
 
-### 2.1 O problema da verificação cara
+### 2.1 Reputação como sinal, não como medida perfeita
 
-A produção jurídica — petições, votos, pareceres, argumentos orais
-— tem propriedade que a torna difícil de avaliar diretamente: é
-bem de *experiência* e, mais precisamente, de *credência*. Bens
-de experiência são aqueles cuja qualidade pode ser avaliada após
-o consumo (como um restaurante: você sabe se a refeição foi boa
-depois de comê-la). Bens de credência são aqueles cuja qualidade
-não pode ser facilmente verificada mesmo após o consumo — você pode
-não saber se o argumento do advogado era o melhor possível mesmo
-depois de ganhar o processo.
+Reputação, certificação, afiliação e prestígio podem transmitir informação útil sem serem medidas perfeitas de qualidade. Um escritório conhecido, uma credencial institucional ou histórico de atuação pode elevar a expectativa de qualidade, mas o sinal mistura competência, recursos, seleção de clientes, posição institucional, acesso a casos, marketing e desempenho passado.
 
-A qualidade de um argumento jurídico é bem de credência de modo
-acentuado. O juiz que recebe uma petição pode verificar se está
-bem escrita, se cita as normas pertinentes, se tem estrutura
-reconhecível. Mas verificar se o argumento identifica corretamente
-os fundamentos determinantes do precedente relevante, se a distinção
-proposta é genuína, se há omissão que enfraquece a fundamentação —
-isso exige pesquisa independente que o juiz raramente tem tempo
-de fazer.
+A literatura anterior já demonstra que esses sinais podem influenciar matching e tratamento institucional. Assim, este paper não pressupõe que reputação seja mero “erro” a ser eliminado. Ela é resposta racional a informação imperfeita, ainda que possa produzir vieses e vantagens cumulativas.
 
-Akerlof demonstrou que mercados com informação assimétrica sobre
-qualidade tendem a colapsar para equilíbrios de baixa qualidade:
-compradores que não conseguem distinguir boa qualidade de má
-qualidade pagam preço médio; vendedores de boa qualidade, que não
-conseguem ser pagos acima do preço médio, saem do mercado; a
-qualidade média cai; o preço médio cai; o processo continua. O
-resultado — que Akerlof chamou de market for lemons — é equilíbrio
-onde apenas baixa qualidade persiste.
+### 2.2 Verificação direta desloca a composição do conjunto informacional
 
-O sistema jurídico não colapsa dessa forma porque desenvolveu
-mecanismo alternativo de sinalização de qualidade: a reputação.
+Se uma característica antes cara de avaliar se torna barata e confiavelmente observável, o peso relativo de sinais indiretos pode cair **na decisão em que a característica é relevante**.
 
-### 2.2 A rede de reputação
+Isso não significa que reputação desapareça. Qualidade jurídica é multidimensional e muitas de suas dimensões permanecem de difícil verificação. A tecnologia pode tornar algumas propriedades transparentes e deixar outras praticamente intactas.
 
-A reputação funciona como sistema de informação distribuída: cada
-agente acumula histórico de interações com outros agentes, e esse
-histórico é parcialmente observável pelos demais. Ao avaliar um
-agente desconhecido, o sistema usa a reputação como proxy — sinal
-observável que se correlaciona com qualidade.
-
-No sistema jurídico brasileiro, a rede de reputação opera em todos
-os nós:
-
-**Advogado avalia advogado adversário.** Antes de preparar a
-estratégia, o advogado pesquisa o adversário: onde estudou, em que
-escritório trabalha, qual o histórico de casos, qual a área de
-especialização. Essa avaliação é consciente — o exemplo de revisão
-do próprio raciocínio diante de adversário reputado é fenômeno
-reconhecido na prática forense. E é inconsciente também: estratégias
-de negociação, tonalidade das petições, disposição para acordar ou
-litigar são moduladas pela reputação percebida do adversário.
-
-**Juiz avalia advogado.** O juiz que recebe petição de advogado
-conhecido — por histórico de petições bem fundamentadas, por
-reputação de seriedade — dedica atenção diferente do que dedicaria
-à petição de advogado desconhecido ou de reputação duvidosa. Não
-porque a petição atual foi verificada — mas porque a reputação é
-sinal de qualidade esperada. A reputação do advogado afeta o
-threshold cognitivo do juiz para acolher o argumento.
-
-**Tribunal avalia juiz.** O tribunal que recebe recurso de sentença
-de juiz conhecido por fundamentação cuidadosa trata a sentença de
-modo diferente do que trataria sentença de juiz conhecido por
-fundamentação mecânica. A presunção de qualidade da sentença —
-que aumenta o ônus do recorrente de demonstrar o erro — é parcialmente
-função da reputação do juiz que a proferiu.
-
-**STF avalia tribunal.** O STF que recebe reclamação contra acórdão
-de tribunal com reputação de fundamentação cuidadosa tende a tratar
-o acórdão com presunção diferente do que trataria acórdão de
-tribunal com reputação de aplicação mecânica. Isso não está
-codificado em nenhuma norma; emerge da estrutura reputacional do
-sistema.
-
-**Academia avalia STF.** A academia jurídica avalia a qualidade
-dos julgamentos do STF e produz reputação institucional. Acórdãos
-citados positivamente pela doutrina de referência têm autoridade
-diferente de acórdãos que a doutrina critica. Essa avaliação
-retroalimenta o STF: ministros com consciência de sua reputação
-acadêmica têm incentivo para produzir julgamentos que resistam à
-crítica doutrinária.
-
-### 2.3 O que a reputação rastreia
-
-A reputação como mecanismo de informação é tão boa quanto a
-correlação entre os sinais que rastreia e a qualidade que pretende
-sinalizar. No sistema jurídico brasileiro, a reputação rastreia
-principalmente proxies institucionais — não qualidade diretamente.
-
-Os proxies dominantes são:
-
-**Afiliação institucional.** O advogado de grande escritório
-nacional, o procurador de carreira tradicional, o advogado público
-federal têm reputação inicial positiva por afiliação — não por
-verificação da qualidade de seus argumentos. A afiliação é proxy
-porque a instituição faz seleção de entrada que correlaciona com
-qualidade, e porque a instituição tem reputação própria a preservar.
-
-**Histórico de vitórias.** Advogados e escritórios com histórico
-de vitórias têm reputação positiva. O proxy é imperfeito: vitórias
-podem ser atribuídas a clientes com casos fortes, a juízes
-favoráveis, a assimetria de recursos, ou a sorte — não necessariamente
-a qualidade argumentativa. Mas a correlação é positiva suficientemente
-para que o histórico seja usado como sinal.
-
-**Titulação e trajetória acadêmica.** Doutor em direito processual
-pela USP com pós-doutorado em Bologna tem reputação diferente de
-advogado sem titulação. O proxy correlaciona com qualidade de
-pesquisa jurídica, mas imperfeitamente com qualidade argumentativa
-forense, que é habilidade distinta.
-
-**Network e relações.** A reputação circula por redes de relacionamento
-— quem conhece quem, quem já trabalhou com quem, quem foi aluno
-de quem. Reputação transmitida por network tem propriedade de
-endosso: o agente que transmite compromete sua própria reputação
-com a transmissão. Isso torna o sinal mais confiável — mas também
-mais restrito a quem já está na rede.
+O mecanismo deste paper depende justamente dessa modularidade: observar diretamente certas violações ou conformidades pode produzir informação adicional sem transformar “qualidade jurídica total” numa variável perfeitamente mensurável.
 
 ---
 
-## 3. A rede de reputação e o sistema de precedentes
+## 3. A fronteira verificável: quais atributos entram no mecanismo
 
-### 3.1 Precedentes como instrumentos reputacionais
+A hipótese é mais plausível para atributos que atendam quatro condições:
 
-O sistema de precedentes vinculantes tem dimensão reputacional que
-a literatura processual raramente tematiza.
+1. **identificabilidade textual ou documental:** existe um objeto verificável na peça, no processo ou na fonte jurídica;
+2. **critério relativamente estável:** observadores diferentes podem aplicar o teste com razoável consistência;
+3. **baixo custo de confirmação:** o sinal pode ser validado sem reconstruir toda a controvérsia jurídica;
+4. **materialidade:** o atributo tem importância suficiente para influenciar confiança na qualidade do trabalho.
 
-Um acórdão paradigmático — que passa a ser citado como leading
-case, que orienta jurisprudência de tribunais inferiores, que é
-reproduzido em manuais — é instrumento de construção de reputação
-para o tribunal que o proferiu, para os advogados que o construíram,
-e para os professores que o analisaram. O precedente de qualidade
-circula no sistema como capital simbólico — no sentido que Bourdieu
-dá ao termo: recurso acumulado que produz reconhecimento e que pode
-ser convertido em outros capitais.
+Exemplos candidatos incluem:
 
-A criação de súmula vinculante é ato de máxima sinalização
-reputacional pelo STF: a corte afirma que aquela proposição está
-suficientemente assentada para vincular todo o sistema. O capital
-reputacional investido é proporcional à amplitude da vinculação.
-Isso cria incentivo para que o STF só emita súmulas em matérias
-onde está muito confiante — o que é, em teoria, mecanismo de
-qualidade. Mas cria também incentivo para que o STF defenda a
-súmula contra questionamentos — porque rever súmula é perda de
-capital reputacional.
+- citar precedente inexistente ou materialmente diverso do descrito;
+- omitir precedente vinculante diretamente aplicável sem explicação;
+- atribuir a dispositivo legal conteúdo que ele não possui;
+- deixar de satisfazer requisito processual claramente identificável;
+- apresentar inconsistência lógica interna entre premissa e conclusão;
+- afirmar fato documentalmente incompatível com a própria peça ou autos acessíveis;
+- fornecer fonte cuja verificação reproduzível confirma ou desmente a proposição apresentada.
 
-### 3.2 A reputação como barreira de entrada
+Outros atributos são muito menos adequados ao mecanismo, como elegância retórica, criatividade doutrinária, sensibilidade estratégica, julgamento prudencial ou qualidade global de uma tese controvertida.
 
-O capital reputacional acumulado cria barreira de entrada para
-novos agentes. O advogado sem afiliação institucional reconhecida,
-sem histórico de vitórias em matéria específica, sem network
-estabelecido, enfrenta déficit reputacional que precisa superar
-para que seus argumentos sejam tratados com presunção de qualidade
-pelos operadores com quem interage.
-
-Essa barreira tem propriedade auto-reforçante. O agente sem reputação
-tem seus argumentos tratados com menor presunção de qualidade; como
-consequência, produz menos vitórias e menos citações; como
-consequência, acumula capital reputacional mais devagar; o déficit
-se perpetua. O sistema reputacional tende a preservar a distribuição
-de capital reputacional existente, o que significa preservar as
-hierarquias institucionais que geraram essa distribuição.
-
-Isso é barreira ao acesso à justiça de qualidade. Partes que só
-têm acesso a advogados sem capital reputacional — por razões
-geográficas, econômicas, ou de especialização — recebem tratamento
-diferente não porque seus argumentos são piores, mas porque os
-sinais que o sistema usa para inferir qualidade são menos favoráveis.
-
-### 3.3 O interesse na opacidade
-
-O ponto mais importante da análise reputacional é este: os agentes
-com capital reputacional acumulado têm interesse estrutural em
-manter a opacidade argumentativa que torna a reputação necessária.
-
-A lógica é direta. Se a qualidade argumentativa fosse diretamente
-verificável — se qualquer operador pudesse verificar, em minutos
-e a baixo custo, se um argumento identifica corretamente os
-fundamentos determinantes do precedente, se a distinção é genuína,
-se a fundamentação tem consistência interna — então a reputação
-perderia grande parte de sua função de sinalização. Qualidade seria
-verificada diretamente; o proxy seria menos necessário.
-
-Quando o proxy é menos necessário, seu valor como capital cai. O
-advogado de grande escritório que construiu reputação ao longo de
-décadas de afiliação institucional veria parte desse capital
-desvalorizado se qualidade passasse a ser verificável diretamente.
-O juiz que construiu reputação por histórico de julgamentos
-amplamente citados veria parte desse capital desvalorizado se a
-qualidade de cada julgamento passasse a ser auditável de modo
-transparente.
-
-Esse interesse é estrutural — não depende de nenhuma decisão
-consciente de qualquer agente. Os agentes com alto capital
-reputacional não precisam deliberadamente conspirar para manter
-a opacidade; basta que reajam de modo racional aos seus próprios
-incentivos, que incluem resistência a mudanças que desvalorizam
-seu capital.
+A divisão é importante: redução do custo de checar alguns componentes não transforma automaticamente reputação jurídica em score objetivo de qualidade total.
 
 ---
 
-## 4. A recalibração reputacional pela transparência argumentativa
+## 4. O canal local de reputação
 
-### 4.1 O mecanismo de recalibração
+### 4.1 Observação repetida
 
-A redução do custo de verificação da qualidade argumentativa perturba
-o equilíbrio reputacional em dois sentidos simultâneos.
+Considere um praticante \(P\) cujas peças chegam repetidamente a uma unidade decisória \(U\). Em cada interação, \(U\) observa um conjunto de atributos verificáveis \(V_t\).
 
-**Desvalorização de proxies.** Quando qualidade argumentativa torna-se
-mais verificável diretamente, os proxies institucionais que a
-sistema usa como substituto perdem valor relativo. A afiliação ao
-grande escritório nacional importa menos se qualquer advogado pode
-produzir argumentação de qualidade verificável. O histórico de
-vitórias importa menos se as vitórias passadas podem ser auditadas
-quanto à qualidade dos argumentos que as sustentaram. A titulação
-acadêmica importa menos se a qualidade do raciocínio é diretamente
-examinável.
+Se a verificação é barata e os atributos são informativos, \(U\) pode atualizar uma crença local sobre a confiabilidade de \(P\):
 
-A desvalorização é parcial — os proxies não desaparecem, porque
-verificação direta nunca é perfeita. Mas o peso relativo dos proxies
-na formação de reputação diminui quando verificação direta se torna
-mais barata.
+\[
+R_{P,U,t+1}=f(R_{P,U,t},V_t).
+\]
 
-**Abertura de novo canal de construção de reputação.** Quando
-qualidade argumentativa é verificável diretamente, o agente que
-produz argumentação de qualidade pode construir reputação baseada
-nessa qualidade — sem precisar dos proxies institucionais
-tradicionais. O advogado de comarca do interior com argumento
-auditável e sólido pode construir reputação baseada na qualidade
-verificável de seus argumentos, não apenas na afiliação ou no
-network.
+A equação é apenas conceitual. O paper não propõe score obrigatório, ranking judicial de advogados nem perfil oculto de litigantes. O objetivo é explicitar que **informação repetida pode alterar expectativa local mesmo sem propagação externa**.
 
-Esse é o mecanismo de democratização reputacional: a redução de
-custos de verificação abre canal de construção de reputação que
-antes estava fechado para agentes sem capital institucional prévio.
+### 4.2 Atribuição é condição necessária
 
-Esse canal, tal como o mecanismo o sustenta, é local: opera entre um
-procurador ou advogado específico e os juízes e tribunais que
-efetivamente observam suas peças ao longo do tempo — não uma reputação
-que se propaga em rede por todo o sistema. A extensão do canal local
-para democratização reputacional em rede, em que a reputação construída
-perante um juízo se transferisse para o reconhecimento do agente perante
-o sistema como um todo, não é estabelecida por este mecanismo
-isoladamente; exigiria infraestrutura adicional de propagação (imprensa
-especializada, bases de jurisprudência anotadas por autoria) que este
-artigo não desenvolve. A seção 4.3 discute, além disso, obstáculos
-estruturais à própria acumulação do canal local no contexto brasileiro.
+Não existe reputação do praticante se o observador não consegue atribuir o produto ao agente relevante.
 
-### 4.2 A resistência à recalibração
+Em organizações grandes, petições podem ser assinadas por um advogado e produzidas por equipe; instituições públicas podem usar modelos compartilhados; decisões podem ser preparadas por assessorias; distribuição aleatória e substituição de julgadores podem quebrar continuidade observacional.
 
-A recalibração encontra resistência estrutural dos agentes que
-perdem com ela. Essa resistência assume formas que podem ser
-observadas empiricamente:
+Esses fatos não são detalhes. Eles definem o domínio em que a hipótese é falsificável.
 
-**Resistência normativa.** Agentes com alto capital reputacional
-têm poder desproporcional para influenciar normas que regulam o
-sistema. Normas que aumentam o custo de produzir argumentação de
-qualidade — exigências formais complexas, restrições ao uso de
-tecnologia na prática forense, critérios de admissão que favorecem
-proxies institucionais — preservam o valor do capital reputacional
-acumulado.
+### 4.3 Continuidade do observador
 
-**Resistência cultural.** A cultura jurídica em que proxies são
-fortemente valorizados é resistente a mudanças que os desvalorizam.
-A desconfiança em relação a argumentos produzidos com assistência
-tecnológica — "esse argumento não foi feito pelo advogado, foi
-feito pela máquina" — é expressão de resistência cultural à
-recalibração.
+O aprendizado local também depende de memória institucional. Se cada peça é recebida por unidade completamente diferente, sem registro compartilhado e sem continuidade de equipe, a experiência anterior pode não influenciar a seguinte.
 
-**Resistência institucional.** Instituições cujo prestígio repousa
-sobre o capital reputacional acumulado — grandes bancas, tribunais
-superiores, faculdades de elite — têm incentivo para manter
-mecanismos de sinalização que preservam a centralidade de sua
-posição na rede reputacional.
+Por isso, estágio (a) é mais provável quando há:
 
-### 4.3 Kreps e a reputação em jogos repetidos
+- repetição suficiente de interações;
+- alguma estabilidade da unidade observadora;
+- capacidade institucional de reter informação relevante;
+- atribuição consistente das peças;
+- custo de verificação baixo o bastante para que a checagem realmente ocorra.
 
-A análise de Kreps sobre reputação em jogos repetidos oferece
-moldura útil para compreender a dinâmica da recalibração.
+### 4.4 Efeito local não é favoritismo legítimo
 
-Kreps demonstrou que reputação tem valor em jogos repetidos porque
-serve como mecanismo de comprometimento crível: o agente que
-construiu reputação de comportamento de determinado tipo tem
-incentivo para manter esse comportamento, porque o desvio destrói
-a reputação que lhe dá vantagem nas interações futuras.
+O mecanismo descritivo não autoriza decidir pelo nome do advogado. A decisão deve permanecer vinculada aos autos, ao direito aplicável e à fundamentação.
 
-No sistema jurídico, a reputação de qualidade argumentativa tem
-valor exatamente por isso: o advogado que construiu reputação de
-argumentação sólida tem incentivo para manter essa qualidade em
-cada nova petição, porque o desvio deteriora a reputação que lhe
-dá vantagem nos casos futuros (presunção de qualidade pelo juiz,
-atenção diferenciada pelo adversário).
+A hipótese trata de **alocação de atenção e expectativa informacional**, não de ônus jurídico diferente segundo reputação. Se o observador passa a aceitar proposições sem verificá-las apenas porque o agente tem bom histórico, o sistema volta a substituir verificação por reputação — exatamente o problema que a redução de custo pretendia mitigar.
 
-A recalibração pela verificabilidade direta não elimina a função
-da reputação em jogos repetidos — o comprometimento crível continua
-valioso. O que ela faz é mudar o que conta para construir essa
-reputação: de proxies institucionais para qualidade argumentativa
-verificável. Isso é transição dolorosa para agentes com alto capital
-em proxies e baixo capital em qualidade verificável — e é
-precisamente por isso que esses agentes resistem.
-
-**Obstáculos estruturais à acumulação do canal local no Brasil.** O
-mecanismo de Kreps pressupõe que o mesmo par de agentes — aqui, um
-procurador ou advogado específico e um juízo específico — interaja
-repetidamente, permitindo que a reputação se acumule como capital que
-orienta expectativas futuras. Três características da organização
-judiciária brasileira perturbam essa acumulação de modo independente
-entre si:
-
-**Distribuição aleatória por sorteio.** A distribuição por sorteio,
-prática de organização judiciária generalizada nos tribunais
-brasileiros voltada a assegurar impessoalidade, dispersa as petições
-de um mesmo procurador entre múltiplos juízes, diluindo a repetição
-de interação entre o mesmo par de agentes que a acumulação de
-reputação local pressupõe.
-
-**Rodízio de vara e movimentação de magistrados.** O rodízio periódico
-de vara e a movimentação de magistrados entre comarcas e tribunais têm
-efeito análogo: interrompem séries de interação antes que a reputação
-se consolide, mesmo quando a distribuição inicial concentrasse casos
-de um mesmo procurador perante o mesmo juízo.
-
-**Processamento mediado por assessoria.** O exame cotidiano das peças
-é mediado por assessores e servidores, não pelo magistrado diretamente;
-a impressão de qualidade que a reputação pressupõe frequentemente se
-forma primeiro no assessor que analisa a peça, e chega ao magistrado
-que assina a decisão apenas indiretamente e com perda de informação.
-
-Os três mecanismos operam de modo independente: mesmo quando um deles
-não se aplica a determinado contexto processual, os outros dois
-permanecem como obstáculos à acumulação de reputação local nos moldes
-que a seção 4.1 descreve. Nenhum dos três impede o canal descrito nesta
-seção — mas todos os três restringem sua força esperada, e nenhum
-deles é neutralizado pela redução de custos de verificação que é o
-objeto deste artigo.
+O teste normativamente saudável é mais modesto: reputação local pode orientar onde vale a pena checar primeiro ou quanta surpresa um erro gera, mas não pode substituir a análise da peça atual.
 
 ---
 
-## 5. Implicações
+## 5. Estágio (a) e estágio (b)
 
-### 5.1 Para o acesso à justiça
+### 5.1 Estágio (a): aprendizagem local
 
-A dimensão mais imediata das implicações é de acesso à justiça.
-O sistema reputacional atual exclui, de modo sistemático, agentes
-sem capital institucional prévio — não porque produzem argumentação
-de baixa qualidade, mas porque não têm os proxies que o sistema
-usa como substituto para verificação de qualidade.
+O estágio defendido neste paper é:
 
-A recalibração reputacional pela verificabilidade direta abre canal
-de construção de reputação para agentes que o sistema atual exclui:
-o defensor público com alta carga de trabalho e sem rede de contatos,
-o advogado de comarca sem titulação acadêmica de prestígio, o
-advogado dativo em processo penal sem recursos para pesquisa
-especializada. Esses agentes, com acesso a ferramentas que reduzem
-o custo de produzir argumentação verificável, podem começar a
-construir reputação baseada na qualidade diretamente verificável
-de seus argumentos.
+\[
+\text{verificação barata}
+\to
+\text{observação repetida de qualidade identificável}
+\to
+\text{atualização local de confiança}.
+\]
 
-O canal opera com força diferenciada segundo a estrutura de
-responsabilização do agente. Para advogados em mercado competitivo
-— com clientes capazes de atribuir variação nos resultados à qualidade
-argumentativa e com exposição direta a consequências em cada caso —,
-o mecanismo de dissuasão ao nível da produção da documentação opera
-com maior clareza: a qualidade argumentativa verificável é diretamente
-penalizada ou premiada nos resultados do processo, criando incentivo
-substancial ao esforço argumentativo genuíno. Para o defensor público
-em regime de serviço civil, o advogado dativo com honorários
-padronizados e a clientela incapaz de avaliar a qualidade argumentativa
-como bem de credência — exatamente os agentes que este mecanismo de
-democratização pretende alcançar —, o caminho de dissuasão exige
-condição empírica adicional: que o sistema de triagem automatizado
-produza aumento observável na taxa de impugnações nos dockets
-institucionais específicos onde esses agentes formam suas crenças sobre
-probabilidade de aplicação das normas. O debate bilateral que acompanha
-este artigo identificou essa condição de resultado da triagem como a
-questão empírica central para o segmento institucional e não a
-resolveu: os desafios à sua satisfação — lacuna de motivação
-institucional nos escritórios de defensoria e de assistência jurídica,
-observabilidade limiar em dockets de alto volume, e efeito de
-roteamento pela separação de casos (arts. 1036–1041 do CPC) — foram
-contestados estruturalmente mas não eliminados empiricamente. O
-argumento de democratização do acesso à justiça vale com maior
-segurança para o segmento competitivo; para o segmento institucional,
-é previsão condicional dependente de desenvolvimento de políticas de
-escalada seletiva e de taxas de impugnação observáveis nos dockets
-específicos que esses agentes habitualmente frequentam.
+A unidade pode ser um gabinete, turma, órgão litigante, contraparte institucional ou outro observador que efetivamente veja repetidamente o trabalho do mesmo agente.
 
-### 5.2 Para a qualidade do sistema de precedentes
+### 5.2 Estágio (b): propagação em rede
 
-O sistema de precedentes funciona melhor quando os argumentos que
-chegam aos tribunais superiores são de alta qualidade — porque
-argumentos de qualidade forçam julgamentos de qualidade (pelo
-mecanismo do dever simétrico de fundamentação desenvolvido no Paper
-1D desta série). O capital reputacional distribuído de modo mais
-amplo e mais vinculado a qualidade verificável tende a aumentar a
-qualidade média dos argumentos que chegam ao STF.
+Uma alegação muito mais forte seria:
 
-Isso se conecta ao argumento do Paper 1E sobre redução de custos
-e mudança de equilíbrio: a dimensão reputacional amplifica o
-mecanismo. Não apenas o custo de produzir argumento cai; o benefício
-reputacional de produzir argumento verificável sobe — o que aumenta
-ainda mais o incentivo para adotar a estratégia de qualidade
-argumentativa.
+\[
+R_{P,U} \to R_{P,rede}.
+\]
 
-### 5.3 Para a teoria da reputação no direito
+Ou seja, a informação aprendida localmente propagaria reputação de \(P\) para cortes, colegas, clientes e instituições que não observaram diretamente seu trabalho.
 
-A análise deste artigo sugere que a literatura jurídica brasileira
-tem lacuna: a reputação como mecanismo de coordenação no sistema
-jurídico não está sistematicamente estudada no Brasil. A literatura
-norte-americana tem trabalhos significativos sobre o papel da
-reputação na advocacia (Galanter sobre "why the haves come out
-ahead"), na magistratura (Posner sobre comportamento judicial), e
-nas relações entre tribunais (Epstein e Knight sobre interações
-estratégicas no judiciário). A literatura brasileira, com honrosas
-exceções de inspiração bourdieusiana (Engelmann, Bonelli, Koerner
-sobre o campo jurídico brasileiro), trata a reputação de modo
-implícito ou anedótico.
+Este paper **não demonstra esse segundo passo**.
 
-O presente artigo é contribuição inicial a esse programa de pesquisa
-— mas é apenas inicial. A análise empírica da rede reputacional
-do sistema jurídico brasileiro — mapeamento das redes de citação,
-das trajetórias institucionais, dos padrões de vitória e derrota
-— é agenda de pesquisa que este artigo propõe mas não executa.
+A propagação exige mecanismos adicionais:
+
+- sinais públicos ou compartilhados;
+- identificação estável do agente;
+- confiança no emissor do sinal;
+- comparabilidade entre tipos de caso;
+- governança contra manipulação;
+- respeito a privacidade e devido processo;
+- incentivos para terceiros consumirem a informação.
+
+Sem esses mecanismos, aprendizagem local permanece local.
+
+### 5.3 Por que a distinção importa para “democratização”
+
+Reduzir dependência de prestígio numa interação específica não implica democratizar o mercado jurídico.
+
+Um agente sem afiliação prestigiosa pode ter sua peça atual avaliada de forma mais direta e construir confiabilidade diante de uma unidade que observa repetidamente seu trabalho. Isso é uma abertura local importante, mas muito menor do que afirmar que tecnologia redefine a hierarquia reputacional da profissão.
+
+A linguagem arquivável limita-se à primeira proposição.
 
 ---
 
-## 6. Conclusão
+## 6. Prior art e limite da contribuição
 
-O sistema jurídico opera por rede de reputação distribuída porque
-a verificação direta de qualidade argumentativa é cara. A reputação
-é o substituto descentralizado para essa verificação: proxy que
-correlaciona com qualidade sem exigi-la diretamente.
+### 6.1 Informação assimétrica e reputação em serviços jurídicos
 
-Os proxies que o sistema usa — afiliação institucional, histórico
-de vitórias, titulação, network — correlacionam com qualidade de
-modo imperfeito, e os agentes com alto capital nesses proxies têm
-interesse estrutural em manter a opacidade que torna o proxy
-necessário e valioso.
+Daniels (1992) já descreve reputação de firmas como resposta a informação insuficiente sobre qualidade dos serviços jurídicos. Iossa e Jullien, em working paper de 2007 e publicação posterior, modelam informação/certificação de qualidade de advogados e efeitos sobre escolha e decisão. Chaserant e Harnay modelam reputação individual e coletiva da profissão jurídica. Esses trabalhos ocupam o núcleo de C1.
 
-A redução tecnológica do custo de verificação argumentativa
-recalibra esse sistema em dois sentidos: desvaloriza proxies
-institucionais quando qualidade é verificável diretamente, e abre
-novo canal de construção de reputação para agentes antes excluídos
-do sistema. A recalibração encontra resistência estrutural dos
-agentes que perdem com ela.
+### 6.2 Prestígio, afiliação e vantagem cumulativa
 
-O argumento tem consequências para o debate sobre acesso à justiça,
-para a teoria do sistema de precedentes, e para a compreensão do
-campo jurídico brasileiro como espaço de distribuição de capital
-simbólico. A dimensão reputacional é o elo que conecta a análise
-de incentivos dos papers anteriores desta série com a experiência
-vivida pelos operadores do sistema — a intuição, reconhecida por
-qualquer advogado experiente, de que a identidade do adversário
-muda a qualidade do raciocínio que você investe na causa.
+Iacobucci (2012) ocupa vantagens reputacionais de escala em firmas. *Bates* fornece antecedente forte para a proposição de que restrição informacional pode proteger posição de agentes estabelecidos. Iossa e Jullien também mostram que sinais de qualidade podem afetar tratamento institucional.
+
+Logo, C2 e a versão genérica de “opacidade favorece incumbentes” não podem carregar originalidade ampla.
+
+### 6.3 Informação objetiva como substituto parcial de proxies
+
+Sadka, Seira e Woodruff mostram que informação estatística pode alterar comportamento e escolha de representação em tribunais trabalhistas. Caplin, Gomberg e Sadka mostram que reduzir custo de acesso a informação complexa pode melhorar qualidade decisória. Mojon, Mahari e Lera fornecem o antecedente mais direto para a comparação prestígio versus métrica empírica de desempenho em escritórios de advocacia e para a ideia de reduzir assimetria informacional por rankings data-driven.
+
+Assim, a versão ampla de C4 — “sinal objetivo de qualidade reduz dependência de prestígio e nivela o campo” — é anterior ao paper.
+
+### 6.4 Residual
+
+O residual defendido é somente:
+
+> **verificação direta de propriedades argumentativas identificáveis pode criar informação reputacional local por observação repetida dentro de relações jurídicas concretas, sem pressupor propagação sistêmica.**
+
+Mesmo essa combinação é apresentada sem alegação de prioridade absoluta. A auditoria não prova ausência de formulações equivalentes fora das fontes pesquisadas.
+
+---
+
+## 7. Predições e falsificadores
+
+A hipótese local permite testes claros.
+
+### P1 — repetição é necessária
+
+Se observadores não reencontram o mesmo praticante ou não retêm memória institucional suficiente, não deve emergir efeito reputacional local persistente.
+
+### P2 — atribuição importa
+
+Quando a autoria real do produto é obscura — equipes rotativas, peças padronizadas, assinaturas formais não correspondentes à produção — o sinal ligado ao indivíduo deve enfraquecer.
+
+### P3 — verificação precisa ser barata
+
+Se o atributo exige reconstrução completa do mérito de cada processo, o mecanismo tende a desaparecer em ambientes de alto volume.
+
+### P4 — atributos verificáveis devem prever comportamento futuro relacionado
+
+Para que o sinal seja reputacional e não mero histórico, observações anteriores precisam melhorar alguma previsão sobre propriedades futuras do trabalho do mesmo agente na mesma dimensão.
+
+### P5 — prestígio deve perder peso apenas onde a informação direta é suficientemente boa
+
+Se sinais diretos são ruidosos, manipuláveis ou pouco relacionados à qualidade relevante, afiliação e reputação geral podem continuar dominantes.
+
+### P6 — estágio (a) não implica estágio (b)
+
+Mesmo que a corte local aprenda que um praticante entrega peças mais verificáveis, a ausência de propagação para outros observadores não falsifica o canal local; falsifica apenas uma teoria mais ampla de rede.
+
+### P7 — decisão pelo nome é um desvio, não confirmação
+
+Se a reputação acumulada passa a substituir a verificação da peça atual e gera favoritismo, o mecanismo normativamente desejável falhou. O objetivo é tornar verificação mais barata, não criar um novo atalho autoritativo.
+
+---
+
+## 8. Limitações institucionais
+
+A hipótese é especialmente sensível ao desenho real do Judiciário.
+
+Distribuição aleatória de processos pode reduzir repetição entre praticante e julgador. Mobilidade de magistrados e servidores pode apagar memória local. Assessores podem mediar a observação. Unidades de triagem podem ver a peça antes do decisor final. Grandes litigantes institucionais podem aparecer com tanta frequência que o aprendizado ocorre no nível da instituição, não do indivíduo.
+
+Também há heterogeneidade entre tipos de processo. Em rotinas de alto volume e baixa revisão, verificações automáticas simples podem ser mais úteis; em controvérsias constitucionais complexas, qualidade depende de julgamento que não se reduz a checklist.
+
+Qualquer implementação computacional levanta ainda riscos de viés, privacidade, gaming, erro de atribuição e cristalização de reputação negativa. Este paper não propõe ranking secreto de profissionais nem uso decisório de score reputacional.
+
+Finalmente, qualidade de argumentação não se identifica com taxa de vitória. Métricas baseadas apenas em resultados confundem mérito do caso, seleção de clientes, recursos do litigante, composição do tribunal e qualidade profissional. A hipótese aqui privilegia propriedades verificáveis do próprio produto jurídico.
+
+---
+
+## 9. Conclusão
+
+Reputação jurídica como resposta a assimetria de informação não é uma descoberta deste paper. Tampouco é nova a proposição de que sinais objetivos de desempenho podem competir com prestígio e reduzir assimetria no mercado jurídico.
+
+O ponto residual é mais estreito e mais testável. Quando uma corte consegue verificar repetidamente, a baixo custo, propriedades identificáveis de peças atribuídas ao mesmo praticante, essa sequência pode gerar informação local sobre confiabilidade. A tecnologia altera a relação apenas na medida em que realmente reduz custo de verificação e preserva qualidade do sinal.
+
+A conclusão deve parar aí. O canal local não prova propagação em rede, democratização profissional ampla ou substituição do capital reputacional existente. Esses fenômenos exigem mecanismos adicionais e evidência própria.
+
+Ao separar **observação local** de **propagação reputacional**, o paper troca uma tese ampla e difícil de sustentar por uma hipótese institucional delimitada, falsificável e compatível com o prior art existente.
 
 ---
 
 ## Referências
 
-AKERLOF, George A. The market for "lemons": quality uncertainty
-and the market mechanism. *Quarterly Journal of Economics*, v. 84,
-n. 3, p. 488-500, 1970.
+BATES v. State Bar of Arizona, 433 U.S. 350 (1977).
 
-BOURDIEU, Pierre. *O poder simbólico*. Tradução de Fernando Tomaz.
-Rio de Janeiro: Bertrand Brasil, 1989.
+CAPLIN, Andrew; GOMBERG, Andrei; SADKA, Joyce. **Judging the Judges: Indexing of Complex Information Reduces Injustice.** NBER Working Paper 32587, 2024.
 
-BOURDIEU, Pierre. La force du droit: éléments pour une sociologie
-du champ juridique. *Actes de la Recherche en Sciences Sociales*,
-v. 64, p. 3-19, 1986.
+CHASERANT, Camille; HARNAY, Sophie. **Self-regulation of the legal profession and quality in the market for legal services: an economic analysis of lawyers’ reputation.** European Journal of Law and Economics, v. 39, n. 2, 2015. DOI: 10.1007/s10657-013-9420-1.
 
-BONELLI, Maria da Gloria. *Profissionalismo e política no mundo
-do direito*. São Paulo: EdUFSCar, 2002.
+DANIELS, Ronald J. **The Law Firm as an Efficient Community.** McGill Law Journal, v. 37, n. 3, 1992.
 
-ENGELMANN, Fabiano. *Sociologia do campo jurídico: juristas e
-usos do direito*. Porto Alegre: Sergio Antonio Fabris, 2006.
+IACOBUCCI, Edward M. **Reputational Economies of Scale, with Application to Law Firms.** American Law and Economics Review, v. 14, n. 1, 2012. DOI: 10.1093/aler/ahr023.
 
-EPSTEIN, Lee; KNIGHT, Jack. *The choices justices make*. Washington:
-CQ Press, 1998.
+IOSSA, Elisabetta; JULLIEN, Bruno. **The Market for Lawyers: The Value of Information on the Quality of Legal Services.** IDEI Working Paper 485, 2007; final publication in RAND Journal of Economics, v. 43, n. 4, 2012.
 
-GALANTER, Marc. Why the "haves" come out ahead: speculations on
-the limits of legal change. *Law & Society Review*, v. 9, n. 1,
-p. 95-160, 1974.
+MOJON, Alexandre; MAHARI, Robert; LERA, Sandro Claudio. **Addressing Information Asymmetry in Legal Disputes through Data-Driven Law Firm Rankings.** arXiv:2408.16863, 2024; later published as *Data-driven law firm rankings to reduce information asymmetry in legal disputes*.
 
-KREPS, David M. Corporate culture and economic theory. In:
-HAMILTON, J.; SHEPSLE, K. (ed.). *Perspectives on positive political
-economy*. Cambridge: Cambridge University Press, 1990.
+SADKA, Joyce; SEIRA, Enrique; WOODRUFF, Christopher. **Information and Bargaining through Agents: Experimental Evidence from Mexico’s Labor Courts.** NBER Working Paper 25137, 2018; Review of Economic Studies, 2024.
 
-LUHMANN, Niklas. *Confianza*. Tradução de Amada Flores. Barcelona:
-Anthropos, 1996.
+### Registro de auditoria de prioridade
 
-LUHMANN, Niklas. *Law as a social system*. Tradução de Klaus
-Ziegert. Oxford: Oxford University Press, 2004.
-
-MARINONI, Luiz Guilherme. *Precedentes obrigatórios*. 5. ed. São
-Paulo: Revista dos Tribunais, 2016.
-
-POSNER, Richard A. *How judges think*. Cambridge: Harvard University
-Press, 2008.
-
-SPENCE, Michael. Job market signaling. *Quarterly Journal of
-Economics*, v. 87, n. 3, p. 355-374, 1973.
-
----
-
-*Este artigo integra a série "Raciocínio Jurídico Auditável"
-(Papers 1A a 1F). Versão de 9 de julho de 2026.*
+A decomposição de claims, cutoffs públicos, buscas e classificações que limitam a contribuição desta versão estão preservados em `audits/prior-art/paper1f-reputation-coordination-2026-09-18.md`. O registro integra a proveniência do preprint e não substitui as fontes externas citadas acima.
