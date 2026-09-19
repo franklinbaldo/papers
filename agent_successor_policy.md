@@ -1,4 +1,5 @@
 ---
+type: "Alignment Paper"
 okf_version: "0.2"
 title: "Agent Successor Policy: Multi-Horizon Reward Representations for Prompt-Selected Autonomous Work"
 description: "A proposal for agents whose cycle-level prompts are selected by learned representations of the futures their behaviors tend to produce."
