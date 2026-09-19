@@ -735,3 +735,12 @@ Finally, the formalism describes capability, not authorization. Whether a recove
 RL relay transducers make the space between language-model calls trainable without requiring differentiable access to the models themselves. Their actions remain discrete and inspectable. Associative memory lets them reuse strings associated with useful embedding regions. A frozen cosine layer preserves semantic recall, while reward-conditioned functional keys and contextual utility learn which retrieved strings actually survive and help in particular channel contexts. Receivers learn what survived; relay policies learn how to preserve or steer it; language models can remain frozen or slowly coadapt.
 
 This architecture provides a controlled setting for studying communication through LLMs, black-box textual control, multi-hop credit assignment, learned codebooks, private protocols, and compositional safety. The central empirical question is not simply whether a prompt can cause a desired output. It is whether a learned discrete policy can construct representations that remain recoverable across repeated stochastic transformations, and whether those representations describe general properties of language-model channels or only private agreements among co-trained components.
+
+## Research programme position
+
+- **Initiative:** RL Relay Transducers
+- **Scope:** Trainable relay mechanisms for information flow through model chains.
+- **Not claimed here:** This belongs to the machine-interaction programme and shares methodology with active probing, but is not a Pontifex result.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
