@@ -19,3 +19,5 @@ jobs:
         run: python3 okf/validate.py
       - name: Test Zenodo deposit preparation
         run: python3 scripts/zenodo_prepare.py --self-test
+      - name: Validate all Zenodo-ready paper bundles
+        run: python3 scripts/zenodo_validate_ready.py

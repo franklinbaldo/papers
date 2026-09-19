@@ -11,11 +11,12 @@ authors:
       - "Independent Researcher"
     corresponding: true
 publication:
-  status: draft
+  status: ready
   targets: [zenodo]
   zenodo:
     publication_type: preprint
     access_right: open
+    license: cc-by-nc-4.0
     version: "0.1"
 ---
 
@@ -50,7 +51,7 @@ Suppose two embedding models can be compared on the same collection of texts. Ev
 
 These questions are not equivalent. Coordinate alignment can preserve broad correspondence while nearest-neighbor identities remain observer-specific. Conversely, small-gallery neighborhood disagreement can be a finite-gallery artifact: as the gallery grows, calibrated agreement might collapse toward chance or converge toward a common structure.
 
-The experiment therefore asks whether cross-observer local agreement survives a large-gallery test, and whether surviving agreement approaches the stability one obtains when the observer is held fixed.
+The experiment therefore asks whether cross-observer local agreement survives a large-gallery test, and whether surviving agreement approaches the stability one obtains when the observer itself is held fixed.
 
 The preregistered decision rule was deliberately asymmetric. The static paper would be released only if cross-observer agreement remained both nontrivial and scale-stable, while also remaining materially below a same-observer stability ceiling. A collapse would demote the pilot result to a small-gallery artifact. Near-equivalence to the same-observer ceiling would weaken the case that discrete relational structure is meaningfully observer-specific.
 
