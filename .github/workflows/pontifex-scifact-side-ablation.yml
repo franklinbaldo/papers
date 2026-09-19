@@ -1,0 +1,48 @@
+name: Pontifex SciFact residual-side ablation
+
+on:
+  pull_request:
+    paths:
+      - "experiments/pontifex_benchmarks/scifact_residual_side_ablation.py"
+      - "experiments/pontifex_benchmarks/PROTOCOL-SCIFACT-RESIDUAL-SIDE-ABLATION-2026-09-19.md"
+      - ".github/workflows/pontifex-scifact-side-ablation.yml"
+  workflow_dispatch:
+
+jobs:
+  ablation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Restore SciFact minimal representation cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/pontifex-scifact
+            ~/.cache/huggingface
+          key: pontifex-scifact-side-v1-${{ runner.os }}
+          restore-keys: |
+            pontifex-scifact-side-v1-
+            pontifex-scifact-transport-v2-
+            pontifex-scifact-transport-v1-
+
+      - name: Run label-sealed 2x2 residual-side ablation
+        run: |
+          uv run experiments/pontifex_benchmarks/scifact_residual_side_ablation.py \
+            --budgets 16 32 64 128 256 512 \
+            --seed 20260919 \
+            --cache-dir .cache/pontifex-scifact \
+            --output /tmp/pontifex-scifact-side-ablation.json
+
+      - name: Upload ablation record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pontifex-scifact-side-ablation
+          path: /tmp/pontifex-scifact-side-ablation.json
+          if-no-files-found: error

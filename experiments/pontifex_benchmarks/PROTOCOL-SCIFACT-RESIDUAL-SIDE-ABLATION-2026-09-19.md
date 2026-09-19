@@ -20,12 +20,12 @@ This ablation changes no training information and introduces no new fit. It deco
 
 ## Frozen information boundary
 
-- `D_assembly`: canonical SciFact corpus/query text plus split membership and encoder weights. Relevance grades are not part of assembly.
-- `D_student`: first 80% of exact-test-text-overlap-filtered train-query IDs after the deterministic seed-20260919 permutation. Only paired MiniLM/MPNet representations are used.
+- `D_assembly`: canonical SciFact corpus/query text plus split membership and frozen encoder weights. Relevance grades are not part of assembly.
+- `D_student`: first 80% of exact-test-text-overlap-filtered train-query IDs after deterministic seed `20260919`. Only paired MiniLM/MPNet representations are used.
 - `D_val`: remaining 20% of filtered train-query IDs. Only B-coordinate reconstruction selects Pontifex `tau` and `lambda`; train qrels are never used.
-- `D_test`: canonical SciFact test relevance grades. The ablation script reads only test query IDs before fitting; relevance grades are loaded only after all K-specific transports and hyperparameters are frozen.
+- `D_test`: canonical SciFact test relevance grades. Before fitting, the script reads only test query IDs/text so the official split and overlap filter can be constructed; relevance grades are loaded only after all K-specific transports and hyperparameters are frozen.
 
-True B coordinates for test queries/documents are evaluation diagnostics only. No test endpoint selects K, `tau`, `lambda`, anchors, or model class.
+The stricter executable for this ablation **does not encode B coordinates for test queries or corpus documents at all**. MPNet/B is evaluated only on the train-query representation pool used to form `D_student` and `D_val`. Thus no target-space test coordinate can accidentally become a tuning signal. No test endpoint selects K, `tau`, `lambda`, anchors, or model class.
 
 ## 2x2 frozen evaluation
 
@@ -51,7 +51,7 @@ This is an exact algebraic decomposition of the full retrieval change into query
 
 `K=256` is the primary mechanism point because the previously completed SICK-R strict-crossfit benchmark showed the clearest B-coordinate residual reconstruction at that budget. This choice is based on a different benchmark and predates SciFact test inspection. Other K values are a predeclared scaling diagnostic.
 
-For each contrast the script reports the mean paired per-query nDCG@10 difference and a deterministic 95% percentile bootstrap interval over the 300 untouched test queries (`5000` resamples, seed `20260919 + K`). The bootstrap is uncertainty estimation after model freeze; it does not retune anything.
+For each contrast the script reports the mean paired per-query nDCG@10 difference and a deterministic 95% percentile bootstrap interval over the 300 untouched test queries (`5000` resamples, seed derived from `20260919 + K`). The bootstrap is uncertainty estimation after model freeze; it does not retune anything.
 
 No arbitrary pass/fail effect threshold is introduced. Multiple K values are not treated as six independent confirmatory discoveries.
 
@@ -59,4 +59,4 @@ No arbitrary pass/fail effect threshold is introduced. Multiple K values are not
 
 Evidence can support statements such as “the retrieval delta is concentrated on the document-side residual” or “the full residual does not outperform the same Procrustes map.” It cannot by itself establish a physical torus, causal semantic locality, or general transport superiority.
 
-A positive coordinate-reconstruction delta without a retrieval delta remains mechanism evidence only. A retrieval delta that disappears in the side decomposition weakens rather than strengthens the claim.
+A positive coordinate-reconstruction result on another benchmark is motivation for the ablation, not evidence about SciFact. The present test is deliberately downstream-only: target-space B coordinates for `D_test` and corpus are never generated.

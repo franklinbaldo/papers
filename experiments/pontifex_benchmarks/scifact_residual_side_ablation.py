@@ -10,9 +10,11 @@
 # ///
 """Frozen query/document-side residual ablation for BEIR SciFact.
 
-The crucial structural property is label sealing: qrel IDs are read before fit so
-canonical split membership is known, but relevance grades are not loaded until
-all K-specific transports and hyperparameters have been frozen.
+This implementation is deliberately stricter than the parent benchmark:
+- qrel IDs are read before fit only to identify canonical split membership;
+- relevance grades are not loaded until every transport is frozen;
+- B/MPNet coordinates are encoded only for TRAIN queries (student + val);
+- no B coordinate is generated for test queries or corpus documents.
 """
 
 from __future__ import annotations
@@ -55,6 +57,60 @@ def text_only_data(root: Path) -> tuple[base.Data, list[str], list[str]]:
     return data, train_ids, test_ids
 
 
+def minimal_embeddings(
+    data: base.Data,
+    train_ids: list[str],
+    test_ids: list[str],
+    cache: Path,
+) -> dict[str, np.ndarray]:
+    """Encode only coordinates that the ablation is allowed to use.
+
+    A is needed for docs, train queries and test queries because the frozen map is
+    applied to A at evaluation. B is needed *only* for train queries because
+    student/validation correspondence learning occurs entirely inside TRAIN.
+    """
+    a_texts = (
+        data.corpus_texts
+        + [data.queries[q] for q in train_ids]
+        + [data.queries[q] for q in test_ids]
+    )
+    b_texts = [data.queries[q] for q in train_ids]
+    manifest = base.sha256_lines(
+        ["A"] + a_texts + ["B-TRAIN-ONLY"] + b_texts
+    )
+    if cache.exists():
+        payload = np.load(cache, allow_pickle=False)
+        if (
+            str(payload["manifest"].item()) == manifest
+            and str(payload["model_a"].item()) == base.MODEL_A
+            and str(payload["model_b"].item()) == base.MODEL_B
+        ):
+            return {
+                k: np.asarray(payload[k], dtype=np.float32)
+                for k in ("a_docs", "a_train", "a_test", "b_train")
+            }
+
+    n_docs = len(data.corpus_ids)
+    n_train = len(train_ids)
+    a = base.encode_texts(base.MODEL_A, a_texts, 128)
+    b_train = base.encode_texts(base.MODEL_B, b_texts, 64)
+    out = {
+        "a_docs": a[:n_docs],
+        "a_train": a[n_docs : n_docs + n_train],
+        "a_test": a[n_docs + n_train :],
+        "b_train": b_train,
+    }
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        cache,
+        manifest=np.asarray(manifest),
+        model_a=np.asarray(base.MODEL_A),
+        model_b=np.asarray(base.MODEL_B),
+        **out,
+    )
+    return out
+
+
 def per_query_ndcg(
     qrels: dict[str, dict[str, int]],
     qids: list[str],
@@ -65,18 +121,27 @@ def per_query_ndcg(
     vals = np.empty(len(qids), dtype=np.float64)
     for i, qid in enumerate(qids):
         order = np.argsort(scores[i])[::-1][:k]
-        rels = np.asarray([qrels[qid].get(doc_ids[j], 0) for j in order], dtype=np.float64)
+        rels = np.asarray(
+            [qrels[qid].get(doc_ids[j], 0) for j in order], dtype=np.float64
+        )
         discounts = 1.0 / np.log2(np.arange(2, len(rels) + 2))
         dcg = float(np.sum((np.power(2.0, rels) - 1.0) * discounts))
-        ideal = np.sort(np.asarray(list(qrels[qid].values()), dtype=np.float64))[::-1][:k]
+        ideal = np.sort(
+            np.asarray(list(qrels[qid].values()), dtype=np.float64)
+        )[::-1][:k]
         idcg = float(
-            np.sum((np.power(2.0, ideal) - 1.0) / np.log2(np.arange(2, len(ideal) + 2)))
+            np.sum(
+                (np.power(2.0, ideal) - 1.0)
+                / np.log2(np.arange(2, len(ideal) + 2))
+            )
         )
         vals[i] = 0.0 if idcg == 0.0 else dcg / idcg
     return vals
 
 
-def bootstrap_summary(delta: np.ndarray, seed: int, n_boot: int = 5000) -> dict[str, float]:
+def bootstrap_summary(
+    delta: np.ndarray, seed: int, n_boot: int = 5000
+) -> dict[str, float | int]:
     rng = np.random.default_rng(seed)
     n = len(delta)
     draws = rng.integers(0, n, size=(n_boot, n))
@@ -99,10 +164,16 @@ def scores(q: np.ndarray, d: np.ndarray) -> np.ndarray:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--budgets", nargs="+", type=int, default=[16, 32, 64, 128, 256, 512])
+    ap.add_argument(
+        "--budgets", nargs="+", type=int, default=[16, 32, 64, 128, 256, 512]
+    )
     ap.add_argument("--seed", type=int, default=20260919)
-    ap.add_argument("--cache-dir", type=Path, default=Path(".cache/pontifex-scifact"))
-    ap.add_argument("--output", type=Path, default=Path("pontifex-scifact-side-ablation.json"))
+    ap.add_argument(
+        "--cache-dir", type=Path, default=Path(".cache/pontifex-scifact")
+    )
+    ap.add_argument(
+        "--output", type=Path, default=Path("pontifex-scifact-side-ablation.json")
+    )
     args = ap.parse_args()
 
     root = base.ensure_dataset(args.cache_dir)
@@ -120,24 +191,35 @@ def main() -> None:
     if 256 not in budgets:
         raise RuntimeError("predeclared primary K=256 is unavailable")
 
-    emb = base.encode_or_load(data, args.cache_dir / "scifact-minilm-mpnet.npz")
+    emb = minimal_embeddings(
+        data, train_ids, test_ids, args.cache_dir / "scifact-side-minimal.npz"
+    )
     train_pos = {qid: i for i, qid in enumerate(train_ids)}
     student_idx = np.asarray([train_pos[q] for q in student_ids], dtype=np.int64)
     val_idx = np.asarray([train_pos[q] for q in val_ids], dtype=np.int64)
-    a_student, b_student = emb["a_train"][student_idx], emb["b_train"][student_idx]
-    a_val, b_val = emb["a_train"][val_idx], emb["b_train"][val_idx]
-    a_test, b_test = emb["a_test"], emb["b_test"]
-    a_docs, b_docs = emb["a_docs"], emb["b_docs"]
+    a_student = emb["a_train"][student_idx]
+    b_student = emb["b_train"][student_idx]
+    a_val = emb["a_train"][val_idx]
+    b_val = emb["b_train"][val_idx]
+    a_test = emb["a_test"]
+    a_docs = emb["a_docs"]
 
-    # Phase 1: fit/select using D_student and D_val only. No relevance grades exist in memory.
+    # Phase 1: fit/select using D_student and D_val only. No relevance grades
+    # and no target-space B coordinates for test/corpus exist in memory.
     frozen: list[dict] = []
     for k in budgets:
         aa, bb = a_student[:k], b_student[:k]
-        tau, lam, val_loss, coarse, residual = base.select_torus(aa, bb, a_val, b_val)
+        tau, lam, val_loss, coarse, residual = base.select_torus(
+            aa, bb, a_val, b_val
+        )
         coarse_q = base.apply_procrustes(a_test, *coarse).astype(np.float32)
         coarse_d = base.apply_procrustes(a_docs, *coarse).astype(np.float32)
-        residual_q = base.apply_torus(a_test, aa, residual, coarse, tau, lam).astype(np.float32)
-        residual_d = base.apply_torus(a_docs, aa, residual, coarse, tau, lam).astype(np.float32)
+        residual_q = base.apply_torus(
+            a_test, aa, residual, coarse, tau, lam
+        ).astype(np.float32)
+        residual_d = base.apply_torus(
+            a_docs, aa, residual, coarse, tau, lam
+        ).astype(np.float32)
         frozen.append(
             {
                 "k": int(k),
@@ -152,10 +234,13 @@ def main() -> None:
             }
         )
 
-    # Phase 2: only now unseal D_test relevance grades. Nothing below may alter a fitted map.
+    # Phase 2: only now unseal D_test relevance grades. Nothing below may alter
+    # a fitted map or selected hyperparameter.
     test_qrels = base.load_qrels(root / "qrels" / "test.tsv")
     if sorted(test_qrels) != test_ids:
-        raise RuntimeError("test qrel ID manifest changed between split-membership and grade load")
+        raise RuntimeError(
+            "test qrel ID manifest changed between split-membership and grade load"
+        )
 
     rows: list[dict] = []
     for item in frozen:
@@ -168,7 +253,10 @@ def main() -> None:
             "CR_coarse_query_residual_document": scores(cq, rd),
             "RR_residual_query_residual_document": scores(rq, rd),
         }
-        nd = {name: per_query_ndcg(test_qrels, test_ids, data.corpus_ids, s) for name, s in cell_scores.items()}
+        nd = {
+            name: per_query_ndcg(test_qrels, test_ids, data.corpus_ids, s)
+            for name, s in cell_scores.items()
+        }
         cc = nd["CC_coarse_query_coarse_document"]
         rc = nd["RC_residual_query_coarse_document"]
         cr = nd["CR_coarse_query_residual_document"]
@@ -189,16 +277,12 @@ def main() -> None:
                     "lambda": item["lambda"],
                     "D_val_coordinate_loss": item["validation_coordinate_loss"],
                 },
-                "test_ndcg_at_10": {name: float(v.mean()) for name, v in nd.items()},
+                "test_ndcg_at_10": {
+                    name: float(v.mean()) for name, v in nd.items()
+                },
                 "paired_query_bootstrap": {
                     name: bootstrap_summary(delta, args.seed + k + i * 100000)
                     for i, (name, delta) in enumerate(deltas.items())
-                },
-                "B_coordinate_diagnostics": {
-                    "query_coarse_mean_cosine": float(np.mean(base.row_cosine(cq, b_test))),
-                    "query_residual_mean_cosine": float(np.mean(base.row_cosine(rq, b_test))),
-                    "document_coarse_mean_cosine": float(np.mean(base.row_cosine(cd, b_docs))),
-                    "document_residual_mean_cosine": float(np.mean(base.row_cosine(rd, b_docs))),
                 },
             }
         )
@@ -212,6 +296,8 @@ def main() -> None:
             "D_student": "80% deterministic filtered train-query representation pairs",
             "D_val": "20% deterministic filtered train-query representation pairs; coordinate-only hyperparameter selection",
             "D_test": "test relevance grades loaded only after every K-specific transport is frozen",
+            "B_test_coordinates_encoded": False,
+            "B_corpus_coordinates_encoded": False,
             "task_labels_used_for_fit_or_selection": 0,
         },
         "manifests": {
