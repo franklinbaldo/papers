@@ -1,3 +1,7 @@
+---
+type: "Protocol"
+---
+
 # Preregistered benchmark — MaleCNS on MultiEURLEX-21 Portuguese
 
 Date: 2026-09-15
