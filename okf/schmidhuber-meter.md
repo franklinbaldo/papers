@@ -56,7 +56,7 @@ Overlap is decomposed rather than inferred from abstract-level semantic similari
 - `O_prediction` — same distinctive prediction or result.
 - `O_rare_conjunction` — overlap in an uncommon combination of otherwise known components.
 
-For formula version 0.1, the aggregate overlap is the arithmetic mean of the five available components unless an audit explicitly records a different pre-registered weighting:
+For formula version 0.1, the aggregate overlap is the arithmetic mean of the five components that are genuinely applicable and observed under a recorded missingness contract:
 
 ```
 O = mean(
@@ -68,7 +68,7 @@ O = mean(
 )
 ```
 
-Missing components are not silently imputed.
+Every dimension must be marked `scored`, `not_applicable`, or `unknown`. `not_applicable` may be excluded from the denominator only with a substantive justification. `unknown` must **not** be silently dropped, because doing so can inflate overlap for poorly observed pairs. When one or more applicable dimensions are unknown, either leave scalar `O`/`SM_base` unset or report an uncertainty interval (for example, `O_min`/`O_max`) under an explicit missing-data rule.
 
 The equal-weight mean is **provisional**. The five components are not assumed to be statistically independent or equally predictive of citation expectation. Audits should preserve the component vector so that future calibrations can reweight or replace the aggregate without destroying the evidence record.
 
@@ -104,7 +104,7 @@ SM_base = 10 × B
 
 This is a **provisional, uncalibrated composite indicator**, not a probability, causal estimate, or validated measurement scale. It is preferred over an uncalibrated learned probability of "citation expected" until a sufficiently large expert-annotated calibration set exists.
 
-The multiplicative form and equal component weights are modeling choices. Because weighting, normalization, and aggregation can change composite-indicator rankings, any consequential comparison should preserve the raw component vector and report a sensitivity analysis under plausible alternative weights/aggregations. If a pair's qualitative interpretation changes materially under reasonable alternatives, that instability is part of the result.
+The multiplicative form and equal component weights are modeling choices. Because weighting, normalization, missing-data treatment, and aggregation can change composite-indicator rankings, any consequential comparison should preserve the raw component vector and report a sensitivity analysis under plausible alternative weights/aggregations. If a pair's qualitative interpretation changes materially under reasonable alternatives, that instability is part of the result.
 
 # Impact is separate
 
@@ -162,6 +162,8 @@ overlap_mechanism:
 overlap_experiment:
 overlap_prediction:
 overlap_rare_conjunction:
+overlap_coverage:
+overlap_missingness_rule:
 
 discoverability:
 credit_received:
@@ -169,6 +171,7 @@ citation_function:
 
 formula_version:
 sm_base:
+sm_base_interval:
 component_uncertainty:
 sensitivity_analysis:
 
@@ -189,7 +192,7 @@ At minimum, test:
 
 - inter-annotator reliability for `P`, all overlap components, `D`, and `C`;
 - correlation/ranking agreement between `SM_base` and blinded expert judgments of whether a citation is expected;
-- robustness of rankings to plausible weights, normalization choices, and additive/geometric/multiplicative alternatives;
+- robustness of rankings to plausible weights, normalization choices, missing-data treatments, and additive/geometric/multiplicative alternatives;
 - out-of-domain stability across fields with different citation norms;
 - calibration of any interpretation thresholds before attaching semantic labels to score ranges.
 
@@ -213,4 +216,4 @@ This allows later empirical calibration without destroying earlier audit evidenc
 
 # Falsification revision — 2026-09-19
 
-A claim-level adversarial audit after the initial prior-art pass found two material problems in the uncalibrated v0.1 presentation: composite-indicator rankings can be sensitive to weighting/aggregation choices, and the earlier interpretation labels `ordinary convergence` / `plausible reinvention` silently suggested causal states that `SM_base` is not designed to identify. Formula v0.1 is preserved for reproducibility, but sensitivity analysis is now required for consequential comparisons and causal interpretation labels are retired. See `audits/prior-art/schmidhuber-meter-falsification-2026-09-19.md`.
+A claim-level adversarial audit after the initial prior-art pass found three material problems in the uncalibrated v0.1 presentation: composite-indicator rankings can be sensitive to weighting/aggregation choices; silently averaging only observed overlap dimensions can reward missing evidence; and the earlier interpretation labels `ordinary convergence` / `plausible reinvention` suggested causal states that `SM_base` is not designed to identify. Formula v0.1 is preserved for reproducibility, but sensitivity analysis and explicit missingness are now required for consequential comparisons, and causal interpretation labels are retired. See `audits/prior-art/schmidhuber-meter-falsification-2026-09-19.md`.
