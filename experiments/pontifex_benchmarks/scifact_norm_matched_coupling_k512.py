@@ -289,9 +289,9 @@ def main() -> None:
         },
         "predeclared_decision": {
             "semantic_specificity_supported": bool(
-                semantic_boot["ci95_low"] > 0.0 and semantic_p <= 0.05
+                semantic_boot["ci95_percentile_low"] > 0.0 and semantic_p <= 0.05
             ),
-            "shared_warp_coherence_supported": bool(coherence_boot["ci95_low"] > 0.0),
+            "shared_warp_coherence_supported": bool(coherence_boot["ci95_percentile_low"] > 0.0),
         },
         "interpretation_boundary": {
             "evidence": "whether exact residual-to-anchor identity adds held-out SciFact utility beyond a shared warp that preserves coarse residual-magnitude strata, and whether the same matched deformation beats independent matched deformations",
