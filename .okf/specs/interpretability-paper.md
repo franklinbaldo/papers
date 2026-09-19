@@ -17,7 +17,7 @@ of this type.
 An Interpretability Paper proposes an architecture or method for
 understanding model internals or behavior, independent of the
 Brazilian-legal-reasoning research programme (see
-`sintese_programa.md`'s explicit scope exclusion).
+`auditable-legal-reasoning/research-program.md`'s explicit scope exclusion).
 
 ## Required fields (beyond OKF baseline)
 
@@ -35,7 +35,7 @@ None beyond OKF's own required `type`.
   targets, not measurements. This is the same convention ESHTR and
   STT use; keep the wording consistent across all three if edited.
 - A `## Companion documents` section, if a companion note (see
-  `okf/types/companion-note.md`) exists — and the companion note MUST
+  `.okf/specs/companion-note.md`) exists — and the companion note MUST
   be characterized accurately there. A 2026-07-09 audit found
   `pontifex.md` citing its companion originality
   assessment as independent validation when it was in fact an

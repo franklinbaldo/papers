@@ -9,7 +9,7 @@ timestamp: 2026-07-09T00:00:00Z
 # OKF Type Spec
 
 **`type` value:** `"OKF Type Spec"`
-**Applies to:** every file under `okf/types/`, including this one.
+**Applies to:** every file under `.okf/specs/`, including this one.
 
 ## Purpose
 
@@ -29,7 +29,7 @@ None beyond OKF's own required `type`.
 
 ## Conventional sections
 
-Every type spec in `okf/types/` follows this shape:
+Every type spec in `.okf/specs/` follows this shape:
 
 1. `# <Type Name>` heading, restating the exact `type` string, the
    file globs it applies to, and 1-2 example filenames.
@@ -56,5 +56,5 @@ Every type spec in `okf/types/` follows this shape:
 Adding a new `type` to this repository means adding a new file here
 in the same change — `okf/validate.py` treats an undocumented `type`
 value as a lint failure, by design, so the type taxonomy can't
-silently drift the way `sintese_programa.md`'s paper count did before
+silently drift the way `auditable-legal-reasoning/research-program.md`'s paper count did before
 the 2026-07-09 audit.

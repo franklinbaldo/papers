@@ -48,4 +48,4 @@ own vendoring note for the pattern.
 
 If the upstream source publishes a new version, update the vendored
 copy and its `timestamp` together, and check whether anything in
-`okf/types/` or `okf/validate.py` needs to change to match.
+`.okf/specs/` or `okf/validate.py` needs to change to match.

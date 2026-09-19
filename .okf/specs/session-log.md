@@ -1,7 +1,7 @@
 ---
 type: "OKF Type Spec"
 title: "Session Log"
-description: "Superseded, non-reserved-filename precursor to synthesis/blog/; kept as historical record."
+description: "Superseded, non-reserved-filename precursor to archive/adversarial-paper-development/synthesis/blog/; kept as historical record."
 tags: [okf-type-spec]
 timestamp: 2026-07-09T00:00:00Z
 ---
@@ -15,7 +15,7 @@ gain new members — see Notes.
 ## Purpose
 
 Historical record of the two earliest improvement sessions
-(2026-05-12), predating the `synthesis/blog/` mechanism that replaced
+(2026-05-12), predating the `archive/adversarial-paper-development/synthesis/blog/` mechanism that replaced
 it the following day. Kept for provenance, not extended.
 
 ## Required fields (beyond OKF baseline)
@@ -38,4 +38,4 @@ OKF adoption and was not renamed to fit that convention, both because
 it is inactive and because its per-session structure (full narrative
 per entry, not a flat dated-bullet list) doesn't match `log.md`'s
 specified format. New chronological history belongs in
-`synthesis/blog/` (see `okf/types/session-log-entry.md`), not here.
+`archive/adversarial-paper-development/synthesis/blog/` (see `.okf/specs/session-log-entry.md`), not here.

@@ -10,7 +10,7 @@ timestamp: 2026-08-22T00:00:00Z
 
 **`type` value:** `"Supportive Blog"`
 
-**Applies to:** dated files under `yesindeed/blog/` that record a complete
+**Applies to:** dated files under `archive/adversarial-paper-development/yesindeed/blog/` that record a complete
 supportive round, including its trigger, argument selection, discarded
 alternatives, assessment, open questions, and resulting paper changes.
 
@@ -26,7 +26,7 @@ log.
 Use this type only when the document itself carries the substantive
 supportive argument. A short dated activity record remains a
 `Session Log Entry`; the living cross-round defense thread at
-`yesindeed/<slug>.md` remains a `Supportive Defense`.
+`archive/adversarial-paper-development/yesindeed/<slug>.md` remains a `Supportive Defense`.
 
 ## Required fields beyond the OKF baseline
 

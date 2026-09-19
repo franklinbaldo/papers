@@ -9,20 +9,20 @@ timestamp: 2026-07-09T00:00:00Z
 # Technical Paper
 
 **`type` value:** `"Technical Paper"`
-**Applies to:** `pipeline_lean_argdown.md`, `proveniencia_claims.md`,
-`embedding_seeded_tournament.md` (ESHTR), `semantic_tokenization_transformers.md` (STT).
-**Examples:** `pipeline_lean_argdown.md`, `embedding_seeded_tournament.md`.
+**Applies to:** `auditable-legal-reasoning/lean-argdown-pipeline.md`, `auditable-legal-reasoning/claim-provenance.md`,
+`archive/adversarial-paper-development/methods/embedding-seeded-tournament.md` (ESHTR), `semantic-tokenization/semantic-tokenization-transformers.md` (STT).
+**Examples:** `auditable-legal-reasoning/lean-argdown-pipeline.md`, `archive/adversarial-paper-development/methods/embedding-seeded-tournament.md`.
 
 ## Purpose
 
 A Technical Paper develops methodology, tooling, or evaluation
-infrastructure in English. Three of the four (`pipeline_lean_argdown.md`,
-`proveniencia_claims.md`, ESHTR) are built specifically to formalize or
+infrastructure in English. Three of the four (`auditable-legal-reasoning/lean-argdown-pipeline.md`,
+`auditable-legal-reasoning/claim-provenance.md`, ESHTR) are built specifically to formalize or
 evaluate the dogmatic series and are counted inside the "Raciocinio
-Juridico Auditavel" programme's eleven-paper scope (`sintese_programa.md`).
+Juridico Auditavel" programme's eleven-paper scope (`auditable-legal-reasoning/research-program.md`).
 STT is a general tokenization-architecture proposal that happens to live
 in this repository but is **not** part of that programme — see
-`sintese_programa.md`'s Resumo for the explicit scope boundary. Don't
+`auditable-legal-reasoning/research-program.md`'s Resumo for the explicit scope boundary. Don't
 infer programme membership from `type` alone; check `tags`.
 
 ## Required fields (beyond OKF baseline)
@@ -41,15 +41,15 @@ None beyond OKF's own required `type`.
 ## Conventional sections
 
 ESHTR and STT open with a `> **Position paper.**` blockquote banner
-(see `okf/types/interpretability-paper.md` for the shared convention).
-`pipeline_lean_argdown.md` and `proveniencia_claims.md` do not use this
+(see `.okf/specs/interpretability-paper.md` for the shared convention).
+`auditable-legal-reasoning/lean-argdown-pipeline.md` and `auditable-legal-reasoning/claim-provenance.md` do not use this
 banner — they describe an implemented pipeline with a demonstrated
 worked example, not an unrealized design — but they DO disclose where
 the implementation lives (`franklinbaldo/skills`, external to this
 repository) rather than claiming in-repo verifiability. Any new
 Technical Paper should pick one of these two honesty conventions
 explicitly, not silently imply completed results it doesn't have (see
-`okf/types/empirical-paper.md` for the failure mode this guards against).
+`.okf/specs/empirical-paper.md` for the failure mode this guards against).
 
 ## Notes
 
@@ -59,7 +59,7 @@ Filenames in this repository do not carry sequential paper numbers
 a single linear reading order that never existed (three research axes
 share the numbering; a "Paper 4" was referred to in other papers' prose
 for years without ever being assigned a file — ESHTR). If a Technical
-Paper is ever added, name it descriptively (as `embedding_seeded_tournament.md`
-and `semantic_tokenization_transformers.md` already are), not by number.
+Paper is ever added, name it descriptively (as `archive/adversarial-paper-development/methods/embedding-seeded-tournament.md`
+and `semantic-tokenization/semantic-tokenization-transformers.md` already are), not by number.
 Cite it by name in prose too, not by an ordinal that has no
 corresponding, stable file identity.

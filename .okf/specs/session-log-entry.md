@@ -9,14 +9,14 @@ timestamp: 2026-07-09T00:00:00Z
 # Session Log Entry
 
 **`type` value:** `"Session Log Entry"`
-**Applies to:** every file under `otherwise/blog/`, `yesindeed/blog/`,
-and `synthesis/blog/` (~165 files as of 2026-07-09 — the large
+**Applies to:** every file under `archive/adversarial-paper-development/otherwise/blog/`, `archive/adversarial-paper-development/yesindeed/blog/`,
+and `archive/adversarial-paper-development/synthesis/blog/` (~165 files as of 2026-07-09 — the large
 majority of documents in this repository by count).
 
 ## Purpose
 
 A Session Log Entry records what happened in one session: what a role
-(adversarial, supportive, or synthesis — see `PROTOCOL.md`) did, why,
+(adversarial, supportive, or synthesis — see `archive/adversarial-paper-development/protocol.md`) did, why,
 what alternatives were considered and discarded, and what remains
 open. It is append-only in spirit: once written, a Session Log Entry
 is not rewritten by later sessions, unlike the `Adversarial Critique` /
@@ -29,7 +29,7 @@ repository instead uses one file per dated entry. Both are valid OKF
 patterns for representing chronological history; this repository's
 choice preserves per-entry git history and direct linkability at the
 cost of not matching OKF's specific `log.md` filename convention. See
-`okf/index.md` for the repository-level rationale.
+`.okf/index.md` for the repository-level rationale.
 
 ## Required fields (beyond OKF baseline)
 
@@ -50,7 +50,7 @@ None beyond OKF's own required `type`.
 
 Filename convention: `YYYY-MM-DD-<slug>.md`, where `<slug>` matches
 the target `Adversarial Critique` / `Supportive Defense` /
-synthesis-topic it concerns. `synthesis/blog/` entries additionally
+synthesis-topic it concerns. `archive/adversarial-paper-development/synthesis/blog/` entries additionally
 embed a session number in the title (e.g. "Session 54").
 
 ## Notes
