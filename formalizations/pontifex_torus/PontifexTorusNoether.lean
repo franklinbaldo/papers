@@ -1,23 +1,56 @@
-/-- Minimal structural formalization for the Pontifex Torus symmetry claim.
+namespace PontifexTorus
 
-This file deliberately proves only discrete structural statements that follow from
-the definitions below. It does not formalize the analytic Noether theorem and it
-does not prove that learned embedding deformations satisfy these hypotheses. -/
+universe u
 
-structure Phase where
-  index : Int
-  deriving DecidableEq, Repr
+/-- Discrete structural proxy for a beginning-to-end narrative cycle.
+The continuous paper model uses a phase on S¹; this dependency-free Lean
+skeleton keeps only the periodic/translation structure. -/
+structure NarrativeCycle where
+  period : Nat
+  positive : period > 0
+
+abbrev Phase := Nat
 
 def translatePhase (theta delta : Phase) : Phase :=
-  ⟨theta.index + delta.index⟩
+  theta + delta
 
+def Periodic {α : Type u}
+    (cycle : NarrativeCycle)
+    (field : Phase → α) : Prop :=
+  ∀ theta, field (translatePhase theta cycle.period) = field theta
+
+theorem periodic_closure {α : Type u}
+    (cycle : NarrativeCycle)
+    (field : Phase → α)
+    (hperiodic : Periodic cycle field)
+    (theta : Phase) :
+    field (translatePhase theta cycle.period) = field theta := by
+  exact hperiodic theta
+
+/-- A seam shift is a relabeling of phase coordinates, not a new physical
+configuration. This is the discrete structural analogue used in the paper. -/
+def seamShift (delta theta : Phase) : Phase :=
+  translatePhase theta delta
+
+/-- If an observable is translation invariant, moving the seam cannot change
+its value. -/
+def SeamInvariant {α : Type u} (observable : Phase → α) : Prop :=
+  ∀ theta delta, observable (seamShift delta theta) = observable theta
+
+theorem seam_shift_preserves_invariant {α : Type u}
+    (observable : Phase → α)
+    (hinvariant : SeamInvariant observable)
+    (theta delta : Phase) :
+    observable (seamShift delta theta) = observable theta := by
+  exact hinvariant theta delta
+
+/-- Structural proxy for a bilateral flow. We deliberately use integers rather
+than physical fields: the formalization proves only an antisymmetry statement,
+not that a learned semantic deformation is a physical Noether current. -/
 structure BilateralCurrent where
   left : Int
   right : Int
-  deriving DecidableEq, Repr
 
-/-- A bilateral current is antisymmetric when the right-side flow is exactly the
-negative of the left-side flow. -/
 def AntisymmetricCurrent (current : BilateralCurrent) : Prop :=
   current.right = -current.left
 
@@ -48,14 +81,4 @@ theorem conserved_charge_is_seam_independent
     charge (translatePhase theta delta) = charge theta := by
   exact hconserved theta delta
 
-/-- A seam shift does not change a conserved charge. This is only the discrete
-translation invariance encoded by `ConservedCharge`. -/
-theorem conserved_charge_under_two_shifts
-    (charge : Phase → Int)
-    (hconserved : ConservedCharge charge)
-    (theta delta₁ delta₂ : Phase) :
-    charge (translatePhase (translatePhase theta delta₁) delta₂) = charge theta := by
-  calc
-    charge (translatePhase (translatePhase theta delta₁) delta₂) =
-        charge (translatePhase theta delta₁) := hconserved (translatePhase theta delta₁) delta₂
-    _ = charge theta := hconserved theta delta₁
+end PontifexTorus
