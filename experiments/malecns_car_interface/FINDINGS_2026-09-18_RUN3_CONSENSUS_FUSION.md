@@ -14,6 +14,14 @@ timestamp: 2026-09-18T19:57:00-04:00
 
 Six unit tests passed. The experiment used only Python standard-library code. No dataset, CARLA asset, model weight, or external dependency was downloaded, so there were no cache misses.
 
+## Prior-art boundary
+
+A follow-up claim-level audit found substantial pre-cutoff antecedents for the generic robust-fusion ingredients used here: median/MAD outlier detection, confidence/reliability-weighted fusion, screening or downweighting inconsistent measurements before fusion, and combining source reliability with cross-sensor agreement. In particular, Chen et al. (2012) derive confidence indicators from median/MAD-scale outlier evidence and use them as weights, while ARMS (2026) combines MAD-based robustness, sensor reliability weights, and consensus-based cross-sensor outlier detection without ground truth.
+
+Accordingly, this record does **not** claim invention of consensus-gated confidence fusion as a general sensor-fusion method. Its contribution is the executed fixed baseline, failure-mode diagnostic, and exact synthetic result inside the MaleCNS sensor-colony programme. The still-unexecuted research question is whether a learned MaleCNS coordinator can beat these established robust-fusion baselines under matched controls.
+
+See [`audits/prior-art/malecns-consensus-fusion-2026-09-19.md`](../../audits/prior-art/malecns-consensus-fusion-2026-09-19.md) for the temporal reconstruction, sources, queries, and classifications.
+
 ## Motivation
 
 Run 2 showed that confidence-weighted fusion is excellent when specialist confidence is calibrated, but collapses when a faulty specialist is confidently wrong. A real sensor colony therefore needs a cheap baseline that does not trust confidence before checking whether a specialist agrees with its peers.
