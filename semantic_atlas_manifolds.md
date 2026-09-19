@@ -1,9 +1,23 @@
 ---
 type: "Technical Paper"
 title: "From Semantic Points to Concept Manifolds: A Manifold-Aware Extension of the Semantic Atlas"
-description: "Follow-up position paper proposing a two-scale Semantic Atlas in which a global calibrated reference frame locates concept manifolds while local manifold coordinates and spectral geometry support navigation, steering, and visualization."
+description: "Follow-up position paper proposing an SRF-anchored two-scale Semantic Atlas in which a calibrated external reference frame locates concept-specific local charts while geometry, spectral support, transition dynamics, and measured control cost remain separately testable layers."
 tags: [semantic-atlas, manifolds, spectral-geometry, graph-laplacian, block-sparse-featurizers, embeddings, steering, interpretability, navigation]
 timestamp: 2026-08-15T01:25:00Z
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
 # From Semantic Points to Concept Manifolds: A Manifold-Aware Extension of the Semantic Atlas
@@ -14,7 +28,7 @@ franklinbaldo@gmail.com
 
 ---
 
-> **Follow-up position paper and experimental extension.** This manuscript does not modify or supersede *Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models*. It asks what changes if the local objects being navigated are not adequately represented as points or preferred directions, but as low-dimensional concept manifolds embedded in a much larger activation space. Unless explicitly marked otherwise, the claims below are hypotheses and proposed experiments rather than measured results.
+> **Follow-up position paper and experimental extension.** This manuscript does not modify or supersede *Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models*. It asks what changes if the local objects being navigated are not adequately represented as points or preferred directions, but as low-dimensional concept manifolds embedded in a much larger activation space. Unless explicitly marked otherwise, the claims below are hypotheses and proposed experiments rather than measured results. This archival version does **not** claim novelty for semantic manifolds, local charts, Procrustes manifold alignment, manifold/geodesic steering, graph-Laplacian or diffusion geometry, Fiedler vectors, conductance, or a generic multiscale semantic-manifold hierarchy. Its narrower candidate contribution is the integration of those established ingredients with the pre-existing calibrated SRF/quasar frame and a falsifiable inter-/intra-manifold navigation and control contract.
 
 ## Abstract
 
@@ -24,7 +38,9 @@ This paper proposes a **manifold-aware Semantic Atlas** as a follow-up hypothesi
 
 The extension also introduces a third class of observables: **spectral geometry of the sampled semantic support**. Neighborhood graphs, diffusion operators, normalized graph Laplacians, the first non-trivial Laplacian eigenvalue, Fiedler vectors, and conductance provide a falsifiable way to ask whether an apparently continuous semantic region contains robust bottlenecks, weak bridges, or nearly disconnected subregions. These quantities are treated strictly as geometry-of-representation observables. A graph or Laplace--Beltrami spectral gap is not a quantum-field-theoretic mass gap and carries no such physical interpretation here.
 
-This produces a testable alternative to a global-PCA picture of semantic space. Global dimensionality reduction remains useful for visualization, but is no longer assumed to be the scientific state representation. We define experiments comparing global linear projections, direction-based features, post-hoc manifold recovery, block-sparse featurization, and spectral/diffusion geometry on language-model activations. We further propose tangent-aware control, cross-model chart alignment, spectral-bottleneck tests, and a three-dimensional "semantic spacecraft" interface in which the visual world is explicitly treated as a rendering of measured geometry rather than evidence by itself. The central falsifiable claim is that a hierarchical atlas of globally located but locally curved concept manifolds predicts and controls language-model trajectories better than matched point-space baselines at comparable complexity.
+The individual ingredients above have substantial pre-cutoff prior art, including semantic manifolds, global/local manifold hierarchies, Procrustes alignment, controlled dynamics on semantic manifolds, geometry-aware steering, local chart atlases, and spectral/diffusion methods. The candidate contribution here is therefore compositional rather than component-wise: a separately calibrated external SRF/quasar macroscopic frame; concept-specific local charts nested inside it; an explicit split between inter-manifold routing and intra-manifold motion; separately falsifiable cross-model chart alignment; a separation between representation geometry, spectral support, transition dynamics and measured control/escape cost; and matched point/direction rejection tests.
+
+This produces a testable alternative to a global-PCA picture of semantic space. Global dimensionality reduction remains useful for visualization, but is no longer assumed to be the scientific state representation. We define experiments comparing global linear projections, direction-based features, post-hoc manifold recovery, block-sparse featurization, and spectral/diffusion geometry on language-model activations. We further propose tangent-aware control, cross-model chart alignment, spectral-bottleneck tests, and a three-dimensional "semantic spacecraft" interface in which the visual world is explicitly treated as a rendering of measured geometry rather than evidence by itself. The central falsifiable claim is that this **SRF-anchored hierarchical integration**, not manifold geometry by itself, predicts and controls language-model trajectories better than matched point-space baselines at comparable complexity.
 
 **Keywords:** semantic atlas, concept manifolds, spectral geometry, graph Laplacian, conductance, diffusion geometry, block sparsity, neural geometry, semantic trajectories, activation steering, local charts, representation geometry, semantic navigation
 
@@ -64,6 +80,21 @@ lexical generation
 
 The original point-space Atlas is retained as a baseline throughout. If manifold structure does not improve prediction, compression, routing, or control, the extension should be rejected while the broader Semantic Atlas programme remains intact.
 
+### 1.1 Prior art and the surviving contribution boundary
+
+The manifold ingredients in this proposal are not being introduced here as standalone inventions. Mabrok (2026) explicitly models LLM hidden states as a low-dimensional Riemannian semantic manifold. Zhang and Dong's **Multi-Scale Manifold Alignment** (2025) is a particularly close pre-cutoff antecedent for a global/intermediate/local semantic-manifold hierarchy and cross-scale Procrustes alignment, while their **Dynamic Manifold Evolution Theory** (2025) treats LLM generation as a controlled dynamical system on a low-dimensional semantic manifold. Bhalla et al. (2026) study concept manifolds and local/global recovery in LLM activations; Fel et al. (2026) provide the multidimensional block-sparse realization used here as one candidate featurizer. Wurgaft et al. (2026) and Oozeer et al. (2026) establish geometry-aware and Riemannian/geodesic steering as prior techniques. Local tangent charts, learned chart atlases and Procrustes manifold alignment have still earlier antecedents in manifold learning (Zhang & Zha, 2002; Wang & Mahadevan, 2008; Sidheekh et al., 2022), while diffusion maps and graph-spectral bottleneck machinery are established mathematical tools (Coifman & Lafon, 2006; Chung, 1997).
+
+Accordingly, this paper does **not** claim novelty for any of those components. Its surviving candidate contribution is the following conjunction:
+
+1. a separately calibrated, external **SRF/quasar macroscopic frame** inherited from the Semantic Atlas;
+2. concept-specific local chart state nested inside that frame;
+3. an explicit separation of **inter-manifold routing** from **intra-manifold motion**;
+4. cross-model chart alignment treated as a separate falsifiable layer rather than assumed from global calibration;
+5. a hierarchy that keeps representation geometry, decodability, spectral support, transition dynamics and **measured control/escape cost** distinct;
+6. matched point/direction baselines and an experimental contract under which the manifold extension is rejected if it does not improve prediction, navigation or control at comparable complexity.
+
+No pre-cutoff source located in the dedicated claim-specific audit contained that exact conjunction. That is a bounded search result, **not** a claim that the combination is globally first. The audit and its queries, dates and classifications are preserved in [`audits/prior-art/semantic-atlas-manifolds-2026-09-19.md`](audits/prior-art/semantic-atlas-manifolds-2026-09-19.md).
+
 ## 2. Why points may be an incomplete primitive
 
 ### 2.1 One concept can contain structured internal variation
@@ -72,7 +103,7 @@ A single concept often varies along several semantically meaningful degrees of f
 
 Recent evidence makes this more than a philosophical concern. Fel et al. (2026) introduce **Block-Sparse Featurizers**, which enforce sparsity over multidimensional blocks instead of individual one-dimensional features. In DINOv3 and SDXL, the recovered blocks contain interpretable internal geometry, and their effective stable rank is typically about two to four dimensions. The same paper shows that movement within such a block can produce smooth, interpretable changes in generated images. This result is currently strongest in vision and image generation; it is not evidence that every language concept has the same dimensionality or that the same featurizer is optimal for language.
 
-Language-model work nevertheless supplies related evidence. Bhalla et al. (2026) show that sparse autoencoders can fragment continuous concept manifolds across multiple directions and demonstrate post-hoc recovery of manifold structure in Llama 3.1 8B. Wurgaft et al. (2026) find that steering along fitted representation manifolds yields more natural behavioral trajectories than straight-line steering in several structured language tasks. Bigelow et al. (2026) model in-context belief updates as trajectories on low-dimensional conceptual manifolds and show that those trajectories are reflected in both representations and behavior.
+Language-model work nevertheless supplies related evidence. Bhalla et al. (2026) show that sparse autoencoders can fragment continuous concept manifolds across multiple directions and demonstrate post-hoc recovery of manifold structure in Llama 3.1 8B. Wurgaft et al. (2026) find that steering along fitted representation manifolds yields more natural behavioral trajectories than straight-line steering in several structured language tasks. Bigelow et al. (2026) model in-context belief updates as trajectories on low-dimensional conceptual manifolds and show that those trajectories are reflected in both representations and behavior. Mabrok (2026), Multi-Scale Manifold Alignment (Zhang & Dong, 2025), and Dynamic Manifold Evolution Theory (Zhang & Dong, 2025) further establish that broad semantic-manifold and multiscale/dynamical framings predate this follow-up.
 
 These results motivate, but do not establish, the hypothesis that the Semantic Atlas should be charted as a collection of locally low-dimensional objects rather than only a globally reduced cloud.
 
@@ -184,6 +215,8 @@ The global frame answers "where is this conceptual region relative to the rest o
 
 Local manifold coordinates are not automatically comparable across models. If one model represents a concept in coordinates \(u\) and another in \(Ru\) for an orthogonal matrix \(R\), their geometries can be equivalent while their coordinate labels differ.
 
+Procrustes manifold alignment is established prior art (Wang & Mahadevan, 2008), and Zhang & Dong's Multi-Scale Manifold Alignment (2025) already uses Procrustes-style alignment in a multiscale LLM-manifold framework. The question here is narrower: whether independently learned **semantic concept charts** can be aligned across models *after* global SRF calibration, and whether the resulting local correspondence survives held-out and shuffled-pair controls.
+
 Cross-model manifold alignment must therefore be tested using paired examples or invariant quantities. Candidate tests include:
 
 - Procrustes alignment of matched local coordinates;
@@ -230,6 +263,8 @@ The practical implementation may use:
 - geodesics under a learned metric;
 - BSF coordinates followed by decode/re-embed verification;
 - model-predictive control constrained by atlas support.
+
+These techniques are not claimed as novel: Wurgaft et al. (2026) already demonstrate manifold-respecting activation steering and Oozeer et al. (2026) explicitly frame steering as Riemannian geodesic computation. The Atlas-specific test is whether an SRF-routed, locally geometry-aware controller improves measured behavior over matched global and straight-line controls.
 
 The key comparison is not whether curved paths look nicer. It is whether they produce better measured behavior: higher task success, greater likelihood under the base model, lower off-support distance, smaller intervention norm, or more predictable semantic displacement.
 
@@ -282,7 +317,7 @@ The Atlas interpretation is deliberately modest:
 
 The distinction from **semantic gravity** is load-bearing. A low-conductance bridge is a property of sampled geometric/support connectivity. Semantic gravity is defined through measured escape or control cost. The scientifically useful question is whether the two predict one another on held-out trajectories. A region can be spectrally narrow but dynamically easy to cross, or geometrically well connected while control remains expensive.
 
-Recent diffusion-geometry work on neural representations provides a direct methodological precedent for constructing Markov operators from representation clouds and probing their geometry at multiple diffusion scales. The present proposal uses that machinery not merely to compare representations, but to test whether semantic navigation difficulty is concentrated at reproducible spectral bottlenecks.
+Diffusion maps (Coifman & Lafon, 2006), spectral graph theory (Chung, 1997), Fiedler vectors and conductance are established machinery. Recent diffusion-geometry work on neural representations provides a direct methodological precedent for constructing Markov operators from representation clouds and probing their geometry at multiple diffusion scales. The present proposal uses that machinery not as a novelty claim, but to test whether semantic navigation difficulty is concentrated at reproducible spectral bottlenecks and, critically, whether those bottlenecks predict measured control cost rather than being assumed to equal it.
 
 ## 6. Semantic gravity under the manifold view
 
@@ -549,7 +584,7 @@ This modularity is important. The new evidence from neural geometry should updat
 
 If the experiments succeed, the conceptual shift is small to state but substantial in consequence:
 
-> A semantic atlas is not merely a cloud of points with routes drawn through it. It is an **atlas in the differential-geometric sense**: a collection of local coordinate charts, connected by transitions, embedded in a larger calibrated reference frame, whose sampled support also has measurable multiscale spectral structure.
+> A semantic atlas is not merely a cloud of points with routes drawn through it. In this proposal it becomes an **SRF-anchored atlas in the differential-geometric sense**: a collection of local coordinate charts, connected by transitions, nested inside a separately calibrated reference frame, whose sampled support also has measurable multiscale spectral structure.
 
 That interpretation gives distinct roles to the components:
 
@@ -566,18 +601,28 @@ The most interesting possibility is that the model's enormous activation space c
 ## 12. References
 
 - Baldo, F. (2026). *Semantic Atlas: Quasar Reference Frames, Reachability, and Closed-Loop Navigation for Language Models*. `semantic_atlas.md` in this repository.
-- Bhalla, U., Fel, T., Rager, C., Feucht, S., Haklay, T., Wurgaft, D., et al. (2026). *Do Sparse Autoencoders Capture Concept Manifolds?* arXiv:2604.28119.
-- Bigelow, E., Sarfati, R., Wurgaft, D., Lewis, O., McGrath, T., Merullo, J., Geiger, A., & Lubana, E. S. (2026). *Stories in Space: In-Context Learning Trajectories in Conceptual Belief Space*. arXiv:2605.12412.
+- Bhalla, U., Fel, T., Rager, C., Feucht, S., Haklay, T., Wurgaft, D., et al. (2026). *Do Sparse Autoencoders Capture Concept Manifolds?* arXiv:2604.28119. https://arxiv.org/abs/2604.28119.
+- Bigelow, E., Sarfati, R., Wurgaft, D., Lewis, O., McGrath, T., Merullo, J., Geiger, A., & Lubana, E. S. (2026). *Stories in Space: In-Context Learning Trajectories in Conceptual Belief Space*. arXiv:2605.12412. https://arxiv.org/abs/2605.12412.
 - Cheeger, J. (1970). *A Lower Bound for the Smallest Eigenvalue of the Laplacian*. In *Problems in Analysis (Papers Dedicated to Salomon Bochner)*, Princeton University Press, 195–199.
 - Chung, F. R. K. (1997). *Spectral Graph Theory*. CBMS Regional Conference Series in Mathematics 92, American Mathematical Society.
 - Coifman, R. R., & Lafon, S. (2006). *Diffusion Maps*. *Applied and Computational Harmonic Analysis*, 21(1), 5–30. https://doi.org/10.1016/j.acha.2006.04.006.
-- Fel, T., Kowal, M., Jacobs, M., Hazra, D., Bhalla, U., Sharkey, L., et al. (2026). *Structuring Sparsity: Block-Sparse Featurizers Capture Visual Concept Manifolds*. arXiv:2606.25234.
+- Fel, T., Kowal, M., Jacobs, M., Hazra, D., Bhalla, U., Sharkey, L., et al. (2026). *Structuring Sparsity: Block-Sparse Featurizers Capture Visual Concept Manifolds*. arXiv:2606.25234. https://arxiv.org/abs/2606.25234.
 - Gärdenfors, P. (2000). *Conceptual Spaces: The Geometry of Thought*. MIT Press.
+- Huang, H., LeCun, Y., & Balestriero, R. (2026). *Semantic Tube Prediction: Beating LLM Data Efficiency with JEPA*. arXiv:2602.22617. https://arxiv.org/abs/2602.22617.
 - Khandait, A., & Gerken, J. E. (2026). *From Layers to Networks: Comparing Neural Representations via Diffusion Geometry*. arXiv:2605.15901.
-- Wurgaft, D., Rager, C., Kowal, M., Shyam, V., Feucht, S., Bhalla, U., et al. (2026). *Manifold Steering Reveals the Shared Geometry of Neural Network Representation and Behavior*. arXiv:2605.05115.
+- Mabrok, M. A. (2026). *Latent Semantic Manifolds in Large Language Models*. arXiv:2603.22301. https://arxiv.org/abs/2603.22301.
+- Oozeer, N., et al. (2026). *Riemannian-Manifold Steering: Geometry-Aware Generative Autoencoders for Label-Free Steering*. arXiv:2605.24942. https://arxiv.org/abs/2605.24942.
+- Sidheekh, S., et al. (2022). *VQ-Flows: Vector Quantized Local Normalizing Flows*. arXiv:2203.11556; UAI 2022. https://arxiv.org/abs/2203.11556.
+- Wang, C., & Mahadevan, S. (2008). *Manifold alignment using Procrustes analysis*. ICML 2008. https://doi.org/10.1145/1390156.1390297.
+- Wurgaft, D., Rager, C., Kowal, M., Shyam, V., Feucht, S., Bhalla, U., et al. (2026). *Manifold Steering Reveals the Shared Geometry of Neural Network Representation and Behavior*. arXiv:2605.05115. https://arxiv.org/abs/2605.05115.
+- Zhang, Y., & Dong, Q. (2025). *Multi-Scale Manifold Alignment: A Unified Framework for Enhanced Explainability of Large Language Models*. arXiv:2505.20333. https://arxiv.org/abs/2505.20333.
+- Zhang, Y., & Dong, Q. (2025). *Dynamic Manifold Evolution Theory: Modeling and Stability Analysis of Latent Representations in Large Language Models*. arXiv:2505.20340. https://arxiv.org/abs/2505.20340.
+- Zhang, Z., & Zha, H. (2002). *Principal Manifolds and Nonlinear Dimension Reduction via Local Tangent Space Alignment*. arXiv:cs/0212008. https://arxiv.org/abs/cs/0212008.
 
 ---
 
 ## Claim boundary
 
-This paper proposes an extension and a sequence of falsifiable experiments. It does **not** claim that BSFs are the correct featurizer for language, that language concepts are typically two- to four-dimensional, that independently trained models share the same local manifold coordinates, that semantic "gravity" is a physical force, that spectral graph bottlenecks are causal barriers, or that a three-dimensional visualization faithfully represents the full high-dimensional geometry without distortion. In particular, a spectral gap of a graph Laplacian or Laplace--Beltrami operator is used here only as a representation-geometric observable; it is not a quantum-field-theoretic mass gap and does not support claims about Yang--Mills theory or physical compactification. Those distinctions are part of the experimental discipline, not optional caveats.
+This paper proposes an extension and a sequence of falsifiable experiments. It does **not** claim novelty for the broad semantic-manifold hypothesis, concept manifolds, sparse multidimensional concept blocks, generic global/local semantic-manifold decompositions, dynamical-system descriptions on semantic manifolds, manifold/geodesic steering, local tangent charts, learned chart atlases, Procrustes alignment, or graph-Laplacian/diffusion/Fiedler/conductance machinery. It also does **not** claim that BSFs are the correct featurizer for language, that language concepts are typically two- to four-dimensional, that independently trained models share the same local manifold coordinates, that semantic "gravity" is a physical force, that spectral graph bottlenecks are causal barriers, or that a three-dimensional visualization faithfully represents the full high-dimensional geometry without distortion.
+
+The bounded candidate contribution is the **SRF/quasar-anchored integration and experimental contract** described in §1.1. In particular, a spectral gap of a graph Laplacian or Laplace--Beltrami operator is used here only as a representation-geometric observable; it is not a quantum-field-theoretic mass gap and does not support claims about Yang--Mills theory or physical compactification. No experiment reported here establishes the manifold extension; the proposal is ready to archive as a preprint because its claims are explicitly scoped, its strongest alternatives and controls are stated, and its rejection conditions are part of the design.
