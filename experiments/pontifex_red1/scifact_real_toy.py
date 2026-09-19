@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -42,7 +43,7 @@ import httpx
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import average_precision_score
+from sklearn.metrics import average_precision_score, ndcg_score
 from sklearn.neural_network import MLPClassifier
 
 DATASET = "CohereLabs/beir-embed-english-v3"
@@ -178,6 +179,29 @@ def recall_at_k(y: np.ndarray, scores: np.ndarray, k: int = 10) -> float:
     return float(np.mean(recalls))
 
 
+def mrr_at_k(y: np.ndarray, scores: np.ndarray, k: int = 10) -> float:
+    values = []
+    for i in range(len(y)):
+        order = np.argsort(scores[i])[::-1][:k]
+        relevant = np.flatnonzero(y[i, order])
+        values.append(0.0 if len(relevant) == 0 else 1.0 / float(relevant[0] + 1))
+    return float(np.mean(values))
+
+
+def ndcg_at_k(y: np.ndarray, scores: np.ndarray, k: int = 10) -> float:
+    values = [ndcg_score(y[i : i + 1], scores[i : i + 1], k=k) for i in range(len(y))]
+    return float(np.mean(values))
+
+
+def metric_row(y: np.ndarray, scores: np.ndarray) -> dict[str, float]:
+    return {
+        "macro_auprc": macro_ap(y, scores),
+        "recall_at_10": recall_at_k(y, scores, 10),
+        "mrr_at_10": mrr_at_k(y, scores, 10),
+        "ndcg_at_10": ndcg_at_k(y, scores, 10),
+    }
+
+
 def training_pairs(
     dense: np.ndarray,
     lexical: np.ndarray,
@@ -226,6 +250,13 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--queries", type=int, default=96)
     ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument(
+        "--train-budgets",
+        type=int,
+        nargs="+",
+        default=[4, 8, 16, 32, 48],
+        help="Number of labelled training queries used by learned fusion models.",
+    )
     ap.add_argument("--output", type=Path, default=Path("pontifex-scifact-real-toy.json"))
     args = ap.parse_args()
 
@@ -262,39 +293,88 @@ def main() -> None:
     best_name = "dense" if dense_train_ap >= lexical_train_ap else "lexical"
     best_scores = dense if best_name == "dense" else lexical
 
-    x_train, y_train = training_pairs(dense_z, lexical_z, y, train_idx, args.seed)
-
-    linear = LogisticRegression(max_iter=1000, class_weight="balanced", random_state=args.seed)
-    linear.fit(x_train, y_train)
-
-    mlp = MLPClassifier(
-        hidden_layer_sizes=(8,),
-        activation="relu",
-        alpha=0.01,
-        learning_rate_init=0.003,
-        max_iter=800,
-        early_stopping=True,
-        validation_fraction=0.15,
-        n_iter_no_change=30,
-        random_state=args.seed,
-    )
-    mlp.fit(x_train, y_train)
-
     y_test = y[test_idx]
-    test_scores = {
+    static_scores = {
         "A_best_single": best_scores[test_idx],
         "B_simple_mean": simple_mean[test_idx],
-        "W_linear_fusion": predict_pair_model(linear, dense_z, lexical_z, test_idx),
-        "C_nonlinear_fusion": predict_pair_model(mlp, dense_z, lexical_z, test_idx),
     }
+    static_metrics = {name: metric_row(y_test, scores) for name, scores in static_scores.items()}
 
-    metrics = {
-        name: {
-            "macro_auprc": macro_ap(y_test, scores),
-            "recall_at_10": recall_at_k(y_test, scores, 10),
+    budgets = sorted({min(int(b), len(train_idx)) for b in args.train_budgets if int(b) > 0})
+    if len(train_idx) not in budgets:
+        budgets.append(len(train_idx))
+
+    efficiency_curve = []
+    for budget in budgets:
+        # Prefix of the already-randomized training partition: same held-out test set
+        # and nested labelled-query budgets for every learned method.
+        budget_idx = train_idx[:budget]
+        x_train, y_train = training_pairs(dense_z, lexical_z, y, budget_idx, args.seed)
+
+        t0 = time.perf_counter()
+        linear = LogisticRegression(max_iter=1000, class_weight="balanced", random_state=args.seed)
+        linear.fit(x_train, y_train)
+        linear_train_seconds = time.perf_counter() - t0
+
+        t0 = time.perf_counter()
+        linear_scores = predict_pair_model(linear, dense_z, lexical_z, test_idx)
+        linear_infer_seconds = time.perf_counter() - t0
+
+        t0 = time.perf_counter()
+        mlp = MLPClassifier(
+            hidden_layer_sizes=(8,),
+            activation="relu",
+            alpha=0.01,
+            learning_rate_init=0.003,
+            max_iter=800,
+            early_stopping=True,
+            validation_fraction=0.15,
+            n_iter_no_change=30,
+            random_state=args.seed,
+        )
+        mlp.fit(x_train, y_train)
+        mlp_train_seconds = time.perf_counter() - t0
+
+        t0 = time.perf_counter()
+        mlp_scores = predict_pair_model(mlp, dense_z, lexical_z, test_idx)
+        mlp_infer_seconds = time.perf_counter() - t0
+
+        learned_metrics = {
+            "W_linear_fusion": metric_row(y_test, linear_scores),
+            "C_nonlinear_fusion": metric_row(y_test, mlp_scores),
         }
-        for name, scores in test_scores.items()
-    }
+        efficiency_curve.append(
+            {
+                "labelled_train_queries": int(budget),
+                "training_pairs": int(len(y_train)),
+                "metrics": {**static_metrics, **learned_metrics},
+                "cost": {
+                    "W_linear_fusion": {
+                        "train_seconds": linear_train_seconds,
+                        "infer_seconds": linear_infer_seconds,
+                        "trainable_parameters": int(linear.coef_.size + linear.intercept_.size),
+                    },
+                    "C_nonlinear_fusion": {
+                        "train_seconds": mlp_train_seconds,
+                        "infer_seconds": mlp_infer_seconds,
+                        "trainable_parameters": int(
+                            sum(w.size for w in mlp.coefs_) + sum(b.size for b in mlp.intercepts_)
+                        ),
+                    },
+                },
+                "delta_vs_best_single_auprc": {
+                    "W_linear_fusion": learned_metrics["W_linear_fusion"]["macro_auprc"]
+                    - static_metrics["A_best_single"]["macro_auprc"],
+                    "C_nonlinear_fusion": learned_metrics["C_nonlinear_fusion"]["macro_auprc"]
+                    - static_metrics["A_best_single"]["macro_auprc"],
+                },
+                "delta_vs_linear_auprc": learned_metrics["C_nonlinear_fusion"]["macro_auprc"]
+                - learned_metrics["W_linear_fusion"]["macro_auprc"],
+            }
+        )
+
+    final = efficiency_curve[-1]
+    metrics = final["metrics"]
 
     result = {
         "experiment": "Pontifex real-data SciFact no-reencode toy",
@@ -310,10 +390,12 @@ def main() -> None:
         "embedding_dimension": int(data.corpus_emb.shape[1]),
         "best_single_selected_on_train": best_name,
         "train_channel_auprc": {"dense": dense_train_ap, "lexical": lexical_train_ap},
-        "metrics": metrics,
-        "delta_simple": metrics["C_nonlinear_fusion"]["macro_auprc"]
+        "official_task_metrics": ["ndcg_at_10", "mrr_at_10", "recall_at_10"],
+        "metrics_at_full_budget": metrics,
+        "efficiency_curve": efficiency_curve,
+        "delta_simple_at_full_budget": metrics["C_nonlinear_fusion"]["macro_auprc"]
         - max(metrics["A_best_single"]["macro_auprc"], metrics["B_simple_mean"]["macro_auprc"]),
-        "delta_interaction": metrics["C_nonlinear_fusion"]["macro_auprc"]
+        "delta_interaction_at_full_budget": metrics["C_nonlinear_fusion"]["macro_auprc"]
         - metrics["W_linear_fusion"]["macro_auprc"],
     }
 
