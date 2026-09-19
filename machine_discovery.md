@@ -1109,3 +1109,13 @@ A learner changes the curriculum not when it produces a remarkable-looking answe
 [8] Ju, H. et al. “Automated Conjecture Resolution with Formal Verification.” arXiv:2604.03789 (2026). https://arxiv.org/abs/2604.03789
 
 [9] OpenAI. *Ten Advances in Mathematics and Theoretical Computer Science.* (2026). https://cdn.openai.com/pdf/ten-proofs-oai.pdf
+
+
+## Research programme position
+
+- **Initiative:** Machine Discovery
+- **Scope:** Certified epistemic transition, novelty, provenance, and downstream fertility of machine-produced discoveries.
+- **Not claimed here:** It is adjacent epistemology/interaction research and does not depend on Pontifex/Torus geometry.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
