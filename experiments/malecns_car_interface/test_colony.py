@@ -3,11 +3,13 @@ import unittest
 from colony import (
     SpecialistReport,
     age_spread_ms,
+    allocate_recruitment_slots,
     confidence_weighted_value,
     consensus_weighted_value,
     disagreement,
     freshness_weighted_value,
     median_value,
+    recruitment_score,
     summarize_modality,
 )
 
@@ -108,6 +110,47 @@ class ColonyTests(unittest.TestCase):
         ]
         with self.assertRaises(ValueError):
             summarize_modality(reports, specialist_id="mixed")
+
+    def test_recruitment_score_prefers_fresh_uncertain_modality(self):
+        fresh_uncertain = [
+            SpecialistReport("a", "yaw-rate", 0.0, 0.9, age_ms=20.0, modality="imu"),
+            SpecialistReport("b", "yaw-rate", 0.3, 0.9, age_ms=25.0, modality="imu"),
+        ]
+        stale_uncertain = [
+            SpecialistReport("a", "yaw-rate", 0.0, 0.9, age_ms=600.0, modality="camera"),
+            SpecialistReport("b", "yaw-rate", 0.3, 0.9, age_ms=610.0, modality="camera"),
+        ]
+        self.assertGreater(
+            recruitment_score(fresh_uncertain),
+            recruitment_score(stale_uncertain),
+        )
+
+    def test_dynamic_recruitment_avoids_stale_common_mode(self):
+        groups = {
+            "camera": [
+                SpecialistReport("c1", "yaw-rate", 0.0, 0.9, age_ms=700.0, modality="camera"),
+                SpecialistReport("c2", "yaw-rate", 0.2, 0.9, age_ms=710.0, modality="camera"),
+            ],
+            "imu": [
+                SpecialistReport("i1", "yaw-rate", 0.0, 0.9, age_ms=20.0, modality="imu"),
+                SpecialistReport("i2", "yaw-rate", 0.12, 0.9, age_ms=25.0, modality="imu"),
+            ],
+        }
+        allocation = allocate_recruitment_slots(groups, extra_slots=8)
+        self.assertGreater(allocation["imu"], allocation["camera"])
+        self.assertEqual(sum(allocation.values()), 8)
+
+    def test_recruitment_requires_shared_semantic_channel(self):
+        groups = {
+            "camera": [
+                SpecialistReport("c", "yaw-rate", 0.0, 0.9, modality="camera")
+            ],
+            "imu": [
+                SpecialistReport("i", "speed", 0.0, 0.9, modality="imu")
+            ],
+        }
+        with self.assertRaises(ValueError):
+            allocate_recruitment_slots(groups, extra_slots=2)
 
 
 if __name__ == "__main__":
