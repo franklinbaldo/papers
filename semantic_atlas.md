@@ -26,6 +26,18 @@ The programme deliberately separates six claims that are easy to conflate: (1) s
 
 ---
 
+## Evidence hierarchy: local first, global as hypothesis
+
+The Semantic Atlas programme now uses a strict evidence hierarchy.
+
+1. **Local relational evidence** — calibrated neighborhood, graph, spectral, or transition structure that survives matched nulls — is the default evidence layer.
+2. **Mesoscale/manifold structure** is a stronger model that requires its own held-out predictive or control advantage.
+3. **One shared global semantic geometry** is a hypothesis, not a consequence of local agreement or successful coordinate alignment.
+
+Accordingly, terms such as "semantic reference frame", "shared geometry", "universe", or "atlas" name an experimental coordinate/modeling construction unless a section explicitly ties them to a confirmatory result. A visually coherent global map, a successful Procrustes fit, or above-chance local agreement does not by itself establish an observer-independent global semantic manifold.
+
+This boundary follows the Semantic Observers programme: different models may preserve robust local relations while retaining observer-specific global distortion. Structural Identification supplies the complementary formal language for gauge and observational equivalence. See the [Semantic Systems Research Map](research/semantic-systems-map.md).
+
 ## 1. Introduction
 
 A language model exposes a peculiar interface to a large body of learned structure: whatever it knows or can compute must ordinarily be reached through an autoregressive path. Even when the final answer is conceptually close to a known solution, the model proceeds through a sequence of token-level state transitions. Long-form reasoning can therefore contain detours, repetitions, abandoned branches, abrupt changes of topic, and verbalized intermediate work that may be unnecessary for the final result.
