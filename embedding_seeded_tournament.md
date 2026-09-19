@@ -39,8 +39,9 @@ judges to be more reliable — while the cross-cluster phase is
 designed to surface globally exceptional decisions. We motivate the
 method theoretically by connecting known non-transitivity failures in
 LLM-as-judge pipelines to semantic distance between compared items,
-and argue that stratifying comparisons by similarity should reduce
-non-transitivity incidence. We outline an evaluation protocol using a
+and treat the prediction that stratifying comparisons by similarity
+reduces non-transitivity as an empirical hypothesis rather than an
+established causal mechanism. We outline an evaluation protocol using a
 heterogeneous panel of frontier LLMs as synthetic jurors with
 structured rubrics anchored to Brazilian CPC procedural criteria
 (art. 489, §1º; art. 927), calibrated against known-quality writing.
@@ -87,17 +88,18 @@ that share procedural vocabulary but differ in substantive
 reasoning standards, evidentiary frameworks, and applicable
 precedent hierarchies.
 
-The core problem this heterogeneity creates for existing methods
-is not merely one of comparability in an intuitive sense. It is
-a structural cause of the non-transitivity failures documented in
-recent LLM-as-judge literature (see, e.g., the non-transitivity
-analyses cited in Section 2.1). When compared items are semantically distant, LLM judges
-are more likely to exhibit position bias and preference
-inconsistency, because their in-context reasoning cannot draw on
-stable, shared evaluative criteria. Non-transitivity undermines
-tournament rankings: if the judge prefers A over B and B over C
-but C over A, the tournament outcome is an artifact of bracket
-design rather than a reliable quality signal.
+The core problem this heterogeneity may create for existing methods
+is not merely one of comparability in an intuitive sense. It may
+interact with the non-transitivity failures documented in recent
+LLM-as-judge literature (see, e.g., the non-transitivity analyses
+cited in Section 2.1). Our specific hypothesis is that semantic
+distance can destabilize the evaluative frame used across
+comparisons, but this must be distinguished empirically from other
+known drivers of comparison difficulty, including small quality
+margins between candidates. Non-transitivity undermines tournament
+rankings: if the judge prefers A over B and B over C but C over A,
+the tournament outcome can become bracket-sensitive rather than a
+reliable quality signal.
 
 We propose **Embedding-Seeded Hierarchical Tournament Ranking
 (ESHTR)** as a principled response to this problem. The key
@@ -109,7 +111,7 @@ been filtered. We adapt this logic to judicial evaluation: use
 dense text embeddings to group semantically similar decisions
 into clusters (seeding by type), rank within each cluster where
 comparisons are most reliable, then conduct a championship round
-among intra-cluster winners to produce a global ordering.
+among intra-cluster winners to identify cross-cluster champions.
 
 **Contributions.** This paper makes three contributions:
 
@@ -119,8 +121,8 @@ among intra-cluster winners to produce a global ordering.
 
 2. **A theoretical motivation**: we connect non-transitivity
    failures in LLM judges to semantic distance between compared
-   items and argue that ESHTR's stratification by similarity
-   reduces non-transitivity incidence.
+   items and formulate the effect of semantic proximity on
+   reliability as a controlled, falsifiable hypothesis.
 
 3. **An evaluation protocol**: a structured LLM panel rubric
    anchored to Brazilian CPC procedural criteria, with
@@ -162,12 +164,18 @@ bias (a model rating its own outputs more favorably) (Zheng et al.,
 (Han et al., EMNLP 2025) specifically reports that LLM judges of
 legal reasoning are "fragile and inconsistent" and can be misled
 by rhetorically persuasive but logically invalid arguments — a
-finding we engage directly in Section 5.3.
+finding we engage directly in Section 5.3. Pairwise comparison is
+also not automatically the most robust feedback protocol: Tripathi
+et al. (2025) report substantially greater susceptibility of
+pairwise LLM judging to irrelevant distractor features than
+absolute scoring.
 
 **Non-transitivity.** Recent work (Xu et al., 2025) documents
 that LLMs exhibit both hard and soft non-transitive preferences in
-pairwise comparison, with incidence correlated with positional bias.
-This finding motivates ESHTR's stratification approach.
+pairwise comparison, with incidence affected by position bias and
+comparison difficulty. This motivates tournament-aware aggregation
+but also means semantic proximity must be tested conditionally on
+quality margin rather than assumed to be the dominant driver.
 
 ### 2.2 Clustering and Stratification in Evaluation
 
@@ -199,7 +207,9 @@ corpora at scale.
 
 To our knowledge, the specific combination of embedding-based
 seeding and hierarchical tournament ranking for judicial decision
-quality evaluation has not been proposed.
+quality evaluation has not been proposed. This is a bounded
+literature-search statement, not a claim that the component
+techniques are individually novel.
 
 ---
 
@@ -216,7 +226,7 @@ flowchart TD
     P --> R[Cluster rankings R1...Rk]
     R --> W[Winners w1...wk]
     W --> H[Phase 3: cross-cluster<br/>championship tournament]
-    H --> G[Global ranking G<br/>and champion c*]
+    H --> G[Champion ordering Gw<br/>and champion c*]
 ```
 
 The figure makes the hierarchy explicit: embedding geometry seeds comparable groups, quality judgments are made by the panel within those groups, and only the winners are exposed to the semantically heterogeneous championship stage.
@@ -246,13 +256,14 @@ depending on corpus size and desired granularity:
 **Rationale for embedding-first.** The seeding function of
 Phase 1 is to ensure that Phase 2 comparisons occur between
 decisions that share enough semantic context for the LLM judge
-to apply stable evaluative criteria. This reduces the incidence
-of non-transitivity (Section 4) and increases the reliability of
-intra-cluster rankings. A criminal sentencing decision and a
-public procurement ruling may both exhibit poor argumentation,
-but the standards, precedents, and rhetorical conventions that
-constitute "good argumentation" differ between them. Phase 1
-ensures they compete in different groups until Phase 3.
+to apply stable evaluative criteria. ESHTR hypothesizes that this
+reduces non-transitivity and increases reliability; Section 4
+specifies the conditional test rather than treating that mechanism
+as established. A criminal sentencing decision and a public
+procurement ruling may both exhibit poor argumentation, but the
+standards, precedents, and rhetorical conventions that constitute
+"good argumentation" differ between them. Phase 1 ensures they
+compete in different groups until Phase 3.
 
 ### 3.2 Phase 2: Intra-Cluster Ranking
 
@@ -262,9 +273,12 @@ LLM judge panel** using iterative pairwise tournament comparison
 
 **Panel composition.** Following Verga et al. (2024), the panel
 comprises 3-5 frontier LLMs from different model families
-(e.g., Claude, GPT-5, Gemini, Grok). Model diversity mitigates
-self-preference bias and reduces systematic bias from any single
-model family's training distribution.
+(e.g., Claude, GPT-5, Gemini, Grok). Model diversity is intended
+to reduce family-specific and self-preference effects; it does
+not guarantee cancellation of biases shared across model families.
+The experimental protocol therefore includes style/rhetoric
+perturbations and expert-human validation rather than treating
+panel agreement as ground truth.
 
 **Evaluation rubric.** Each judge receives a structured prompt
 including:
@@ -283,8 +297,10 @@ including:
 
 **Aggregation.** Panel votes are aggregated by majority. Ties
 are broken by confidence-weighted voting. Bradley-Terry model
-scores are computed from all pairwise outcomes within each
-cluster to produce a full ranking Rᵢ.
+scores are computed from the scheduled pairwise outcomes within
+each cluster to produce a local ranking Rᵢ; if the schedule is
+sparse rather than all-pairs, the comparison graph and rank
+uncertainty must be reported explicitly.
 
 **Intra-cluster winner selection.** The top-ranked decision in
 each cluster wᵢ advances to Phase 3. Optionally, the top-k
@@ -302,62 +318,78 @@ Phase 3 compares decisions that won in different contexts, and
 asks judges to abstract from subject-specific vocabulary to
 underlying argumentation quality.
 
-The output of Phase 3 is a global ranking G of intra-cluster
-champions, with the overall champion c* identified. The full
-ranking of all decisions in the corpus can be reconstructed from
-Phase 2 cluster rankings and Phase 3 cross-cluster ordering.
+The output of Phase 3 is a cross-cluster ordering of the promoted
+champions and an overall champion c*. **It does not, by itself,
+identify a total ordering of all decisions in the corpus.** Local
+rankings plus comparisons among winners leave the relative order
+of non-winners from different clusters underdetermined. A full
+global ranking requires additional cross-cluster bridge/pivot
+comparisons (or a separately justified score-linking model) that
+connect local ranking scales.
 
 ### 3.4 Computational Complexity
 
 Let n = total decisions, k = number of clusters, c = average
-cluster size (c = n/k). Phase 1 requires O(n) embedding calls
-and O(n log n) clustering. Phase 2 requires O(c² / 2) pairwise
-comparisons per cluster (or O(c log c) with tournament
-elimination), totaling O(n·c) = O(n²/k) comparisons. Phase 3
-requires O(k²/2) comparisons. Total: O(n²/k + k²).
+cluster size (c = n/k). With all-pairs comparison inside each
+cluster, Phase 2 requires
 
-For a corpus of n=1000 decisions with k=20 clusters: Phase 2
-requires ~1250 comparisons (vs. ~500,000 for all-pairs), and
-Phase 3 requires ~190 comparisons. ESHTR reduces comparison
-burden by approximately 99.7% relative to exhaustive pairwise.
+\[
+k\,c(c-1)/2
+\]
+
+comparisons, asymptotically O(n²/k). Phase 3 all-pairs among the k
+champions requires k(k-1)/2 comparisons. Sparse/adaptive schedules
+can use fewer comparisons, but their comparison count and the
+ranking guarantee they support must be reported separately; a
+knockout that identifies a winner does not supply an all-pairs
+Bradley-Terry data set or a fully identified total ranking.
+
+For n=1000 and k=20, c=50. Phase 2 therefore uses
+`20 × 50 × 49 / 2 = 24,500` comparisons, and Phase 3 uses `190`,
+for **24,690 total comparisons**. Exhaustive global all-pairs uses
+`1000 × 999 / 2 = 499,500`, so this specific all-pairs-within-
+cluster design reduces the comparison count by approximately
+**95.1%**, not 99.7%.
 
 ---
 
 ## 4. Theoretical Motivation: Semantic Distance and Non-Transitivity
 
 We propose the **Semantic Proximity Hypothesis for LLM
-Non-Transitivity**: the incidence of non-transitive preferences
-in LLM judges is positively correlated with the semantic distance
-between compared items.
+Non-Transitivity (SPH)** as a conditional empirical hypothesis:
+after controlling for comparison difficulty and known judge
+confounds, semantic distance between compared items contributes
+positively to non-transitive preference risk.
 
 **Informal argument.** When an LLM judge compares two items A
 and B, it must construct an implicit evaluative frame — a set
 of criteria, weights, and reference points — to adjudicate
 between them. When A and B share semantic context (same subject
 matter, similar structure, comparable length), the evaluative
-frame is relatively stable across comparisons involving either
-A or B. When A and B are semantically distant, the judge must
-bridge different contextual frames, introducing instability.
-This instability manifests as non-transitivity: the criterion
-that makes A better than B (rhetorical clarity in a criminal
-context) may not be the criterion that makes B better than C
-(procedural completeness in a tax context), generating cycles.
+frame may be more stable across comparisons involving either A
+or B. When A and B are semantically distant, the judge may need
+to bridge different contextual frames, potentially introducing
+instability. This is a proposed mechanism, not an established
+fact; similar-quality candidates are independently known to be a
+difficult regime for LLM judges and can confound a raw
+within-cluster versus cross-cluster contrast.
 
-**Connection to known bias sources.** Positional bias and
-verbosity bias (Zheng et al., 2023) are amplified when compared
-items are semantically distant, because the judge has less
-stable criteria to override surface-level heuristics (position,
-length). ESHTR's clustering reduces semantic distance within
-comparison pairs, thereby reducing the foothold of these biases.
+**Connection to known bias sources.** Position, style, verbosity,
+self-preference and comparison margin are alternative or interacting
+sources of instability. ESHTR therefore does not assume that
+semantic clustering removes these biases. It asks whether semantic
+distance explains residual instability after they are controlled.
 
-**Falsifiability.** The hypothesis predicts that inter-judge
-agreement (measured by Fleiss' κ) should be higher within
-ESHTR clusters than in all-pairs comparisons drawn from the
-full heterogeneous corpus. Section 6 specifies the test; the
-test itself is **not yet conducted** in this position paper.
-*Falsified if:* in a properly designed experiment, κ_intracluster
-≤ κ_crosscorpus, or if the difference disappears once positional
-randomization is controlled for.
+**Falsifiability.** A valid SPH test must cross semantic distance
+with independently estimated quality margin/uncertainty while
+holding the judge panel, rubric, position randomization and budget
+fixed. The primary claim is falsified or materially narrowed if
+semantic distance has no positive residual association with cycle
+incidence or expert-validity error after preregistered controls, or
+if ESHTR clustering fails to improve expert-valid ranking at matched
+comparison budget. Fleiss' κ remains a useful reliability diagnostic,
+but `κ_intracluster > κ_crosscorpus` alone is not sufficient because
+semantic proximity and comparison difficulty may co-vary.
 
 A finer-grained empirical test concerns whether residual
 within-cluster non-transitive cycles are *structured* relative to
@@ -459,6 +491,12 @@ fundamentação was cited approvingly in subsequent decisions
 correctly ranks low-quality below high-quality in ≥ 80% of
 pairs, across all judge models.
 
+This synthetic/record-derived contrast is not sufficient as the
+only validity standard. A held-out subset must also receive
+independent expert-human pairwise judgments and criterion scores;
+inter-LLM agreement is treated as reliability evidence, not as a
+substitute for external legal validity.
+
 **C1 annotation protocol.** Calibration for C1 (identificação de
 fundamentos determinantes) requires identifying the cited
 precedent's authoritative ratio. Annotators read the precedent's
@@ -506,12 +544,20 @@ institutional convention phrases outside official-database coverage
 are addressed by cross-cluster convention stripping before frequency
 analysis (see §7.3).
 
-### 5.5 Inter-Judge Agreement
+### 5.5 Inter-Judge Agreement and External Validity
 
-We report Fleiss' κ across all panel members for each cluster
-and for Phase 3. We test the Semantic Proximity Hypothesis by
-comparing κ values within ESHTR clusters against κ values for
-randomly selected cross-cluster pairs from the same corpus.
+We report Fleiss' κ across all panel members for each cluster and
+for Phase 3, but do not use κ as a validity surrogate. SPH is tested
+with a preregistered model in which semantic distance competes with
+quality margin/uncertainty, position, style/length, procedural class
+and judge identity. A held-out expert-human subset supplies the main
+external-validity endpoint (pairwise agreement and rank correlation).
+
+The protocol additionally includes legally irrelevant presentation
+perturbations — formatting, assertiveness and verbosity variants that
+preserve substantive content — and compares pairwise judging against
+a pointwise/reference-based rubric baseline. A robust judicial-quality
+ranking should not move materially under those perturbations.
 
 ---
 
@@ -531,33 +577,32 @@ ESHTR can be tested by us or by independent researchers.*
   Fleiss' κ per judge model and aggregated; examples of
   high-ranked and low-ranked decisions per cluster with
   criterion-by-criterion assessments.
-- Phase 3: Global ranking of cluster champions; Phase 3
-  Fleiss' κ vs. Phase 2 κ comparison (testing Semantic
-  Proximity Hypothesis); examples of decisions where
-  persuasiveness and validity axes diverge.
+- Phase 3: ordering of cluster champions and overall champion;
+  Phase 3 Fleiss' κ vs. Phase 2 κ comparison; examples of
+  decisions where persuasiveness and validity axes diverge.
+- External validity: expert-human pairwise judgments/rank anchors,
+  rank correlation, cycle incidence, perturbation sensitivity and
+  bootstrap rank uncertainty.
 
-**Hypothesis test:** We expect κ_intracluster > κ_crosscorpus
-(supporting the Semantic Proximity Hypothesis), with the
-difference most pronounced for semantically distant cluster
-pairs.
+**Hypothesis test:** the preregistered SPH coefficient for semantic
+distance should be positive after controlling for expert-estimated
+quality margin/uncertainty and the other covariates above. Raw
+`κ_intracluster > κ_crosscorpus` is reported only as a descriptive
+contrast, not as identification of the semantic-distance mechanism.
 
-The hypothesis is testable as a matched contrast rather than as a comparison of two different judging systems. Corpus, judge panel, rubric, randomization policy, and comparison budget remain fixed; only the semantic relationship of the sampled pair changes. Fleiss' κ is the primary endpoint, with non-transitive-cycle incidence as a secondary diagnostic.
+The experiment compares at matched judge-call budget: ESHTR,
+round-robin subsampling/Bradley-Terry, a SWIM-like adaptive
+matchmaking baseline, a bridge/pivot hierarchical baseline, and a
+pointwise/reference-based rubric protocol. ESHTR supports a mechanism
+claim only if semantic distance predicts residual error/cycling and
+the full method improves expert-valid ranking over these alternatives
+at matched cost.
 
-```mermaid
-flowchart TD
-    C[Same held-out judicial corpus] --> I[Sample intra-cluster pairs]
-    C --> X[Sample cross-cluster pairs]
-    K[Held constant:<br/>judge panel + rubric +<br/>position randomization + budget] --> I
-    K --> X
-    I --> MI[Measure κ_intra<br/>and cycle incidence]
-    X --> MX[Measure κ_cross<br/>and cycle incidence]
-    MI --> T{Pre-registered contrast}
-    MX --> T
-    T --> S[Support SPH if<br/>κ_intra > κ_cross]
-    T --> F[No support / falsification if<br/>κ_intra ≤ κ_cross after controls]
-```
-
-This design prevents clustering quality itself from being mistaken for judicial quality: clustering determines the comparison regime, while the unchanged panel supplies the quality judgments.
+For any future claim of a **full global ranking**, the comparison
+graph must include cross-cluster bridges sufficient to identify
+relative scales (or an explicitly tested linking model). The current
+winner-only Phase 3 is intentionally interpreted as champion
+selection plus local rankings, not a total order over all documents.
 
 ---
 
@@ -568,8 +613,9 @@ This design prevents clustering quality itself from being mistaken for judicial 
 ESHTR is appropriate when: (a) the corpus is large enough that
 all-pairs comparison is infeasible; (b) the corpus is
 heterogeneous enough that direct comparison across types would
-be unreliable; (c) the evaluation objective is ranking by
-quality rather than absolute scoring.
+be unreliable; (c) the evaluation objective is local ranking plus
+cross-cluster champion identification, or a full ranking is augmented
+with explicit bridge comparisons.
 
 ESHTR is less appropriate when: (a) the corpus is homogeneous
 (all decisions of the same type); (b) the evaluation objective
@@ -608,13 +654,28 @@ are a proxy for expert human judgment, not a replacement. The
 calibration protocol (Section 5.4) reduces but does not
 eliminate this concern. Rankings produced by ESHTR should be
 interpreted as *evidence* of quality ordering, not as
-authoritative verdicts.
+authoritative verdicts. Legal-domain evidence that LLM judges can
+diverge from official expert evaluation makes the held-out human
+anchor in §5.5 mandatory for empirical claims.
+
+**Shared judge bias.** Heterogeneous model families can reduce
+family-specific bias, but they may still share presentation/style
+preferences. Panel agreement therefore cannot certify robustness;
+style-preserving perturbation tests and a pointwise/reference-based
+control are part of the protocol.
+
+**Partial-order limitation.** Winner-only cross-cluster comparison
+does not identify the ordering of non-winners across different
+clusters. The base ESHTR protocol therefore outputs local rankings
+plus a champion ordering. Any total-order extension requires
+cross-cluster bridge comparisons or a validated score-linking model.
 
 **Cost.** ESHTR reduces comparison burden relative to all-pairs,
 but for very large corpora (n > 10,000) and expensive frontier
 LLM judges, Phase 2 cost may still be significant. Adaptive
-sampling strategies (stopping Phase 2 early when Bradley-Terry
-scores have converged) can reduce cost further.
+sampling strategies can reduce cost further, but their ranking
+uncertainty and comparison graph must be reported rather than
+assuming the all-pairs Bradley-Terry guarantee.
 
 **C1 annotation difficulty for constitutional precedents.** When
 the cited precedent's ementa characterizes the ratio at
@@ -740,23 +801,23 @@ We proposed Embedding-Seeded Hierarchical Tournament Ranking
 (ESHTR), a three-phase method for evaluating judicial decision
 quality at scale using LLM judge panels. The method addresses
 the heterogeneity problem in judicial corpora by using dense
-embeddings to seed comparison groups, ensuring that LLM judges
-operate in semantically coherent contexts where non-transitivity
-failures are less likely. We proposed the Semantic Proximity
-Hypothesis — that non-transitivity incidence correlates with
-semantic distance between compared items — as a theoretical
-foundation for the method, and designed an experimental protocol
-to test it. We provided a structured evaluation rubric anchored
-to Brazilian CPC procedural criteria, with a dual-axis
-(validity vs. persuasiveness) assessment design that directly
-addresses the critique of LLM legal judges in COURTREASONER
-(Han et al., EMNLP 2025), converting a methodological liability into
-a diagnostic signal.
+embeddings to seed comparison groups. We proposed the Semantic
+Proximity Hypothesis — that semantic distance contributes to
+non-transitivity after relevant confounds are controlled — as a
+falsifiable theoretical foundation rather than an established
+mechanism, and designed an experimental protocol to test it against
+strong pairwise, adaptive and pointwise baselines. We provided a
+structured evaluation rubric anchored to Brazilian CPC procedural
+criteria, with a dual-axis (validity vs. persuasiveness) assessment
+design that directly addresses the critique of LLM legal judges in
+COURTREASONER (Han et al., EMNLP 2025).
 
-ESHTR is a general method applicable to any heterogeneous legal
-corpus, and its embedding-seeded stratification logic extends
-naturally to other domains where quality evaluation must contend
-with semantic heterogeneity at scale.
+The base protocol yields local cluster rankings plus an ordering of
+promoted champions. A full corpus-wide total ranking requires
+additional cross-cluster bridges or a validated linking model. ESHTR
+therefore remains a proposal whose incremental value must be shown
+against expert-human anchors and matched-budget alternatives, not a
+validated ranking instrument.
 
 ---
 
@@ -769,7 +830,10 @@ revision. Entries marked with † require verification before submission.*
   and Chatbot Arena. *NeurIPS 2023*.
 - Verga, P. et al. (2024). Replacing Judges with Juries:
   Evaluating LLM Generations with a Panel of Diverse Models.
-  *NAACL 2024*.
+  *NAACL 2024*. arXiv:2404.18796.
+- Tripathi, T., Wadhwa, M., Durrett, G., and Niekum, S. (2025).
+  Pairwise or Pointwise? Evaluating Feedback Protocols for Bias in
+  LLM-Based Evaluation. arXiv:2504.14716.
 - Sandan, I. B., Dinh, T. A., and Niehues, J. (2025). Knockout
   LLM Assessment: Using Large Language Models for Evaluations
   through Iterative Pairwise Comparisons. In *Proceedings of the
@@ -783,6 +847,15 @@ revision. Entries marked with † require verification before submission.*
   Thuo, R. K., Knowlton, S., Piskac, R., Shapiro, S. J., and
   Cohan, A. (2025). CourtReasoner: Can LLM Agents Reason Like
   Judges? In *Proceedings of EMNLP 2025*.
+- Karp, M. et al. (2025). LLM-as-a-Judge is Bad, Based on AI
+  Attempting the Exam Qualifying for the Member of the Polish
+  National Board of Appeal. arXiv:2511.04205.
+- Soumik, S. K. (2026). Judging the Judges: A Systematic
+  Evaluation of Bias Mitigation Strategies in LLM-as-a-Judge
+  Pipelines. arXiv:2604.23178.
+- Chiang, C. et al. (2026). MultEval: Supporting Collaborative
+  Alignment for LLM-as-a-Judge Evaluation Criteria.
+  arXiv:2604.26679.
 - Guha, N. et al. (2023). LegalBench: A Collaboratively Built
   Benchmark for Measuring Legal Reasoning in Large Language
   Models. *NeurIPS 2023*.
