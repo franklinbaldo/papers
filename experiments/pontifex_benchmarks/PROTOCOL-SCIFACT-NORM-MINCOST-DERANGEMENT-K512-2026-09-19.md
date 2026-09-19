@@ -1,5 +1,5 @@
 ---
-type: "Experiment Protocol"
+type: "Protocol"
 title: "Pontifex SciFact K=512 residual-norm minimum-cost derangement"
 tags: [pontifex, scifact, red-1, null, locality, preregistration]
 timestamp: 2026-09-19T15:18:00-04:00
