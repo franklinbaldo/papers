@@ -1,975 +1,357 @@
 ---
 type: "Dogmatic Paper"
-title: "As Cinco Saídas Legítimas do Tribunal diante de Precedente Vinculante: Vinculação Racional e Superação no CPC 2015"
-description: "As cinco saidas legitimas do tribunal diante de precedente vinculante (art. 927, par. 1o c/c art. 489, par. 1o, V-VI)."
-tags: [paper1b]
+title: "As Cinco Saídas diante de Precedente Vinculante: mapa analítico, competência e aplicação parcial silenciosa no CPC 2015"
+description: "Taxonomia dogmática e competência-sensível das respostas a precedentes vinculantes, com distinção entre não aplicação no caso concreto, revisão formal e aplicação parcial silenciosa."
+tags: [paper1b, precedentes, cpc, fundamentacao, distinguishing, overruling, aplicacao-parcial]
 timestamp: 2026-08-14T00:00:00+00:00
+authors:
+  - ref: /authors/franklin-silveira-baldo.md
+    byline: "Franklin Silveira Baldo"
+    affiliations:
+      - "Independent Researcher"
+    corresponding: true
+publication:
+  status: ready
+  targets: [zenodo]
+  zenodo:
+    publication_type: preprint
+    access_right: open
+    license: cc-by-nc-4.0
+    version: "0.1"
 ---
 
-# As Cinco Saídas Legítimas do Tribunal diante de Precedente Vinculante: Vinculação Racional e Superação no CPC 2015
+# As Cinco Saídas diante de Precedente Vinculante: mapa analítico, competência e aplicação parcial silenciosa no CPC 2015
 
-**Franklin Silveira Baldo**
-Procurador do Estado de Rondônia (OAB/RO 5733)
-Diretor da Procuradoria do Patrimônio Imobiliário — PGE-RO
-Porto Velho, RO
+**Franklin Silveira Baldo**  
+Independent Researcher
 
----
+> **Nota de escopo e prioridade.** Esta versão incorpora a auditoria temporal de prior art de 18 de setembro de 2026. A possibilidade de não aplicação, no caso concreto, de precedente vinculante por órgão inferior — sob determinadas condições e com ônus argumentativo qualificado — e a distinção entre essa não aplicação e a revisão formal do precedente já estavam expressamente debatidas na doutrina brasileira antes do corte público deste trabalho. Esta versão não reivindica novidade para esses componentes. A contribuição residual é mais estreita: uma organização analítica em cinco situações úteis para auditar decisões, acompanhada de uma formulação delimitada de **aplicação parcial silenciosa**. A busca também encontrou um antecedente público próximo para aplicação parcial de tese vinculante com cronologia prévia potencialmente relevante; por isso não se reivindica *firstness* exaustiva para o rótulo ou para o fenômeno.
 
 ## Resumo
 
-O presente artigo demonstra que a conjugação dos arts. 927, §1º,
-e 489, §1º, V e VI, do Código de Processo Civil de 2015 configura
-não duas mas cinco saídas legítimas para o tribunal diante de
-precedente vinculante invocado: (i) aplicação correta, com
-identificação dos fundamentos determinantes e demonstração de ajuste
-do caso; (ii) distinção fundamentada, com identificação da diferença
-substantiva que impede a aplicação da ratio; (iii) reconhecimento
-de superação superveniente do tribunal-fonte; (iv) superação racional
-pelo próprio tribunal, com apontamento expresso de erro na ratio;
-e (v) abstenção da invocação. Demonstra-se que a concepção
-hierárquica da vinculação — segundo a qual o tribunal inferior
-limitaria-se à escolha binária entre seguir e não seguir — não
-encontra respaldo no CPC 2015, que adota modelo de vinculação
-racional: o tribunal é vinculado à ratio do precedente porque ela
-articula razão jurídica que, salvo demonstração de erro qualificada,
-deve se aplicar a casos análogos. Nomeia-se e conceitua-se o vício
-de "aplicação parcial silenciosa de precedente vinculante": a
-prática de invocar o precedente para se valer da porção favorável,
-ignorando ressalvas expressas da ratio, sem adotar nenhuma das
-saídas substantivas legítimas. O artigo engaja a doutrina de
-Marinoni e Mitidiero sobre a natureza do precedente e ilustra a
-análise com hipótese de aplicação.
+Os arts. 927, §1º, e 489, §1º, V e VI, do Código de Processo Civil de 2015 impõem deveres de fundamentação quando um precedente, súmula ou orientação vinculante é aplicado ou afastado. Esses dispositivos, porém, não criam cinco poderes equivalentes nem autorizam qualquer órgão judicial a revisar formalmente um precedente vinculante. Este artigo propõe uma **taxonomia analítica, não exaustiva**, de cinco situações que ajudam a verificar se a decisão enfrentou adequadamente o precedente: (i) aplicação justificada; (ii) distinção; (iii) reconhecimento de superação ou revisão pela autoridade competente; (iv) contestação fundamentada ou não aplicação no caso concreto quando houver mecanismo juridicamente admissível, sempre separada da revisão formal; e (v) demonstração de que o precedente não controla o resultado por uma questão dispositiva independente. A quinta situação não equivale a simples silêncio: deixar de citar um precedente invocado e material não elimina os deveres de enfrentamento. O artigo também delimita a categoria de **aplicação parcial silenciosa**: a decisão utiliza o precedente como fundamento, mas omite, sem explicação, uma condição expressa ou parcela da razão controladora materialmente relevante ao caso. A categoria é apresentada como instrumento de auditoria da fundamentação, não como nova hipótese autônoma de nulidade. A literatura anterior sobre *anticipatory overruling*, superação no caso concreto e competência da corte-fonte é incorporada explicitamente, e a controvérsia entre modelos mais permissivos e mais hierárquicos é preservada em vez de ser resolvida por definição.
 
-**Palavras-chave**: precedentes vinculantes; fundamentação; art. 927
-do CPC; art. 489 do CPC; distinguishing; overruling; superação
-racional; vinculação racional; aplicação parcial silenciosa.
-
----
+**Palavras-chave:** precedentes vinculantes; fundamentação; art. 927 do CPC; art. 489 do CPC; distinguishing; overruling; superação; competência; aplicação parcial silenciosa.
 
 ## Abstract
 
-This article demonstrates that the combination of arts. 927, §1,
-and 489, §1, V and VI, of the 2015 Brazilian Code of Civil Procedure
-configures not two but five legitimate responses for a court faced
-with an invoked binding precedent: (i) correct application, with
-identification of determining grounds and demonstration that the
-case fits them; (ii) justified distinction, with identification of
-the substantive difference that prevents application of the ratio;
-(iii) recognition of subsequent supersession by the source court;
-(iv) rational supersession by the court itself, with express
-identification of error in the ratio; and (v) abstention from
-invocation. The article demonstrates that the hierarchical
-conception of binding — according to which a lower court would be
-limited to the binary choice between following and not following —
-finds no support in the CPC 2015, which adopts a model of rational
-binding: the court is bound to the ratio of the precedent because
-it articulates legal reasoning that, absent qualified demonstration
-of error, should apply to analogous cases. The article names and
-conceptualizes the defect of "silent partial application of binding
-precedent": the practice of invoking the precedent to benefit from
-the favorable portion while ignoring express qualifications in the
-ratio, without adopting any of the substantive legitimate responses.
-The article engages the doctrine of Marinoni and Mitidiero on the
-nature of precedent and illustrates the analysis with a
-hypothetical scenario.
+Articles 927(1) and 489(1)(V–VI) of the Brazilian Code of Civil Procedure impose reason-giving duties when binding precedents are applied or departed from. They do not, however, create five equivalent judicial powers or authorize every court to formally revise a binding precedent. This paper proposes a **non-exhaustive analytical taxonomy** of five situations useful for auditing precedent reasoning: (i) reasoned application; (ii) distinguishing; (iii) recognition of supersession or revision by the competent source court; (iv) reasoned contestation or case-specific nonapplication where a legally available mechanism exists, kept distinct from formal revision; and (v) a showing that the precedent is genuinely non-controlling because an independent dispositive issue resolves the case. The fifth situation is not citation silence: failure to mention a material precedent invoked by a party does not erase the duty to engage with it. The paper also narrows the notion of **silent partial application** to decisions that rely on a precedent while omitting, without explanation, an express condition or controlling proposition that is materially relevant to the case. The label is offered as a reasoning-audit device rather than a new autonomous ground of invalidity. Earlier Brazilian work on anticipatory overruling, case-specific nonapplication, and source-court competence is treated as antecedent doctrine rather than as a contribution of this paper.
 
-**Keywords**: binding precedents; judicial reasoning; art. 927 CPC;
-art. 489 CPC; distinguishing; overruling; rational supersession;
-rational binding; silent partial application.
+**Keywords:** binding precedent; judicial reasoning; Brazilian Code of Civil Procedure; distinguishing; overruling; competence; silent partial application.
 
 ---
 
 ## 1. Introdução
 
-O regime de precedentes vinculantes instituído pelo Código de
-Processo Civil de 2015 gerou transformação significativa na teoria
-e na prática do direito processual brasileiro. A enumeração do art.
-927 — que inclui as decisões do STF em controle concentrado, as
-súmulas vinculantes, os acórdãos em recursos repetitivos e
-incidentes de resolução de demandas repetitivas, e a orientação
-do plenário ou órgão especial — criou, pelo menos formalmente, um
-sistema de stare decisis de feição própria, moldado pelas
-peculiaridades do ordenamento brasileiro.
+O CPC de 2015 tornou explícito um conjunto de deveres argumentativos ligados ao uso de precedentes. O art. 927, §1º, remete ao art. 489, §1º, e os incisos V e VI deste último dispositivo vedam duas formas recorrentes de decisão deficiente: invocar precedente sem identificar seus fundamentos determinantes e sem demonstrar a aderência do caso; ou deixar de seguir precedente, súmula ou jurisprudência invocados sem demonstrar distinção ou superação.
 
-A implementação prática desse sistema, contudo, tem sido marcada
-por duas distorções simétricas.
+Esses textos não eliminam, por si sós, as controvérsias sobre competência para superação, força vinculante, técnicas de não aplicação e desenho institucional das cortes. A literatura brasileira anterior ao corte deste artigo já discutia intensamente se e em que condições um juiz ou tribunal inferior pode deixar de aplicar um precedente ainda formalmente vigente, e já distinguia essa atuação da revisão ou substituição formal da tese pela corte competente.
 
-A primeira é a submissão acrítica: tribunais que aplicam o
-precedente por simples menção ao enunciado de súmula ou transcrição
-de ementa, sem identificar os fundamentos determinantes do
-precedente, sem demonstrar que o caso se ajusta a esses fundamentos,
-e sem enfrentar as ressalvas ou qualificações que o próprio enunciado
-contém. Essa prática viola o art. 489, §1º, V, do CPC — que exige
-precisamente a identificação e a demonstração de ajuste —, mas
-aparece disfarçada de cumprimento do precedente.
+A tese deste trabalho é, portanto, deliberadamente mais modesta do que em versões anteriores. O objetivo não é demonstrar que o CPC teria criado cinco autorizações autônomas, nem sustentar uma competência geral dos órgãos inferiores para *overruling*. O objetivo é construir um **mapa de auditoria**: quando um precedente potencialmente controlador entra no espaço decisório, quais movimentos argumentativos precisam ser distinguidos para que se possa avaliar a fundamentação sem confundir aplicação, distinção, contestação, não incidência e revisão formal?
 
-A segunda é o afastamento silencioso: tribunais que deixam de
-aplicar o precedente sem declará-lo, sem distinguir, sem superar.
-A decisão simplesmente não menciona o precedente ou o menciona sem
-enfrentá-lo. Essa prática viola o art. 489, §1º, VI, do CPC — que
-exige, para o afastamento, demonstração de distinção ou superação.
+A utilidade do mapa é prática. Muitas decisões parecem aderir a um precedente porque o citam; outras parecem afastá-lo porque discordam de seu resultado; outras ainda usam apenas a parte favorável da razão de decidir. Sem decomposição, movimentos institucionalmente distintos acabam tratados como se fossem equivalentes.
 
-Entre as duas distorções, há uma zona intermediária particularmente
-problemática: a aplicação parcial silenciosa, em que o tribunal
-invoca o precedente para se valer da porção que lhe convém, ignora
-a porção ou as ressalvas que desfavorecem sua conclusão, e não
-adota nenhuma das saídas legitimas disponíveis. Essa zona é onde
-a confusão entre cumprimento formal e cumprimento substancial do
-precedente é mais difícil de detectar e mais grave em suas
-consequências.
-
-O presente artigo tem por objetivo mapear com precisão o espaço
-das saídas legítimas disponíveis ao tribunal diante de precedente
-vinculante invocado, demonstrar que esse espaço é mais amplo do
-que a concepção hierárquica da vinculação sugere — cinco saídas,
-não duas —, e nomear e conceituar o vício de aplicação parcial
-silenciosa como categoria dogmática autônoma.
-
-A seção 2 examina o fundamento normativo das saídas legítimas a
-partir do CPC 2015. A seção 3 apresenta e desenvolve as cinco
-saídas. A seção 4 examina em detalhe a quarta saída — superação
-racional — e seu fundamento na teoria do precedente brasileiro. A
-seção 5 conceitua a aplicação parcial silenciosa como vício. A
-seção 6 ilustra com análise de caso concreto. A seção 7 enfrenta
-as principais objeções à tese aqui sustentada. A seção 8 conclui.
+O artigo organiza essa decomposição em cinco situações analíticas. O número cinco é uma escolha de organização do argumento, não uma ontologia completa do direito dos precedentes e não uma enumeração legal fechada. A classificação deve ceder sempre que um regime específico — constitucional, legal, regimental ou jurisprudencial — imponha solução de competência mais estreita.
 
 ---
 
-## 2. O fundamento normativo: arts. 927 e 489 em conjugação
+## 2. Base normativa: art. 927, §1º, e art. 489, §1º, V–VI
 
-O art. 927, §1º, do CPC estabelece que "os juízes e os tribunais
-observarão o disposto no art. 489, §1º, quando decidirem com
-fundamento neste artigo". A remissão ao art. 489, §1º, V e VI, é
-o dispositivo central para compreender as obrigações do tribunal
-diante de precedente vinculante.
+O art. 927, §1º, determina que juízes e tribunais observem o art. 489, §1º, ao decidir com fundamento nos precedentes e pronunciamentos ali referidos. Para o problema deste artigo, interessam especialmente os incisos V e VI do art. 489, §1º.
 
-O art. 489, §1º, V, dispõe que não se considera fundamentada a
-decisão que "se limitar a invocar precedente ou enunciado de súmula,
-sem identificar seus fundamentos determinantes nem demonstrar que
-o caso sob julgamento se ajusta àqueles fundamentos". O dispositivo
-exige, portanto, que a invocação do precedente venha acompanhada
-de dois movimentos: (a) identificação dos fundamentos determinantes
-— a ratio decidendi do precedente —; e (b) demonstração de ajuste
-do caso — que o caso sob julgamento se enquadra na ratio.
+O inciso V considera insuficientemente fundamentada a decisão que se limite a invocar precedente ou enunciado de súmula sem identificar seus fundamentos determinantes nem demonstrar que o caso se ajusta a eles. Há, portanto, dois encargos distintos: **identificar a razão juridicamente relevante** e **justificar a correspondência entre essa razão e o caso atual**.
 
-O art. 489, §1º, VI, dispõe que não se considera fundamentada a
-decisão que "deixar de seguir enunciado de súmula, jurisprudência
-ou precedente invocado pela parte, sem demonstrar a existência de
-distinção no caso em julgamento ou a superação do entendimento".
-O dispositivo exige, para o afastamento do precedente, demonstração
-de distinção ou de superação.
+O inciso VI, por sua vez, exige explicação quando a decisão deixa de seguir enunciado de súmula, jurisprudência ou precedente invocado pela parte. O texto menciona distinção e superação. Essa redação participa da controvérsia sobre quem pode realizar cada espécie de afastamento, mas não resolve sozinha a distribuição institucional de competência.
 
-A conjugação dos dois incisos com o art. 927, §1º, produz o seguinte
-sistema: o tribunal que invoca precedente vinculante deve ou aplicá-lo
-corretamente — identificando fundamentos determinantes e demonstrando
-ajuste — ou demonstrar sua distinção ou superação. Não existe, nesse
-sistema, espaço para invocação sem percurso, nem para afastamento
-sem declaração.
+Duas consequências são seguras para a análise aqui proposta.
 
-O que esse sistema não estabelece — e o que este artigo busca
-demonstrar — é que as saídas disponíveis para o tribunal são apenas
-duas: seguir ou não seguir. A leitura detida do texto, combinada
-com a teoria do precedente que informa o sistema, revela que as
-saídas são cinco.
+Primeiro, **citar não basta**. A simples presença do número do tema, de uma ementa ou de uma frase destacada não substitui a identificação dos fundamentos determinantes e a demonstração de aderência.
+
+Segundo, **não citar também não basta**. Se a parte invoca precedente materialmente relevante e a decisão deixa de segui-lo, o órgão julgador não escapa do dever argumentativo simplesmente silenciando sobre a fonte. Por isso, a antiga formulação deste paper que tratava “abstenção da invocação” como uma quinta saída independente era excessiva e é abandonada nesta versão.
+
+O que segue é um mapa de situações decisórias, não uma licença para contornar a força vinculante.
 
 ---
 
-## 3. As cinco saídas legítimas
+## 3. Cinco situações analíticas
 
-### 3.1 Primeira saída: aplicação correta
+### 3.1 Aplicação justificada
 
-A aplicação correta do precedente é a saída ordinária, prevista
-no art. 489, §1º, V. Exige dois movimentos cumulativos:
+A primeira situação é a aplicação do precedente ao caso atual.
 
-**Identificação dos fundamentos determinantes.** O tribunal deve
-identificar a ratio decidendi do precedente — o fundamento jurídico
-que foi determinante para a conclusão do precedente. A ratio não
-se confunde com o enunciado da ementa nem com o dispositivo: é o
-fundamento sem o qual o precedente não teria chegado à conclusão
-que chegou. Obiter dicta — fundamentos marginais, hipotéticos,
-ou de passagem — não integram a ratio e não vinculam.
+Ela exige, no mínimo:
 
-**Demonstração de ajuste do caso.** O tribunal deve demonstrar que
-o caso sob julgamento se enquadra nos fundamentos determinantes
-identificados — que as características relevantes do caso
-correspondem às características do caso paradigma que determinaram
-a ratio. A demonstração é substancial, não meramente formal: não
-basta citar o precedente; é necessário mostrar que o caso se encaixa.
+1. identificar o pronunciamento relevante;
+2. reconstruir a razão ou condição controladora pertinente à questão;
+3. demonstrar por que as características juridicamente relevantes do caso atual satisfazem essa razão ou condição; e
+4. enfrentar ressalvas expressas que possam limitar o alcance do precedente.
 
-A aplicação correta assim entendida é exigente. Ela requer que o
-tribunal compreenda o precedente — o que é a ratio, em que contexto
-surgiu, a que características do caso paradigma ela responde — e
-que demonstre essa compreensão na fundamentação. A simples
-transcrição de ementa, sem o percurso de identificação e
-demonstração, não satisfaz o art. 489, §1º, V.
+A aplicação não é correta apenas porque o resultado final coincide com o resultado do precedente. O art. 489, §1º, V, dirige-se justamente contra a aplicação por rótulo. O percurso argumentativo faz parte da justificação.
 
-### 3.2 Segunda saída: distinção fundamentada
+### 3.2 Distinção
 
-A distinção fundamentada — o distinguishing — é a saída adequada
-quando o caso sob julgamento apresenta características relevantes
-que o diferenciam do caso paradigma, de modo que a ratio do
-precedente não captura o caso.
+A segunda situação é a distinção (*distinguishing*). Aqui o precedente permanece íntegro, mas a razão que o tornou vinculante não controla o caso atual porque existe diferença fática ou jurídica materialmente relevante.
 
-O distinguishing genuíno exige três movimentos:
+Uma distinção adequada pressupõe:
 
-**Identificação dos fundamentos determinantes do precedente.** O
-tribunal deve, antes de distinguir, compreender o que vincula. Não
-se distingue do que não se identificou: o distinguishing pressupõe
-a identificação da ratio.
+1. identificar a razão controladora do precedente;
+2. identificar a característica relevante que difere no caso atual;
+3. explicar por que essa diferença afasta a incidência da razão; e
+4. preservar a força do precedente para os casos em que seus pressupostos estejam presentes.
 
-**Identificação da diferença substantiva.** O tribunal deve
-demonstrar que o caso sob julgamento possui característica relevante
-ausente no caso paradigma — ou que o caso paradigma possui
-característica relevante ausente no caso sob julgamento — de modo
-que a ratio, corretamente entendida, não abrange o caso.
+A distinção não é simples discordância. Ela afirma que, compreendido corretamente, o precedente não alcança aquele caso.
 
-**Declaração formal da distinção.** O tribunal deve declarar
-expressamente que está distinguindo e por quê, nos termos do art.
-489, §1º, VI.
+### 3.3 Reconhecimento de revisão ou superação pela autoridade competente
 
-O distinguishing não é discordância de resultado; é afirmação de
-diferença relevante. O tribunal que distingue não está dizendo que
-o precedente está errado; está dizendo que o precedente, corretamente
-aplicado, não alcança o caso.
+A terceira situação é declarativa. O órgão julgador constata que a tese anteriormente vinculante já foi revista, cancelada ou superada pela autoridade competente, ou que houve alteração normativa ou constitucional cuja consequência jurídica já esteja estabelecida de forma suficiente para retirar a força controladora do precedente anterior.
 
-### 3.3 Terceira saída: reconhecimento de superação superveniente
+Nesse movimento, o julgador atual não pretende produzir uma nova tese vinculante. Ele identifica a mudança jurídica relevante, sua fonte e sua relação com o precedente anterior.
 
-O reconhecimento de superação superveniente é saída declarativa:
-o tribunal registra que o tribunal-fonte do precedente invocado
-já o superou em jurisprudência posterior. O tribunal que adota essa
-saída não está superando o precedente por força de argumento próprio;
-está constatando fato externo — o precedente, naquele momento, já
-não existe como tal, porque foi superado pela própria corte que o
-produziu.
+A distinção entre essa situação e a seguinte é central. **Reconhecer que a corte competente já revisou a tese** não é o mesmo que **um órgão inferior sustentar que a tese deveria ser revista**.
 
-Essa saída exige dois elementos:
+### 3.4 Contestação fundamentada e não aplicação no caso concreto: competência antes do rótulo
 
-**Existência de precedente posterior.** Deve haver precedente
-posterior do tribunal-fonte que haja efetivamente superado a ratio
-do precedente invocado. Não basta incompatibilidade formal de
-enunciados; é necessário que o tribunal-fonte haja, de fato, mudado
-de orientação sobre a mesma questão jurídica.
+A quarta situação é a mais controvertida e precisa ser formulada de modo competência-sensível.
 
-**Identificação e declaração.** O tribunal deve identificar o
-precedente posterior e declarar expressamente que reconhece a
-superação. A declaração torna o movimento auditável e impede que
-o reconhecimento de superação se confunda com o afastamento
-silencioso.
+Existe, antes do corte deste paper, literatura brasileira que sustenta que o art. 489, §1º, VI, permite a um juiz ou tribunal inferior deixar de aplicar um precedente vinculante no caso concreto quando demonstra, com ônus argumentativo elevado, que o entendimento está superado ou é incompatível com o direito. Evie Nogueira e Malafaia (2020), Flávia Pereira Ribeiro e César Augusto Costa (2024) e a tese de Fernanda Pagotto Gomes Pitta publicada em 2025 são antecedentes diretos dessa arquitetura. A literatura sobre *anticipatory overruling*, por sua vez, já admitia hipóteses mais estreitas de não aplicação por órgão inferior quando sinais posteriores indicam provável mudança da corte-fonte.
 
-A relevância prática dessa saída é crescente, especialmente em
-áreas onde a jurisprudência do STF e do STJ tem evoluído
-rapidamente. O tribunal que percebe que o precedente que uma das
-partes invocou foi superado pelo próprio STF tem, nessa saída, o
-instrumento adequado — sem precisar superar o precedente por força
-de argumento próprio.
+Há também posição contrária relevante. Daniel Mitidiero sustenta, em formulação conhecida, que a superação formal do precedente cabe à corte responsável por sua formação. Em formulações próximas, a função do órgão inferior é aplicar ou distinguir o precedente, podendo criticar a tese e fornecer razões para sua futura revisão, mas não substituir por conta própria a orientação vinculante.
 
-### 3.4 Quarta saída: superação racional com apontamento expresso de erro
+Esta versão não resolve a controvérsia por definição. Em vez disso, separa quatro operações que versões anteriores misturavam sob o rótulo “superação racional”:
 
-A superação racional é a saída mais exigente e, ao mesmo tempo,
-a menos explorada. Ela consiste na superação do precedente pelo
-próprio tribunal — inclusive o tribunal inferior ao tribunal-fonte —
-mediante apontamento expresso de erro na ratio do precedente.
+**a) crítica ou sinalização fundamentada.** O órgão pode expor razões pelas quais considera o precedente problemático e preservar essas razões para recurso, reclamação ou futura revisão. Crítica não é sinônimo de autorização para desobedecer.
 
-Não basta discordar do resultado; é necessário identificar onde a
-razão do precedente falha como argumento. O ônus argumentativo é
-qualificado: o tribunal deve demonstrar que a ratio é internamente
-defectiva — vício lógico na estrutura do argumento —, que está em
-descompasso com norma superveniente — legislativa, constitucional,
-ou de direito supranacional —, ou que é inconsistente com princípios
-que o precedente não considerou adequadamente.
+**b) anticipatory overruling.** Quando o regime jurídico e os sinais da própria corte-fonte permitem essa técnica, a não aplicação pode ser justificada pela erosão objetivamente demonstrável do precedente. Trata-se de hipótese mais estreita do que uma competência geral de superação.
 
-A superação racional é desenvolvida em detalhe na seção 4.
+**c) não aplicação concreta por mecanismo juridicamente admitido.** Parte da doutrina lê o art. 489, §1º, VI, como permitindo ao órgão inferior, excepcionalmente, demonstrar a superação no caso concreto. Quando essa posição é adotada, deve-se explicitar que ela é controvertida e que a decisão não substitui formalmente a tese vinculante para os demais casos.
 
-A quarta saída também é exercitável diante de precedente vinculante
-constitucional do STF — decisões de controle concentrado de
-constitucionalidade e súmulas vinculantes. A vinculação constitucional
-não suprime o dever de fundamentação (art. 93, IX, CF) nem impede que
-o tribunal inferior articule divergência fundamentada e, com base
-nela, deixe de aplicar o precedente ao caso concreto — o tribunal
-pode fazê-lo. O que distingue esse domínio do infraconstitucional é o
-remédio processual disponível contra a divergência, desenvolvido na
-seção 4.4.
+**d) revisão, cancelamento ou substituição formal.** A produção de nova tese vinculante, o cancelamento de súmula vinculante ou a revisão institucional do precedente dependem da competência e do procedimento próprios da corte responsável. Uma decisão inferior não adquire esse poder apenas por ser detalhadamente fundamentada.
 
-### 3.5 Quinta saída: abstenção da invocação
+Essa separação é especialmente importante para precedentes constitucionais vinculantes e súmulas vinculantes do STF. O dever geral de fundamentação não se transforma em autorização geral para órgãos inferiores cancelarem, substituírem ou tornarem sem efeito a orientação da Corte. Distinção, identificação de não incidência, crítica institucional, recursos e mecanismos de revisão devem ser tratados segundo suas competências próprias.
 
-A quinta saída é logicamente distinta das demais porque opera antes
-da invocação, não depois. O tribunal que decide o caso por outros
-fundamentos, sem invocar o precedente vinculante, não entra no
-espaço das obrigações que a invocação gera.
+A contribuição desta seção não é a autorização da quarta situação — isso já era objeto de debate direto antes do paper. A contribuição é **impedir que quatro operações institucionalmente diferentes sejam chamadas pelo mesmo nome**.
 
-A quinta saída não é propriamente uma saída para o problema do
-cumprimento do precedente; é a saída que evita o problema. Quem
-não invoca não precisa aplicar corretamente, distinguir, reconhecer
-superação ou superar racionalmente.
+### 3.5 Precedente genuinamente não controlador por questão dispositiva independente
 
-Sua importância dogmática está na implicação inversa: quem invoca
-o precedente vincula-se às quatro saídas substantivas. A escolha
-de invocar gera as obrigações do art. 489, §1º, V e VI. O tribunal
-que invoca e depois não adota nenhuma das quatro saídas — que aplica
-parcialmente e silenciosamente — não está na quinta saída: está fora
-do espaço legítimo.
+A quinta situação substitui a antiga “abstenção da invocação”. O ponto não é que o órgão possa escapar da vinculação deixando de citar o precedente. O ponto é que, em certos casos, uma questão independente e dispositiva torna aquele precedente **não controlador do resultado**.
 
-A taxonomia fica mais clara se se separar a decisão de **invocar** o
-precedente das quatro respostas substantivas que essa invocação abre.
-A quinta saída ocorre antes desse compromisso; a aplicação parcial
-silenciosa, ao contrário, surge depois da invocação e por isso não pode
-ser confundida com abstenção.
+Exemplos abstratos incluem:
 
-```mermaid
-flowchart TD
-    P[Precedente vinculante disponível] --> I{O tribunal o invoca?}
-    I -- Não --> A[5. Abstenção da invocação<br/>decide por outro fundamento]
-    I -- Sim --> R[Identificar ratio integral<br/>inclusive ressalvas]
-    R --> Q{Como a ratio se relaciona<br/>com o caso e o estado do direito?}
-    Q --> AP[1. Aplicação correta<br/>ratio + ajuste demonstrado]
-    Q --> DI[2. Distinção fundamentada<br/>diferença substantiva]
-    Q --> SS[3. Superação superveniente<br/>reconhecida no tribunal-fonte]
-    Q --> SR[4. Superação racional<br/>erro na ratio explicitado]
-    R -. seleciona só a porção favorável .-> X[Aplicação parcial silenciosa<br/>vício, não sexta saída]
-```
+- falta de pressuposto indispensável para que a questão regulada pelo precedente surja;
+- resolução do litígio por questão anterior e independente que torna desnecessário alcançar a matéria coberta pela tese;
+- identificação de que o precedente invocado disciplina relação jurídica diversa daquela efetivamente necessária à decisão.
 
-O diagrama é uma taxonomia normativa proposta pelo artigo, não uma
-afirmação de que a admissibilidade da quarta saída seja pacífica; as
-objeções e a indeterminação estrutural dessa tese são enfrentadas nas
-seções 4 e 7.
+Mesmo aqui, se a parte invocou o precedente e ele parece, em princípio, material, a decisão deve explicar por que a questão independente o torna não controlador. **Silêncio não é a quinta saída.** A quinta situação é uma conclusão argumentada sobre não incidência material.
+
+O valor analítico dessa categoria é separar duas coisas que, na prática, podem parecer iguais: “não apliquei porque não quis enfrentar” e “não apliquei porque o caso foi legitimamente resolvido por uma questão logicamente anterior e independente”.
 
 ---
 
-## 4. A superação racional e o caráter racional da vinculação
+## 4. Prior art e limite da contribuição
 
-### 4.1 A concepção hierárquica e seus limites
+A auditoria temporal realizada em 18 de setembro de 2026 altera a maneira correta de descrever este trabalho.
 
-A objeção mais frequente à admissão da superação racional pelo
-tribunal inferior é de caráter sistêmico: se qualquer tribunal
-pudesse superar precedente do STF por força de argumento próprio,
-a vinculação se esvaziaria e a uniformização da jurisprudência
-ficaria comprometida.
+### 4.1 Não aplicação por juiz ou tribunal inferior já era uma controvérsia ocupada
 
-A objeção confunde dois planos distintos: a possibilidade da
-superação racional e a facilidade da superação racional.
+Ataíde Jr. e Peixoto discutiam *anticipatory overruling* no direito brasileiro em 2014. Leonard Ziesemer Schmitz, em 2015, foi publicamente citado defendendo a possibilidade de argumento novo capaz de enfraquecer a razão do precedente sob o art. 489, §1º, VI. Textos posteriores tornaram ainda mais explícita a tese de que a não aplicação concreta poderia ser realizada por magistrado inferior.
 
-A possibilidade existe — o CPC 2015 não a proíbe e, como
-demonstrado, o art. 489, §1º, VI, exige para o afastamento apenas
-"fundamentação expressa", não "autorização do tribunal superior".
-O que torna a superação racional difícil — e funcionalmente
-importante que seja difícil — é o ônus argumentativo qualificado
-que ela impõe. O tribunal que pretende superar precedente do STF
-por força de argumento próprio precisa demonstrar erro de
-articulação na ratio — não mera discordância de resultado, não
-preferência por orientação diversa, não peso diferente atribuído
-aos valores em jogo. Erro expresso na razão do precedente.
+Nogueira e Malafaia (2020) distinguem diretamente **revisão** de uma tese vinculante, reservada à autoridade competente, e **superação ou não aplicação no caso concreto**, que defendem poder ocorrer em instâncias inferiores sob carga argumentativa elevada. Ribeiro e Costa (2024) defendem de maneira expressa a possibilidade de o juiz singular deixar de aplicar precedente vinculante mesmo sem movimento prévio da corte-fonte, embora reconheçam a excepcionalidade da medida. Pitta, em tese disponibilizada publicamente em 2025, apresenta estrutura semelhante.
 
-### 4.2 A teoria do precedente que informa o sistema
+Consequentemente, este paper não pode atribuir a si a descoberta da quarta situação nem da distinção entre não aplicação concreta e revisão formal.
 
-A doutrina processual brasileira mais refinada sobre precedentes
-converge para leitura racional da vinculação.
+### 4.2 A taxonomia em cinco partes é uma síntese, não uma descoberta das peças
 
-Marinoni defende que precedente é "razão que não pode ser
-desconsiderada sem razão mais forte". A formulação é precisa em
-suas duas partes: precedente é razão — não comando, não imposição
-de autoridade; e não pode ser desconsiderado sem razão mais forte
-— há ônus argumentativo para o afastamento, mas o afastamento
-existe como possibilidade. Tribunais inferiores que identificam
-erro grave na ratio têm, nessa leitura, não apenas a possibilidade
-mas, em certos casos, a obrigação de articular o argumento —
-precisamente para que o sistema possa depurar seus próprios erros.
+A busca não localizou, antes do corte do paper, a mesma organização exata em cinco situações com a mesma combinação terminológica. Isso é insuficiente para uma reivindicação de prioridade forte. Taxonomias podem ser funcionalmente equivalentes sem usar o mesmo número ou os mesmos rótulos.
 
-Mitidiero, examinando a distinção entre cortes superiores e cortes
-supremas, enfatiza que o modelo de corte suprema — ao qual o STF
-e o STJ se aproximam no CPC 2015 — pressupõe que a autoridade do
-precedente deriva da qualidade da razão que ele contém, não
-simplesmente da posição hierárquica do tribunal que o emitiu.
-Precedente de má qualidade argumentativa — que contém erro
-identificável — é precedente cuja autoridade pode ser contestada
-por argumento de melhor qualidade.
+A formulação defendida aqui é, portanto, a de uma **síntese operacional**: as cinco situações ajudam a auditar uma decisão, mas seus componentes substantivos pertencem a uma literatura anterior extensa.
 
-Essa leitura tem fundamentos filosóficos que transcendem o direito
-processual brasileiro. Hart, ao examinar a natureza da autoridade
-jurídica, distingue entre autoridade de conteúdo — que deriva da
-qualidade da razão — e autoridade de fonte — que deriva da posição
-do emissor. Sistemas jurídicos maduros combinam as duas: a
-hierarquia tem papel de coordenação, mas não substitui a qualidade
-da razão como fundamento último da vinculação.
+### 4.3 “Aplicação parcial silenciosa” também exige linguagem de originalidade limitada
 
-Raz, por sua vez, ao examinar a legitimidade da autoridade,
-argumenta que autoridade se justifica quando o agente sujeito
-à autoridade segue melhor as razões que se aplicam a ele seguindo
-a diretiva da autoridade do que tentando agir diretamente segundo
-essas razões. Para tribunais inferiores em relação ao STF, isso
-geralmente é verdade — o STF tem mais recursos para desenvolver
-razões jurídicas sobre questões constitucionais. Mas não é sempre
-verdade, especialmente quando o precedente contém erro identificável
-que o tribunal inferior, por força de sua posição no caso concreto,
-está em melhores condições de detectar.
+A expressão serve para destacar um padrão específico: a decisão usa o precedente como autoridade, extrai dele a parcela favorável à conclusão e omite uma condição controladora relevante que poderia alterar a aplicação ao caso.
 
-### 4.3 O ônus argumentativo qualificado
-
-A superação racional pelo tribunal inferior tem ônus argumentativo
-mais elevado que a superação pelo próprio tribunal-fonte. Três
-elementos são exigidos cumulativamente:
-
-**Apontamento expresso de erro.** O tribunal deve declarar que está
-superando o precedente e identificar precisamente onde a ratio falha.
-"Falha" aqui significa erro identificável — não preferência por
-resultado diverso. Erro de lógica interna (a conclusão não se segue
-das premissas), erro de pressuposição factual (o precedente
-pressupôs estado de fato que não corresponde à realidade), erro de
-norma (a ratio contradiz norma constitucional ou legal superveniente
-que o precedente não pôde considerar), ou erro de princípio
-(inconsistência não detectada com princípio constitucional).
-
-**Demonstração de irracionalidade da ratio ou de sua superação
-normativa.** Não basta apontar o erro; é necessário demonstrá-lo.
-A demonstração é o conteúdo da "razão mais forte" que Marinoni exige:
-o tribunal apresenta argumento que mostra, passo a passo, que a
-ratio do precedente não pode ser mantida.
-
-**Observância dos princípios de segurança jurídica e proteção da
-confiança.** Esses princípios devem informar a superação racional
-pelo tribunal inferior, ainda que sem apoio direto no art. 927, §4º,
-do CPC — dispositivo cujo objeto é a autorrevisão de jurisprudência
-pelo próprio tribunal que a firmou, não o afastamento por tribunal
-inferior. O fundamento direto está nos princípios constitucionais de
-segurança jurídica e proteção da confiança: o tribunal deve considerar
-o impacto da superação na confiança depositada no precedente pelas
-partes e pela comunidade jurídica.
-
-### 4.4 A superação racional e o sistema
-
-É preciso qualificar o que a quarta saída efetivamente produz no caso
-concreto antes de discutir seu efeito sistêmico. A decisão do tribunal
-inferior que supera racionalmente o precedente não é, em si, juridicamente
-efetiva no sentido de encerrar a controvérsia: permanece sujeita a
-reforma pelo tribunal competente e, salvo se o próprio tribunal-fonte
-vier a acolher a superação proposta, tende a ser revertida caso
-submetida a recurso ou reclamação. O valor da quarta saída não está em
-produzir decisão que se sustente isoladamente; está em articular, com
-o ônus argumentativo qualificado da seção 4.3, o argumento apto a levar
-o tribunal-fonte a rever sua própria ratio.
-
-O remédio processual contra a superação racional não é uniforme —
-depende do instrumento de que o precedente se origina, não de a
-matéria ser constitucional ou infraconstitucional. Para súmula
-vinculante e para decisão do STF em controle concentrado de
-constitucionalidade, o art. 988, III, do CPC — em conjugação com o
-art. 103-A, §3º, da CF para a súmula vinculante especificamente —
-autoriza reclamação diretamente ao STF, cabível tanto pela aplicação
-indevida da tese quanto por sua não aplicação ao caso que a ela
-corresponda (art. 988, §4º, do CPC): hipótese que inclui precisamente
-o afastamento por superação racional que a quarta saída descreve. A
-reclamação é processada e julgada pelo próprio órgão cuja autoridade
-se busca preservar (art. 988, §1º, do CPC) — diretamente pelo STF,
-sem percorrer a escada recursal — e tem cognição estruturalmente mais
-estreita, restrita ao confronto entre a tese fixada e a decisão
-reclamada, do que a devolvida em recurso ordinário.
-
-Essa proteção, contudo, não segue a linha constitucional/
-infraconstitucional: o mesmo art. 988 estende reclamação a acórdãos
-de incidente de resolução de demandas repetitivas e de incidente de
-assunção de competência (inciso IV) — de origem tipicamente
-infraconstitucional, firmados por tribunais de justiça e regionais
-federais — e, por força do §5º, II, também a recursos extraordinário
-e especial repetitivos, desde que esgotadas as instâncias ordinárias.
-A linha real separa precedentes originados de mecanismos processuais
-que o CPC equipou com reclamação (súmula vinculante, controle
-concentrado, IRDR, IAC, repetitivos) de precedentes "ordinários" —
-inclusive jurisprudência consolidada do STJ que não tenha percorrido
-nenhum desses procedimentos —, para os quais a única via de correção
-é o recurso ordinário. Súmula vinculante e controle concentrado, por
-serem sempre do STF, caem sempre do lado protegido por reclamação;
-daí a impressão de que a diferença relevante para a quarta saída é
-"constitucional versus infraconstitucional", quando na verdade é
-"precedente com reclamação versus precedente sem reclamação" — e o
-primeiro grupo inclui precedentes infraconstitucionais (IRDR, IAC,
-repetitivos) que a esta altura da série ainda não foram examinados
-sob essa lente.
-
-O argumento vale, na verdade, a fortiori para esses precedentes
-infraconstitucionais. Súmula vinculante e controle concentrado têm
-fundamento constitucional expresso para sua força vinculante (art.
-103-A e art. 102, §2º, da CF) — e, mesmo assim, a Constituição não
-autoriza aplicação acrítica, sem fundamentação racional: o dever do
-art. 93, IX, permanece incondicionado, e a própria reclamação existe
-porque a divergência fundamentada pode ocorrer e precisa de remédio,
-não porque a aplicação devesse ser automática. IRDR (art. 976, I e
-II, do CPC) e IAC (art. 947 do CPC) não têm fundamento constitucional
-expresso comparável: sua força vinculante deriva de opção legislativa
-ordinária, apoiada em poderes implícitos — a competência do tribunal
-para uniformizar é inferida dos princípios de isonomia e segurança
-jurídica que o próprio art. 976, II, invoca como requisito de
-instauração, não outorgada por dispositivo constitucional específico
-como o art. 103-A confere à súmula vinculante. Recursos repetitivos
-(arts. 1.036 e seguintes do CPC) repousam na mesma base implícita.
-Se nem o instrumento com fundamento constitucional expresso dispensa
-fundamentação racional e a possibilidade de divergência fundamentada,
-não há como sustentar que institutos de fundamento apenas implícito
-imponham padrão de aplicação mais acrítico. A ausência de reclamação
-como remédio direto para a generalidade desses precedentes (ressalvadas
-as hipóteses do art. 988, IV e §5º, II, do CPC) não os torna mais
-vinculantes que súmula vinculante — torna apenas o remédio disponível
-menos direto, sem alterar o piso comum de fundamentação racional que
-os arts. 93, IX, CF, e 489, §1º, do CPC exigem de qualquer decisão
-que invoque qualquer precedente, constitucional ou infraconstitucional.
-
-Esta seção converge com — e generaliza — três desenvolvimentos já
-presentes, de forma independente e mais restrita, em outros papers da
-série. O Paper 1D desenvolve em profundidade, especificamente para a
-súmula vinculante, o argumento central desta seção: a vinculação
-institui dever de forma (expor razões), não obrigação de resultado; a
-reclamação é canal de diálogo institucional, não mecanismo de
-silenciamento; e "a súmula vinculante não é carta branca para
-dispensar a fundamentação" (paper1D, §§2–4). O Paper 1E já identificara
-que súmula vinculante e temas repetitivos têm velocidades de correção
-distintas — "erros em súmulas vinculantes chegam ao STF via reclamação
-com relativa rapidez[;] erros em temas repetitivos chegam via recursos
-sobrestados que esperam o julgamento de leading case — processo muito
-mais lento" (paper1E, §3.3) —, instância mais estreita do critério
-generalizado aqui. E o Paper 1G já agrupara temas repetitivos, IRDR e
-incidente de assunção de competência como produtos da mesma lógica
-infraconstitucional, com mecanismo de correção "convoluted e de custo
-alto" que não impede, antes pressupõe, a possibilidade de superação
-racional (paper1G, §4.2). Esta seção unifica os três resultados sob um
-único critério — proteção por reclamação, não domínio constitucional/
-infraconstitucional — e o estende ao IAC, não examinado nos demais
-papers da série sob essa lente.
-
-A admissão da superação racional pelo tribunal inferior não enfraquece
-o sistema de precedentes; pelo contrário, o fortalece a longo prazo.
-Um sistema de precedentes sem mecanismo de depuração de erros é um
-sistema que não pode corrigir seus próprios equívocos — exceto pelo
-próprio tribunal-fonte, que pode levar anos para revisar posição
-consolidada.
-
-A superação racional pelo tribunal inferior cria pressão
-argumentativa sobre o tribunal-fonte: quando tribunais inferiores
-identificam e articulam erro na ratio com argumento de qualidade,
-o tribunal-fonte tem material para reconsiderar. O sistema que não
-admite esse canal de pressão perde informação valiosa.
+A auditoria encontrou um antecedente público próximo, ligado a alegação de “aplicação parcial de tese vinculante”, associado a processo com decisão publicada em março de 2026. A reconstrução da primeira data pública exata desse argumento não permitiu uma afirmação segura de prioridade. Por isso, a categoria é mantida como ferramenta analítica útil, mas **sem reivindicação de firstness**.
 
 ---
 
-## 5. A aplicação parcial silenciosa como vício
+## 5. Aplicação parcial silenciosa: definição restrita
 
-### 5.1 Conceituação
+Versões anteriores tratavam a aplicação parcial silenciosa como uma categoria muito ampla. A formulação arquivável precisa de quatro requisitos cumulativos.
 
-A "aplicação parcial silenciosa de precedente vinculante" é vício
-de fundamentação autônomo que se situa entre a aplicação correta
-e o afastamento silencioso. Consiste na invocação do precedente
-para se valer da porção ou dos aspectos que favorecem a conclusão
-pretendida, com simultânea omissão ou desconsideração dos aspectos
-desfavoráveis ou das ressalvas expressas contidas na própria ratio
-— sem adotar nenhuma das quatro saídas substantivas.
+Há aplicação parcial silenciosa, no sentido proposto neste paper, quando:
 
-O vício tem estrutura característica: o tribunal (a) invoca o
-precedente — escolhendo, portanto, entrar no espaço das obrigações
-do art. 489, §1º, V e VI; (b) transcreve ou parafraseia a ratio,
-incluindo as ressalvas; (c) aplica a porção positiva da ratio ao
-caso; (d) não enfrenta as ressalvas; (e) não distingue; (f) não
-reconhece superação; (g) não supera racionalmente. O resultado é
-uma conclusão que invoca o precedente como fundamento mas na prática
-se apoia apenas na metade favorável da ratio.
+1. **a decisão invoca efetivamente o precedente como fundamento** de uma conclusão;
+2. **a proposição omitida integra a razão controladora ou constitui condição expressa de aplicação**, e não mero *obiter dictum*, detalhe histórico ou passagem lateral;
+3. **a proposição omitida é material ao caso atual**, isto é, sua incidência poderia alterar a conclusão sobre a aplicação do precedente; e
+4. **a decisão não explica a omissão**, não distinguindo a condição, não demonstrando sua irrelevância e não adotando outro fundamento que a torne não controladora.
 
-### 5.2 Distinção em relação a outros vícios
+A categoria não pretende criar, por si só, um novo tipo autônomo de invalidade processual. Dependendo do contexto, o problema pode ser descrito pelas categorias já conhecidas do art. 489, §1º — inclusive deficiência na identificação dos fundamentos determinantes, ausência de demonstração de aderência, não enfrentamento de argumento material ou afastamento não justificado.
 
-A aplicação parcial silenciosa não se confunde com:
+O ganho do rótulo é diagnóstico. Ele dirige a atenção para decisões que parecem obedecer ao precedente porque o citam, mas o fazem de forma seletiva.
 
-**Afastamento silencioso:** este último ocorre quando o tribunal
-prescinde do precedente sem mencioná-lo ou sem enfrentá-lo. Na
-aplicação parcial silenciosa, o tribunal menciona e parcialmente
-aplica o precedente — o vício está na seleção interessada da porção
-aplicada.
+### 5.1 O que não é aplicação parcial silenciosa
 
-**Distinguishing implícito:** o tribunal poderia argumentar que,
-ao não aplicar a ressalva, estava implicitamente distinguindo o
-caso da hipótese abrangida pela ressalva. Mas distinguishing deve
-ser explícito, nos termos do art. 489, §1º, VI. Distinguishing
-implícito é afastamento silencioso.
+Não se enquadram automaticamente na categoria:
 
-**Erro de compreensão da ratio:** o tribunal poderia não ter
-percebido que a ressalva integrava a ratio. Mas a ausência de
-percepção não elide o vício de fundamentação: a exigência de
-identificação dos fundamentos determinantes inclui a exigência de
-identificação das ressalvas e qualificações que integram a ratio.
+- deixar de transcrever partes irrelevantes do precedente;
+- resumir corretamente uma razão extensa;
+- não mencionar *obiter dicta*;
+- adotar interpretação plausível sobre qual proposição é controladora, desde que a escolha seja explicada;
+- distinguir expressamente a condição omitida;
+- resolver o caso por questão dispositiva independente, explicando por que a tese deixa de controlar o resultado.
 
-### 5.3 Fundamento normativo
-
-A aplicação parcial silenciosa viola o art. 489, §1º, V, por duas
-razões cumulativas.
-
-Primeiro, a decisão invoca o precedente sem identificar seus
-fundamentos determinantes em sua integralidade: a identificação
-que inclui apenas a porção positiva da ratio, ignorando a porção
-excludente ou as ressalvas, não é identificação completa dos
-fundamentos determinantes.
-
-Segundo, a decisão não demonstra que o caso se ajusta à ratio
-integral: demonstrar ajuste ao caso é demonstrar que o caso
-satisfaz as condições positivas da ratio E que não cai nas ressalvas
-ou exclusões que a ratio contém. A demonstração que considera apenas
-as condições positivas e silencia sobre as ressalvas não é
-demonstração completa.
-
-O vício é de fundamentação — art. 489, §1º, V — e é sanável por
-embargos de declaração, quando a omissão sobre a ressalva ou a
-contradição entre a premissa transcrita e a conclusão aplicada
-satisfaz os requisitos do art. 1.022.
+A categoria não premia quantidade de citação. Ela exige fidelidade à estrutura justificativa relevante.
 
 ---
 
-## 6. Ilustração
+## 6. Exemplo abstrato
 
-### 6.1 O caso hipotético
+Considere precedente vinculante cuja razão aplicável possa ser representada, de modo simplificado, assim:
 
-Considere-se hipótese em que tribunal de segundo grau julga
-apelação cuja questão central é se determinado cargo de
-especialista em educação integra a carreira do magistério para
-fins do art. 37, XVI, "b", da Constituição Federal. A servidora
-havia sido nomeada originariamente para esse cargo e posteriormente
-reenquadrada como professora por força de lei estadual de
-reenquadramento.
+> Regra R aplica-se aos casos do tipo X, **desde que não esteja presente a condição C**.
 
-### 6.2 O precedente vinculante e sua ratio integral
+No caso posterior, a decisão afirma que o litígio é do tipo X, invoca o precedente e aplica R. Os autos, porém, contêm argumento específico de que C está presente. A decisão não discute C, não afirma que C é irrelevante, não distingue o caso e não identifica outro fundamento independente.
 
-O acórdão recorrido transcreveu a ementa de precedente vinculante
-do STF sobre o alcance da expressão "carreira do magistério", que
-contém a seguinte passagem: "as funções de direção, coordenação e
-assessoramento pedagógico integram a carreira do magistério, desde
-que exercidos, em estabelecimentos de ensino básico, por professores
-de carreira, **excluídos os especialistas em educação**".
+O problema não é que a decisão tenha citado pouco. O problema é que ela utilizou a autoridade do precedente enquanto suprimiu justamente uma condição expressa que delimita sua aplicação.
 
-A ressalva "excluídos os especialistas em educação" é parte da
-ratio do precedente — não obiter dictum. O STF, ao decidir a
-controvérsia, precisou delimitar o alcance da expressão "carreira
-do magistério" e o fez de modo a incluir funções pedagógicas em
-geral, mas excluir expressamente os especialistas em educação.
-Essa exclusão foi determinante para a ratio: sem ela, a decisão
-teria alcance distinto.
+O diagnóstico correto requer três perguntas:
 
-A identificação correta dos fundamentos determinantes do
-precedente exige, portanto, o enfrentamento da ressalva — não a
-sua omissão.
+1. C integra de fato a razão controladora do precedente ou é apenas passagem lateral?
+2. C é material ao caso atual?
+3. A decisão ofereceu alguma explicação juridicamente adequada para não aplicar C?
 
-### 6.3 A aplicação parcial silenciosa no acórdão
+Somente se as respostas forem, respectivamente, **sim**, **sim** e **não** o rótulo “aplicação parcial silenciosa” ganha força analítica.
 
-O acórdão transcreveu a ementa — inclusive a ressalva — e a seguir
-concluiu pela licitude da acumulação de cargos pela servidora, sem
-enfrentar a questão de se a servidora, nomeada originariamente
-para cargo de especialista em educação, estava ou não incluída na
-categoria que a ratio do precedente expressamente exclui.
-
-O acórdão não adotou nenhuma das cinco saídas legítimas:
-
-Não aplicou corretamente: deixou de identificar os fundamentos
-determinantes em sua integralidade, ignorando a ressalva que é parte
-da ratio.
-
-Não distinguiu: não demonstrou que a servidora não é especialista
-em educação para fins da ressalva, nem identificou qualquer diferença
-substantiva entre o caso e a hipótese excludente da ratio.
-
-Não reconheceu superação superveniente: não invocou precedente
-posterior do STF que haja superado a ressalva.
-
-Não superou racionalmente: não apontou erro algum na ratio do
-precedente nem na ressalva que ela contém.
-
-Não se absteve de invocar: invocou o precedente, vinculando-se às
-quatro saídas substantivas.
-
-O resultado é o vício de aplicação parcial silenciosa: a porção
-positiva da ratio (funções pedagógicas integram o magistério) foi
-invocada; a porção excludente (especialistas em educação estão
-excluídos) foi silenciada.
-
-### 6.4 O vício e o remédio
-
-O vício foi impugnado mediante Embargos de Declaração, que
-identificaram: omissão sobre a ressalva expressa (art. 1.022, II,
-c/c art. 489, §1º, IV), contradição entre a premissa transcrita
-e a conclusão sustentada (art. 1.022, I, c/c art. 489, §1º, V),
-e uso impróprio de precedente vinculante por aplicação seletiva
-da ratio sem adoção de nenhuma das saídas substantivas legítimas
-(art. 927, §1º, c/c art. 489, §1º, V e VI).
-
-O remédio correto é o acolhimento dos embargos para integração da
-fundamentação com enfrentamento da ressalva e suas consequências
-para o caso concreto — e, na medida em que a integração importe
-modificação do julgado, a consequente revisão do acórdão, nos
-termos do art. 1.024, §3º, do CPC.
+Esse teste reduz o risco de transformar toda discordância interpretativa em vício de fundamentação.
 
 ---
 
-## 7. Objeções e Respostas
+## 7. Objeções
 
-As teses sustentadas nas seções anteriores — sobretudo a tese das
-cinco saídas e a admissibilidade da superação racional pelo
-tribunal inferior — contrariam posições consolidadas na doutrina
-brasileira e estrangeira. Esta seção enfrenta as seis objeções de
-maior peso.
+### 7.1 “Apenas a corte-fonte pode superar; portanto a quarta situação é errada”
 
-### 7.1 A concepção hierárquica forte
+A objeção atinge versões anteriores deste trabalho, mas não a formulação atual. A quarta situação não é apresentada como autorização geral de *overruling* por órgão inferior. Ela é um contêiner analítico que obriga a perguntar **qual mecanismo de não aplicação está sendo usado e se o órgão tem competência para usá-lo**.
 
-**Objeção.** Em linha defendida por autores como Eduardo Cambi e
-Elpídio Donizetti, o art. 927 do CPC institui vinculação topo-down
-de natureza estritamente hierárquica: o tribunal inferior está
-obrigado a seguir o precedente do tribunal superior, sob pena de
-cassação por recurso. Não há, nesse quadro, espaço para "superação
-racional" pelo inferior — apenas para distinção quando o caso
-diferir.
+Quando a ordem jurídica reserva a revisão formal à corte-fonte, essa reserva deve ser respeitada. O órgão inferior pode ainda distinguir, identificar não incidência, articular crítica, preservar razões para revisão ou utilizar técnica de não aplicação concretamente admitida pelo regime aplicável. Essas operações não devem ser confundidas.
 
-**Resposta.** A objeção captura uma dimensão real do sistema —
-a vinculação é, de fato, robusta — mas confunde vinculação com
-obediência automática. O art. 489, §1º, VI, exige *demonstração*
-de distinção ou superação, o que pressupõe competência
-argumentativa do tribunal inferior para identificar os fundamentos
-determinantes, examinar sua aplicabilidade e, quando seja o caso,
-apontar erro qualificado. Se a vinculação fosse meramente
-hierárquica, bastaria a citação do precedente; o ônus do art. 489,
-§1º, V e VI, perderia sentido. A vinculação é racional, não
-formal: é à ratio que se vincula, e a ratio só vincula enquanto
-articula razão sustentável.
+### 7.2 “O art. 489, §1º, VI, diz ‘superação’; logo qualquer juiz pode superar”
 
-### 7.2 A ortodoxia sobre overruling
+O texto é parte relevante do argumento defendido por Schmitz, Nogueira e Malafaia, Ribeiro e Costa e Pitta. Mas a inferência sobre competência não é puramente lexical. Ela convive com regras sobre autoridade, procedimento, revisão de teses, súmulas vinculantes, reclamação e função institucional das cortes.
 
-**Objeção.** Em linha presente em parte da obra de Marinoni e em
-Mitidiero, o *overruling* é prerrogativa exclusiva do tribunal que
-firmou o precedente. Ao tribunal inferior cabe distinguir; não
-cabe superar. Admitir superação pelo inferior subverteria o
-desenho institucional do sistema de precedentes e a função das
-cortes supremas como cortes de interpretação.
+A posição mais segura para um paper de síntese é registrar a controvérsia e tornar explícita a competência usada em cada operação.
 
-**Resposta.** A objeção tem peso porque os mesmos autores aqui
-invocados em apoio sustentam, em outros momentos, a leitura
-ortodoxa. Reconhece-se a tensão. A tese das cinco saídas não
-nega que o *overruling* pleno seja prerrogativa do tribunal de
-origem; sustenta que o tribunal inferior, quando vinculado a
-precedente cuja ratio entende equivocada, tem três caminhos
-legítimos: aplicar mesmo discordando, abster-se de invocar (se
-o caso permitir solução por fundamento alternativo) ou superar
-racionalmente com apontamento expresso de erro — caso em que se
-expõe à reforma e contribui para o aperfeiçoamento do sistema.
-A posição encontra base em (a) art. 926 do CPC, que impõe dever
-de integridade e coerência a todos os tribunais; (b) na noção
-de *anticipatory overruling* presente na literatura comparada;
-e (c) na própria distinção marinoniana entre vinculação por
-autoridade de fonte e vinculação por autoridade de conteúdo.
+### 7.3 “A quinta situação permite esconder precedentes”
 
-### 7.3 A crítica cética (Streck)
+Não. A antiga categoria de “abstenção da invocação” foi abandonada precisamente por esse risco. O órgão não pode neutralizar um precedente material e invocado simplesmente omitindo sua existência.
 
-**Objeção.** Em linha desenvolvida por Lenio Streck, os
-"precedentes" do CPC/2015 não são precedentes em sentido forte;
-são provimentos administrativos vinculantes, formados por
-procedimento concentrado, sem o lastro de elaboração caso-a-caso
-próprio do *stare decisis*. Toda a moldura das "saídas legítimas"
-seria viciada na origem por importar categoria estranha ao
-sistema brasileiro.
+A quinta situação só existe quando há uma **razão independente que torna a tese não controladora**, e essa conclusão deve ser explicada quando o precedente foi trazido ao debate de modo material.
 
-**Resposta.** A crítica é teoricamente significativa, mas não
-infirma a tese aqui sustentada. Independentemente da classificação
-teórica dos provimentos do art. 927, o sistema do CPC opera com
-vinculação — e essa vinculação demanda critérios de aplicação. A
-tese das cinco saídas é descrição da estrutura normativa
-existente, não importação de modelo estrangeiro. Aliás, é
-*compatível* com a crítica de Streck: precisamente por limitar o
-automatismo da invocação, reabre espaço para argumentação
-substantiva — exatamente o que a crítica hermenêutica reivindica.
+### 7.4 “Aplicação parcial silenciosa é apenas omissão”
 
-### 7.4 O argumento formalista da redundância
+Ela pode coincidir, em muitos casos, com formas já conhecidas de fundamentação deficiente. O paper não nega isso. O rótulo tem função classificatória: permite localizar a espécie de seletividade em que o precedente é usado como fonte de autoridade e, ao mesmo tempo, amputado de uma condição controladora desfavorável.
 
-**Objeção.** A "aplicação parcial silenciosa" seria mera espécie
-de error in iudicando ou de aplicação incorreta. Sua nomeação
-como vício autônomo é redundante diante do art. 489, §1º, V, que
-já caracteriza como não fundamentada a decisão que invoca
-precedente sem demonstrar o ajustamento.
+A classificação é útil mesmo se a consequência jurídica continuar sendo extraída das categorias normativas já existentes.
 
-**Resposta.** A redundância é apenas aparente. O art. 489, §1º, V,
-captura a hipótese genericamente, mas não distingue o padrão
-específico — invocar a ratio favorável e silenciar a ressalva
-restritiva. A nomeação dogmática é útil porque (a) identifica um
-padrão recorrente que opera sob a aparência de cumprimento, (b)
-ancora o vício em dispositivo preciso, e (c) facilita o controle
-recursal ao oferecer ao advogado e ao tribunal categoria com
-contornos definidos. Conceitos dogmáticos não se justificam pela
-ausência de cobertura legal genérica, mas pela utilidade analítica
-e operacional.
+### 7.5 “Por que exatamente cinco?”
 
-### 7.5 A concepção restritiva de ratio (Goodhart)
+Não há razão ontológica para que todo sistema de precedentes possua exatamente cinco movimentos. O número é uma forma de organizar o problema examinado neste paper. Outros regimes ou níveis de abstração podem decompor ou reunir essas situações de maneira diferente.
 
-**Objeção.** No método clássico de Goodhart para identificação da
-*ratio decidendi*, são *ratio* apenas os fatos materiais tratados
-pelo juiz como relevantes para a conclusão. Ressalvas que
-delimitam o alcance da regra sem se referirem a fatos materiais
-do caso seriam *obiter dictum*, não vinculando tribunais
-posteriores.
-
-**Resposta.** A leitura goodhartiana estrita é uma entre várias.
-Cross e Harris, em *Precedent in English Law*, e MacCormick, em
-*Legal Reasoning and Legal Theory*, sustentam concepção mais
-ampla: integram a ratio também as proposições normativas
-necessárias para sustentar o dispositivo, ainda quando articuladas
-em termos abstratos. Pelo critério da necessidade lógica, ressalvas
-que delimitam o alcance da regra — sem as quais a decisão teria
-escopo distinto — são parte da ratio, não obiter. No caso da
-ratio analisada, a ressalva "excluídos os especialistas em
-educação" não é digressão; é o limite preciso do alcance da
-proposição central. Suprimi-la altera o dispositivo. Logo,
-integra a ratio.
-
-### 7.6 O argumento da segurança jurídica
-
-**Objeção.** Admitir superação racional pelo tribunal inferior
-gera instabilidade. Decisões díspares proliferariam, a previsibilidade
-do sistema seria comprometida e o princípio da segurança jurídica
-— um dos pilares do regime de precedentes — sofreria erosão.
-
-**Resposta.** A objeção pressupõe que segurança jurídica equivale
-a uniformidade automática. Não equivale. Segurança jurídica é
-*previsibilidade racional*: o jurisdicionado pode antecipar como
-o caso será decidido porque conhece as razões que orientam a
-decisão. Um sistema que decide por inércia — invocando
-precedente sem enfrentar argumento qualificado de erro — não
-oferece previsibilidade racional; oferece submissão. O ônus
-argumentativo qualificado do art. 489, §1º, VI, é exatamente o
-filtro: a superação racional é exceção que demanda demonstração
-expressa, sob controle recursal. O risco de instabilidade é
-contido pelo próprio desenho do ônus; o risco de erro
-inquestionável, ao contrário, é estrutural na leitura puramente
-hierárquica.
-
-### 7.7 O fundamento conjunto das saídas 4 e 5: paridade estrutural entre a leitura de reconhecimento de forma e a leitura de autorização
-
-**Objeção.** A conjugação dos arts. 927 e 489 como estrutura conjunta produz ambiguidade genuína sobre o que "legítimas" em "saídas legítimas" constitutivamente exige. Duas leituras coerentes são identificáveis a partir do texto do CPC 2015, cada uma enfatizando uma das funções do binômio normativo.
-
-A *leitura de autorização* sustenta que o art. 927 é o dispositivo de constituição do sujeito da compliance — é a norma que cria a obrigação de precedente vinculante —, e que "legítima" marca as respostas que o sistema de compliance *autoriza* como navegações permissíveis da obrigação. Sob essa leitura, as saídas 4 e 5 — superação racional e abstenção da invocação — integram o conjunto das "saídas legítimas" apenas se o regime do art. 927 as autorizar como respostas permissíveis à obrigação que ele mesmo constitui.
-
-A *leitura de reconhecimento de forma* — adotada implicitamente pela taxonomia deste artigo — sustenta que o art. 489 é o critério de classificação do conjunto, e que "legítima" marca as respostas que o art. 489 *reconhece* na estrutura de processamento ordinário como tipos regulados de resposta. Sob essa leitura, as saídas 4 e 5 qualificam como "legítimas" porque o art. 489 as reconhece como respostas no domínio do processamento ordinário, independentemente de qualquer determinação autorizante prévia pelo art. 927.
-
-A literatura adversarial sobre esta tese — quinze rodadas de debate bilateral preservadas em `otherwise/paper1b-rational-supersession.md` — estabeleceu que o vocabulário estrutural disponível a partir do texto do CPC 2015 é exaurido sem adjudicar a questão entre as duas leituras. Ambas são expressões coerentes de suas premissas contestadas; nenhuma constitui argumento estrutural independente que resolve a questão sem pressupor a leitura que expressa. O que o debate estabeleceu é paridade pro tanto ao nível da conjunção dos arts. 927 e 489: a leitura de reconhecimento de forma, que organiza este artigo, é plausível, não privilegiada. O mecanismo de resolução remanescente é doutrina processual brasileira primária sobre o que "saídas legítimas" constitutivamente exige no regime do CPC 2015 — especificamente, o que a operação conjunta do art. 927 (como dispositivo de constituição da obrigação de compliance) e do art. 489 (como critério de classificação das respostas) produz para o predicado organizador da taxonomia.
-
-**Reconhecimento.** Este artigo sustenta a leitura de reconhecimento de forma como interpretação coerente com o modelo de vinculação racional desenvolvido na seção 4 — em que o tribunal é vinculado à ratio porque ela articula razão jurídica, não porque a autoridade de fonte a autoriza. Reconhece, contudo, que essa preferência é pro tanto pari à leitura de autorização ao nível do fundamento conjunto: nenhuma das duas leituras demonstra superioridade sobre a outra pela análise estrutural das disposições do CPC 2015. As saídas 4 e 5 permanecem categorias dogmáticas válidas e úteis — o espaço das cinco saídas encontra fundamento direto no texto dos arts. 927, §1º, e 489, §1º, V e VI. O que o debate adversarial estabeleceu é que o fundamento profundo dessas saídas — a razão pela qual o sistema as reconhece como formas, e não como anomalias toleradas — é genuinamente indeterminado ao nível da conjunção dos arts. 927 e 489. Essa indeterminação não compromete o alcance prático das saídas; compromete apenas a pretensão de fundamento privilegiado de uma leitura sobre a outra.
+Por isso a taxonomia é expressamente **não exaustiva** e **não legislativa**.
 
 ---
 
-## 8. Conclusão
+## 8. Uso prático: como auditar a decisão
 
-O CPC 2015 instituiu regime de precedentes vinculantes que não se
-reduz à submissão hierárquica. O art. 927, §1º, combinado com o
-art. 489, §1º, V e VI, configura cinco saídas legítimas para o
-tribunal diante de precedente vinculante invocado: aplicação correta,
-distinção fundamentada, reconhecimento de superação superveniente,
-superação racional com apontamento expresso de erro, e abstenção
-da invocação. Não são duas — seguir ou não seguir.
+A taxonomia pode ser convertida em um roteiro curto de revisão.
 
-A admissão da superação racional pelo tribunal inferior reflete o
-caráter racional — não meramente hierárquico — da vinculação a
-precedente no sistema do CPC 2015. O tribunal é vinculado à ratio
-do precedente porque a ratio articula razão jurídica que, salvo
-demonstração de erro qualificada, deve se aplicar a casos análogos.
-A possibilidade de superação racional preserva, não viola, a
-integridade do sistema: um sistema sem mecanismo de depuração
-argumentativa é um sistema que não pode corrigir seus próprios
-erros.
+### 8.1 Identifique o precedente e sua força
 
-A aplicação parcial silenciosa de precedente vinculante — invocar
-o precedente para se valer da porção favorável, ignorar as ressalvas
-expressas da ratio, sem adotar nenhuma das quatro saídas substantivas
-— é vício de fundamentação nos termos do art. 489, §1º, V, do CPC.
-É o vício que se disfarça de cumprimento: o tribunal que o pratica
-parece estar seguindo o precedente, mas na prática está selecionando
-a porção conveniente e descartando o restante. O resultado é a
-violação da ratio na aparência de sua aplicação.
+Antes de discutir aplicação, registre:
 
-A identificação e a nomeação desse vício — "aplicação parcial
-silenciosa de precedente vinculante" — tem utilidade prática
-imediata para a prática forense: fornece ao advogado e ao procurador
-a categoria dogmática para nomear o vício com precisão, ancorar
-o pedido de embargos ou de recurso no dispositivo correto, e
-localizar a falha com a especificidade que o art. 489, §1º, exige.
+- tribunal e órgão prolator;
+- espécie de precedente ou enunciado;
+- dispositivo que lhe atribui força relevante;
+- questão jurídica efetivamente decidida;
+- razão ou condição que se afirma controladora.
+
+### 8.2 Classifique o movimento decisório
+
+Pergunte qual das situações melhor descreve a decisão:
+
+1. aplicação justificada;
+2. distinção;
+3. reconhecimento de revisão pela autoridade competente;
+4. contestação/não aplicação concreta com fundamento jurídico declarado;
+5. precedente não controlador por questão independente.
+
+Se nenhuma descrição couber, isso é um sinal de que o percurso argumentativo precisa ser reconstruído com maior precisão.
+
+### 8.3 Se houver não aplicação, identifique a competência
+
+Não basta escrever “o precedente está superado”. A decisão deve permitir que o leitor responda:
+
+- quem teria competência para revisar formalmente a tese?
+- o julgador está revisando, apenas deixando de aplicar no caso, distinguindo ou criticando?
+- qual regra ou técnica jurídica autoriza esse movimento?
+- o precedente continuará vinculante para outros casos após essa decisão?
+
+Essa última pergunta é particularmente útil para separar não aplicação concreta de revisão formal.
+
+### 8.4 Se houver alegação de aplicação parcial silenciosa, identifique a proposição omitida
+
+A parte que levanta o vício deve apontar:
+
+- a passagem ou proposição controladora omitida;
+- por que ela integra a *ratio* ou constitui condição expressa;
+- os fatos ou questões do caso que a tornam material;
+- onde a decisão invoca a parte favorável do mesmo precedente; e
+- a ausência de explicação para o tratamento seletivo.
+
+Esse formato evita alegações genéricas de “má aplicação do precedente”.
 
 ---
 
-## Nota sobre o escopo
+## 9. Limitações
 
-Este artigo é um **trabalho doutrinário de natureza argumentativa**:
-propõe uma taxonomia normativa das saídas legítimas do tribunal
-diante de precedente vinculante e identifica o vício da aplicação
-parcial silenciosa como categoria dogmática autônoma. Não constitui
-pesquisa empírica de jurisprudência nem revisão sistemática de
-literatura; os exemplos são ilustrativos. As teses defendidas —
-notadamente a admissão da superação racional pelo tribunal inferior
-e a qualificação da aplicação parcial silenciosa como vício do
-art. 489, §1º, V — são posições do autor, submetidas ao debate
-doutrinário; o estado da arte registra divergências expressivas
-sobre cada uma delas, parcialmente endereçadas na Seção 7
-("Objeções e Respostas").
+Este paper é dogmático e taxonômico. Ele não apresenta estudo empírico sobre frequência de cada situação, taxa de reforma de decisões ou comportamento de cortes inferiores.
+
+A categoria de aplicação parcial silenciosa não foi submetida a teste de concordância entre avaliadores. Sua utilidade operacional depende de conseguir distinguir, com razoável consistência, *ratio decidendi*, condição expressa material e passagem lateral.
+
+A literatura brasileira diverge sobre a extensão da competência de órgãos inferiores para não aplicação de precedente vinculante. O artigo não resolve essa divergência. Em especial, não afirma uma competência geral de juízes inferiores para cancelar, substituir ou formalmente superar precedentes constitucionais do STF, súmulas vinculantes ou teses cuja revisão esteja submetida a procedimento próprio.
+
+A busca de prior art foi extensa, mas não exaustiva. Resultados negativos de busca não demonstram ausência histórica de formulações equivalentes.
+
+---
+
+## 10. Conclusão
+
+O CPC de 2015 exige que o uso de precedentes seja justificável e auditável. Esse compromisso não se resume a uma oposição entre “seguir” e “não seguir”, mas também não autoriza transformar qualquer divergência bem escrita em poder de revisão formal.
+
+A formulação mais defensável das “cinco saídas” é a de um **mapa analítico não exaustivo**: aplicação justificada; distinção; reconhecimento de revisão pela autoridade competente; contestação ou não aplicação concreta segundo mecanismo juridicamente disponível; e demonstração de que o precedente é não controlador por uma questão independente. A antiga ideia de que o julgador poderia escapar do regime simplesmente deixando de invocar a fonte é rejeitada.
+
+A literatura anterior já ocupava a controvérsia sobre não aplicação por órgãos inferiores e já distinguia essa atuação da revisão formal pela corte-fonte. O paper não reivindica essas proposições como descobertas. O valor residual está na organização do mapa e no diagnóstico específico da **aplicação parcial silenciosa**, aqui limitado aos casos em que a decisão usa um precedente como fundamento enquanto omite, sem justificativa, uma condição ou razão controladora material ao caso.
+
+Essa formulação é menos ambiciosa do que versões anteriores, mas é também mais útil: separa problemas de fundamentação de problemas de competência e torna explícito o que deve ser demonstrado antes de chamar uma decisão de aplicação, distinção, não aplicação, superação ou uso seletivo de precedente.
 
 ---
 
 ## Referências
 
-CAMBI, Eduardo. *Neoconstitucionalismo e neoprocessualismo:
-direitos fundamentais, políticas públicas e protagonismo
-judiciário*. 2. ed. São Paulo: Revista dos Tribunais, 2016.
+ATAÍDE JR., Jaldemiro Rodrigues de; PEIXOTO, Ravi. **Flexibilidade, stare decisis e o desenvolvimento do anticipatory overruling no direito brasileiro.** Revista de Processo, v. 236, 2014, p. 279–301.
 
-CÂMARA, Alexandre Freitas. *O novo processo civil brasileiro*. 6.
-ed. São Paulo: Atlas, 2020.
+BRASIL. **Lei nº 13.105, de 16 de março de 2015 — Código de Processo Civil.** Texto compilado. <https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm>.
 
-CROSS, Rupert; HARRIS, J. W. *Precedent in English law*. 4. ed.
-Oxford: Clarendon Press, 1991.
+MARINONI, Luiz Guilherme. **Uma nova realidade diante do projeto de CPC: a ratio decidendi ou os fundamentos determinantes da decisão.** Revista do Ministério Público do Estado do Rio de Janeiro, n. 47, 2013, p. 181–237.
 
-DIDIER JR., Fredie; CUNHA, Leonardo Carneiro da; BRAGA, Paula
-Sarno; OLIVEIRA, Rafael Alexandria de. *Curso de direito processual
-civil*. Vol. 3. 16. ed. Salvador: JusPodivm, 2019.
+MITIDIERO, Daniel. **Cortes superiores e Cortes Supremas: do controle à interpretação, da jurisprudência ao precedente.** São Paulo: Revista dos Tribunais, 2013.
 
-DONIZETTI, Elpídio. *Curso didático de direito processual civil*.
-22. ed. São Paulo: Atlas, 2019.
+NOGUEIRA E MALAFAIA, Evie. **Decisões de efeito vinculante no CPC/15: revisão x superação.** Empório do Direito, 12 fev. 2020. <https://emporiododireito.com.br/leitura/abdpro-116-decisoes-de-efeito-vinculante-no-cpc-15-revisao-x-superacao>.
 
-GOODHART, Arthur L. Determining the ratio decidendi of a case.
-*Yale Law Journal*, v. 40, n. 2, p. 161–183, 1930.
+PITTA, Fernanda Pagotto Gomes. **Mecanismos processuais de superação dos precedentes nos Tribunais Superiores.** Tese (Doutorado em Direito) — Pontifícia Universidade Católica de São Paulo. Repositório institucional, registro público em 2025. <https://repositorio.pucsp.br/jspui/bitstream/handle/44082/1/Fernanda%20Pagotto%20Gomes%20Pitta.pdf>.
 
-HART, Herbert L. A. *O conceito de direito*. Tradução de A.
-Ribeiro Mendes. 3. ed. Lisboa: Fundação Calouste Gulbenkian, 2001.
+RIBEIRO, Flávia Pereira; COSTA, César Augusto. **Precedentes vinculantes: possibilidade de superação pelo juiz singular.** Migalhas, 12 jun. 2024. <https://www.migalhas.com.br/depeso/409097/precedentes-vinculantes-possibilidade-de-superacao-pelo-juiz-singular>.
 
-MACÊDO, Lucas Buril de. *Precedentes judiciais e o direito
-processual civil*. 3. ed. Salvador: JusPodivm, 2019.
+SCHMITZ, Leonard Ziesemer. **Fundamentação das decisões judiciais.** São Paulo: Revista dos Tribunais, 2015.
 
-MACCORMICK, Neil. *Legal reasoning and legal theory*. Oxford:
-Clarendon Press, 1978.
+### Registro de auditoria de prioridade
 
-MARINONI, Luiz Guilherme. *Precedentes obrigatórios*. 5. ed.
-São Paulo: Revista dos Tribunais, 2016.
-
-MARINONI, Luiz Guilherme. *A ética dos precedentes: justificativa
-do novo CPC*. 3. ed. São Paulo: Revista dos Tribunais, 2018.
-
-MARINONI, Luiz Guilherme; ARENHART, Sérgio Cruz; MITIDIERO, Daniel.
-*Novo código de processo civil comentado*. 3. ed. São Paulo: Revista
-dos Tribunais, 2017.
-
-MITIDIERO, Daniel. *Cortes superiores e cortes supremas: do
-controle à interpretação, da jurisprudência ao precedente*. 3.
-ed. São Paulo: Revista dos Tribunais, 2017.
-
-MITIDIERO, Daniel. *Precedentes: da persuasão à vinculação*. 4.
-ed. São Paulo: Revista dos Tribunais, 2021.
-
-NERY JR., Nelson; NERY, Rosa Maria de Andrade. *Código de processo
-civil comentado*. 17. ed. São Paulo: Revista dos Tribunais, 2018.
-
-RAZ, Joseph. *The authority of law: essays on law and morality*.
-2. ed. Oxford: Oxford University Press, 2009.
-
-STRECK, Lenio Luiz. *O que é isto — decido conforme minha
-consciência?* 6. ed. Porto Alegre: Livraria do Advogado, 2017.
-
-WAMBIER, Teresa Arruda Alvim. *Recurso especial, recurso
-extraordinário e ação rescisória*. 3. ed. São Paulo: Revista dos
-Tribunais, 2016.
-
-ZANETI JR., Hermes. *O valor vinculante dos precedentes: teoria
-dos precedentes normativos formalmente vinculantes*. 4. ed.
-Salvador: JusPodivm, 2019.
-
----
-
-*Artigo submetido para publicação em [VEÍCULO]. Versão de 9 de julho de 2026.*
+A decomposição de claims, os cutoffs públicos, as buscas e a classificação dos antecedentes utilizados para limitar a originalidade desta versão estão preservados em `audits/prior-art/paper1b-five-exits-precedents-2026-09-18.md`. Esse registro é parte da proveniência científica do preprint; não substitui as fontes externas citadas acima.
