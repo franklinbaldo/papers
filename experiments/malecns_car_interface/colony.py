@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import floor
 from statistics import median
-from typing import Iterable
+from typing import Iterable, Mapping
 
 
 @dataclass(frozen=True)
@@ -167,3 +168,111 @@ def age_spread_ms(reports: Iterable[SpecialistReport]) -> float:
         raise ValueError("at least one specialist report is required")
     ages = [report.age_ms for report in items]
     return max(ages) - min(ages)
+
+
+def recruitment_score(
+    reports: Iterable[SpecialistReport],
+    *,
+    half_life_ms: float = 150.0,
+    uncertainty_floor: float = 0.005,
+) -> float:
+    """Estimate where another specialist could be useful without privileged truth.
+
+    Recruitment should target *fresh but epistemically unsettled* modalities.
+    Within-modality disagreement is a proxy for specialist-level uncertainty,
+    where another independently trained MaleCNS may help. Exponential freshness
+    prevents the allocator from wasting compute on a commonly stale physical
+    stream: more cognition cannot recreate a missing sensor sample.
+
+    Scores are comparable only for modalities estimating the same normalized
+    semantic channel.
+    """
+
+    items = list(reports)
+    if not items:
+        raise ValueError("at least one specialist report is required")
+    if half_life_ms <= 0.0:
+        raise ValueError("half_life_ms must be positive")
+    if uncertainty_floor < 0.0:
+        raise ValueError("uncertainty_floor must be non-negative")
+
+    channels = {report.channel for report in items}
+    modalities = {report.modality for report in items}
+    if len(channels) != 1:
+        raise ValueError("recruitment score requires one semantic channel")
+    if len(modalities) != 1 or None in modalities:
+        raise ValueError("recruitment score requires one declared modality")
+
+    age_ms = float(median(report.age_ms for report in items))
+    freshness = 2 ** (-age_ms / half_life_ms)
+    return freshness * (disagreement(items) + uncertainty_floor)
+
+
+def allocate_recruitment_slots(
+    modality_reports: Mapping[str, Iterable[SpecialistReport]],
+    *,
+    extra_slots: int,
+    half_life_ms: float = 150.0,
+    uncertainty_floor: float = 0.005,
+) -> dict[str, int]:
+    """Allocate a fixed extra-specialist budget from lawful colony signals.
+
+    Each mapping entry represents pilot specialists for one physical modality.
+    All groups must estimate the same normalized semantic channel. Slots are
+    apportioned by largest remainder from ``recruitment_score``. No simulator
+    truth, realized error, or hidden fault flag is used.
+    """
+
+    if extra_slots < 0:
+        raise ValueError("extra_slots must be non-negative")
+    if not modality_reports:
+        raise ValueError("at least one modality is required")
+
+    materialized: dict[str, list[SpecialistReport]] = {}
+    channels: set[str] = set()
+    for name, reports in modality_reports.items():
+        items = list(reports)
+        if not items:
+            raise ValueError(f"modality {name!r} has no pilot reports")
+        group_channels = {report.channel for report in items}
+        if len(group_channels) != 1:
+            raise ValueError("each modality must estimate one semantic channel")
+        channels.update(group_channels)
+        materialized[name] = items
+
+    if len(channels) != 1:
+        raise ValueError("recruitment allocation requires one shared semantic channel")
+
+    allocation = {name: 0 for name in materialized}
+    if extra_slots == 0:
+        return allocation
+
+    scores = {
+        name: recruitment_score(
+            items,
+            half_life_ms=half_life_ms,
+            uncertainty_floor=uncertainty_floor,
+        )
+        for name, items in materialized.items()
+    }
+    score_sum = sum(scores.values())
+
+    if score_sum <= 0.0:
+        names = sorted(materialized)
+        for index in range(extra_slots):
+            allocation[names[index % len(names)]] += 1
+        return allocation
+
+    quotas = {name: extra_slots * score / score_sum for name, score in scores.items()}
+    for name, quota in quotas.items():
+        allocation[name] = floor(quota)
+
+    remainder = extra_slots - sum(allocation.values())
+    ranked = sorted(
+        quotas,
+        key=lambda name: (quotas[name] - allocation[name], name),
+        reverse=True,
+    )
+    for name in ranked[:remainder]:
+        allocation[name] += 1
+    return allocation
