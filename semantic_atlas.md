@@ -709,3 +709,13 @@ The intended end state is therefore not a map the size of Borges's empire. It is
 ## Issue map
 
 This paper is developed under #260. Prior-art delimitation is #261; multiscale trajectory formalization is #262; quasar/SRF design is #263; atlas/gravity/reachability is #264; Semantic Servo is #265; the observational atlas implementation is #266; MPC navigation is #267; Jacobian/servo efficiency is #268; weight-space compilation is #269; and final empirical integration is #270.
+
+
+## Research programme position
+
+- **Initiative:** Semantic Atlas
+- **Scope:** Static and relational cartography of representation spaces, including reference frames, multiscale neighborhoods, reachability, and control questions.
+- **Not claimed here:** Pontifex intervention-response geometry, Perquire semantic inversion, and Torus-specific periodic topology are separate tests.
+- **Canonical map:** [Semantic Systems Research Map](research/semantic-systems-map.md)
+
+Programme-wide relationships and current cross-project status are maintained in the canonical map rather than duplicated here. This paper remains authoritative for its own claims, evidence, protocol, and limitations.
