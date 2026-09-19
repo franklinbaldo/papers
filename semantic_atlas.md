@@ -723,6 +723,12 @@ The intended end state is therefore not a map the size of Borges's empire. It is
 This paper is developed under #260. Prior-art delimitation is #261; multiscale trajectory formalization is #262; quasar/SRF design is #263; atlas/gravity/reachability is #264; Semantic Servo is #265; the observational atlas implementation is #266; MPC navigation is #267; Jacobian/servo efficiency is #268; weight-space compilation is #269; and final empirical integration is #270.
 
 
+## Shared cross-program evaluation contracts
+
+When several observers are fused, Semantic Atlas uses the common [Synergy Geometry protocol](experiments/synergy_geometry/protocol.md) rather than treating any multi-model improvement as synergy by default.
+
+To determine whether static Atlas structure and intervention-derived Pontifex structure are genuinely complementary, the programme now has a prospective [Unified Semantic Identification Benchmark](experiments/unified_semantic_identification/protocol.md). Static Atlas is one frozen arm in that benchmark; it does not receive intervention responses or Perquire target feedback.
+
 ## Research programme position
 
 - **Initiative:** Semantic Atlas
