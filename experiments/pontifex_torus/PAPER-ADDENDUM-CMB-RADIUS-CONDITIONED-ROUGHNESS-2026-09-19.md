@@ -1,3 +1,10 @@
+---
+type: Experiment Report
+title: "Pontifex CMB: radius-conditioned roughness holdout"
+date: 2026-09-19
+status: experimental
+---
+
 # Pontifex CMB addendum — radius-conditioned roughness holdout
 
 **Date:** 2026-09-19  
